@@ -61,8 +61,8 @@ print_primes = .false.
 !$omp end single
 
 !$omp do private(factor, limit, prime) &
-   schedule(dynamic,10) &
-   reduction(+:number_of_primes,number_of_41primes,number_of_43primes)
+!$omp&   schedule(dynamic,10) &
+!$omp&   reduction(+:number_of_primes,number_of_41primes,number_of_43primes)
 
 do index = start, end, 2   ! workshared loop
 
