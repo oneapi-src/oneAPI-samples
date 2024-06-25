@@ -1293,8 +1293,9 @@ a:hover {
     color: rgb(0, 199, 253) !important;
 }
 
-#trademarks{
+.tmb-cookies-privacy{
   color: rgba(0,84,174,68) !important;
+  padding: 0.25rem;
 }
 
 #footer-container{

@@ -3,15 +3,7 @@
 
 {% block head %}
 <head>
-        <!-- START Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DT7D3YR0LH"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-DT7D3YR0LH');
-        </script>
-        <!-- END Google tag (gtag.js) -->
+        <script async src=""></script>
 
         <link rel="stylesheet" type="text/css" href="_static/styles.css" />
         <meta charset="UTF-8">
@@ -66,9 +58,22 @@
     {% block footer %}
     <footer>
         <div id="footer-container"> 
+            
+            
             <div id="footer-blk-1">
                 &copy; Copyright 2024 Intel Corporation. 
-                <a href="https://www.intel.com/content/www/us/en/legal/trademarks.html"><span id="trademarks">*Trademarks </span></a></a>
+                
+                <a href="https://www.intel.com/content/www/us/en/legal/trademarks.html">
+                    <span class="tmb-cookies-privacy">*Trademarks </span>
+                </a>
+            
+                <a class="footer-link" href='https://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html' data-cookie-notice='true'>
+                    <span class="tmb-cookies-privacy">Cookies</span>
+                </a>
+            
+                <a class="footer-link" href='https://www.intel.com/content/www/us/en/privacy/intel-privacy-notice.html'>
+                    <span class="tmb-cookies-privacy">Privacy</span>
+                </a>
             </div>
 
             <div>
