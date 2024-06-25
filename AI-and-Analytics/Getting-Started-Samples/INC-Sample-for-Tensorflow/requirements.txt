@@ -1,2 +1,5 @@
 ipykernel
 matplotlib
+jupyter
+runipy
+notebook

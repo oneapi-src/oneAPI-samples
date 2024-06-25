@@ -275,9 +275,6 @@ latencys_times [1, 0.38379207710795576]
 accuracys_times [0, -0.009999999999990905]
 ```
 
-![Absolute Performance](img/inc_ab_perf_data.png)
-![Relative Performance](img/inc_re_perf_data.png)
-
 #### Troubleshooting
 
 If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
