@@ -1,0 +1,22 @@
+{
+  "guid": "21FDB859-9510-428B-A570-6C57C41E1359",
+  "name": "bilateralFilter",
+  "categories": ["Toolkit/oneAPI-samples/Tools/OpenACCToOpenMP"],
+  "description": "This sample uses OpenMP directives to perform a simple bilateral filter on an image and measures performance",
+  "toolchain": [ "icx" ],
+  "dependencies": [ "compiler|icx","openmp" ],
+  "languages": [ { "c": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "make",
+                        "make run"
+                 ]
+        }]
+  },
+  "expertise": "Concepts and Functionality"
+}

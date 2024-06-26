@@ -1,0 +1,71 @@
+* Line 38 contains the following statement
+#pragma acc routine
+that has been as been translated into:
+#pragma omp declare target
+
+
+* Line 76 contains the following statement
+#pragma acc routine
+that has been as been translated into:
+#pragma omp declare target
+
+
+* Line 82 contains the following statement
+#pragma acc routine
+that has been as been translated into:
+#pragma omp declare target
+
+
+* Line 128 contains the following statement
+#pragma acc enter data create(call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N]) copyin(option_data_arr[0:OPT_N])
+that has been as been translated into:
+#pragma omp target enter data map(to:option_data_arr[0:OPT_N]) map(alloc:call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N])
+
+
+* Line 144 contains the following statement
+#pragma acc kernels loop async(j) present(call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N],option_data_arr[0:OPT_N])
+that has been as been translated into:
+#pragma omp target teams loop map(present,alloc:call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N],option_data_arr[0:OPT_N]) nowait
+* WARNING(s)! Please review the translation.
+  1. The kernels construct in OpenACC is a hint to the compiler of where it should look for parallelism. OpenMP does not have a direct translation for this construct.
+  2. OpenACC and OpenMP differ on asynchronous mechanisms. Check for the translation.
+
+
+* Line 158 contains the following statement
+#pragma acc loop reduction(+:sum,sum2)
+that has been as been translated into:
+#pragma omp loop reduction(+:sum,sum2)
+
+
+* Line 174 contains the following statement
+#pragma acc exit data copyout(call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N]) delete(option_data_arr[0:OPT_N])
+that has been as been translated into:
+#pragma omp target exit data map(from:call_value_e_gpu[0:OPT_N],confidence_gpu[0:OPT_N]) map(delete:option_data_arr[0:OPT_N])
+
+
+* Line 74 contains the following statement
+**END declare target**
+that has been as been translated into:
+#pragma omp end declare target
+
+
+* Line 80 contains the following statement
+**END declare target**
+that has been as been translated into:
+#pragma omp end declare target
+
+
+* Line 86 contains the following statement
+**END declare target**
+that has been as been translated into:
+#pragma omp end declare target
+
+
+Note the following OpenACC API calls. These have NOT been translated.
+* Line 125 contains an invocation to 'acc_get_num_devices'. You can use omp_get_num_devices().
+* Line 172 contains an invocation to 'acc_wait'. Consider using #pragma omp taskwait.
+* Line 172 contains an invocation to 'acc_wait_all'. Consider using #pragma omp taskwait.
+* Line 185 contains an invocation to 'acc_get_num_devices'. You can use omp_get_num_devices().
+* Line 208 contains an invocation to 'acc_set_device_num'. You can use omp_set_default_device().
+
+
