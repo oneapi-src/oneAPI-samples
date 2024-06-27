@@ -1,0 +1,2334 @@
+The Project Gutenberg Etext of Cambridge Pieces, by Samuel Butler
+#7 in our series by Samuel Butler
+
+Copyright laws are changing all over the world, be sure to check
+the laws for your country before redistributing these files!!!
+
+Please take a look at the important information in this header.
+We encourage you to keep this file on your own disk, keeping an
+electronic path open for the next readers.
+
+Please do not remove this.
+
+This should be the first thing seen when anyone opens the book.
+Do not change or edit it without written permission.  The words
+are carefully chosen to provide users with the information they
+need about what they can legally do with the texts.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*These Etexts Prepared By Hundreds of Volunteers and Donations*
+
+Information on contacting Project Gutenberg to get Etexts, and
+further information is included below.  We need your donations.
+The Project Gutenberg Literary Archive Foundation is a 501(c)(3)
+organization with EIN [Employee Identification Number] 64-6221541
+
+As of 12/12/00 contributions are only being solicited from people in:
+Colorado, Connecticut, Idaho, Indiana, Iowa,
+Kentucky, Louisiana, Massachusetts, Montana,
+Nevada, Oklahoma, South Carolina, South Dakota,
+Texas, Vermont, and Wyoming.
+
+International donations are accepted,
+but we don't know ANYTHING about how
+to make them tax-deductible, or
+even if they CAN be made deductible,
+and don't have the staff to handle it
+even if there are ways.
+
+As the requirements for other states are met,
+additions to this list will be made and fund raising
+will begin in the additional states.  Please feel
+free to ask to check the status of your state.
+
+International donations are accepted,
+but we don't know ANYTHING about how
+to make them tax-deductible, or
+even if they CAN be made deductible,
+and don't have the staff to handle it
+even if there are ways.
+
+These donations should be made to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Ave.
+Oxford, MS 38655-4109
+
+
+Title: Samuel Butler's Cambridge Pieces
+
+Author: Samuel Butler
+
+Release Date: June, 2002  [Etext #3278]
+[Yes, we are about one year ahead of schedule]
+[The actual date this file first posted = 03/10/01]
+
+Edition: 10
+
+Language: English
+
+The Project Gutenberg Etext of Cambridge Pieces, by Samuel Butler
+
+Corrected EDITIONS of our etexts get a new NUMBER, cambp11.txt
+VERSIONS based on separate sources get new LETTER, cambp10a.txt
+
+This etext was produced from the 1914 A. C. Fifield edition by David
+Price, email ccx074@coventry.ac.uk
+
+Project Gutenberg Etexts are usually created from multiple editions,
+all of which are in the Public Domain in the United States, unless a
+copyright notice is included.  Therefore, we usually do NOT keep any
+of these books in compliance with any particular paper edition.
+
+We are now trying to release all our books one year in advance
+of the official release dates, leaving time for better editing.
+Please be encouraged to send us error messages even years after
+the official publication date.
+
+Please note:  neither this list nor its contents are final till
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.
+
+Most people start at our sites at:
+http://gutenberg.net
+http://promo.net/pg
+
+
+Those of you who want to download any Etext before announcement
+can surf to them as follows, and just download by date; this is
+also a good way to get them instantly upon announcement, as the
+indexes our cataloguers produce obviously take a while after an
+announcement goes out in the Project Gutenberg Newsletter.
+
+http://www.ibiblio.org/gutenberg/etext02
+or
+ftp://ftp.ibiblio.org/pub/docs/books/gutenberg/etext02
+
+Or /etext01, 00, 99, 98, 97, 96, 95, 94, 93, 92, 92, 91 or 90
+
+Just search by the first five letters of the filename you want,
+as it appears in our Newsletters.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+time it takes us, a rather conservative estimate, is fifty hours
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour this year as we release fifty new Etext
+files per month, or 500 more Etexts in 2000 for a total of 3000+
+If they reach just 1-2% of the world's population then the total
+should reach over 300 billion Etexts given away by year's end.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by December 31, 2001.  [10,000 x 100,000,000 = 1 Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only about 4% of the present number of computer users.
+
+At our revised rates of production, we will reach only one-third
+of that goal by the end of 2001, or about 3,333 Etexts unless we
+manage to get some real funding.
+
+The Project Gutenberg Literary Archive Foundation has been created
+to secure a future for Project Gutenberg into the next millennium.
+
+We need your donations more than ever!
+
+Presently, contributions are only being solicited from people in:
+Colorado, Connecticut, Idaho, Indiana, Iowa,
+Kentucky, Louisiana, Massachusetts, Nevada,
+Montana, Nevada, Oklahoma, South Carolina,
+South Dakota, Texas, Vermont, and Wyoming.
+
+As the requirements for other states are met,
+additions to this list will be made and fund raising
+will begin in the additional states.
+
+These donations should be made to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Ave.
+Oxford, MS 38655-4109
+
+
+Project Gutenberg Literary Archive Foundation,
+EIN [Employee Identification Number] 64-6221541,
+has been approved as a 501(c)(3) organization by the US Internal
+Revenue Service (IRS).  Donations are tax-deductible to the extent
+permitted by law.  As the requirements for other states are met,
+additions to this list will be made and fund raising will begin in the
+additional states.
+
+All donations should be made to the Project Gutenberg Literary
+Archive Foundation.  Mail to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Avenue
+Oxford, MS 38655-4109  [USA]
+
+
+We need your donations more than ever!
+
+You can get up to date donation information at:
+
+http://www.gutenberg.net/donation.html
+
+
+***
+
+If you can't reach Project Gutenberg,
+you can always email directly to:
+
+Michael S. Hart <hart@pobox.com>
+
+hart@pobox.com forwards to hart@prairienet.org and archive.org
+if your mail bounces from archive.org, I will still see it, if
+it bounces from prairienet.org, better resend later on. . . .
+
+Prof. Hart will answer or forward your message.
+
+We would prefer to send you information by email.
+
+
+***
+
+
+Example command-line FTP session:
+
+ftp ftp.ibiblio.org
+login: anonymous
+password: your@login
+cd pub/docs/books/gutenberg
+cd etext90 through etext99 or etext00 through etext02, etc.
+dir [to see files]
+get or mget [to get files. . .set bin for zip files]
+GET GUTINDEX.??  [to get a year's listing of books, e.g., GUTINDEX.99]
+GET GUTINDEX.ALL [to get a listing of ALL books]
+
+
+**The Legal Small Print**
+
+
+(Three Pages)
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here?  You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault.  So, among other things, this "Small Print!" statement
+disclaims most of our liability to you.  It also tells you how
+you may distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement.  If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from.  If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-tm etexts,
+is a "public domain" work distributed by Professor Michael S. Hart
+through the Project Gutenberg Association (the "Project").
+Among other things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties.  Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the "PROJECT GUTENBERG" trademark.
+
+Please do not use the "PROJECT GUTENBERG" trademark to market
+any commercial products without permission.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works.  Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects".  Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] Michael Hart and the Foundation (and any other party you may
+receive this etext from as a PROJECT GUTENBERG-tm etext) disclaims
+all liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from.  If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy.  If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS".  NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold Michael Hart, the Foundation,
+and its trustees and agents, and any volunteers associated
+with the production and distribution of Project Gutenberg-tm
+texts harmless, from all liability, cost and expense, including
+legal fees, that arise directly or indirectly from any of the
+following that you do or cause:  [1] distribution of this etext,
+[2] alteration, modification, or addition to the etext,
+or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word
+     processing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Foundation of 20% of the
+     gross profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Literary Archive Foundation"
+     the 60 days following each date you prepare (or were
+     legally required to prepare) your annual (or equivalent
+     periodic) tax return.  Please contact us beforehand to
+     let us know your plans and to work out the details.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+Project Gutenberg is dedicated to increasing the number of
+public domain and licensed works that can be freely distributed
+in machine readable form.
+
+The Project gratefully accepts contributions of money, time,
+public domain materials, or royalty free copyright licenses.
+Money should be paid to the:
+"Project Gutenberg Literary Archive Foundation."
+
+If you are interested in contributing scanning equipment or
+software or other items, please contact Michael Hart at:
+hart@pobox.com
+
+*END THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.12.12.00*END*
+
+
+
+
+
+This etext was produced from the 1914 A. C. Fifield edition by David
+Price, email ccx074@coventry.ac.uk
+
+
+
+
+
+SAMUEL BUTLER'S CAMBRIDGE PIECES
+
+by Samuel Butler
+
+
+
+
+Contents:
+   On English Composition and Other Matters
+   Our Tour
+   Translation from an Unpublished Work of Herodotus
+   The shield of Achilles, with variations
+   Prospectus of the Great Split Society
+   Powers
+   A skit on examinations
+   An Eminent Person
+   Napoleon at St. Helena
+   THE TWO DEANS
+   The Battle of Alma Mater
+   On the Italian Priesthood
+   Samuel Butler and the Simeonites
+
+
+
+ON ENGLISH COMPOSITION AND OTHER MATTERS
+
+
+
+This essay is believed to be the first composition by Samuel Butler
+that appeared in print.  It was published in the first number of the
+EAGLE, a magazine written and edited by members of St. John's
+College, Cambridge, in the Lent Term, 1858, when Butler was in his
+fourth and last year of residence.
+
+[From the Eagle, Vol. 1, No. 1, Lent Term, 1858, p. 41.]
+
+I sit down scarcely knowing how to grasp my own meaning, and give it
+a tangible shape in words; and yet it is concerning this very
+expression of our thoughts in words that I wish to speak.  As I muse
+things fall more into their proper places, and, little fit for the
+task as my confession pronounces me to be, I will try to make clear
+that which is in my mind.
+
+I think, then, that the style of our authors of a couple of hundred
+years ago was more terse and masculine than that of those of the
+present day, possessing both more of the graphic element, and more
+vigour, straightforwardness, and conciseness.  Most readers will
+have anticipated me in admitting that a man should be clear of his
+meaning before he endeavours to give to it any kind of utterance,
+and that having made up his mind what to say, the less thought he
+takes how to say it, more than briefly, pointedly, and plainly, the
+better; for instance, Bacon tells us, "Men fear death as children
+fear to go in the dark"; he does not say, what I can imagine a last
+century writer to have said, "A feeling somewhat analogous to the
+dread with which children are affected upon entering a dark room, is
+that which most men entertain at the contemplation of death."
+Jeremy Taylor says, "Tell them it is as much intemperance to weep
+too much as to laugh too much"; he does not say, "All men will
+acknowledge that laughing admits of intemperance, but some men may
+at first sight hesitate to allow that a similar imputation may be at
+times attached to weeping."
+
+I incline to believe that as irons support the rickety child, whilst
+they impede the healthy one, so rules, for the most part, are but
+useful to the weaker among us.  Our greatest masters in language,
+whether prose or verse, in painting, music, architecture, or the
+like, have been those who preceded the rule and whose excellence
+gave rise thereto; men who preceded, I should rather say, not the
+rule, but the discovery of the rule, men whose intuitive perception
+led them to the right practice.  We cannot imagine Homer to have
+studied rules, and the infant genius of those giants of their art,
+Handel, Mozart, and Beethoven, who composed at the ages of seven,
+five, and ten, must certainly have been unfettered by them:  to the
+less brilliantly endowed, however, they have a use as being
+compendious safeguards against error.  Let me then lay down as the
+best of all rules for writing, "forgetfulness of self, and
+carefulness of the matter in hand."  No simile is out of place that
+illustrates the subject; in fact a simile as showing the symmetry of
+this world's arrangement, is always, if a fair one, interesting;
+every simile is amiss that leads the mind from the contemplation of
+its object to the contemplation of its author.  This will apply
+equally to the heaping up of unnecessary illustrations:  it is as
+great a fault to supply the reader with too many as with too few;
+having given him at most two, it is better to let him read slowly
+and think out the rest for himself than to surfeit him with an
+abundance of explanation.  Hood says well,
+
+
+And thus upon the public mind intrude it;
+As if I thought, like Otaheitan cooks,
+No food was fit to eat till I had chewed it.
+
+
+A book that is worth reading will be worth reading thoughtfully, and
+there are but few good books, save certain novels, that it is well
+to read in an arm-chair.  Most will bear standing to.  At the
+present time we seem to lack the impassiveness and impartiality
+which was so marked among the writings of our forefathers, we are
+seldom content with the simple narration of fact, but must rush off
+into an almost declamatory description of them; my meaning will be
+plain to all who have studied Thucydides.  The dignity of his
+simplicity is, I think, marred by those who put in the accessories
+which seem thought necessary in all present histories.  How few
+writers of the present day would not, instead of [Greek text which
+cannot be reproduced] rather write, "Night fell upon this horrid
+scene of bloodshed." {1}  This is somewhat a matter of taste, but I
+think I shall find some to agree with me in preferring for plain
+narration (of course I exclude oratory) the unadorned gravity of
+Thucydides.  There are, indeed, some writers of the present day who
+seem returning to the statement of facts rather than their
+adornment, but these are not the most generally admired.  This
+simplicity, however, to be truly effective must be unstudied; it
+will not do to write with affected terseness, a charge which, I
+think, may be fairly preferred against Tacitus; such a style if ever
+effective must be so from excess of artifice and not from that
+artlessness of simplicity which I should wish to see prevalent among
+us.
+
+Neither again is it well to write and go over the ground again with
+the pruning knife, though this fault is better than the other; to
+take care of the matter, and let the words take care of themselves,
+is the best safeguard.
+
+To this I shall be answered, "Yes, but is not a diamond cut and
+polished a more beautiful object than when rough?"  I grant it, and
+more valuable, inasmuch as it has run chance of spoliation in the
+cutting, but I maintain that the thinking man, the man whose
+thoughts are great and worth the consideration of others, will "deal
+in proprieties," and will from the mine of his thoughts produce
+ready-cut diamonds, or rather will cut them there spontaneously, ere
+ever they see the light of day.
+
+There are a few points still which it were well we should consider.
+We are all too apt when we sit down to study a subject to have
+already formed our opinion, and to weave all matter to the warp of
+our preconceived judgment, to fall in with the received idea, and,
+with biassed minds, unconsciously to follow in the wake of public
+opinion, while professing to lead it.  To the best of my belief half
+the dogmatism of those we daily meet is in consequence of the
+unwitting practices of this self-deception.  Simply let us not talk
+about what we do not understand, save as learners, and we shall not
+by writing mislead others.
+
+There is no shame in being obliged to others for opinions, the shame
+is not being honest enough to acknowledge it:  I would have no one
+omit to put down a useful thought because it was not his own,
+provided it tended to the better expression of his matter, and he
+did not conceal its source; let him, however, set out the borrowed
+capital to interest.  One word more and I have done.  With regard to
+our subject, the best rule is not to write concerning that about
+which we cannot at our present age know anything save by a process
+which is commonly called cram:  on all such matters there are abler
+writers than ourselves; the men, in fact, from whom we cram.  Never
+let us hunt after a subject, unless we have something which we feel
+urged on to say, it is better to say nothing; who are so ridiculous
+as those who talk for the sake of talking, save only those who write
+for the sake of writing?  But there are subjects which all young men
+think about.  Who can take a walk in our streets and not think?  The
+most trivial incident has ramifications, to whose guidance if we
+surrender our thoughts, we are oft-times led upon a gold mine
+unawares, and no man whether old or young is worse for reading the
+ingenuous and unaffected statement of a young man's thoughts.  There
+are some things in which experience blunts the mental vision, as
+well as others in which it sharpens it.  The former are best
+described by younger men, our province is not to lead public
+opinion, is not in fact to ape our seniors, and transport ourselves
+from our proper sphere, it is rather to show ourselves as we are, to
+throw our thoughts before the public as they rise, without requiring
+it to imagine that we are right and others wrong, but hoping for the
+forbearance which I must beg the reader to concede to myself, and
+trusting to the genuineness and vigour of our design to attract it
+may be more than a passing attention.
+
+I am aware that I have digressed from the original purpose of my
+essay, but I hope for pardon, if, believing the digression to be of
+more value than the original matter, I have not checked my pen, but
+let it run on even as my heart directed it.
+
+CELLARIUS.
+
+
+
+OUR TOUR
+
+
+
+This essay was published in the EAGLE, Vol. 1, No. 5. in the Easter
+Term, 1859.  It describes a holiday trip made by Butler in June,
+1857, in company with a friend whose name, which was Joseph Green,
+Butler Italianised as Giuseppe Verdi.  I am permitted by Professor
+Bonney to quote a few words from a private letter of his referring
+to Butler's tour:  "It was remarkable in the amount of ground
+covered and the small sum spent, but still more in the direction
+taken in the first part of the tour.  Dauphine was then almost a
+TERRA INCOGNITA to English or any other travellers."
+
+[From the Eagle, Vol. 1, No. 5.  Easter Term, 1859, p. 241.]
+
+As the vacation is near, and many may find themselves with three
+weeks' time on their hand, five-and-twenty pounds in their pockets,
+and the map of Europe before them, perhaps the following sketch of
+what can be effected with such money and in such time, may not come
+amiss to those, who, like ourselves a couple of years ago, are in
+doubt how to enjoy themselves most effectually after a term's hard
+reading.
+
+To some, probably, the tour we decided upon may seem too hurried,
+and the fatigue too great for too little profit; still even to these
+it may happen that a portion of the following pages may be useful.
+Indeed, the tour was scarcely conceived at first in its full extent,
+originally we had intended devoting ourselves entirely to the French
+architecture of Normandy and Brittany.  Then we grew ambitious, and
+stretched our imaginations to Paris.  Then the longing for a snowy
+mountain waxed, and the love of French Gothic waned, and we
+determined to explore the French Alps.  Then we thought that we must
+just step over them and take a peep into Italy, and so, disdaining
+to return by the road we had already travelled, we would cut off the
+north-west corner of Italy, and cross the Alps again into
+Switzerland, where, of course, we must see the cream of what was to
+be seen; and then thinking it possible that our three weeks and our
+five-and-twenty pounds might be looking foolish, we would return,
+via Strasburg to Paris, and so to Cambridge.  This plan we
+eventually carried into execution, spending not a penny more money,
+nor an hour's more time; and, despite the declarations which met us
+on all sides that we could never achieve anything like all we had
+intended, I hope to be able to show how we did achieve it, and how
+anyone else may do the like if he has a mind.  A person with a good
+deal of energy might do much more than this; we ourselves had at one
+time entertained thoughts of going to Rome for two days, and thence
+to Naples, walking over the Monte St. Angelo from Castellamare to
+Amalfi (which for my own part I cherish with fond affection, as
+being far the most lovely thing that I have ever seen), and then
+returning as with a Nunc Dimittis, and I still think it would have
+been very possible; but, on the whole, such a journey would not have
+been so well, for the long tedious road between Marseilles and Paris
+would have twice been traversed by us, to say nothing of the sea
+journey between Marseilles and Civita Vecchia.  However, no more of
+what might have been, let us proceed to what was.
+
+If on Tuesday, June 9 [i.e. 1857], you leave London Bridge at six
+o'clock in the morning, you will get (via Newhaven) to Dieppe at
+fifteen minutes past three.  If on landing you go to the Hotel
+Victoria, you will find good accommodation and a table d'hote at
+five o'clock; you can then go and admire the town, which will not be
+worth admiring, but which will fill you with pleasure on account of
+the novelty and freshness of everything you meet; whether it is the
+old bonnet-less, short-petticoated women walking arm and arm with
+their grandsons, whether the church with its quaint sculpture of the
+Entombment of our Lord, and the sad votive candles ever guttering in
+front of it, or whether the plain evidence that meets one at every
+touch and turn, that one is among people who live out of doors very
+much more than ourselves, or what not--all will be charming, and if
+you are yourself in high spirits and health, full of anticipation
+and well inclined to be pleased with all you see, Dieppe will appear
+a very charming place, and one which a year or two hence you will
+fancy that you would like to revisit.  But now we must leave it at
+forty-five minutes past seven, and at twelve o'clock on Tuesday
+night we shall find ourselves in Paris.  We drive off to the Hotel
+de Normandie in the Rue St. Honore, 290 (I think), stroll out and
+get a cup of coffee, and return to bed at one o'clock.
+
+The next day we spent in Paris, and of it no account need be given,
+save perhaps the reader may be advised to ascend the Arc de
+Triomphe, and not to waste his time in looking at Napoleon's hats
+and coats and shoes in the Louvre; to eschew all the picture rooms
+save the one with the Murillos, and the great gallery, and to dine
+at the Diners de Paris.  If he asks leave to wash his hands before
+dining there, he will observe a little astonishment among the
+waiters at the barbarian cleanliness of the English, and be shown
+into a little room, where a diminutive bowl will be proffered to
+him, of which more anon; let him first (as we did) wash or rather
+sprinkle his face as best he can, and then we will tell him after
+dinner what we generally do with the bowls in question.  I forget
+how many things they gave us, but I am sure many more than would be
+pleasant to read, nor do I remember any circumstance connected with
+the dinner, save that on occasion of one of the courses, the waiter
+perceiving a little perplexity on my part as to how I should manage
+an artichoke served a la francaise, feelingly removed my knife and
+fork from my hand and cut it up himself into six mouthfuls,
+returning me the whole with a sigh of gratitude for the escape of
+the artichoke from a barbarous and unnatural end; and then after
+dinner they brought us little tumblers of warm lavender scent and
+water to wash our mouths out, and the little bowls to spit into; but
+enough of eating, we must have some more coffee at a cafe on the
+Boulevards, watch the carriages and the people and the dresses and
+the sunshine and all the pomps and vanities which the Boulevards
+have not yet renounced; return to the inn, fetch our knapsacks, and
+be off to the Chemin de Fer de Lyon by forty-five minutes past
+seven; our train leaves at five minutes past eight, and we are
+booked to Grenoble.  All night long the train speeds towards the
+south.  We leave Sens with its grey cathedral solemnly towering in
+the moonlight a mile on the left.  (How few remember, that to the
+architect William of Sens we owe Canterbury Cathedral.)
+Fontainebleau is on the right, station after station wakes up our
+dozing senses, while ever in our ears are ringing as through the dim
+light we gaze on the surrounding country, "the pastures of
+Switzerland and the poplar valleys of France."
+
+It is still dark--as dark, that is, as the midsummer night will
+allow it to be, when we are aware that we have entered on a tunnel;
+a long tunnel, very long--I fancy there must be high hills above it;
+for I remember that some few years ago when I was travelling up from
+Marseilles to Paris in midwinter, all the way from Avignon (between
+which place and Chalon the railway was not completed), there had
+been a dense frozen fog; on neither hand could anything beyond the
+road be descried, while every bush and tree was coated with a thick
+and steadily increasing fringe of silver hoar-frost, for the night
+and day, and half-day that it took us to reach this tunnel, all was
+the same--bitter cold dense fog and ever silently increasing hoar-
+frost:  but on emerging from it, the whole scene was completely
+changed; the air was clear, the sun shining brightly, no hoar-frost
+and only a few patches of fast melting snow, everything in fact
+betokening a thaw of some days' duration.  Another thing I know
+about this tunnel which makes me regard it with veneration as a
+boundary line in countries, namely, that on every high ground after
+this tunnel on clear days Mont Blanc may be seen.  True, it is only
+very rarely seen, but I have known those who have seen it; and
+accordingly touch my companion on the side, and say, "We are within
+sight of the Alps"; a few miles farther on and we are at Dijon.  It
+is still very early morning, I think about three o'clock, but we
+feel as if we were already at the Alps, and keep looking anxiously
+out for them, though we well know that it is a moral impossibility
+that we should see them for some hours at the least.  Indian corn
+comes in after Dijon; the oleanders begin to come out of their tubs;
+the peach trees, apricots, and nectarines unnail themselves from the
+walls, and stand alone in the open fields.  The vineyards are still
+scrubby, but the practised eye readily detects with each hour some
+slight token that we are nearer the sun than we were, or, at any
+rate, farther from the North Pole.  We don't stay long at Dijon nor
+at Chalon, at Lyons we have an hour to wait; breakfast off a basin
+of cafe au lait and a huge hunch of bread, get a miserable wash,
+compared with which the spittoons of the Diners de Paris were
+luxurious, and return in time to proceed to St. Rambert, whence the
+railroad branches off to Grenoble.  It is very beautiful between
+Lyons and St. Rambert.  The mulberry trees show the silkworm to be a
+denizen of the country, while the fields are dazzlingly brilliant
+with poppies and salvias; on the other side of the Rhone rise high
+cloud-capped hills, but towards the Alps we strain our eyes in vain.
+
+At St. Rambert the railroad to Grenoble branches off at right angles
+to the main line, it was then only complete as far as Rives, now it
+is continued the whole way to Grenoble; by which the reader will
+save some two or three hours, but miss a beautiful ride from Rives
+to Grenoble by the road.  The valley bears the name of Gresivaudan.
+It is very rich and luxuriant, the vineyards are more Italian, the
+fig trees larger than we have yet seen them, patches of snow whiten
+the higher hills, and we feel that we are at last indeed among the
+outskirts of the Alps themselves.  I am told that we should have
+stayed at Voreppe, seen the Grande Chartreuse (for which see
+Murray), and then gone on to Grenoble, but we were pressed for time
+and could not do everything.  At Grenoble we arrived about two
+o'clock, washed comfortably at last and then dined; during dinner a
+caleche was preparing to drive us on to Bourg d'Oisans, a place some
+six or seven and thirty miles farther on, and by thirty minutes past
+three we find ourselves reclining easily within it, and digesting
+dinner with the assistance of a little packet, for which we paid
+one-and-fourpence at the well-known shop of Mr. Bacon, Market-
+square, Cambridge.  It is very charming.  The air is sweet, warm,
+and sunny, there has been bad weather for some days here, but it is
+clearing up; the clouds are lifting themselves hour by hour, we are
+evidently going to have a pleasant spell of fine weather.  The
+caleche jolts a little, and the horse is decidedly shabby, both qua
+horse and qua harness, but our moustaches are growing, and our
+general appearance is in keeping.  The wine was very pleasant at
+Grenoble, and we have a pound of ripe cherries between us; so, on
+the whole, we would not change with his Royal Highness Prince Albert
+or all the Royal Family, and jolt on through the long straight
+poplar avenue that colonnades the road above the level swamp and
+beneath the hills, and turning a sharp angle enter Vizille, a
+wretched place, only memorable because from this point we begin
+definitely, though slowly, to enter the hills and ascend by the side
+of the Romanche through the valley, which that river either made or
+found--who knows or cares?  But we do know very well that we are
+driving up a very exquisitely beautiful valley, that the Romanche
+takes longer leaps from rock to rock than she did, that the hills
+have closed in upon us, that we see more snow each time the valley
+opens, that the villages get scantier, and that at last a great
+giant iceberg walls up the way in front, and we feast our eyes on
+the long-desired sight till after that the setting sun has tinged it
+purple (a sure sign of a fine day), its ghastly pallor shows us that
+the night is upon us.  It is cold, and we are not sorry at half-past
+nine to find ourselves at Bourg d'Oisans, where there is a very fair
+inn kept by one Martin; we get a comfortable supper of eggs and go
+to bed fairly tired.
+
+This we must remind the reader is Thursday night, on Tuesday morning
+we left London, spent one day in Paris, and are now sleeping among
+the Alps, sharpish work, but very satisfactory, and a prelude to
+better things by and by.  The next day we made rather a mistake,
+instead of going straight on to Briancon we went up a valley towards
+Mont Pelvoux (a mountain nearly 14,000 feet high), intending to
+cross a high pass above La Berarde down to Briancon, but when we got
+to St. Christophe we were told the pass would not be open till
+August, so returned and slept a second night at Bourg d'Oisans.  The
+valley, however, was all that could be desired, mingled sun and
+shadow, tumbling river, rich wood, and mountain pastures, precipices
+all around, and snow-clad summits continually unfolding themselves;
+Murray is right in calling the valley above Venosc a scene of savage
+sterility.  At Venosc, in the poorest of hostelries was a tuneless
+cracked old instrument, half piano, half harpsichord--how it ever
+found its way there we were at a loss to conceive--and an irrelevant
+clock that struck seven times by fits and starts at its own
+convenience during our one o'clock dinner; we returned to Bourg
+d'Oisans at seven, and were in bed by nine.
+
+Saturday, June 13.
+
+Having found that a conveyance to Briancon was beyond our finances,
+and that they would not take us any distance at a reasonable charge,
+we determined to walk the whole fifty miles in the day, and half-way
+down the mountains, sauntering listlessly accordingly left Bourg
+d'Oisans at a few minutes before five in the morning.  The clouds
+were floating over the uplands, but they soon began to rise, and
+before seven o'clock the sky was cloudless; along the road were
+passing hundreds of people (though it was only five in the morning)
+in detachments of from two to nine, with cattle, sheep, pigs, and
+goats, picturesque enough but miserably lean and gaunt:  we leave
+them to proceed to the fair, and after a three miles' level walk
+through a straight poplar avenue, commence ascending far above the
+Romanche; all day long we slowly ascend, stopping occasionally to
+refresh ourselves with vin ordinaire and water, but making steady
+way in the main, though heavily weighted and under a broiling sun,
+at one we reach La Grave, which is opposite the Mont de Lans, a most
+superb mountain.  The whole scene equal to anything in Switzerland,
+as far as the mountains go.  The Mont de Lans is opposite the
+windows, seeming little more than a stone's throw off, and causing
+my companion (whose name I will, with his permission, Italianise
+into that of the famous composer Giuseppe Verdi) to think it a mere
+nothing to mount to the top of those sugared pinnacles which he will
+not believe are many miles distant in reality.  After dinner we
+trudge on, the scenery constantly improving, the snow drawing down
+to us, and the Romanche dwindling hourly; we reach the top of the
+Col du Lautaret, which Murray must describe; I can only say that it
+is first-class scenery.  The flowers are splendid, acres and acres
+of wild narcissus, the Alpine cowslip, gentians, large purple and
+yellow anemones, soldanellas, and the whole kith and kin of the high
+Alpine pasture flowers; great banks of snow lie on each side of the
+road, and probably will continue to do so till the middle of July,
+while all around are glaciers and precipices innumerable.
+
+We only got as far as Monetier after all, for, reaching that town at
+half-past eight, and finding that Briancon was still eight miles
+further on, we preferred resting there at the miserable but cheap
+and honest Hotel de l'Europe; had we gone on a little farther we
+should have found a much better one, but we were tired with our
+forty-two miles' walk, and, after a hasty supper and a quiet pipe,
+over which we watch the last twilight on the Alps above Briancon, we
+turn in very tired but very much charmed.
+
+Sunday morning was the clearest and freshest morning that ever
+tourists could wish for, the grass crisply frozen (for we are some
+three or four thousand feet above the sea), the glaciers descending
+to a level but little higher than the road; a fine range of Alps in
+front over Briancon, and the road winding down past a new river (for
+we have long lost the Romanche) towards the town, which is some six
+or seven miles distant.
+
+It was a fete--the Fete du bon Dieu, celebrated annually on this day
+throughout all this part of the country; in all the villages there
+were little shrines erected, adorned with strings of blue
+corncockle, narcissus heads, and poppies, bunches of green, pink,
+and white calico, moss and fir-tree branches, and in the midst of
+these tastefully arranged bowers was an image of the Virgin and her
+Son, with whatever other saints the place was possessed of.
+
+At Briancon, which we reached (in a trap) at eight o'clock, these
+demonstrations were more imposing, but less pleasing; the soldiers,
+too, were being drilled and exercised, and the whole scene was one
+of the greatest animation, such as Frenchmen know how to exhibit on
+the morning of a gala day.
+
+Leaving our trap at Briancon and making a hasty breakfast at the
+Hotel de la Paix, we walked up a very lonely valley towards
+Cervieres.  I dare not say how many hours we wended our way up the
+brawling torrent without meeting a soul or seeing a human
+habitation; it was fearfully hot too, and we longed for vin
+ordinaire; Cervieres seemed as though it never would come--still the
+same rugged precipices, snow-clad heights, brawling torrent, and
+stony road, butterflies beautiful and innumerable, flowers to match,
+sky cloudless.  At last we are there; through the town, or rather
+village, the river rushes furiously, the dismantled houses and
+gaping walls affording palpable traces of the fearful inundations of
+the previous year, not a house near the river was sound, many quite
+uninhabitable, and more such as I am sure few of us would like to
+inhabit.  However, it is Cervieres such as it is, and we hope for
+our vin ordinaire; but, alas!--not a human being, man, woman or
+child, is to be seen, the houses are all closed, the noonday quiet
+holds the hill with a vengeance, unbroken, save by the ceaseless
+roar of the river.
+
+While we were pondering what this loneliness could mean, and
+wherefore we were unable to make an entrance even into the little
+auberge that professed to loger a pied et a cheval, a kind of low
+wail or chaunt began to make itself heard from the other side of the
+river; wild and strange, yet full of a music of its own, it took my
+friend and myself so much by surprise that we almost thought for the
+moment that we had trespassed on to the forbidden ground of some
+fairy people who lived alone here, high amid the sequestered valleys
+where mortal steps were rare, but on going to the corner of the
+street we were undeceived indeed, but most pleasurably surprised by
+the pretty spectacle that presented itself.
+
+For from the church opposite first were pouring forth a string of
+young girls clad in their Sunday's best, then followed the youths,
+as in duty bound, then came a few monks or friars or some such folk,
+carrying the Virgin, then the men of the place, then the women and
+lesser children, all singing after their own rough fashion; the
+effect was electrical, for in a few minutes the procession reached
+us, and dispersing itself far and wide, filled the town with as much
+life as it had before been lonely.  It was like a sudden
+introduction of the whole company on to the theatre after the stage
+has been left empty for a minute, and to us was doubly welcome as
+affording us some hope of our wine.
+
+"Vous etes Piedmontais, monsieur," said one to me.  I denied the
+accusation.  "Alors vous etes Allemands."  I again denied and said
+we were English, whereon they opened their eyes wide and said,
+"Anglais,--mais c'est une autre chose," and seemed much pleased, for
+the alliance was then still in full favour.  It caused them a little
+disappointment that we were Protestants, but they were pleased at
+being able to tell us that there was a Protestant minister higher up
+the valley which we said would "do us a great deal of pleasure."
+
+The vin ordinaire was execrable--they only, however, charged us nine
+sous for it, and on our giving half a franc and thinking ourselves
+exceedingly stingy for not giving a whole one, they shouted out
+"Voila les Anglais, voila la generosite des Anglais," with evident
+sincerity.  I thought to myself that the less we English corrupted
+the primitive simplicity of these good folks the better; it was
+really refreshing to find several people protesting about one's
+generosity for having paid a halfpenny more for a bottle of wine
+than was expected; at Monetier we asked whether many English came
+there, and they told us yes, a great many, there had been fifteen
+there last year, but I should imagine that scarcely fifteen could
+travel up past Cervieres, and yet the English character be so little
+known as to be still evidently popular.
+
+I don't know what o'clock it was when we left Cervieres--midday I
+should imagine; we left the river on our left and began to ascend a
+mountain pass called Izouard, as far as I could make out, but will
+not pledge myself to have caught the name correctly; it was more
+lonely than ever, very high, much more snow on the top than on the
+previous day over the Col du Lautaret, the path scarcely
+distinguishable, indeed quite lost in many places, very beautiful
+but not so much so as the Col du Lautaret, and better on descending
+towards Queyras than on ascending; from the summit of the pass the
+view of the several Alpine chains about is very fine, but from the
+entire absence of trees of any kind it is more rugged and barren
+than I altogether liked; going down towards Queyras we found the
+letters S.I.C. marked on a rock, evidently with the spike of an
+alpine-stock,--we wondered whether they stood for St. John's
+College.
+
+We reached Queyras at about four very tired, for yesterday's work
+was heavy, and refresh ourselves with a huge omelette and some good
+Provence wine.
+
+Reader, don't go into that auberge, carry up provision from
+Briancon, or at any rate carry the means of eating it:  they have
+only two knives in the place, one for the landlord and one for the
+landlady; these are clasp knives, and they carry them in their
+pockets; I used the landlady's, my companion had the other; the room
+was very like a cow-house--dark, wooden, and smelling strongly of
+manure; outside I saw that one of the beams supporting a huge
+projecting balcony that ran round the house was resting on a capital
+of white marble--a Lombard capital that had evidently seen better
+days, they could not tell us whence it came.  Meat they have none,
+so we gorge ourselves with omelette, and at half-past five trudge
+on, for we have a long way to go yet, and no alternative but to
+proceed.
+
+Abries is the name of the place we stopped at that night; it was
+pitch-dark when we reached it, and the whole town was gone to bed,
+but by great good luck we found a cafe still open (the inn was shut
+up for the night), and there we lodged.  I dare not say how many
+miles we had walked, but we were still plucky, and having prevailed
+at last on the landlord to allow us clean sheets on our beds instead
+of the dirty ones he and his wife had been sleeping on since
+Christmas, and making the best of the solitary decanter and pie dish
+which was all the washing implements we were allowed (not a toothmug
+even extra), we had coffee and bread and brandy for supper, and
+retired at about eleven to the soundest sleep in spite of our
+somewhat humble accommodation.  If nasty, at any rate it was cheap;
+they charged us a franc a piece for our suppers, beds, and two
+cigars; we went to the inn to breakfast, where, though the
+accommodation was somewhat better, the charge was most extortionate.
+Murray is quite right in saying the travellers should bargain
+beforehand at this inn (chez Richard); I think they charged us five
+francs for the most ordinary breakfast.  From this place we started
+at about nine, and took a guide as far as the top of the Col de la
+Croix Haute, having too nearly lost our way yesterday; the paths
+have not been traversed much yet, and the mule and sheep droppings
+are but scanty indicators of the direction of paths of which the
+winds and rain have obliterated all other traces.
+
+The Col de la Croix Haute is rightly named, it was very high, but
+not so hard to ascend until we reached the snow.  On the Italian
+side it is terribly steep, from the French side, however, the slope
+is more gradual.  The snow was deeper at the top of this pass than
+on either of the two previous days; in many places we sank deep in,
+but had no real difficulty in crossing; on the Italian side the snow
+was gone and the path soon became clear enough, so we sent our guide
+to the right about and trudged on alone.
+
+A sad disappointment, however, awaited us, for instead of the clear
+air that we had heretofore enjoyed, the clouds were rolling up from
+the valley, and we entirely lost the magnificent view of the plains
+of Lombardy which we ought to have seen; this was our first mishap,
+and we bore it heroically.  A lunch may be had at Prali, and there
+the Italian tongue will be heard for the first time.
+
+We must have both looked very questionable personages, for I
+remember that a man present asked me for a cigar; I gave him two,
+and he proffered a sou in return as a matter of course.
+
+Shortly below Prali the clouds drew off, or rather we reached a
+lower level, so that they were above us, and now the walnut and the
+chestnut, the oak and the beech have driven away the pines of the
+other side, not that there were many of them; soon, too, the
+vineyards come in, the Indian corn again flourishes everywhere, the
+cherries grow ripe as we descend, and in an hour or two we felt to
+our great joy that we were fairly in Italy.
+
+The descent is steep beyond compare, for La Tour, which we reached
+by four o'clock, is quite on the plain, very much on a level with
+Turin--I do not remember any descent between the two--and the pass
+cannot be much under eight thousand feet.
+
+Passports are asked at Bobbio, but the very sight of the English
+name was at that time sufficient to cause the passport to be
+returned unscrutinised.
+
+La Tour is a Protestant place, or at any rate chiefly so, indeed all
+the way from Cervieres we have been among people half Protestant and
+half Romanist; these were the Waldenses of the Middle Ages, they are
+handsome, particularly the young women, and I should fancy an honest
+simple race enough, but not over clean.
+
+As a proof that we were in Italy we happened while waiting for table
+d'hote to be leaning over the balcony that ran round the house and
+passed our bedroom door, when a man and a girl came out with two
+large pails in their hands, and we watched them proceed to a cart
+with a barrel in it, which was in a corner of the yard; we had been
+wondering what was in the barrel and were glad to see them commence
+tapping it, when lo! out spouted the blood-red wine with which they
+actually half filled their pails before they left the spot.  This
+was as Italy should be.  After dinner, too, as we stroll in the
+showy Italian sort of piazza near the inn, the florid music which
+fills the whole square, accompanied by a female voice of some
+pretensions, again thoroughly Italianises the scene, and when she
+struck up our English national anthem (with such a bass
+accompaniment!) nothing could be imagined more incongruous.
+
+Sleeping at La Tour at the hotel kept by M. Gai (which is very good,
+clean, and cheap), we left next morning, i.e. Tuesday, June 16, at
+four by diligence for Pinerolo, thence by rail to Turin where we
+spent the day.  It was wet and we saw no vestiges of the Alps.
+
+Turin is a very handsome city, very regularly built, the streets
+running nearly all parallel to and at right angles with each other;
+there are no suburbs, and the consequence is that at the end of
+every street one sees the country; the Alps surround the city like a
+horseshoe, and hence many of the streets seem actually walled in
+with a snowy mountain.  Nowhere are the Alps seen to greater
+advantage than from Turin.  I speak from the experience, not of the
+journey I am describing, but of a previous one.  From the Superga
+the view is magnificent, but from the hospital for soldiers just
+above the Po on the eastern side of the city the view is very
+similar, and the city seen to greater advantage.  The Po is a fine
+river, but very muddy, not like the Ticino which has the advantage
+of getting washed in the Lago Maggiore.  On the whole Turin is well
+worth seeing.  Leaving it, however, on Wednesday morning we arrived
+at Arona about half-past eleven:  the country between the two places
+is flat, but rich and well cultivated:  much rice is grown, and in
+consequence the whole country easily capable of being laid under
+water, a thing which I should imagine the Piedmontese would not be
+slow to avail themselves of; we ought to have had the Alps as a
+background to the view, but they were still veiled.  It was here
+that a countryman, seeing me with one or two funny little pipes
+which I had bought in Turin, asked me if I was a fabricante di pipi-
+-a pipe-maker.
+
+By the time that we were at Arona the sun had appeared, and the
+clouds were gone; here, too, we determined to halt for half a day,
+neither of us being quite the thing, so after a visit to the
+colossal statue of San Carlo, which is very fine and imposing, we
+laid ourselves down under the shade of some chestnut trees above the
+lake, and enjoyed the extreme beauty of everything around us, until
+we fell fast asleep, and yet even in sleep we seemed to retain a
+consciousness of the unsurpassable beauty of the scene.  After
+dinner (we were stopping at the Hotel de la Poste, a very nice inn
+indeed) we took a boat and went across the lake to Angera, a little
+town just opposite; it was in the Austrian territory, but they made
+no delay about admitting us; the reason of our excursion was, that
+we might go and explore the old castle there, which is seated on an
+inconsiderable eminence above the lake.  It affords an excellent
+example of Italian domestic Gothic of the Middle Ages; San Carlo was
+born and resided here, and, indeed, if saintliness were to depend
+upon beauty of natural scenery, no wonder at his having been a
+saint.
+
+The castle is only tenanted by an old man who keeps the place; we
+found him cooking his supper over a small crackling fire of sticks,
+which he had lighted in the main hall; his feeble old voice chirps
+about San Carlo this and San Carlo that as we go from room to room.
+We have no carpets here--plain honest brick floors--the chairs,
+indeed, have once been covered with velvet, but they are now so worn
+that one can scarcely detect that they have been so, the tables
+warped and worm-eaten, the few, that is, that remained there, the
+shutters cracked and dry with the sun and summer of so many hundred
+years--no Renaissance work here, yet for all that there was
+something about it which made it to me the only really pleasurable
+nobleman's mansion that I have ever been over; the view from the top
+is superb, and then the row home to Arona, the twinkling lights
+softly gleaming in the lake, the bells jangling from the tall and
+gaudy campaniles, the stillness of the summer night--so warm and yet
+so refreshing on the water; hush, there are some people singing--how
+sweetly their voices are borne to us upon the slight breath of wind
+that alone is stirring; oh, it is a cruel thing to think of war in
+connection with such a spot as this, and yet from this very Angera
+to this very Arona it is that the Austrians have been crossing to
+commence their attack on Sardinia.  I fear these next summer nights
+will not be broken with the voice of much singing and that we shall
+have to hush for the roaring of cannon.
+
+I never knew before how melodiously frogs can croak--there is a
+sweet guttural about some of these that I never heard in England:
+before going to bed, I remember particularly one amorous batrachian
+courting malgre sa maman regaled us with a lusciously deep rich
+croak, that served as a good accompaniment for the shrill whizzing
+sound of the cigales.
+
+My space is getting short, but fortunately we are getting on to
+ground better known; I will therefore content myself with sketching
+out the remainder of our tour and leaving the reader to Murray for
+descriptions.
+
+We left Arona with regret on Thursday morning (June 18), took
+steamer to the Isola Bella, which is an example of how far human
+extravagance and folly can spoil a rock, which had it been left
+alone would have been very beautiful, and thence by a little boat
+went to Baveno; thence we took diligence for Domo d'Ossola; the
+weather clouded towards evening and big raindrops beginning to
+descend we thought it better to proceed at once by the same
+diligence over the Simplon; we did not care to walk the pass in wet,
+therefore leaving Domo d'Ossola at ten o'clock that night we arrived
+at Iselle about two; the weather clearing we saw the gorge of Gondo
+and walked a good way up the pass in the early morning by the
+diligence; breakfasted at Simplon at four o'clock in the morning,
+and without waiting a moment as soon as we got out at Brieg set off
+for Visp, which we reached at twelve on foot; we washed and dressed
+there, dined and advanced to Leuk, and thence up the most
+exquisitely beautiful road to Leukerbad, which we reached at about
+eight o'clock after a very fatiguing day.  The Hotel de la France is
+clean and cheap.  Next morning we left at half-past five and,
+crossing the Gemini, got to Frutigen at half-past one, took an open
+trap after dinner and drove to Interlaken, which we reached on the
+Saturday night at eight o'clock, the weather first rate; Sunday we
+rested at Interlaken; on Monday we assailed the Wengern Alp, but the
+weather being pouring wet we halted on the top and spent the night
+there, being rewarded by the most transcendent evening view of the
+Jungfrau, Eiger, and Monch in the clear cold air seen through a thin
+veil of semi-transparent cloud that was continually scudding across
+them.
+
+Next morning early we descended to Grindelwald, thence past the
+upper glacier under the Wetterhorn over the Scheidegg to Rosenlaui,
+where we dined and saw the glacier, after dinner, descending the
+valley we visited the falls of Reichenbach (which the reader need
+not do if he means to see those of the Aar at Handegg), and leaving
+Meyringen on our left we recommenced an ascent of the valley of the
+Aar, sleeping at Guttannen, about ten miles farther on.
+
+Next day, i.e. Wednesday, June 24, leaving Guttannen very early,
+passing the falls of Handegg, which are first rate, we reached the
+hospice at nine; had some wine there, and crawled on through the
+snow and up the rocks to the summit of the pass--here we met an old
+lady, in a blue ugly, with a pair of green spectacles, carried in a
+chaise a porteur; she had taken it into her head in her old age that
+she would like to see a little of the world, and here she was.  We
+had seen her lady's maid at the hospice, concerning whom we were
+told that she was "bien sage," and did not scream at the precipices.
+On the top of the Gemini, too, at half-past seven in the morning, we
+had met a somewhat similar lady walking alone with a blue parasol
+over the snow; about half an hour after we met some porters carrying
+her luggage, and found that she was an invalid lady of Berne, who
+was walking over to the baths at Leukerbad for the benefit of her
+health--we scarcely thought there could be much occasion--leaving
+these two good ladies then, let us descend the Grimsel to the bottom
+of the glacier of the Rhone, and then ascend the Furka--a stiff
+pull; we got there by two o'clock, dined (Italian is spoken here
+again), and finally reached Hospenthal at half-past five after a
+very long day.
+
+On Thursday walking down to Amstegg and taking a trap to Fluelen, we
+then embarked on board a steamer and had a most enjoyable ride to
+Lucerne, where we slept; Friday to Basle by rail, walking over the
+Hauenstein, {2} and getting a magnificent panorama (alas! a final
+one) of the Alps, and from Basle to Strasburg, where we ascended the
+cathedral as far as they would let us without special permission
+from a power they called Mary, and then by the night train to Paris,
+where we arrived Saturday morning at ten.
+
+Left Paris on Sunday afternoon, slept at Dieppe; left Dieppe Monday
+morning, got to London at three o'clock or thereabouts, and might
+have reached Cambridge that night had we been so disposed; next day
+came safely home to dear old St. John's, cash in hand 7d.
+
+From my window {3} in the cool of the summer twilight I look on the
+umbrageous chestnuts that droop into the river; Trinity library
+rears its stately proportions on the left; opposite is the bridge;
+over that, on the right, the thick dark foliage is blackening almost
+into sombreness as the night draws on.  Immediately beneath are the
+arched cloisters resounding with the solitary footfall of meditative
+students, and suggesting grateful retirement.  I say to myself then,
+as I sit in my open window, that for a continuance I would rather
+have this than any scene I have visited during the whole of our most
+enjoyed tour, and fetch down a Thucydides, for I must go to Shilleto
+at nine o'clock to-morrow.
+
+
+
+
+TRANSLATION FROM AN UNPUBLISHED WORK OF HERODOTUS
+
+
+
+This piece and the ten that follow it date from Butler's
+undergraduate days.  They were preserved by the late Canon Joseph
+McCormick, who was Butler's contemporary at Cambridge and knew him
+well.
+
+In a letter to THE TIMES, published 27 June, 1902, shortly after
+Butler's death, Canon McCormick gave some interesting details of
+Butler's Cambridge days.  "I have in my possession," he wrote, "some
+of the skits with which he amused himself and some of his personal
+friends.  Perhaps the skit professed to be a translation from
+Thucydides, inimitable in its way, applied to Johnians in their
+successes or defeats on the river, or it was the 'Prospectus of the
+Great Split Society,' attacking those who wished to form narrow or
+domineering parties in the College, or it was a very striking poem
+on Napoleon in St. Helena, or it was a play dealing with a visit to
+the Paris Exhibition, which he sent to PUNCH, and which, strange to
+say, the editor never inserted, or it was an examination paper set
+to a gyp of a most amusing and clever character."  One at least of
+the pieces mentioned by Canon McCormick has unfortunately
+disappeared.  Those that have survived are here published for what
+they are worth.  There is no necessity to apologise for their faults
+and deficiencies, which do not, I think, obscure their value as
+documents illustrating the development of that gift of irony which
+Butler was afterwards to wield with such brilliant mastery.
+'Napoleon at St. Helena' and 'The Shield of Achilles' have already
+appeared in THE EAGLE, December, 1902; the "Translation from
+Herodotus," "The Shield of Achilles," "The Two Deans II," and "On
+the Italian Priesthood," in THE NOTE-BOOKS OF SAMUEL BUTLER; the
+"Prospectus of the Great Split Society" and "A Skit on Examinations"
+in THE EAGLE, June, 1913.
+
+
+And the Johnians practise their tub in the following manner:  They
+select eight of the most serviceable freshmen and put these into a
+boat, and to each one of them they give an oar; and having told them
+to look at the backs of the men before them they make them bend
+forward as far as they can and at the same moment, and having put
+the end of the oar into the water pull it back again in to them
+about the bottom of the ribs; and if any of them does not do this or
+looks about him away from the back of the man before him they curse
+him in the most terrible manner, but if he does what he is bidden
+they immediately cry out:
+
+"Well pulled, number so-and-so."
+
+For they do not call them by their names but by certain numbers,
+each man of them having a number allotted to him in accordance with
+his place in the boat, and the first man they call stroke, but the
+last man bow; and when they have done this for about fifty miles
+they come home again, and the rate they travel at is about twenty-
+five miles an hour; and let no one think that this is too great a
+rate, for I could say many other wonderful things in addition
+concerning the rowing of the Johnians, but if a man wishes to know
+these things he must go and examine them himself.  But when they
+have done they contrive some such a device as this, for they make
+them run many miles along the side of the river in order that they
+may accustom them to great fatigue, and many of them being
+distressed in this way fall down and die, but those who survive
+become very strong, and receive gifts of cups from the others; and
+after the revolution of a year they have great races with their
+boats against those of the surrounding islanders, but the Johnians,
+both owing to the carefulness of the training and a natural
+disposition for rowing, are always victorious.  In this way then the
+Johnians, I say, practise their tub.
+
+
+
+THE SHIELD OF ACHILLES, WITH VARIATIONS
+
+
+
+And in it he placed the Fitzwilliam and King's College Chapel and
+the lofty towered church of the Great Saint Mary, which looketh
+toward the Senate House, and King's Parade and Trumpington Road and
+the Pitt Press and the divine opening of the Market Square and the
+beautiful flowing fountain which formerly Hobson laboured to make
+with skilful art; him did his father beget in the many-public-housed
+Trumpington from a slavey mother, and taught him blameless works;
+and he, on the other hand, sprang up like a young shoot, and many
+beautifully matched horses did he nourish in his stable, which used
+to convey his rich possessions to London and the various cities of
+the world; but oftentimes did he let them out to others and
+whensoever anyone was desirous of hiring one of the long-tailed
+horses, he took them in order so that the labour was equal to all,
+wherefore do men now speak of the choice of the renowned Hobson.
+And in it he placed the close of the divine Parker, and many
+beautiful undergraduates were delighting their tender minds upon it
+playing cricket with one another; and a match was being played and
+two umpires were quarrelling with one another; the one saying that
+the batsman who was playing was out, and the other declaring with
+all his might that he was not; and while they two were contending,
+reviling one another with abusive language, a ball came and hit one
+of them on the nose, and the blood flowed out in a stream, and
+darkness was covering his eyes, but the rest were crying out on all
+sides:
+
+"Shy it up."
+
+And he could not; him then was his companion addressing with
+scornful words:
+
+"Arnold, why dost thou strive with me since I am much wiser?  Did I
+not see his leg before the wicket and rightly declare him to be out?
+Thee then has Zeus now punished according to thy deserts, and I will
+seek some other umpire of the game equally-participated-in-by-both-
+sides."
+
+And in it he placed the Cam, and many boats equally rowed on both
+sides were going up and down on the bosom of the deep-rolling river,
+and the coxswains were cheering on the men, for they were going to
+enter the contest of the scratchean fours; and three men were rowing
+together in a boat, strong and stout and determined in their hearts
+that they would either first break a blood-vessel or earn for
+themselves the electroplated-Birmingham-manufactured magnificence of
+a pewter to stand on their hall tables in memorial of their
+strength, and from time to time drink from it the exhilarating
+streams of beer whensoever their dear heart should compel them; but
+the fourth was weak and unequally matched with the others, and the
+coxswain was encouraging him and called him by name and spake
+cheering words:
+
+"Smith, when thou hast begun the contest, be not flurried nor strive
+too hard against thy fate; look at the back of the man before thee
+and row with as much strength as the Fates spun out for thee on the
+day when thou fellest between the knees of thy mother, neither lose
+thine oar, but hold it tight with thy hands."
+
+
+
+PROSPECTUS OF THE GREAT SPLIT SOCIETY
+
+
+
+It is the object of this society to promote parties and splits in
+general, and since of late we have perceived disunion among friends
+to be not nearly so ripe as in the Bible it is plainly commanded to
+be, we the members of this club have investigated the means of
+producing, fostering, and invigorating strife of all kinds, whereby
+the society of man will be profited much.  For in a few hours we can
+by the means we have discovered create so beautiful a dissension
+between two who have lately been friends, that they shall never
+speak of one another again, and their spirit is to be greatly
+admired and praised for this.  And since it is the great goddess
+Talebearer who has contributed especially to our success, inasmuch
+as where she is not strife will cease as surely as the fire goeth
+out when there is no wood to feed it, we will erect an altar to her
+and perform monthly rites at her shrine in a manner hereafter to be
+detailed.  And all men shall do homage to her, for who is there that
+hath not felt her benefits?  And the rites shall be of a cheerful
+character, and all the world shall be right merry, and we will write
+her a hymn and Walmisley {4} shall set it to music.  And any shall
+be eligible to this society by only changing his name; for this is
+one of its happiest hits, to give a name to each of its members
+arising from some mental peculiarity (which the gods and peacemakers
+call "foible"), whereby each being perpetually kept in mind of this
+defect and being always willing to justify it shall raise a clamour
+and cause much delight to the assembly.
+
+And we will have suppers once a month both to do honour unto
+Talebearer and to promote her interest.  And the society has laid
+down a form of conversation to be used at all such meetings, which
+shall engender quarrellings even in the most unfavourable
+dispositions, and inflame the anger of one and all; and having
+raised it shall set it going and start it on so firm a basis as that
+it may be left safely to work its own way, for there shall be no
+fear of its dying out.
+
+And the great key to this admirable treasure-house is Self, who hath
+two beautiful children, Self-Love and Self-Pride . . . We have also
+aided our project much by the following contrivance, namely, that
+ten of the society, the same who have the longest tongues and ears,
+shall make a quorum to manage all affairs connected with it; and it
+is difficult to comprehend the amount of quarrelling that shall go
+on at these meetings.
+
+And the monthly suppers shall be ordered in this way:  Each man must
+take at least two tablespoonfuls of vinegar, which shall make the
+wit sharp, or in default thereof one teaspoonful of pepper and
+mustard; for the rest we leave the diet to the management of our
+stewards and bursars, but after the cloth has been removed the
+president shall single out some one of the company, and in a calm
+and friendly manner acquaint him with his faults and advise him in
+what way he may best amend the same.  The member selected is
+compelled by the rules to remain silent for the space of three
+minutes, and is then to retort and bring up six instances.  He is to
+call the present members to witness, and all are to take one side or
+the other, so that none be neutral, and the melee will doubtless
+become general, and we expect that much beautiful latent abusive
+talent will be developed in this way.  But let all this be done with
+an air of great politeness, sincerity, and goodwill, at least at the
+commencement, for this, when evidently fictitious, is a two-edged
+sword of irritation.
+
+And if any grow weak in spirit and retreat from this society, and
+afterwards repent and wish again to join, he shall be permitted to
+do so on condition of repeating the words, "Oh, ah!"  "Lor!"  "Such
+is life," "That's cheerful," "He's a lively man, is Mr. So-and-so"
+ten times over.  For these are refreshing and beautiful words and
+mean much (!), they are the emblems of such talent.
+
+And any members are at liberty to have small meetings among
+themselves, especially to tea, whereat they may enjoy the ever fresh
+and pleasant luxury of scandal and mischief-making, and prepare
+their accusations and taunts for the next general meeting; and this
+is not only permitted but enjoined and recommended strongly to all
+the members.
+
+And sentences shall be written for the training of any young hand
+who wishes to become one of us, since none can hope to arrive at
+once at the pitch of perfection to which the society has brought the
+art.  And if that any should be heard of his own free will and
+invention uttering one or more of these sentences and by these means
+indicate much talent in the required direction, he shall be waited
+on by a committee of the club and induced, if possible, to join us,
+for he will be an acquisition; and the sentences required are such
+as:  "I think so-and-so a very jolly fellow, indeed I don't know a
+man in the college I like better than so-and-so, but I don't care
+twopence about him, at least it is all the same to me whether he
+cuts me or not."
+
+The beauty of this sentence is not at first appreciable, for though
+self-deceit and self-satisfaction are both very powerfully
+demonstrated in it, and though these are some of the society's most
+vehement supporters, yet it is the good goddess Talebearer who
+nourisheth the seed of mischief thus sown.
+
+It is also strictly forbidden by this society's laws to form a firm
+friendship grounded upon esteem and a perception of great and good
+qualities in the object of one's liking, for this kind of friendship
+lasts a long time--nay, for life; but each member must have a
+furious and passionate running after his friend for the time being,
+insomuch that he could never part for an instant from him.  And when
+the society sees this it feels comfortable, for it is quite certain
+that its objects are being promoted, for this cannot be brought
+about by any but unnatural means and is the foundation and very soul
+of quarrelling.  The stroking of the hair and affectionate
+embracings are much recommended, for they are so manly.
+
+And at the suppers and the rites of Talebearer each member is to
+drop an anonymous opinion of some other member's character into a
+common letter box, and the president shall read them out.  Each
+member is to defend himself; the formula for the commencement of
+each speech being:  "I know who wrote that about me, and it is a
+very blackguardly thing of him to say . . . "
+
+N.B.--Any number of persons are allowed to speak at the same time.
+By these means it is hoped to restore strife and dissension to the
+world, now alas! so fatally subjugated to a mean-spirited thing
+called Charity, which during the last month has been perfectly
+rampant in the college.  Yes, we will give a helping hand to
+bickerings, petty jealousies, back-bitings, and all sorts of good
+things, and will be as jolly as ninepence and--who'll be the first
+president?
+
+
+
+POWERS
+
+
+
+But, my son, think not that it is necessary for thee to be excellent
+if thou wouldst be powerful.  Observe how the lighter substance in
+nature riseth by its own levity and overtoppeth that which is the
+more grave.  Even so, my son, mayest thou be light and worthless,
+and yet make a goodly show above those who are of a more intrinsic
+value than thyself.  But as much circumspection will be necessary
+for thee to attain this glorious end, and as by reason of thy youth
+thou art liable to miss many of the most able and effective means of
+becoming possessed of it, hear the words of an old man and treasure
+them in thy heart.  The required qualities, my son, are easily
+procured; many are naturally gifted with them.  In order, however,
+that thou mayest keep them in set form in thy mind commit to memory
+the following list of requisites:  Love of self, love of show, love
+of sound, reserve, openness, distrust.
+
+The love of self, which shall chiefly manifest itself in the
+obtaining the best of all things for thyself to the exclusion of
+another, be he who he may; and as meal-times are the fittest
+occasion for the exercise of this necessary quality, I will even
+illustrate my meaning that thou mayest the more plainly comprehend
+me.  Suppose that many are congregated to a breakfast and there is a
+dish of kidneys on the table, but not so many but what the greater
+number must go without them, cry out with a loud voice, immediately
+that thou hast perceived them:  "Kidneys!  Oh, ah!  I say, G., old
+fellow, give us some kidneys."  Then will the master of the house be
+pleased that he hath provided something to thy liking, and as others
+from false shame will fear to do the like thou wilt both obtain that
+thy soul desireth, and be looked upon by thy fellows as a bold
+fellow and one who knoweth how to make his way in the world, and G.
+will say immediately:  "Waiter, take this to Mr. Potguts," and he
+taketh them, and so on, my son, with all other meats that are on the
+table, see thou refrain not from one of them, for a large appetite
+well becometh a power, or if not a large one then a dainty one.  But
+if thine appetite be small and dainty see thou express contempt for
+a large eater as one inferior to thyself.  Or again, my son, if thou
+art not at a banquet but enterest any room where there are many met
+together, see thou take the arm-chair or the best seat or couch, or
+what other place of comfort is in the room; and if there be another
+power in the room as well as thyself see thou fight with him for it,
+and if thou canst by any craft get rid of him an he be more thickly
+set than thyself, see that thou do this openly and with a noise,
+that all men may behold and admire thee, for they will fear thee and
+yield and not venture to reprove thee openly; and so long as they
+dare not, all will be well.  Nevertheless I would have thee keep
+within certain bounds, lest men turn upon thee if thy rule is too
+oppressive to be borne.  And under this head I would class also the
+care and tending of the sick; for in the first place the sick have
+many delicacies which those who are sound have not, so that if thou
+lay the matter well, thou mayest obtain the lion's share of these
+things also.  But more particularly the minds of men being weak and
+easily overpowered when they are in sickness, thou shalt obtain much
+hold over them, and when they are well (whether thou didst really
+comfort them or not) they will fear to say aught against thee, lest
+men shall accuse them of ingratitude.  But above all see thou do
+this openly and in the sight of men, who thinking in consequence
+that thy heart is very soft and amiable notwithstanding a few
+outward defects, will not fail to commend thee and submit to thee
+the more readily, and so on all counts thou art the gainer, and it
+will serve thee as an excuse with the authorities for the neglect or
+breach of duty.  But all this is the work of an exceedingly refined
+and clever power and not absolutely necessary, but I have named it
+as a means of making thy yoke really the lighter but nevertheless
+the more firmly settled upon the neck of thy fellows.  So much then
+for the love of self.
+
+As for the love of show this is to display itself in thy dress, in
+the trimming or in the growth of thy whiskers, in thy walk and
+carriage, in the company thou keepest, seeing that thou go with none
+but powers or men of wealth or men of title, and caring not so much
+for men of parts, since these commonly deal less in the exterior and
+are not fit associates, for thou canst have nothing in common with
+them.  When thou goest to thy dinner let a time elapse, so that
+thine entry may cause a noise and a disturbance, and when after much
+bustling thou hast taken thy seat, say not:  "Waiter, will you order
+me green peas and a glass of college," but say:  "Waiter (and then a
+pause), peas," and then suffer him to depart, and when he hath gone
+some little way recall him with a loud voice, which shall reach even
+unto the ears of the fellows, say, "and, waiter, college"; and when
+they are brought unto thee complain bitterly of the same.  When thou
+goest to chapel talk much during the service, or pray much; do not
+the thing by halves; thou must either be the very religious power,
+which kind though the less remarked yet on the whole hath the
+greater advantage, or the thoughtless power, but above all see thou
+combine not the two, at least not in the same company, but let thy
+religion be the same to the same men.  Always, if thou be a careless
+power, come in late to chapel and hurriedly; sit with the other
+powers and converse with them on the behaviour of others or any
+other light and agreeable topic.  And, as I said above, under this
+love of show thou must include the choice of thine acquaintance, and
+as it is not possible for thee to order it so as not to have
+knowledge of certain men whom it will not be convenient for thee to
+know at all times and in all places, see thou cultivate those two
+excellent defects of both sight and hearing which will enable thee
+to pass one thou wouldst not meet, without seeing him or hearing his
+salutation.  If thou hast a cousin or schoolfellow who is somewhat
+rustic or uncouth in his manner but nevertheless hath an excellent
+heart, know him in private in thine individual capacity, but when
+thou art abroad or in the company of other powers shun him as if he
+were a venomous thing and deadly.  Again, if thou sittest at table
+with a man at the house of a friend and laughest and talkest with
+him and playest pleasant, if he be not perfect in respect of
+externals see thou pass him the next day without a smile, even
+though he may have prepared his countenance for a thousand grins;
+but if in the house of the same friend or another thou shouldst
+happen to stumble upon him, deal with him as though thy previous
+conversation had broken off but five minutes previously; but should
+he be proud and have all nothing to say unto thee, forthwith
+calumniate him to thine acquaintance as a sorry-spirited fellow and
+mean.
+
+And with regard to smoking, though that, too, is advantageous, it is
+not necessary so much for the power as for the fast man, for the
+power is a more calculating and thoughtful being than this one; but
+if thou smokest, see that others know it; smoke cigars if thou canst
+afford them; if not, say thou wonderest at such as do, for to thy
+liking a pipe is better.  And with regard to all men except thine
+own favoured and pre-eminent clique, designate them as "cheerful,"
+"lively," or use some other ironical term with regard to them.  So
+much then for the love of show.
+
+And of the love of sound I would have thee observe that it is but a
+portion of the love of show, but so necessary for him who would be
+admired without being at the same time excellent and worthy of
+admiration as to deserve a separate heading to itself.  At meal-
+times talk loudly, laugh loudly, condemn loudly; if thou sneezest
+sneeze loudly; if thou call the waiter do so with a noise and, if
+thou canst, while he is speaking to another and receiving orders
+from him; it will be a convenient test of thine advance to see
+whether he will at once quit the other in the midst of his speech
+with him and come to thee, or will wait until the other hath done;
+if thou handle it well he will come to thee at once.  When others
+are in their rooms, as thou passeth underneath their windows, sing
+loudly and all men will know that a power goeth by and will hush
+accordingly; if thou hast a good voice it will profit thee much, if
+a bad one, care not so long as it be a loud one; but above all be it
+remembered that it is to be loud at all times and not low when with
+powers greater than thyself, for this damneth much--even powers
+being susceptible of awe, when they shall behold one resolutely bent
+to out-top them, and thinking it advisable to lend such an one a
+helping hand lest he overthrow them--but if thy voice be not a loud
+one, thou hadst better give up at once the hope of rising to a
+height by thine own skill, but must cling to and flatter those who
+have, and if thou dost this well thou wilt succeed.
+
+And of personal strength and prowess in bodily accomplishment,
+though of great help in the origin, yet are they not necessary; but
+the more thou lackest physical and mental powers the more must thou
+cling to the powerful and rise with them; the more careful must thou
+be of thy dress, and the more money will it cost thee, for thou must
+fill well the bladders that keep thee on the surface, else wilt thou
+sink.
+
+And of reserve, let no man know anything about thee.  If thy father
+is a greengrocer, as I dare say is the case with some of the most
+mighty powers in the land, what matter so long as another knoweth it
+not?  See that thou quell all inquisitive attempts to discover
+anything about thine habits, thy country, thy parentage, and, in a
+word, let no one know anything of thee beyond the exterior; for if
+thou dost let them within thy soul, they will find but little, but
+if it be barred and locked, men will think that by reason of thy
+strong keeping of the same, it must contain much; and they will
+admire thee upon credit.
+
+And of openness, be reserved in the particular, open in the general;
+talk of debts, of women, of money, but say not what debts, what
+women, or what money; be most open when thou doest a shabby thing,
+which thou knowest will not escape detection.  If thy coat is bad,
+laugh and boast concerning it, call attention to it and say thou
+hast had it for ten years, which will be a lie, but men will
+nevertheless think thee frank, but run not the risk of wearing a bad
+coat, save only in vacation time or in the country.  But when thou
+doest a shabby thing which will not reach the general light, breathe
+not a word of it, but bury it deeply in some corner of thine own
+knowledge only; if it come out, glory in it; if not, let it sleep,
+for it is an unprofitable thing to turn over bad ground.
+
+And of distrust, distrust all men, most of all thine own friends;
+they will know thee best, and thou them; thy real worth cannot
+escape them, think not then that thou wilt get service out of them
+in thy need, think not that they will deny themselves that thou
+mayest be saved from want, that they will in after life put out a
+finger to save thee, when thou canst be of no more use to them, the
+clique having been broken up by time.  Nay, but be in thyself
+sufficient; distrust, and lean not so much as an ounce-weight upon
+another.
+
+These things keep and thou shalt do well; keep them all and thou
+wilt be perfect; the more thou keep, the more nearly wilt thou
+arrive at the end I proposed to thee at the commencement, and even
+if thou doest but one of these things thoroughly, trust me thou wilt
+still have much power over thy fellows.
+
+
+
+A SKIT ON EXAMINATIONS
+
+
+
+[It should be explained that Tom Bridges was a gyp at St. John's
+College, during Butler's residence at Cambridge.]
+
+We now come to the most eventful period in Mr. Bridges' life:  we
+mean the time when he was elected to the shoe-black scholarship,
+compared with which all his previous honours sank into
+insignificance.
+
+Mr. Bridges had long been desirous of becoming a candidate for this
+distinction, but, until the death of Mr. Leader, no vacancy having
+occurred among the scholars, he had as yet had no opportunity of
+going in for it.  The income to be derived from it was not
+inconsiderable, and as it led to the porter fellowship the mere
+pecuniary value was not to be despised, but thirst of fame and the
+desire of a more public position were the chief inducements to a man
+of Mr. Bridges' temperament, in which ambition and patriotism formed
+so prominent a part.  Latin, however, was not Mr. Bridges' forte; he
+excelled rather in the higher branches of arithmetic and the
+abstruse sciences.  His attainments, however, in the dead languages
+were beyond those of most of his contemporaries, as the letter he
+sent to the Master and Seniors will abundantly prove.  It was
+chiefly owing to the great reverence for genius shown by Dr. Tatham
+that these letters have been preserved to us, as that excellent man,
+considering that no circumstance connected with Mr. Bridges'
+celebrity could be justly consigned to oblivion, rescued these
+valuable relics from the Bedmaker, as she was on the point of using
+them to light the fire.  By him they were presented to the author of
+this memoir, who now for the first time lays them before the public.
+The first was to the Master himself, and ran as follows:-
+
+
+Reverende Sir,
+
+Possum bene blackere shoas, et locus shoe-blackissis vacuus est.
+Makee me shoeblackum si hoc tibi placeat, precor te, quia desidero
+hoc locum.
+
+Your very humble servant,
+THOMASUS BRIDGESSUS.
+
+
+We subjoin Mr. Bridges' autograph.  The reader will be astonished to
+perceive its resemblance to that of Napoleon I, with whom he was
+very intimate, and with anecdotes of whom he used very frequently to
+amuse his masters.  We add that of Napoleon.
+
+
+THOMAS BRIDGES
+NAPOLEON
+
+
+The second letter was to the Senior Bursar, who had often before
+proved himself a friend to Mr Bridges, and did not fail him in this
+instance.
+
+
+BURSARE SENIOR,
+
+Ego humiliter begs pardonum te becausus quaereri dignitatum
+shoeblacki and credo me getturum esse hoc locum.
+
+Your humble servant,
+THOMASUS BRIDGESSUS.
+
+
+Shortly afterwards Mr. Bridges was called upon, with six other
+competitors, to attend in the Combination Room, and the following
+papers were submitted to him.
+
+
+I
+
+1.  Derive the word "blacking."  What does Paley say on this
+subject?  Do you, or do you not, approve of Paley's arguments, and
+why?  Do you think that Paley knew anything at all about it?
+
+2.  Who were Day and Martin?  Give a short sketch of their lives,
+and state their reasons for advertising their blacking on the
+Pyramids.  Do you approve of the advertising system in general?
+
+3.  Do you consider the Japanese the original inventors of blacking?
+State the principal ingredients of blacking, and give a chemical
+analysis of the following substances:  Sulphate of zinc, nitrate of
+silver, potassium, copperas and corrosive sublimate.
+
+4.  Is blacking an effective remedy against hydrophobia?  Against
+cholera?  Against lock-jaw?  And do you consider it as valuable an
+instrument as burnt corks in playing tricks upon a drunken man?
+
+This was the Master's paper.  The Mathematical Lecturer next gave
+him a few questions, of which the most important were:-
+
+II
+
+1.  Prove that the shoe may be represented by an equation of the
+fifth degree.  Find the equation to a man blacking a shoe:  (1) in
+rectangular co-ordinates; (2) in polar co-ordinates.
+
+2.  A had 500 shoes to black every day, but being unwell for two
+days he had to hire a substitute, and paid him a third of the wages
+per shoe which he himself received.  Had A been ill two days longer
+there would have been the devil to pay; as it was he actually paid
+the sum of the geometrical series found by taking the first n
+letters of the substitute's name.  How much did A pay the
+substitute?  (Answer, 13s. 6d.)
+
+3.  Prove that the scraping-knife should never be a secant, and the
+brush always a tangent to a shoe.
+
+4.  Can you distinguish between meum and tuum?  Prove that their
+values vary inversely as the propinquity of the owners.
+
+5.  How often should a shoe-black ask his master for beer notes?
+Interpret a negative result.
+
+
+
+AN EMINENT PERSON
+
+
+
+Among the eminent persons deceased during the past week we have to
+notice Mr. Arthur Ward, the author of the very elegant treatise on
+the penny whistle.  Mr. Ward was rather above the middle height,
+inclined to be stout, and had lost a considerable portion of his
+hair.  Mr. Ward did not wear spectacles, as asserted by a careless
+and misinformed contemporary.  Mr. Ward was a man of great humour
+and talent; many of his sayings will be treasured up as household
+words among his acquaintance, for instance, "Lor!"  "Oh, ah!"  "Sech
+is life."  "That's cheerful."  "He's a lively man is Mr. . . . "
+His manners were affable and agreeable, and his playful gambols
+exhibited an agility scarcely to be expected from a man of his
+stature.  On Thursday last Mr. Ward was dining off beef-steak pie
+when a bit of gristle, unfortunately causing him to cough, brought
+on a fit of apoplexy, the progress of which no medical assistance
+was able to arrest.  It is understood that the funeral arrangements
+have been entrusted to our very respectable fellow-townsman Mr.
+Smith, and will take place on Monday.
+
+
+
+NAPOLEON AT ST. HELENA
+
+
+
+I see a warrior 'neath a willow tree;
+His arms are folded, and his full fixed eye
+Is gazing on the sky.  The evening breeze
+Blows on him from the sea, and a great storm
+Is rising.  Not the storm nor evening breeze,
+Nor the dark sea, nor the sun's parting beam
+Can move him; for in yonder sky he sees
+The picture of his life, in yonder clouds
+That rush towards each other he beholds
+The mighty wars that he himself hath waged.
+Blow on him, mighty storm; beat on him, rain;
+You cannot move his folded arms nor turn
+His gaze one second from the troubled sky.
+Hark to the thunder!  To him it is not thunder;
+It is the noise of battles and the din
+Of cannons on the field of Austerlitz,
+The sky to him is the whole world disturbed
+By war and rumours of great wars.
+He tumbled like a thunderbolt from heaven
+Upon the startled earth, and as he came
+The round world leapt from out her usual course
+And thought her time was come.  Beat on him, rain;
+And roar about him, O thou voice of thunder.
+But what are ye to him?  O more to him
+Than all besides.  To him ye are himself,
+He knows it and your voice is lovely to him.
+Hath brought the warfare to a close.
+The storm is over; one terrific crash
+Now, now he feels it, and he turns away;
+His arms are now unfolded, and his hands
+Pressed to his face conceal a warrior's tears.
+He flings himself upon the springing grass,
+And weeps in agony.  See, again he rises;
+His brow is calm, and all his tears are gone.
+The vision now is ended, and he saith:
+"Thou storm art hushed for ever.  Not again
+Shall thy great voice be heard.  Unto thy rest
+Thou goest, never never to return.
+I thank thee, that for one brief hour alone
+Thou hast my bitter agonies assuaged;
+Another storm may scare the frightened heavens,
+And like to me may rise and fill
+The elements with terror.  I, alas!
+Am blotted out as though I had not been,
+And am become as though I was not born.
+My day is over, and my night is come -
+A night which brings no rest, nor quiet dreams,
+Nor calm reflections, nor repose from toil,
+But pain and sorrow, anguish never ceasing,
+With dark uncertainty, despair and pain,
+And death's wide gate before me.  Fare ye well!
+The sky is clear and the world at rest;
+Thou storm and I have but too much in common."
+
+
+
+THE TWO DEANS
+
+
+
+I
+
+Williams, I like thee, amiable divine!
+No milk-and-water character is thine.
+A lay more lovely should thy worth attend
+Than my poor muse, alas! hath power to lend.
+Shall I describe thee as thou late didst sit,
+The gater gated and the biter bit,
+When impious hands at the dead hour of night
+Forbade the way and made the barriers tight?
+Next morn I heard their impious voices sing;
+All up the stairs their blasphemies did ring:
+"Come forth, O Williams, wherefore thus supine
+Remain within thy chambers after nine?
+Come forth, suffer thyself to be admired,
+And blush not so, coy dean, to be desired."
+The captive churchman chafes with empty rage,
+Till some knight-errant free him from his cage.
+Pale fear and anger sit upon yon face
+Erst full of love and piety and grace,
+But not pale fear nor anger will undo
+The iron might of gimlet and of screw.
+Grin at the window, Williams, all is vain;
+The carpenter will come and let thee out again.
+   Contrast with him the countenance serene
+And sweet remonstrance of the junior dean;
+The plural number and the accents mild,
+The language of a parent to a child.
+With plaintive voice the worthy man doth state,
+We've not been very regular of late.
+It should more carefully its chapels keep,
+And not make noises to disturb our sleep
+By having suppers and at early hours
+Raising its lungs unto their utmost powers.
+We'll put it, if it makes a noise again,
+On gatesey patsems at the hour of ten;
+And leafy peafy it will turn I'm sure,
+And never vex its own dear Sharpey more.
+
+II
+
+SCENE.--The Court of St. John's College, Cambridge.  Enter the two
+Deans on their way to morning chapel.
+
+JUNIOR DEAN.  Brother, I am much pleased with Samuel Butler,
+I have observed him mightily of late;
+Methinks that in his melancholy walk
+And air subdued whene'er he meeteth me
+Lurks something more than in most other men.
+
+SENIOR DEAN.  It is a good young man.  I do bethink me
+That once I walked behind him in the cloister;
+He saw me not, but whispered to his fellow:
+"Of all men who do dwell beneath the moon
+I love and reverence most the senior Dean."
+
+JUNIOR DEAN.  One thing is passing strange, and yet I know not
+How to condemn it, but in one plain brief word
+He never comes to Sunday morning chapel.
+Methinks he teacheth in some Sunday-school,
+Feeding the poor and starveling intellect
+With wholesome knowledge, or on the Sabbath morn
+He loves the country and the neighbouring spire
+Of Madingley or Coton, or perchance
+Amid some humble poor he spends the day,
+Conversing with them, learning all their cares,
+Comforting them and easing them in sickness.
+
+SENIOR DEAN.  I will advance him to some public post,
+He shall be chapel clerk, some day a Fellow,
+Some day perhaps a Dean, but as thou say'st
+He is indeed an excellent young man -
+
+Enter BUTLER suddenly, without a coat or anything on his head,
+rushing through the cloisters, bearing a cup, a bottle of cider,
+four lemons, two nutmegs, half a pound of sugar and a nutmeg grater.
+
+Curtain falls on the confusion of BUTLER and the horror-stricken
+dismay of the two Deans.
+
+
+
+THE BATTLE OF ALMA MATER
+
+
+
+I
+
+The Temperance commissioners
+   In awful conclave sat,
+Their noses into this to poke
+To poke them into that -
+In awful conclave sat they,
+   And swore a solemn oath,
+That snuff should make no Briton sneeze,
+That smokers all to smoke should cease,
+   They swore to conquer both.
+
+II
+
+Forth went a great Teetotaller,
+   With pamphlet armed and pen,
+He travelled east, he travelled west,
+   Tobacco to condemn.
+At length to Cantabrigia,
+   To move her sons to shame,
+Foredoomed to chaff and insult,
+   That gallant hero came.
+
+III
+
+'Tis Friday:  to the Guildhall
+   Come pouring in apace
+The gownsmen and the townsmen
+   Right thro' the market place -
+They meet, these bitter foemen
+   Not enemies but friends -
+Then fearless to the rostrum,
+   The Lecturer ascends.
+
+IV
+
+He cursed the martyr'd Raleigh,
+   He cursed the mild cigar,
+He traced to pipe and cabbage leaf
+   Consumption and catarrh;
+He railed at simple bird's-eye,
+   By freshmen only tried,
+And with rude and bitter jest assailed
+   The yard of clay beside.
+
+V
+
+When suddenly full twenty pipes,
+   And weeds full twenty more
+Were seen to rise at signal,
+   Where none were seen before.
+No mouth but puffed out gaily
+   A cloud of yellow fume,
+And merrily the curls of smoke
+   Went circling 'thro the room.
+
+VI
+
+In vain th' indignant mayor harangued,
+   A mighty chandler he!
+While peas his hoary head around
+   They whistled pleasantly.
+In vain he tenderly inquired,
+   'Mid many a wild "hurrah!"
+"Of this what father dear would think,
+   Of that what dear mamma?"
+
+VII
+
+In rushed a host of peelers,
+   With a sergeant at the head,
+Jaggard to every kitchen known,
+   Of missuses the dread.
+In rushed that warlike multitude,
+   Like bees from out their hive,
+With Fluffy of the squinting eye,
+   And fighting No. 5.
+
+VIII
+
+Up sprang Inspector Fluffy,
+   Up Sergeant Jaggard rose,
+And playfully with staff he tapped
+   A gownsman on the nose.
+As falls a thundersmitten oak,
+   The valiant Jaggard fell,
+With a line above each ogle,
+   And a "mouse" or two as well.
+
+IX
+
+But hark! the cry is "Smuffkins!
+   And loud the gownsmen cheer,
+And lo! a stalwart Johnian
+   Comes jostling from the rear:
+He eyed the flinching peelers,
+   He aimed a deadly blow,
+Then quick before his fist went down
+   Inspector, Marshal, Peelers, Town,
+While fiercer fought the joyful Gown,
+   To see the claret flow.
+
+X
+
+They run, they run! to win the door
+   The vanquished peelers flew;
+They left the sergeant's hat behind,
+   And the lecturer's surtout:
+Now by our Lady Margaret,
+   It was a goodly sight,
+To see that routed multitude
+   Swept down the tide of flight.
+
+XI
+
+Then hurrah! for gallant Smuffkins,
+   For Cantabs one hurrah!
+Like wolves in quest of prey they scent
+   A peeler from afar.
+Hurrah! for all who strove and bled
+   For liberty and right,
+What time within the Guildhall
+   Was fought the glorious fight.
+
+
+
+ON THE ITALIAN PRIESTHOOD
+
+
+
+This an adaptation of the following epigram, which appeared in
+Giuseppe Giusti's RACCOLTA DI PROVERBI TOSCANI (Firenze, 1853)
+
+
+Con arte e con inganno si vive mezzo l'anno
+Con inganno e con arte si vive l'altra parte.
+
+In knavish art and gathering gear
+They spend the one half of the year;
+In gathering gear and knavish art
+They somehow spend the other part.
+
+
+
+SAMUEL BUTLER AND THE SIMEONITES
+
+
+
+The following article, which originally appeared in the CAMBRIDGE
+MAGAZINE, 1 March, 1913, is by Mr. A. T. Bartholomew, of the
+University Library, Cambridge, who has most kindly allowed me to
+include it in the present volume.  Mr. Bartholomew's discovery of
+Samuel Butler's parody of the Simeonite tract throws a most
+interesting light upon a curious passage in THE WAY OF ALL FLESH,
+and it is a great pleasure to me to be able to give Butlerians the
+story of Mr. Bartholomew's "find" in his own words.
+
+
+Readers of Samuel Butler's remarkable story The Way of All Flesh
+will probably recall his description of the Simeonites (chap.
+xlvii), who still flourished at Cambridge when Ernest Pontifex was
+up at Emmanuel.  Ernest went down in 1858; so did Butler.
+Throughout the book the spiritual and intellectual life and
+development of Ernest are drawn from Butler's own experience.
+
+"The one phase of spiritual activity which had any life in it during
+the time Ernest was at Cambridge was connected with the name of
+Simeon.  There were still a good many Simeonites, or as they were
+more briefly called 'Sims,' in Ernest's time.  Every college
+contained some of them, but their head-quarters were at Caius,
+whither they were attracted by Mr. Clayton, who was at that time
+senior tutor, and among the sizars of St. John's.  Behind the then
+chapel of this last-named college was a 'labyrinth' (this was the
+name it bore) of dingy, tumble-down rooms," and here dwelt many
+Simeonites, "unprepossessing in feature, gait, and manners, unkempt
+and ill-dressed beyond what can be easily described.  Destined most
+of them for the Church, the Simeonites held themselves to have
+received a very loud call to the ministry . . . They would be
+instant in season and out of season in imparting spiritual
+instruction to all whom they could persuade to listen to them.  But
+the soil of the more prosperous undergraduates was not suitable for
+the seed they tried to sow.  When they distributed tracts, dropping
+them at night into good men's letter boxes while they were asleep,
+their tracts got burnt, or met with even worse contumely."  For
+Ernest Pontifex "they had a repellent attraction; he disliked them,
+but he could not bring himself to leave them alone.  On one occasion
+he had gone so far as to parody one of the tracts they had sent
+round in the night, and to get a copy dropped into each of the
+leading Simeonites' boxes.  The subject he had taken was 'Personal
+Cleanliness.'"
+
+Some years ago I found among the Cambridge papers in the late Mr. J.
+W. Clark's collection three printed pieces bearing on the subject.
+The first is a genuine Simeonite tract; the other two are parodies.
+All three are anonymous.  At the top of the second parody is written
+"By S. Butler.  March 31."  It will be necessary to give a few
+quotations from the Simeonite utterance in order to bring out the
+full flavour of Butler's parody, which is given entire.  Butler went
+up to St. John's in October, 1854; so at the time of writing this
+squib he was in his second term, and 18 years of age.
+
+A.T.B.
+
+
+I.--Extracts from the sheet dated "St. John's College, March 13th,
+1855."  In a manuscript note this is stated to be by Ynyr Lamb, of
+St. John's (B.A., 1862).
+
+
+1.  When a celebrated French king once showed the infidel
+philosopher Hume into his carriage, the latter at once leaped in, on
+which his majesty remarked:  "That's the most accomplished man
+living."
+
+It is impossible to presume enough on Divine grace; this kind of
+presumption is the characteristic of Heaven. . .
+
+2.  Religion is not an obedience to external forms or observances,
+but "a bold leap in the dark into the arms of an affectionate
+Father."
+
+4.  However Church Music may raise the devotional feelings, these
+bring a man not one iota nearer to Christ, neither is it acceptable
+in His sight.
+
+13.  The ONE thing needful is Faith:  Faith = 0.25 (historical
+faith) + 0.75 (heart-belief, or assurance, or justification) 1.25
+peace; and peace=Ln Trust--care+joy^(n-r+1)
+
+18.  The Lord's church has been always peculiarly tried at different
+stages of history, and each era will have its peculiar glory in
+eternity. . . . At the present time the trial for the church is
+peculiar; never before, perhaps, were the insinuations of the
+adversary so plausible and artful--his ingenuity so subtle--himself
+so much an angel of light--experience has sharpened his wit--"WHILE
+MEN SLEPT the enemy sowed tares"--he is now the base hypocrite--he
+suits his blandishments to all--the Church is lulled in the arms of
+the monster, rolling the sweet morsel under her tongue . . .
+
+
+II.--Samuel Butler's Parody
+
+
+1.  Beware!  Beware!  Beware!  The enemy sowed tracts in the night,
+and the righteous men tremble.
+
+2.  There are only 10 good men in John's; I am one; reader,
+calculate your chance of salvation.
+
+3.  The genuine recipe for the leaven of the Pharisees is still
+extant, and runs as follows: --Self-deceit 0.33 + want of charity
+0.5 + outward show 0.33, humbug infinity, insert Sim or not as
+required.  Reader, let each one who would seem to be righteous take
+unto himself this leaven.
+
+4.  "The University Church is a place too much neglected by the
+young men up here."  Thus said the learned Selwyn, {5} and he said
+well.  How far better would it be if each man's own heart was a
+little University Church, the pericardium a little University
+churchyard, wherein are buried the lust of the flesh, the pomps and
+vanities of this wicked world; the veins and arteries, little
+clergymen and bishops ministering therein; and the blood a stream of
+soberness, temperance and chastity perpetually flowing into it.
+
+5.  The deluge went before, misery followed after, in the middle
+came a Puseyite playing upon an organ.  Reader, flee from him, for
+he playeth his own soul to damnation.
+
+6.  Church music is as the whore of Babylon, or the ramping lion who
+sought whom he might devour; music in a church cannot be good, when
+St. Paul bade those who were merry to sing psalms.  Music is but
+tinkling brass, and sounding cymbals, which is what St. Paul says he
+should himself be, were he without charity; he evidently then did
+not consider music desirable.
+
+7.  The most truly religious and only thoroughly good man in
+Cambridge is Clayton, {6} of Cams.
+
+8.  "Charity is but the compassion that we feel for our own vices
+when we perceive their hatefulness in other people."  Charity, then,
+is but another name for selfishness, and must be eschewed
+accordingly.
+
+9.  A great French king was walking one day with the late Mr. B.,
+when the king dropped his umbrella.  Mr. B. instantly stooped down
+and picked it up.  The king said in a very sweet tone, "Thank you."
+
+10.  The Cam is the river Jordan.  An unthinking mind may consider
+this a startling announcement.  Let such an one pray for grace to
+read the mystery aright.
+
+11.  When I've lost a button off my trousers I go to the tailors'
+and get a new one sewn on.
+
+12.  Faith and Works were walking one day on the road to Zion, when
+Works turned into a public-house, and said he would not go any
+further, at the same time telling Faith to go on by himself, and
+saying that "he should be only a drag upon him."  Faith accordingly
+left Works in the ale-house, and went on.  He had not gone far
+before he began to feel faint, and thought he had better turn back
+and wait for Works.  He suited the action to the word, and finding
+Works in an advanced state of beer, fell to, and even surpassed that
+worthy in his potations.  They then set to work and fought lustily,
+and would have done each other a mortal injury had not a Policeman
+providentially arrived, and walked them off to the station-house.
+As it was they were fined Five Shillings each, and it was a long
+time before they fully recovered.
+
+13.  What can 10 fools do among 300 sinners?  They can do much harm,
+and had far better let the sinners seek peace their own way in the
+wilderness than ram it down their throats during the night.
+
+14.  Barnwell is a place near Cambridge.  It is one of the descents
+into the infernal regions; nay, the infernal regions have there
+ascended to the upper earth, and are rampant.  He that goeth by it
+shall be scorched, but he that seeketh it knowingly shall be
+devoured in the twinkling of an eye, and become withered as the
+grass at noonday.
+
+15.  Young men do not seem to consider that houses were made to pray
+in, as well as to eat and to drink in.  Spiritual food is much more
+easily procured and far cheaper than bodily nutriment; that,
+perhaps, is the reason why many overlook it.
+
+16.  When we were children our nurses used to say, "Rock-a-bye baby
+on the tree top, when the bough bends the cradle will rock."  Do the
+nurses intend the wind to represent temptation and the storm of
+life, the tree-top ambition, and the cradle the body of the child in
+which the soul traverses life's ocean?  I cannot doubt all this
+passes through the nurses' minds.  Again, when they say, "Little Bo-
+peep has lost her sheep and doesn't know where to find them; let
+them alone and they'll come home with their tails all right behind
+them," is Little Bo-peep intended for mother Church?  Are the sheep
+our erring selves, and our subsequent return to the fold?  No doubt
+of it.
+
+17.  A child will often eat of itself what no compulsion can induce
+it to touch.  Men are disgusted with religion if it is placed before
+them at unseasonable times, in unseasonable places, and clothed in a
+most unseemly dress.  Let them alone, and many will perhaps seek it
+for themselves, whom the world suspects not.  A whited sepulchre is
+a very picturesque object, and I like it immensely, and I like a Sim
+too.  But the whited sepulchre is an acknowledged humbug and most of
+the Sims are not, in my opinion, very far different.
+
+
+
+Footnotes:
+
+{1}  This was called to my attention by a distinguished Greek
+scholar of this University.
+
+{2}  The Hauenstein tunnel was not completed until later.  Its
+construction was delayed by a fall of earth which occurred in 1857
+and buried sixty-three workmen.--R. A. S.
+
+{3}  Mr. J. F. Harris has identified Butler's rooms in the third
+court of St. John's College.--R. A. S.
+
+{4}  As Walmisley died in January, 1856, this piece must evidently
+date from Butler's first year at Cambridge.--R. A. S.
+
+{5}  William Selwyn D.D., Fellow of St. John's Lady Margaret
+Professor of Divinity, died 1875.--A. T. B.
+
+{6} Charles Clayton, M.A., of Gonville and Caius, Vicar of Holy
+Trinity, Cambridge, 1851-65.  Died 1883.--A. T. B.
+
+
+
+
+
+End of The Project Gutenberg Etext of Cambridge Pieces, by Samuel Butler
+

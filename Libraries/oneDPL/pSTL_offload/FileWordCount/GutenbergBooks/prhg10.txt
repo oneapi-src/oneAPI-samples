@@ -1,0 +1,2365 @@
+The Project Gutenberg Etext of Present at a Hanging et al.
+by Ambrose Bierce
+(#8 in our series by Ambrose Bierce)
+
+Copyright laws are changing all over the world. Be sure to check the
+copyright laws for your country before distributing this or any other
+Project Gutenberg file.
+
+We encourage you to keep this file, exactly as it is, on your
+own disk, thereby keeping an electronic path open for future
+readers.  Please do not remove this.
+
+This header should be the first thing seen when anyone starts to
+view the etext. Do not change or edit it without written permission.
+The words are carefully chosen to provide users with the
+information they need to understand what they may and may not
+do with the etext.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*****These Etexts Are Prepared By Thousands of Volunteers!*****
+
+Information on contacting Project Gutenberg to get etexts, and
+further information, is included below.  We need your donations.
+
+The Project Gutenberg Literary Archive Foundation is a 501(c)(3)
+organization with EIN [Employee Identification Number] 64-6221541
+
+
+
+Title: Present at a Hanging and Other Ghost Stories
+
+Author: Ambrose Bierce
+
+Release Date: August, 2003  [Etext #4387]
+[Yes, we are more than one year ahead of schedule]
+[This file was first posted on January 20, 2002]
+[Most recently updated: January 20, 2002]
+
+Edition: 10
+
+Language: English
+
+Character set encoding: ASCII
+
+The Project Gutenberg Etext of Present at a Hanging et. al.
+by Ambrose Bierce
+******This file should be named prhg10.txt or prhg10.zip******
+
+Corrected EDITIONS of our etexts get a new NUMBER, prhg11.txt
+VERSIONS based on separate sources get new LETTER, prhg10a.txt
+
+Transcribed by David Price, email ccx074@coventry.ac.uk, from the
+1918 Boni and Liveright "Can Such Things Be?" edition.
+
+Project Gutenberg Etexts are often created from several printed
+editions, all of which are confirmed as Public Domain in the US
+unless a copyright notice is included.  Thus, we usually do not
+keep etexts in compliance with any particular paper edition.
+
+We are now trying to release all our etexts one year in advance
+of the official release dates, leaving time for better editing.
+Please be encouraged to tell us about any error or corrections,
+even years after the official publication date.
+
+Please note neither this listing nor its contents are final til
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.
+
+Most people start at our sites at:
+http://gutenberg.net or
+http://promo.net/pg
+
+These Web sites include award-winning information about Project
+Gutenberg, including how to donate, how to help produce our new
+etexts, and how to subscribe to our email newsletter (free!).
+
+
+Those of you who want to download any Etext before announcement
+can get to them as follows, and just download by date.  This is
+also a good way to get them instantly upon announcement, as the
+indexes our cataloguers produce obviously take a while after an
+announcement goes out in the Project Gutenberg Newsletter.
+
+http://www.ibiblio.org/gutenberg/etext03 or
+ftp://ftp.ibiblio.org/pub/docs/books/gutenberg/etext03
+
+Or /etext02, 01, 00, 99, 98, 97, 96, 95, 94, 93, 92, 92, 91 or 90
+
+Just search by the first five letters of the filename you want,
+as it appears in our Newsletters.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+time it takes us, a rather conservative estimate, is fifty hours
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.   Our
+projected audience is one hundred million readers.  If the value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour in 2001 as we release over 50 new Etext
+files per month, or 500 more Etexts in 2000 for a total of 4000+
+If they reach just 1-2% of the world's population then the total
+should reach over 300 billion Etexts given away by year's end.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by December 31, 2001.  [10,000 x 100,000,000 = 1 Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only about 4% of the present number of computer users.
+
+At our revised rates of production, we will reach only one-third
+of that goal by the end of 2001, or about 4,000 Etexts.  We need
+funding, as well as continued efforts by volunteers, to maintain
+or increase our production and reach our goals.
+
+The Project Gutenberg Literary Archive Foundation has been created
+to secure a future for Project Gutenberg into the next millennium.
+
+We need your donations more than ever!
+
+As of November, 2001, contributions are being solicited from people
+and organizations in: Alabama, Arkansas, Connecticut, Delaware,
+Florida, Georgia, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky,
+Louisiana, Maine, Michigan, Missouri, Montana, Nebraska, Nevada, New
+Jersey, New Mexico, New York, North Carolina, Oklahoma, Oregon,
+Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee,
+Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin,
+and Wyoming.
+
+*In Progress
+
+We have filed in about 45 states now, but these are the only ones
+that have responded.
+
+As the requirements for other states are met, additions to this list
+will be made and fund raising will begin in the additional states.
+Please feel free to ask to check the status of your state.
+
+In answer to various questions we have received on this:
+
+We are constantly working on finishing the paperwork to legally
+request donations in all 50 states.  If your state is not listed and
+you would like to know if we have added it since the list you have,
+just ask.
+
+While we cannot solicit donations from people in states where we are
+not yet registered, we know of no prohibition against accepting
+donations from donors in these states who approach us with an offer to
+donate.
+
+International donations are accepted, but we don't know ANYTHING about
+how to make them tax-deductible, or even if they CAN be made
+deductible, and don't have the staff to handle it even if there are
+ways.
+
+All donations should be made to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Ave.
+Oxford, MS 38655-4109
+
+Contact us if you want to arrange for a wire transfer or payment
+method other than by check or money order.
+
+
+The Project Gutenberg Literary Archive Foundation has been approved by
+the US Internal Revenue Service as a 501(c)(3) organization with EIN
+[Employee Identification Number] 64-622154.  Donations are
+tax-deductible to the maximum extent permitted by law.  As fundraising
+requirements for other states are met, additions to this list will be
+made and fundraising will begin in the additional states.
+
+We need your donations more than ever!
+
+You can get up to date donation information at:
+
+http://www.gutenberg.net/donation.html
+
+
+***
+
+If you can't reach Project Gutenberg,
+you can always email directly to:
+
+Michael S. Hart <hart@pobox.com>
+
+Prof. Hart will answer or forward your message.
+
+We would prefer to send you information by email.
+
+
+**The Legal Small Print**
+
+
+(Three Pages)
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here? You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault. So, among other things, this "Small Print!" statement
+disclaims most of our liability to you. It also tells you how
+you may distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement. If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from. If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-tm etexts,
+is a "public domain" work distributed by Professor Michael S. Hart
+through the Project Gutenberg Association (the "Project").
+Among other things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties. Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the "PROJECT GUTENBERG" trademark.
+
+Please do not use the "PROJECT GUTENBERG" trademark to market
+any commercial products without permission.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works. Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects". Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] Michael Hart and the Foundation (and any other party you may
+receive this etext from as a PROJECT GUTENBERG-tm etext) disclaims
+all liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from. If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy. If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS". NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold Michael Hart, the Foundation,
+and its trustees and agents, and any volunteers associated
+with the production and distribution of Project Gutenberg-tm
+texts harmless, from all liability, cost and expense, including
+legal fees, that arise directly or indirectly from any of the
+following that you do or cause:  [1] distribution of this etext,
+[2] alteration, modification, or addition to the etext,
+or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word
+     processing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Foundation of 20% of the
+     gross profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Literary Archive Foundation"
+     the 60 days following each date you prepare (or were
+     legally required to prepare) your annual (or equivalent
+     periodic) tax return.  Please contact us beforehand to
+     let us know your plans and to work out the details.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+Project Gutenberg is dedicated to increasing the number of
+public domain and licensed works that can be freely distributed
+in machine readable form.
+
+The Project gratefully accepts contributions of money, time,
+public domain materials, or royalty free copyright licenses.
+Money should be paid to the:
+"Project Gutenberg Literary Archive Foundation."
+
+If you are interested in contributing scanning equipment or
+software or other items, please contact Michael Hart at:
+hart@pobox.com
+
+[Portions of this header are copyright (C) 2001 by Michael S. Hart
+and may be reprinted only when these Etexts are free of all fees.]
+[Project Gutenberg is a TradeMark and may not be used in any sales
+of Project Gutenberg Etexts or other materials be they hardware or
+software or any other related product without express permission.]
+
+*END THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.10/04/01*END*
+
+
+
+
+PRESENT AT A HANGING AND OTHER GHOST STORIES
+
+
+
+
+Contents:
+
+The Ways of Ghosts
+   Present at a Hanging
+   A Cold Greeting
+   A Wireless Message
+   An Arrest
+Soldier-Folk
+   A Man with Two Lives
+   Three and One are One
+   A Baffled Ambuscade
+   Two Military Executions
+Some Haunted Houses
+   The Isle of Pines
+   A Fruitless Assignment
+   A Vine on a House
+   At Old Man Eckert's
+   The Spook House
+   The Other Lodgers
+   The Thing at Nolan
+   The Difficulty of Crossing a Field
+   An Unfinished Race
+   Charles Ashmore's Trail
+   Science to the Front
+
+
+
+THE WAYS OF GHOSTS
+
+
+
+
+My peculiar relation to the writer of the following narratives is
+such that I must ask the reader to overlook the absence of
+explanation as to how they came into my possession.  Withal, my
+knowledge of him is so meager that I should rather not undertake to
+say if he were himself persuaded of the truth of what he relates;
+certainly such inquiries as I have thought it worth while to set
+about have not in every instance tended to confirmation of the
+statements made.  Yet his style, for the most part devoid alike of
+artifice and art, almost baldly simple and direct, seems hardly
+compatible with the disingenuousness of a merely literary intention;
+one would call it the manner of one more concerned for the fruits of
+research than for the flowers of expression.  In transcribing his
+notes and fortifying their claim to attention by giving them
+something of an orderly arrangement, I have conscientiously
+refrained from embellishing them with such small ornaments of
+diction as I may have felt myself able to bestow, which would not
+only have been impertinent, even if pleasing, but would have given
+me a somewhat closer relation to the work than I should care to have
+and to avow.--A. B.
+
+
+
+PRESENT AT A HANGING
+
+
+
+An old man named Daniel Baker, living near Lebanon, Iowa, was
+suspected by his neighbors of having murdered a peddler who had
+obtained permission to pass the night at his house.  This was in
+1853, when peddling was more common in the Western country than it
+is now, and was attended with considerable danger.  The peddler with
+his pack traversed the country by all manner of lonely roads, and
+was compelled to rely upon the country people for hospitality.  This
+brought him into relation with queer characters, some of whom were
+not altogether scrupulous in their methods of making a living,
+murder being an acceptable means to that end.  It occasionally
+occurred that a peddler with diminished pack and swollen purse would
+be traced to the lonely dwelling of some rough character and never
+could be traced beyond.  This was so in the case of "old man Baker,"
+as he was always called.  (Such names are given in the western
+"settlements" only to elderly persons who are not esteemed; to the
+general disrepute of social unworth is affixed the special reproach
+of age.)  A peddler came to his house and none went away--that is
+all that anybody knew.
+
+Seven years later the Rev. Mr. Cummings, a Baptist minister well
+known in that part of the country, was driving by Baker's farm one
+night.  It was not very dark:  there was a bit of moon somewhere
+above the light veil of mist that lay along the earth.  Mr.
+Cummings, who was at all times a cheerful person, was whistling a
+tune, which he would occasionally interrupt to speak a word of
+friendly encouragement to his horse.  As he came to a little bridge
+across a dry ravine he saw the figure of a man standing upon it,
+clearly outlined against the gray background of a misty forest.  The
+man had something strapped on his back and carried a heavy stick--
+obviously an itinerant peddler.  His attitude had in it a suggestion
+of abstraction, like that of a sleepwalker.  Mr. Cummings reined in
+his horse when he arrived in front of him, gave him a pleasant
+salutation and invited him to a seat in the vehicle--"if you are
+going my way," he added.  The man raised his head, looked him full
+in the face, but neither answered nor made any further movement.
+The minister, with good-natured persistence, repeated his
+invitation.  At this the man threw his right hand forward from his
+side and pointed downward as he stood on the extreme edge of the
+bridge.  Mr. Cummings looked past him, over into the ravine, saw
+nothing unusual and withdrew his eyes to address the man again.  He
+had disappeared.  The horse, which all this time had been uncommonly
+restless, gave at the same moment a snort of terror and started to
+run away.  Before he had regained control of the animal the minister
+was at the crest of the hill a hundred yards along.  He looked back
+and saw the figure again, at the same place and in the same attitude
+as when he had first observed it.  Then for the first time he was
+conscious of a sense of the supernatural and drove home as rapidly
+as his willing horse would go.
+
+On arriving at home he related his adventure to his family, and
+early the next morning, accompanied by two neighbors, John White
+Corwell and Abner Raiser, returned to the spot.  They found the body
+of old man Baker hanging by the neck from one of the beams of the
+bridge, immediately beneath the spot where the apparition had stood.
+A thick coating of dust, slightly dampened by the mist, covered the
+floor of the bridge, but the only footprints were those of Mr.
+Cummings' horse.
+
+In taking down the body the men disturbed the loose, friable earth
+of the slope below it, disclosing human bones already nearly
+uncovered by the action of water and frost.  They were identified as
+those of the lost peddler.  At the double inquest the coroner's jury
+found that Daniel Baker died by his own hand while suffering from
+temporary insanity, and that Samuel Morritz was murdered by some
+person or persons to the jury unknown.
+
+
+
+A COLD GREETING
+
+
+
+This is a story told by the late Benson Foley of San Francisco:
+
+"In the summer of 1881 I met a man named James H. Conway, a resident
+of Franklin, Tennessee.  He was visiting San Francisco for his
+health, deluded man, and brought me a note of introduction from Mr.
+Lawrence Barting.  I had known Barting as a captain in the Federal
+army during the civil war.  At its close he had settled in Franklin,
+and in time became, I had reason to think, somewhat prominent as a
+lawyer.  Barting had always seemed to me an honorable and truthful
+man, and the warm friendship which he expressed in his note for Mr.
+Conway was to me sufficient evidence that the latter was in every
+way worthy of my confidence and esteem.  At dinner one day Conway
+told me that it had been solemnly agreed between him and Barting
+that the one who died first should, if possible, communicate with
+the other from beyond the grave, in some unmistakable way--just how,
+they had left (wisely, it seemed to me) to be decided by the
+deceased, according to the opportunities that his altered
+circumstances might present.
+
+"A few weeks after the conversation in which Mr. Conway spoke of
+this agreement, I met him one day, walking slowly down Montgomery
+street, apparently, from his abstracted air, in deep thought.  He
+greeted me coldly with merely a movement of the head and passed on,
+leaving me standing on the walk, with half-proffered hand, surprised
+and naturally somewhat piqued.  The next day I met him again in the
+office of the Palace Hotel, and seeing him about to repeat the
+disagreeable performance of the day before, intercepted him in a
+doorway, with a friendly salutation, and bluntly requested an
+explanation of his altered manner.  He hesitated a moment; then,
+looking me frankly in the eyes, said:
+
+"'I do not think, Mr. Foley, that I have any longer a claim to your
+friendship, since Mr. Barting appears to have withdrawn his own from
+me--for what reason, I protest I do not know.  If he has not already
+informed you he probably will do so.'
+
+"'But,' I replied, 'I have not heard from Mr. Barting.'
+
+"'Heard from him!' he repeated, with apparent surprise.  'Why, he is
+here.  I met him yesterday ten minutes before meeting you.  I gave
+you exactly the same greeting that he gave me.  I met him again not
+a quarter of an hour ago, and his manner was precisely the same:  he
+merely bowed and passed on.  I shall not soon forget your civility
+to me.  Good morning, or--as it may please you--farewell.'
+
+"All this seemed to me singularly considerate and delicate behavior
+on the part of Mr. Conway.
+
+"As dramatic situations and literary effects are foreign to my
+purpose I will explain at once that Mr. Barting was dead.  He had
+died in Nashville four days before this conversation.  Calling on
+Mr. Conway, I apprised him of our friend's death, showing him the
+letters announcing it.  He was visibly affected in a way that
+forbade me to entertain a doubt of his sincerity.
+
+"'It seems incredible,' he said, after a period of reflection.  'I
+suppose I must have mistaken another man for Barting, and that man's
+cold greeting was merely a stranger's civil acknowledgment of my
+own.  I remember, indeed, that he lacked Barting's mustache.'
+
+"'Doubtless it was another man,' I assented; and the subject was
+never afterward mentioned between us.  But I had in my pocket a
+photograph of Barting, which had been inclosed in the letter from
+his widow.  It had been taken a week before his death, and was
+without a mustache."
+
+
+
+A WIRELESS MESSAGE
+
+
+
+In the summer of 1896 Mr. William Holt, a wealthy manufacturer of
+Chicago, was living temporarily in a little town of central New
+York, the name of which the writer's memory has not retained.  Mr.
+Holt had had "trouble with his wife," from whom he had parted a year
+before.  Whether the trouble was anything more serious than
+"incompatibility of temper," he is probably the only living person
+that knows:  he is not addicted to the vice of confidences.  Yet he
+has related the incident herein set down to at least one person
+without exacting a pledge of secrecy.  He is now living in Europe.
+
+One evening he had left the house of a brother whom he was visiting,
+for a stroll in the country.  It may be assumed--whatever the value
+of the assumption in connection with what is said to have occurred--
+that his mind was occupied with reflections on his domestic
+infelicities and the distressing changes that they had wrought in
+his life.
+
+Whatever may have been his thoughts, they so possessed him that he
+observed neither the lapse of time nor whither his feet were
+carrying him; he knew only that he had passed far beyond the town
+limits and was traversing a lonely region by a road that bore no
+resemblance to the one by which he had left the village.  In brief,
+he was "lost."
+
+Realizing his mischance, he smiled; central New York is not a region
+of perils, nor does one long remain lost in it.  He turned about and
+went back the way that he had come.  Before he had gone far he
+observed that the landscape was growing more distinct--was
+brightening.  Everything was suffused with a soft, red glow in which
+he saw his shadow projected in the road before him.  "The moon is
+rising," he said to himself.  Then he remembered that it was about
+the time of the new moon, and if that tricksy orb was in one of its
+stages of visibility it had set long before.  He stopped and faced
+about, seeking the source of the rapidly broadening light.  As he
+did so, his shadow turned and lay along the road in front of him as
+before.  The light still came from behind him.  That was surprising;
+he could not understand.  Again he turned, and again, facing
+successively to every point of the horizon.  Always the shadow was
+before--always the light behind, "a still and awful red."
+
+Holt was astonished--"dumfounded" is the word that he used in
+telling it--yet seems to have retained a certain intelligent
+curiosity.  To test the intensity of the light whose nature and
+cause he could not determine, he took out his watch to see if he
+could make out the figures on the dial.  They were plainly visible,
+and the hands indicated the hour of eleven o'clock and twenty-five
+minutes.  At that moment the mysterious illumination suddenly flared
+to an intense, an almost blinding splendor, flushing the entire sky,
+extinguishing the stars and throwing the monstrous shadow of himself
+athwart the landscape.  In that unearthly illumination he saw near
+him, but apparently in the air at a considerable elevation, the
+figure of his wife, clad in her night-clothing and holding to her
+breast the figure of his child.  Her eyes were fixed upon his with
+an expression which he afterward professed himself unable to name or
+describe, further than that it was "not of this life."
+
+The flare was momentary, followed by black darkness, in which,
+however, the apparition still showed white and motionless; then by
+insensible degrees it faded and vanished, like a bright image on the
+retina after the closing of the eyes.  A peculiarity of the
+apparition, hardly noted at the time, but afterward recalled, was
+that it showed only the upper half of the woman's figure:  nothing
+was seen below the waist.
+
+The sudden darkness was comparative, not absolute, for gradually all
+objects of his environment became again visible.
+
+In the dawn of the morning Holt found himself entering the village
+at a point opposite to that at which he had left it.  He soon
+arrived at the house of his brother, who hardly knew him.  He was
+wild-eyed, haggard, and gray as a rat.  Almost incoherently, he
+related his night's experience.
+
+"Go to bed, my poor fellow," said his brother, "and--wait.  We shall
+hear more of this."
+
+An hour later came the predestined telegram.  Holt's dwelling in one
+of the suburbs of Chicago had been destroyed by fire.  Her escape
+cut off by the flames, his wife had appeared at an upper window, her
+child in her arms.  There she had stood, motionless, apparently
+dazed.  Just as the firemen had arrived with a ladder, the floor had
+given way, and she was seen no more.
+
+The moment of this culminating horror was eleven o'clock and twenty-
+five minutes, standard time.
+
+
+
+AN ARREST
+
+
+
+Having murdered his brother-in-law, Orrin Brower of Kentucky was a
+fugitive from justice.  From the county jail where he had been
+confined to await his trial he had escaped by knocking down his
+jailer with an iron bar, robbing him of his keys and, opening the
+outer door, walking out into the night.  The jailer being unarmed,
+Brower got no weapon with which to defend his recovered liberty.  As
+soon as he was out of the town he had the folly to enter a forest;
+this was many years ago, when that region was wilder than it is now.
+
+The night was pretty dark, with neither moon nor stars visible, and
+as Brower had never dwelt thereabout, and knew nothing of the lay of
+the land, he was, naturally, not long in losing himself.  He could
+not have said if he were getting farther away from the town or going
+back to it--a most important matter to Orrin Brower.  He knew that
+in either case a posse of citizens with a pack of bloodhounds would
+soon be on his track and his chance of escape was very slender; but
+he did not wish to assist in his own pursuit.  Even an added hour of
+freedom was worth having.
+
+Suddenly he emerged from the forest into an old road, and there
+before him saw, indistinctly, the figure of a man, motionless in the
+gloom.  It was too late to retreat:  the fugitive felt that at the
+first movement back toward the wood he would be, as he afterward
+explained, "filled with buckshot."  So the two stood there like
+trees, Brower nearly suffocated by the activity of his own heart;
+the other--the emotions of the other are not recorded.
+
+A moment later--it may have been an hour--the moon sailed into a
+patch of unclouded sky and the hunted man saw that visible
+embodiment of Law lift an arm and point significantly toward and
+beyond him.  He understood.  Turning his back to his captor, he
+walked submissively away in the direction indicated, looking to
+neither the right nor the left; hardly daring to breathe, his head
+and back actually aching with a prophecy of buckshot.
+
+Brower was as courageous a criminal as ever lived to be hanged; that
+was shown by the conditions of awful personal peril in which he had
+coolly killed his brother-in-law.  It is needless to relate them
+here; they came out at his trial, and the revelation of his calmness
+in confronting them came near to saving his neck.  But what would
+you have?--when a brave man is beaten, he submits.
+
+So they pursued their journey jailward along the old road through
+the woods.  Only once did Brower venture a turn of the head:  just
+once, when he was in deep shadow and he knew that the other was in
+moonlight, he looked backward.  His captor was Burton Duff, the
+jailer, as white as death and bearing upon his brow the livid mark
+of the iron bar.  Orrin Brower had no further curiosity.
+
+Eventually they entered the town, which was all alight, but
+deserted; only the women and children remained, and they were off
+the streets.  Straight toward the jail the criminal held his way.
+Straight up to the main entrance he walked, laid his hand upon the
+knob of the heavy iron door, pushed it open without command, entered
+and found himself in the presence of a half-dozen armed men.  Then
+he turned.  Nobody else entered.
+
+On a table in the corridor lay the dead body of Burton Duff.
+
+
+
+
+SOLDIER-FOLK
+
+
+
+
+A MAN WITH TWO LIVES
+
+
+
+Here is the queer story of David William Duck, related by himself.
+Duck is an old man living in Aurora, Illinois, where he is
+universally respected.  He is commonly known, however, as "Dead
+Duck."
+
+"In the autumn of 1866 I was a private soldier of the Eighteenth
+Infantry.  My company was one of those stationed at Fort Phil
+Kearney, commanded by Colonel Carrington.  The country is more or
+less familiar with the history of that garrison, particularly with
+the slaughter by the Sioux of a detachment of eighty-one men and
+officers--not one escaping--through disobedience of orders by its
+commander, the brave but reckless Captain Fetterman.  When that
+occurred, I was trying to make my way with important dispatches to
+Fort C. F. Smith, on the Big Horn.  As the country swarmed with
+hostile Indians, I traveled by night and concealed myself as best I
+could before daybreak.  The better to do so, I went afoot, armed
+with a Henry rifle and carrying three days' rations in my haversack.
+
+"For my second place of concealment I chose what seemed in the
+darkness a narrow canon leading through a range of rocky hills.  It
+contained many large bowlders, detached from the slopes of the
+hills.  Behind one of these, in a clump of sage-brush, I made my bed
+for the day, and soon fell asleep.  It seemed as if I had hardly
+closed my eyes, though in fact it was near midday, when I was
+awakened by the report of a rifle, the bullet striking the bowlder
+just above my body.  A band of Indians had trailed me and had me
+nearly surrounded; the shot had been fired with an execrable aim by
+a fellow who had caught sight of me from the hillside above.  The
+smoke of his rifle betrayed him, and I was no sooner on my feet than
+he was off his and rolling down the declivity.  Then I ran in a
+stooping posture, dodging among the clumps of sage-brush in a storm
+of bullets from invisible enemies.  The rascals did not rise and
+pursue, which I thought rather queer, for they must have known by my
+trail that they had to deal with only one man.  The reason for their
+inaction was soon made clear.  I had not gone a hundred yards before
+I reached the limit of my run--the head of the gulch which I had
+mistaken for a canon.  It terminated in a concave breast of rock,
+nearly vertical and destitute of vegetation.  In that cul-de-sac I
+was caught like a bear in a pen.  Pursuit was needless; they had
+only to wait.
+
+"They waited.  For two days and nights, crouching behind a rock
+topped with a growth of mesquite, and with the cliff at my back,
+suffering agonies of thirst and absolutely hopeless of deliverance,
+I fought the fellows at long range, firing occasionally at the smoke
+of their rifles, as they did at that of mine.  Of course, I did not
+dare to close my eyes at night, and lack of sleep was a keen
+torture.
+
+"I remember the morning of the third day, which I knew was to be my
+last.  I remember, rather indistinctly, that in my desperation and
+delirium I sprang out into the open and began firing my repeating
+rifle without seeing anybody to fire at.  And I remember no more of
+that fight.
+
+"The next thing that I recollect was my pulling myself out of a
+river just at nightfall.  I had not a rag of clothing and knew
+nothing of my whereabouts, but all that night I traveled, cold and
+footsore, toward the north.  At daybreak I found myself at Fort C.
+F. Smith, my destination, but without my dispatches.  The first man
+that I met was a sergeant named William Briscoe, whom I knew very
+well.  You can fancy his astonishment at seeing me in that
+condition, and my own at his asking who the devil I was.
+
+"'Dave Duck,' I answered; 'who should I be?'
+
+"He stared like an owl.
+
+"'You do look it,' he said, and I observed that he drew a little
+away from me.  'What's up?' he added.
+
+"I told him what had happened to me the day before.  He heard me
+through, still staring; then he said:
+
+"'My dear fellow, if you are Dave Duck I ought to inform you that I
+buried you two months ago.  I was out with a small scouting party
+and found your body, full of bullet-holes and newly scalped--
+somewhat mutilated otherwise, too, I am sorry to say--right where
+you say you made your fight.  Come to my tent and I'll show you your
+clothing and some letters that I took from your person; the
+commandant has your dispatches.'
+
+"He performed that promise.  He showed me the clothing, which I
+resolutely put on; the letters, which I put into my pocket.  He made
+no objection, then took me to the commandant, who heard my story and
+coldly ordered Briscoe to take me to the guardhouse.  On the way I
+said:
+
+"'Bill Briscoe, did you really and truly bury the dead body that you
+found in these togs?'
+
+"'Sure,' he answered--'just as I told you.  It was Dave Duck, all
+right; most of us knew him.  And now, you damned impostor, you'd
+better tell me who you are.'
+
+"'I'd give something to know,' I said.
+
+"A week later, I escaped from the guardhouse and got out of the
+country as fast as I could.  Twice I have been back, seeking for
+that fateful spot in the hills, but unable to find it."
+
+
+
+THREE AND ONE ARE ONE
+
+
+
+In the year 1861 Barr Lassiter, a young man of twenty-two, lived
+with his parents and an elder sister near Carthage, Tennessee.  The
+family were in somewhat humble circumstances, subsisting by
+cultivation of a small and not very fertile plantation.  Owning no
+slaves, they were not rated among "the best people" of their
+neighborhood; but they were honest persons of good education, fairly
+well mannered and as respectable as any family could be if
+uncredentialed by personal dominion over the sons and daughters of
+Ham.  The elder Lassiter had that severity of manner that so
+frequently affirms an uncompromising devotion to duty, and conceals
+a warm and affectionate disposition.  He was of the iron of which
+martyrs are made, but in the heart of the matrix had lurked a nobler
+metal, fusible at a milder heat, yet never coloring nor softening
+the hard exterior.  By both heredity and environment something of
+the man's inflexible character had touched the other members of the
+family; the Lassiter home, though not devoid of domestic affection,
+was a veritable citadel of duty, and duty--ah, duty is as cruel as
+death!
+
+When the war came on it found in the family, as in so many others in
+that State, a divided sentiment; the young man was loyal to the
+Union, the others savagely hostile.  This unhappy division begot an
+insupportable domestic bitterness, and when the offending son and
+brother left home with the avowed purpose of joining the Federal
+army not a hand was laid in his, not a word of farewell was spoken,
+not a good wish followed him out into the world whither he went to
+meet with such spirit as he might whatever fate awaited him.
+
+Making his way to Nashville, already occupied by the Army of General
+Buell, he enlisted in the first organization that he found, a
+Kentucky regiment of cavalry, and in due time passed through all the
+stages of military evolution from raw recruit to experienced
+trooper.  A right good trooper he was, too, although in his oral
+narrative from which this tale is made there was no mention of that;
+the fact was learned from his surviving comrades.  For Barr Lassiter
+has answered "Here" to the sergeant whose name is Death.
+
+Two years after he had joined it his regiment passed through the
+region whence he had come.  The country thereabout had suffered
+severely from the ravages of war, having been occupied alternately
+(and simultaneously) by the belligerent forces, and a sanguinary
+struggle had occurred in the immediate vicinity of the Lassiter
+homestead.  But of this the young trooper was not aware.
+
+Finding himself in camp near his home, he felt a natural longing to
+see his parents and sister, hoping that in them, as in him, the
+unnatural animosities of the period had been softened by time and
+separation.  Obtaining a leave of absence, he set foot in the late
+summer afternoon, and soon after the rising of the full moon was
+walking up the gravel path leading to the dwelling in which he had
+been born.
+
+Soldiers in war age rapidly, and in youth two years are a long time.
+Barr Lassiter felt himself an old man, and had almost expected to
+find the place a ruin and a desolation.  Nothing, apparently, was
+changed.  At the sight of each dear and familiar object he was
+profoundly affected.  His heart beat audibly, his emotion nearly
+suffocated him; an ache was in his throat.  Unconsciously he
+quickened his pace until he almost ran, his long shadow making
+grotesque efforts to keep its place beside him.
+
+The house was unlighted, the door open.  As he approached and paused
+to recover control of himself his father came out and stood bare-
+headed in the moonlight.
+
+"Father!" cried the young man, springing forward with outstretched
+hand--"Father!"
+
+The elder man looked him sternly in the face, stood a moment
+motionless and without a word withdrew into the house.  Bitterly
+disappointed, humiliated, inexpressibly hurt and altogether
+unnerved, the soldier dropped upon a rustic seat in deep dejection,
+supporting his head upon his trembling hand.  But he would not have
+it so:  he was too good a soldier to accept repulse as defeat.  He
+rose and entered the house, passing directly to the "sitting-room."
+
+It was dimly lighted by an uncurtained east window.  On a low stool
+by the hearthside, the only article of furniture in the place, sat
+his mother, staring into a fireplace strewn with blackened embers
+and cold ashes.  He spoke to her--tenderly, interrogatively, and
+with hesitation, but she neither answered, nor moved, nor seemed in
+any way surprised.  True, there had been time for her husband to
+apprise her of their guilty son's return.  He moved nearer and was
+about to lay his hand upon her arm, when his sister entered from an
+adjoining room, looked him full in the face, passed him without a
+sign of recognition and left the room by a door that was partly
+behind him.  He had turned his head to watch her, but when she was
+gone his eyes again sought his mother.  She too had left the place.
+
+Barr Lassiter strode to the door by which he had entered.  The
+moonlight on the lawn was tremulous, as if the sward were a rippling
+sea.  The trees and their black shadows shook as in a breeze.
+Blended with its borders, the gravel walk seemed unsteady and
+insecure to step on.  This young soldier knew the optical illusions
+produced by tears.  He felt them on his cheek, and saw them sparkle
+on the breast of his trooper's jacket.  He left the house and made
+his way back to camp.
+
+The next day, with no very definite intention, with no dominant
+feeling that he could rightly have named, he again sought the spot.
+Within a half-mile of it he met Bushrod Albro, a former playfellow
+and schoolmate, who greeted him warmly.
+
+"I am going to visit my home," said the soldier.
+
+The other looked at him rather sharply, but said nothing.
+
+"I know," continued Lassiter, "that my folks have not changed, but--
+"
+
+"There have been changes," Albro interrupted--"everything changes.
+I'll go with you if you don't mind.  We can talk as we go."
+
+But Albro did not talk.
+
+Instead of a house they found only fire-blackened foundations of
+stone, enclosing an area of compact ashes pitted by rains.
+
+Lassiter's astonishment was extreme.
+
+"I could not find the right way to tell you," said Albro.  "In the
+fight a year ago your house was burned by a Federal shell."
+
+"And my family--where are they?"
+
+"In Heaven, I hope.  All were killed by the shell."
+
+
+
+A BAFFLED AMBUSCADE
+
+
+
+Connecting Readyville and Woodbury was a good, hard turnpike nine or
+ten miles long.  Readyville was an outpost of the Federal army at
+Murfreesboro; Woodbury had the same relation to the Confederate army
+at Tullahoma.  For months after the big battle at Stone River these
+outposts were in constant quarrel, most of the trouble occurring,
+naturally, on the turnpike mentioned, between detachments of
+cavalry.  Sometimes the infantry and artillery took a hand in the
+game by way of showing their good-will.
+
+One night a squadron of Federal horse commanded by Major Seidel, a
+gallant and skillful officer, moved out from Readyville on an
+uncommonly hazardous enterprise requiring secrecy, caution and
+silence.
+
+Passing the infantry pickets, the detachment soon afterward
+approached two cavalry videttes staring hard into the darkness
+ahead.  There should have been three.
+
+"Where is your other man?" said the major.  "I ordered Dunning to be
+here to-night."
+
+"He rode forward, sir," the man replied.  "There was a little firing
+afterward, but it was a long way to the front."
+
+"It was against orders and against sense for Dunning to do that,"
+said the officer, obviously vexed.  "Why did he ride forward?"
+
+"Don't know, sir; he seemed mighty restless.  Guess he was skeered."
+
+When this remarkable reasoner and his companion had been absorbed
+into the expeditionary force, it resumed its advance.  Conversation
+was forbidden; arms and accouterments were denied the right to
+rattle.  The horses' tramping was all that could be heard and the
+movement was slow in order to have as little as possible of that.
+It was after midnight and pretty dark, although there was a bit of
+moon somewhere behind the masses of cloud.
+
+Two or three miles along, the head of the column approached a dense
+forest of cedars bordering the road on both sides.  The major
+commanded a halt by merely halting, and, evidently himself a bit
+"skeered," rode on alone to reconnoiter.  He was followed, however,
+by his adjutant and three troopers, who remained a little distance
+behind and, unseen by him, saw all that occurred.
+
+After riding about a hundred yards toward the forest, the major
+suddenly and sharply reined in his horse and sat motionless in the
+saddle.  Near the side of the road, in a little open space and
+hardly ten paces away, stood the figure of a man, dimly visible and
+as motionless as he.  The major's first feeling was that of
+satisfaction in having left his cavalcade behind; if this were an
+enemy and should escape he would have little to report.  The
+expedition was as yet undetected.
+
+Some dark object was dimly discernible at the man's feet; the
+officer could not make it out.  With the instinct of the true
+cavalryman and a particular indisposition to the discharge of
+firearms, he drew his saber.  The man on foot made no movement in
+answer to the challenge.  The situation was tense and a bit
+dramatic.  Suddenly the moon burst through a rift in the clouds and,
+himself in the shadow of a group of great oaks, the horseman saw the
+footman clearly, in a patch of white light.  It was Trooper Dunning,
+unarmed and bareheaded.  The object at his feet resolved itself into
+a dead horse, and at a right angle across the animal's neck lay a
+dead man, face upward in the moonlight.
+
+"Dunning has had the fight of his life," thought the major, and was
+about to ride forward.  Dunning raised his hand, motioning him back
+with a gesture of warning; then, lowering the arm, he pointed to the
+place where the road lost itself in the blackness of the cedar
+forest.
+
+The major understood, and turning his horse rode back to the little
+group that had followed him and was already moving to the rear in
+fear of his displeasure, and so returned to the head of his command.
+
+"Dunning is just ahead there," he said to the captain of his leading
+company.  "He has killed his man and will have something to report."
+
+Right patiently they waited, sabers drawn, but Dunning did not come.
+In an hour the day broke and the whole force moved cautiously
+forward, its commander not altogether satisfied with his faith in
+Private Dunning.  The expedition had failed, but something remained
+to be done.
+
+In the little open space off the road they found the fallen horse.
+At a right angle across the animal's neck face upward, a bullet in
+the brain, lay the body of Trooper Dunning, stiff as a statue, hours
+dead.
+
+Examination disclosed abundant evidence that within a half-hour the
+cedar forest had been occupied by a strong force of Confederate
+infantry--an ambuscade.
+
+
+
+TWO MILITARY EXECUTIONS
+
+
+
+In the spring of the year 1862 General Buell's big army lay in camp,
+licking itself into shape for the campaign which resulted in the
+victory at Shiloh.  It was a raw, untrained army, although some of
+its fractions had seen hard enough service, with a good deal of
+fighting, in the mountains of Western Virginia, and in Kentucky.
+The war was young and soldiering a new industry, imperfectly
+understood by the young American of the period, who found some
+features of it not altogether to his liking.  Chief among these was
+that essential part of discipline, subordination.  To one imbued
+from infancy with the fascinating fallacy that all men are born
+equal, unquestioning submission to authority is not easily mastered,
+and the American volunteer soldier in his "green and salad days" is
+among the worst known.  That is how it happened that one of Buell's
+men, Private Bennett Story Greene, committed the indiscretion of
+striking his officer.  Later in the war he would not have done that;
+like Sir Andrew Aguecheek, he would have "seen him damned" first.
+But time for reformation of his military manners was denied him:  he
+was promptly arrested on complaint of the officer, tried by court-
+martial and sentenced to be shot.
+
+"You might have thrashed me and let it go at that," said the
+condemned man to the complaining witness; "that is what you used to
+do at school, when you were plain Will Dudley and I was as good as
+you.  Nobody saw me strike you; discipline would not have suffered
+much."
+
+"Ben Greene, I guess you are right about that," said the lieutenant.
+"Will you forgive me?  That is what I came to see you about."
+
+There was no reply, and an officer putting his head in at the door
+of the guard-tent where the conversation had occurred, explained
+that the time allowed for the interview had expired.  The next
+morning, when in the presence of the whole brigade Private Greene
+was shot to death by a squad of his comrades, Lieutenant Dudley
+turned his back upon the sorry performance and muttered a prayer for
+mercy, in which himself was included.
+
+A few weeks afterward, as Buell's leading division was being ferried
+over the Tennessee River to assist in succoring Grant's beaten army,
+night was coming on, black and stormy.  Through the wreck of battle
+the division moved, inch by inch, in the direction of the enemy, who
+had withdrawn a little to reform his lines.  But for the lightning
+the darkness was absolute.  Never for a moment did it cease, and
+ever when the thunder did not crack and roar were heard the moans of
+the wounded among whom the men felt their way with their feet, and
+upon whom they stumbled in the gloom.  The dead were there, too--
+there were dead a-plenty.
+
+In the first faint gray of the morning, when the swarming advance
+had paused to resume something of definition as a line of battle,
+and skirmishers had been thrown forward, word was passed along to
+call the roll.  The first sergeant of Lieutenant Dudley's company
+stepped to the front and began to name the men in alphabetical
+order.  He had no written roll, but a good memory.  The men answered
+to their names as he ran down the alphabet to G.
+
+"Gorham."
+
+"Here!"
+
+"Grayrock."
+
+"Here!"
+
+The sergeant's good memory was affected by habit:
+
+"Greene."
+
+"Here!"
+
+The response was clear, distinct, unmistakable!
+
+A sudden movement, an agitation of the entire company front, as from
+an electric shock, attested the startling character of the incident.
+The sergeant paled and paused.  The captain strode quickly to his
+side and said sharply:
+
+"Call that name again."
+
+Apparently the Society for Psychical Research is not first in the
+field of curiosity concerning the Unknown.
+
+"Bennett Greene."
+
+"Here!"
+
+All faces turned in the direction of the familiar voice; the two men
+between whom in the order of stature Greene had commonly stood in
+line turned and squarely confronted each other.
+
+"Once more," commanded the inexorable investigator, and once more
+came--a trifle tremulously--the name of the dead man:
+
+"Bennett Story Greene."
+
+"Here!"
+
+At that instant a single rifle-shot was heard, away to the front,
+beyond the skirmish-line, followed, almost attended, by the savage
+hiss of an approaching bullet which passing through the line, struck
+audibly, punctuating as with a full stop the captain's exclamation,
+"What the devil does it mean?"
+
+Lieutenant Dudley pushed through the ranks from his place in the
+rear.
+
+"It means this," he said, throwing open his coat and displaying a
+visibly broadening stain of crimson on his breast.  His knees gave
+way; he fell awkwardly and lay dead.
+
+A little later the regiment was ordered out of line to relieve the
+congested front, and through some misplay in the game of battle was
+not again under fire.  Nor did Bennett Greene, expert in military
+executions, ever again signify his presence at one.
+
+
+
+
+SOME HAUNTED HOUSES
+
+
+
+
+THE ISLE OF PINES
+
+
+
+For many years there lived near the town of Gallipolis, Ohio, an old
+man named Herman Deluse.  Very little was known of his history, for
+he would neither speak of it himself nor suffer others.  It was a
+common belief among his neighbors that he had been a pirate--if upon
+any better evidence than his collection of boarding pikes,
+cutlasses, and ancient flintlock pistols, no one knew.  He lived
+entirely alone in a small house of four rooms, falling rapidly into
+decay and never repaired further than was required by the weather.
+It stood on a slight elevation in the midst of a large, stony field
+overgrown with brambles, and cultivated in patches and only in the
+most primitive way.  It was his only visible property, but could
+hardly have yielded him a living, simple and few as were his wants.
+He seemed always to have ready money, and paid cash for all his
+purchases at the village stores roundabout, seldom buying more than
+two or three times at the same place until after the lapse of a
+considerable time.  He got no commendation, however, for this
+equitable distribution of his patronage; people were disposed to
+regard it as an ineffectual attempt to conceal his possession of so
+much money.  That he had great hoards of ill-gotten gold buried
+somewhere about his tumble-down dwelling was not reasonably to be
+doubted by any honest soul conversant with the facts of local
+tradition and gifted with a sense of the fitness of things.
+
+On the 9th of November, 1867, the old man died; at least his dead
+body was discovered on the 10th, and physicians testified that death
+had occurred about twenty-four hours previously--precisely how, they
+were unable to say; for the post-mortem examination showed every
+organ to be absolutely healthy, with no indication of disorder or
+violence.  According to them, death must have taken place about
+noonday, yet the body was found in bed.  The verdict of the
+coroner's jury was that he "came to his death by a visitation of
+God."  The body was buried and the public administrator took charge
+of the estate.
+
+A rigorous search disclosed nothing more than was already known
+about the dead man, and much patient excavation here and there about
+the premises by thoughtful and thrifty neighbors went unrewarded.
+The administrator locked up the house against the time when the
+property, real and personal, should be sold by law with a view to
+defraying, partly, the expenses of the sale.
+
+The night of November 20 was boisterous.  A furious gale stormed
+across the country, scourging it with desolating drifts of sleet.
+Great trees were torn from the earth and hurled across the roads.
+So wild a night had never been known in all that region, but toward
+morning the storm had blown itself out of breath and day dawned
+bright and clear.  At about eight o'clock that morning the Rev.
+Henry Galbraith, a well-known and highly esteemed Lutheran minister,
+arrived on foot at his house, a mile and a half from the Deluse
+place.  Mr. Galbraith had been for a month in Cincinnati.  He had
+come up the river in a steamboat, and landing at Gallipolis the
+previous evening had immediately obtained a horse and buggy and set
+out for home.  The violence of the storm had delayed him over night,
+and in the morning the fallen trees had compelled him to abandon his
+conveyance and continue his journey afoot.
+
+"But where did you pass the night?" inquired his wife, after he had
+briefly related his adventure.
+
+"With old Deluse at the 'Isle of Pines,'" {1} was the laughing
+reply; "and a glum enough time I had of it.  He made no objection to
+my remaining, but not a word could I get out of him."
+
+Fortunately for the interests of truth there was present at this
+conversation Mr. Robert Mosely Maren, a lawyer and litterateur of
+Columbus, the same who wrote the delightful "Mellowcraft Papers."
+Noting, but apparently not sharing, the astonishment caused by Mr.
+Galbraith's answer this ready-witted person checked by a gesture the
+exclamations that would naturally have followed, and tranquilly
+inquired:  "How came you to go in there?"
+
+This is Mr. Maren's version of Mr. Galbraith's reply:
+
+"I saw a light moving about the house, and being nearly blinded by
+the sleet, and half frozen besides, drove in at the gate and put up
+my horse in the old rail stable, where it is now.  I then rapped at
+the door, and getting no invitation went in without one.  The room
+was dark, but having matches I found a candle and lit it.  I tried
+to enter the adjoining room, but the door was fast, and although I
+heard the old man's heavy footsteps in there he made no response to
+my calls.  There was no fire on the hearth, so I made one and laying
+[sic] down before it with my overcoat under my head, prepared myself
+for sleep.  Pretty soon the door that I had tried silently opened
+and the old man came in, carrying a candle.  I spoke to him
+pleasantly, apologizing for my intrusion, but he took no notice of
+me.  He seemed to be searching for something, though his eyes were
+unmoved in their sockets.  I wonder if he ever walks in his sleep.
+He took a circuit a part of the way round the room, and went out the
+same way he had come in.  Twice more before I slept he came back
+into the room, acting precisely the same way, and departing as at
+first.  In the intervals I heard him tramping all over the house,
+his footsteps distinctly audible in the pauses of the storm.  When I
+woke in the morning he had already gone out."
+
+Mr. Maren attempted some further questioning, but was unable longer
+to restrain the family's tongues; the story of Deluse's death and
+burial came out, greatly to the good minister's astonishment.
+
+"The explanation of your adventure is very simple," said Mr. Maren.
+"I don't believe old Deluse walks in his sleep--not in his present
+one; but you evidently dream in yours."
+
+And to this view of the matter Mr. Galbraith was compelled
+reluctantly to assent.
+
+Nevertheless, a late hour of the next night found these two
+gentlemen, accompanied by a son of the minister, in the road in
+front of the old Deluse house.  There was a light inside; it
+appeared now at one window and now at another.  The three men
+advanced to the door.  Just as they reached it there came from the
+interior a confusion of the most appalling sounds--the clash of
+weapons, steel against steel, sharp explosions as of firearms,
+shrieks of women, groans and the curses of men in combat!  The
+investigators stood a moment, irresolute, frightened.  Then Mr.
+Galbraith tried the door.  It was fast.  But the minister was a man
+of courage, a man, moreover, of Herculean strength.  He retired a
+pace or two and rushed against the door, striking it with his right
+shoulder and bursting it from the frame with a loud crash.  In a
+moment the three were inside.  Darkness and silence!  The only sound
+was the beating of their hearts.
+
+Mr. Maren had provided himself with matches and a candle.  With some
+difficulty, begotten of his excitement, he made a light, and they
+proceeded to explore the place, passing from room to room.
+Everything was in orderly arrangement, as it had been left by the
+sheriff; nothing had been disturbed.  A light coating of dust was
+everywhere.  A back door was partly open, as if by neglect, and
+their first thought was that the authors of the awful revelry might
+have escaped.  The door was opened, and the light of the candle
+shone through upon the ground.  The expiring effort of the previous
+night's storm had been a light fall of snow; there were no
+footprints; the white surface was unbroken.  They closed the door
+and entered the last room of the four that the house contained--that
+farthest from the road, in an angle of the building.  Here the
+candle in Mr. Maren's hand was suddenly extinguished as by a draught
+of air.  Almost immediately followed the sound of a heavy fall.
+When the candle had been hastily relighted young Mr. Galbraith was
+seen prostrate on the floor at a little distance from the others.
+He was dead.  In one hand the body grasped a heavy sack of coins,
+which later examination showed to be all of old Spanish mintage.
+Directly over the body as it lay, a board had been torn from its
+fastenings in the wall, and from the cavity so disclosed it was
+evident that the bag had been taken.
+
+Another inquest was held:  another post-mortem examination failed to
+reveal a probable cause of death.  Another verdict of "the
+visitation of God" left all at liberty to form their own
+conclusions.  Mr. Maren contended that the young man died of
+excitement.
+
+
+
+A FRUITLESS ASSIGNMENT
+
+
+
+Henry Saylor, who was killed in Covington, in a quarrel with Antonio
+Finch, was a reporter on the Cincinnati Commercial.  In the year
+1859 a vacant dwelling in Vine street, in Cincinnati, became the
+center of a local excitement because of the strange sights and
+sounds said to be observed in it nightly.  According to the
+testimony of many reputable residents of the vicinity these were
+inconsistent with any other hypothesis than that the house was
+haunted.  Figures with something singularly unfamiliar about them
+were seen by crowds on the sidewalk to pass in and out.  No one
+could say just where they appeared upon the open lawn on their way
+to the front door by which they entered, nor at exactly what point
+they vanished as they came out; or, rather, while each spectator was
+positive enough about these matters, no two agreed.  They were all
+similarly at variance in their descriptions of the figures
+themselves.  Some of the bolder of the curious throng ventured on
+several evenings to stand upon the doorsteps to intercept them, or
+failing in this, get a nearer look at them.  These courageous men,
+it was said, were unable to force the door by their united strength,
+and always were hurled from the steps by some invisible agency and
+severely injured; the door immediately afterward opening, apparently
+of its own volition, to admit or free some ghostly guest.  The
+dwelling was known as the Roscoe house, a family of that name having
+lived there for some years, and then, one by one, disappeared, the
+last to leave being an old woman.  Stories of foul play and
+successive murders had always been rife, but never were
+authenticated.
+
+One day during the prevalence of the excitement Saylor presented
+himself at the office of the Commercial for orders.  He received a
+note from the city editor which read as follows:  "Go and pass the
+night alone in the haunted house in Vine street and if anything
+occurs worth while make two columns."  Saylor obeyed his superior;
+he could not afford to lose his position on the paper.
+
+Apprising the police of his intention, he effected an entrance
+through a rear window before dark, walked through the deserted
+rooms, bare of furniture, dusty and desolate, and seating himself at
+last in the parlor on an old sofa which he had dragged in from
+another room watched the deepening of the gloom as night came on.
+Before it was altogether dark the curious crowd had collected in the
+street, silent, as a rule, and expectant, with here and there a
+scoffer uttering his incredulity and courage with scornful remarks
+or ribald cries.  None knew of the anxious watcher inside.  He
+feared to make a light; the uncurtained windows would have betrayed
+his presence, subjecting him to insult, possibly to injury.
+Moreover, he was too conscientious to do anything to enfeeble his
+impressions and unwilling to alter any of the customary conditions
+under which the manifestations were said to occur.
+
+It was now dark outside, but light from the street faintly
+illuminated the part of the room that he was in.  He had set open
+every door in the whole interior, above and below, but all the outer
+ones were locked and bolted.  Sudden exclamations from the crowd
+caused him to spring to the window and look out.  He saw the figure
+of a man moving rapidly across the lawn toward the building--saw it
+ascend the steps; then a projection of the wall concealed it.  There
+was a noise as of the opening and closing of the hall door; he heard
+quick, heavy footsteps along the passage--heard them ascend the
+stairs--heard them on the uncarpeted floor of the chamber
+immediately overhead.
+
+Saylor promptly drew his pistol, and groping his way up the stairs
+entered the chamber, dimly lighted from the street.  No one was
+there.  He heard footsteps in an adjoining room and entered that.
+It was dark and silent.  He struck his foot against some object on
+the floor, knelt by it, passed his hand over it.  It was a human
+head--that of a woman.  Lifting it by the hair this iron-nerved man
+returned to the half-lighted room below, carried it near the window
+and attentively examined it.  While so engaged he was half conscious
+of the rapid opening and closing of the outer door, of footfalls
+sounding all about him.  He raised his eyes from the ghastly object
+of his attention and saw himself the center of a crowd of men and
+women dimly seen; the room was thronged with them.  He thought the
+people had broken in.
+
+"Ladies and gentlemen," he said, coolly, "you see me under
+suspicious circumstances, but"--his voice was drowned in peals of
+laughter--such laughter as is heard in asylums for the insane.  The
+persons about him pointed at the object in his hand and their
+merriment increased as he dropped it and it went rolling among their
+feet.  They danced about it with gestures grotesque and attitudes
+obscene and indescribable.  They struck it with their feet, urging
+it about the room from wall to wall; pushed and overthrew one
+another in their struggles to kick it; cursed and screamed and sang
+snatches of ribald songs as the battered head bounded about the room
+as if in terror and trying to escape.  At last it shot out of the
+door into the hall, followed by all, with tumultuous haste.  That
+moment the door closed with a sharp concussion.  Saylor was alone,
+in dead silence.
+
+Carefully putting away his pistol, which all the time he had held in
+his hand, he went to a window and looked out.  The street was
+deserted and silent; the lamps were extinguished; the roofs and
+chimneys of the houses were sharply outlined against the dawn-light
+in the east.  He left the house, the door yielding easily to his
+hand, and walked to the Commercial office.  The city editor was
+still in his office--asleep.  Saylor waked him and said:  "I have
+been at the haunted house."
+
+The editor stared blankly as if not wholly awake.  "Good God!" he
+cried, "are you Saylor?"
+
+"Yes--why not?"  The editor made no answer, but continued staring.
+
+"I passed the night there--it seems," said Saylor.
+
+"They say that things were uncommonly quiet out there," the editor
+said, trifling with a paper-weight upon which he had dropped his
+eyes, "did anything occur?"
+
+"Nothing whatever."
+
+
+
+A VINE ON A HOUSE
+
+
+
+About three miles from the little town of Norton, in Missouri, on
+the road leading to Maysville, stands an old house that was last
+occupied by a family named Harding.  Since 1886 no one has lived in
+it, nor is anyone likely to live in it again.  Time and the disfavor
+of persons dwelling thereabout are converting it into a rather
+picturesque ruin.  An observer unacquainted with its history would
+hardly put it into the category of "haunted houses," yet in all the
+region round such is its evil reputation.  Its windows are without
+glass, its doorways without doors; there are wide breaches in the
+shingle roof, and for lack of paint the weatherboarding is a dun
+gray.  But these unfailing signs of the supernatural are partly
+concealed and greatly softened by the abundant foliage of a large
+vine overrunning the entire structure.  This vine--of a species
+which no botanist has ever been able to name--has an important part
+in the story of the house.
+
+The Harding family consisted of Robert Harding, his wife Matilda,
+Miss Julia Went, who was her sister, and two young children.  Robert
+Harding was a silent, cold-mannered man who made no friends in the
+neighborhood and apparently cared to make none.  He was about forty
+years old, frugal and industrious, and made a living from the little
+farm which is now overgrown with brush and brambles.  He and his
+sister-in-law were rather tabooed by their neighbors, who seemed to
+think that they were seen too frequently together--not entirely
+their fault, for at these times they evidently did not challenge
+observation.  The moral code of rural Missouri is stern and
+exacting.
+
+Mrs. Harding was a gentle, sad-eyed woman, lacking a left foot.
+
+At some time in 1884 it became known that she had gone to visit her
+mother in Iowa.  That was what her husband said in reply to
+inquiries, and his manner of saying it did not encourage further
+questioning.  She never came back, and two years later, without
+selling his farm or anything that was his, or appointing an agent to
+look after his interests, or removing his household goods, Harding,
+with the rest of the family, left the country.  Nobody knew whither
+he went; nobody at that time cared.  Naturally, whatever was movable
+about the place soon disappeared and the deserted house became
+"haunted" in the manner of its kind.
+
+One summer evening, four or five years later, the Rev. J. Gruber, of
+Norton, and a Maysville attorney named Hyatt met on horseback in
+front of the Harding place.  Having business matters to discuss,
+they hitched their animals and going to the house sat on the porch
+to talk.  Some humorous reference to the somber reputation of the
+place was made and forgotten as soon as uttered, and they talked of
+their business affairs until it grew almost dark.  The evening was
+oppressively warm, the air stagnant.
+
+Presently both men started from their seats in surprise:  a long
+vine that covered half the front of the house and dangled its
+branches from the edge of the porch above them was visibly and
+audibly agitated, shaking violently in every stem and leaf.
+
+"We shall have a storm," Hyatt exclaimed.
+
+Gruber said nothing, but silently directed the other's attention to
+the foliage of adjacent trees, which showed no movement; even the
+delicate tips of the boughs silhouetted against the clear sky were
+motionless.  They hastily passed down the steps to what had been a
+lawn and looked upward at the vine, whose entire length was now
+visible.  It continued in violent agitation, yet they could discern
+no disturbing cause.
+
+"Let us leave," said the minister.
+
+And leave they did.  Forgetting that they had been traveling in
+opposite directions, they rode away together.  They went to Norton,
+where they related their strange experience to several discreet
+friends.  The next evening, at about the same hour, accompanied by
+two others whose names are not recalled, they were again on the
+porch of the Harding house, and again the mysterious phenomenon
+occurred:  the vine was violently agitated while under the closest
+scrutiny from root to tip, nor did their combined strength applied
+to the trunk serve to still it.  After an hour's observation they
+retreated, no less wise, it is thought, than when they had come.
+
+No great time was required for these singular facts to rouse the
+curiosity of the entire neighborhood.  By day and by night crowds of
+persons assembled at the Harding house "seeking a sign."  It does
+not appear that any found it, yet so credible were the witnesses
+mentioned that none doubted the reality of the "manifestations" to
+which they testified.
+
+By either a happy inspiration or some destructive design, it was one
+day proposed--nobody appeared to know from whom the suggestion came-
+-to dig up the vine, and after a good deal of debate this was done.
+Nothing was found but the root, yet nothing could have been more
+strange!
+
+For five or six feet from the trunk, which had at the surface of the
+ground a diameter of several inches, it ran downward, single and
+straight, into a loose, friable earth; then it divided and
+subdivided into rootlets, fibers and filaments, most curiously
+interwoven.  When carefully freed from soil they showed a singular
+formation.  In their ramifications and doublings back upon
+themselves they made a compact network, having in size and shape an
+amazing resemblance to the human figure.  Head, trunk and limbs were
+there; even the fingers and toes were distinctly defined; and many
+professed to see in the distribution and arrangement of the fibers
+in the globular mass representing the head a grotesque suggestion of
+a face.  The figure was horizontal; the smaller roots had begun to
+unite at the breast.
+
+In point of resemblance to the human form this image was imperfect.
+At about ten inches from one of the knees, the cilia forming that
+leg had abruptly doubled backward and inward upon their course of
+growth.  The figure lacked the left foot.
+
+There was but one inference--the obvious one; but in the ensuing
+excitement as many courses of action were proposed as there were
+incapable counselors.  The matter was settled by the sheriff of the
+county, who as the lawful custodian of the abandoned estate ordered
+the root replaced and the excavation filled with the earth that had
+been removed.
+
+Later inquiry brought out only one fact of relevancy and
+significance:  Mrs. Harding had never visited her relatives in Iowa,
+nor did they know that she was supposed to have done so.
+
+Of Robert Harding and the rest of his family nothing is known.  The
+house retains its evil reputation, but the replanted vine is as
+orderly and well-behaved a vegetable as a nervous person could wish
+to sit under of a pleasant night, when the katydids grate out their
+immemorial revelation and the distant whippoorwill signifies his
+notion of what ought to be done about it.
+
+
+
+AT OLD MAN ECKERT'S
+
+
+
+Philip Eckert lived for many years in an old, weather-stained wooden
+house about three miles from the little town of Marion, in Vermont.
+There must be quite a number of persons living who remember him, not
+unkindly, I trust, and know something of the story that I am about
+to tell.
+
+"Old Man Eckert," as he was always called, was not of a sociable
+disposition and lived alone.  As he was never known to speak of his
+own affairs nobody thereabout knew anything of his past, nor of his
+relatives if he had any.  Without being particularly ungracious or
+repellent in manner or speech, he managed somehow to be immune to
+impertinent curiosity, yet exempt from the evil repute with which it
+commonly revenges itself when baffled; so far as I know, Mr.
+Eckert's renown as a reformed assassin or a retired pirate of the
+Spanish Main had not reached any ear in Marion.  He got his living
+cultivating a small and not very fertile farm.
+
+One day he disappeared and a prolonged search by his neighbors
+failed to turn him up or throw any light upon his whereabouts or
+whyabouts.  Nothing indicated preparation to leave:  all was as he
+might have left it to go to the spring for a bucket of water.  For a
+few weeks little else was talked of in that region; then "old man
+Eckert" became a village tale for the ear of the stranger.  I do not
+know what was done regarding his property--the correct legal thing,
+doubtless.  The house was standing, still vacant and conspicuously
+unfit, when I last heard of it, some twenty years afterward.
+
+Of course it came to be considered "haunted," and the customary
+tales were told of moving lights, dolorous sounds and startling
+apparitions.  At one time, about five years after the disappearance,
+these stories of the supernatural became so rife, or through some
+attesting circumstances seemed so important, that some of Marion's
+most serious citizens deemed it well to investigate, and to that end
+arranged for a night session on the premises.  The parties to this
+undertaking were John Holcomb, an apothecary; Wilson Merle, a
+lawyer, and Andrus C. Palmer, the teacher of the public school, all
+men of consequence and repute.  They were to meet at Holcomb's house
+at eight o'clock in the evening of the appointed day and go together
+to the scene of their vigil, where certain arrangements for their
+comfort, a provision of fuel and the like, for the season was
+winter, had been already made.
+
+Palmer did not keep the engagement, and after waiting a half-hour
+for him the others went to the Eckert house without him.  They
+established themselves in the principal room, before a glowing fire,
+and without other light than it gave, awaited events.  It had been
+agreed to speak as little as possible:  they did not even renew the
+exchange of views regarding the defection of Palmer, which had
+occupied their minds on the way.
+
+Probably an hour had passed without incident when they heard (not
+without emotion, doubtless) the sound of an opening door in the rear
+of the house, followed by footfalls in the room adjoining that in
+which they sat.  The watchers rose to their feet, but stood firm,
+prepared for whatever might ensue.  A long silence followed--how
+long neither would afterward undertake to say.  Then the door
+between the two rooms opened and a man entered.
+
+It was Palmer.  He was pale, as if from excitement--as pale as the
+others felt themselves to be.  His manner, too, was singularly
+distrait:  he neither responded to their salutations nor so much as
+looked at them, but walked slowly across the room in the light of
+the failing fire and opening the front door passed out into the
+darkness.
+
+It seems to have been the first thought of both men that Palmer was
+suffering from fright--that something seen, heard or imagined in the
+back room had deprived him of his senses.  Acting on the same
+friendly impulse both ran after him through the open door.  But
+neither they nor anyone ever again saw or heard of Andrus Palmer!
+
+This much was ascertained the next morning.  During the session of
+Messrs. Holcomb and Merle at the "haunted house" a new snow had
+fallen to a depth of several inches upon the old.  In this snow
+Palmer's trail from his lodging in the village to the back door of
+the Eckert house was conspicuous.  But there it ended:  from the
+front door nothing led away but the tracks of the two men who swore
+that he preceded them.  Palmer's disappearance was as complete as
+that of "old man Eckert" himself--whom, indeed, the editor of the
+local paper somewhat graphically accused of having "reached out and
+pulled him in."
+
+
+
+THE SPOOK HOUSE
+
+
+
+On the road leading north from Manchester, in eastern Kentucky, to
+Booneville, twenty miles away, stood, in 1862, a wooden plantation
+house of a somewhat better quality than most of the dwellings in
+that region.  The house was destroyed by fire in the year following-
+-probably by some stragglers from the retreating column of General
+George W. Morgan, when he was driven from Cumberland Gap to the Ohio
+river by General Kirby Smith.  At the time of its destruction, it
+had for four or five years been vacant.  The fields about it were
+overgrown with brambles, the fences gone, even the few negro
+quarters, and out-houses generally, fallen partly into ruin by
+neglect and pillage; for the negroes and poor whites of the vicinity
+found in the building and fences an abundant supply of fuel, of
+which they availed themselves without hesitation, openly and by
+daylight.  By daylight alone; after nightfall no human being except
+passing strangers ever went near the place.
+
+It was known as the "Spook House."  That it was tenanted by evil
+spirits, visible, audible and active, no one in all that region
+doubted any more than he doubted what he was told of Sundays by the
+traveling preacher.  Its owner's opinion of the matter was unknown;
+he and his family had disappeared one night and no trace of them had
+ever been found.  They left everything--household goods, clothing,
+provisions, the horses in the stable, the cows in the field, the
+negroes in the quarters--all as it stood; nothing was missing--
+except a man, a woman, three girls, a boy and a babe!  It was not
+altogether surprising that a plantation where seven human beings
+could be simultaneously effaced and nobody the wiser should be under
+some suspicion.
+
+One night in June, 1859, two citizens of Frankfort, Col. J. C.
+McArdle, a lawyer, and Judge Myron Veigh, of the State Militia, were
+driving from Booneville to Manchester.  Their business was so
+important that they decided to push on, despite the darkness and the
+mutterings of an approaching storm, which eventually broke upon them
+just as they arrived opposite the "Spook House."  The lightning was
+so incessant that they easily found their way through the gateway
+and into a shed, where they hitched and unharnessed their team.
+They then went to the house, through the rain, and knocked at all
+the doors without getting any response.  Attributing this to the
+continuous uproar of the thunder they pushed at one of the doors,
+which yielded.  They entered without further ceremony and closed the
+door.  That instant they were in darkness and silence.  Not a gleam
+of the lightning's unceasing blaze penetrated the windows or
+crevices; not a whisper of the awful tumult without reached them
+there.  It was as if they had suddenly been stricken blind and deaf,
+and McArdle afterward said that for a moment he believed himself to
+have been killed by a stroke of lightning as he crossed the
+threshold.  The rest of this adventure can as well be related in his
+own words, from the Frankfort Advocate of August 6, 1876:
+
+"When I had somewhat recovered from the dazing effect of the
+transition from uproar to silence, my first impulse was to reopen
+the door which I had closed, and from the knob of which I was not
+conscious of having removed my hand; I felt it distinctly, still in
+the clasp of my fingers.  My notion was to ascertain by stepping
+again into the storm whether I had been deprived of sight and
+hearing.  I turned the doorknob and pulled open the door.  It led
+into another room!
+
+"This apartment was suffused with a faint greenish light, the source
+of which I could not determine, making everything distinctly
+visible, though nothing was sharply defined.  Everything, I say, but
+in truth the only objects within the blank stone walls of that room
+were human corpses.  In number they were perhaps eight or ten--it
+may well be understood that I did not truly count them.  They were
+of different ages, or rather sizes, from infancy up, and of both
+sexes.  All were prostrate on the floor, excepting one, apparently a
+young woman, who sat up, her back supported by an angle of the wall.
+A babe was clasped in the arms of another and older woman.  A half-
+grown lad lay face downward across the legs of a full-bearded man.
+One or two were nearly naked, and the hand of a young girl held the
+fragment of a gown which she had torn open at the breast.  The
+bodies were in various stages of decay, all greatly shrunken in face
+and figure.  Some were but little more than skeletons.
+
+"While I stood stupefied with horror by this ghastly spectacle and
+still holding open the door, by some unaccountable perversity my
+attention was diverted from the shocking scene and concerned itself
+with trifles and details.  Perhaps my mind, with an instinct of
+self-preservation, sought relief in matters which would relax its
+dangerous tension.  Among other things, I observed that the door
+that I was holding open was of heavy iron plates, riveted.
+Equidistant from one another and from the top and bottom, three
+strong bolts protruded from the beveled edge.  I turned the knob and
+they were retracted flush with the edge; released it, and they shot
+out.  It was a spring lock.  On the inside there was no knob, nor
+any kind of projection--a smooth surface of iron.
+
+"While noting these things with an interest and attention which it
+now astonishes me to recall I felt myself thrust aside, and Judge
+Veigh, whom in the intensity and vicissitudes of my feelings I had
+altogether forgotten, pushed by me into the room.  'For God's sake,'
+I cried, 'do not go in there!  Let us get out of this dreadful
+place!'
+
+"He gave no heed to my entreaties, but (as fearless a gentleman as
+lived in all the South) walked quickly to the center of the room,
+knelt beside one of the bodies for a closer examination and tenderly
+raised its blackened and shriveled head in his hands.  A strong
+disagreeable odor came through the doorway, completely overpowering
+me.  My senses reeled; I felt myself falling, and in clutching at
+the edge of the door for support pushed it shut with a sharp click!
+
+"I remember no more:  six weeks later I recovered my reason in a
+hotel at Manchester, whither I had been taken by strangers the next
+day.  For all these weeks I had suffered from a nervous fever,
+attended with constant delirium.  I had been found lying in the road
+several miles away from the house; but how I had escaped from it to
+get there I never knew.  On recovery, or as soon as my physicians
+permitted me to talk, I inquired the fate of Judge Veigh, whom (to
+quiet me, as I now know) they represented as well and at home.
+
+"No one believed a word of my story, and who can wonder?  And who
+can imagine my grief when, arriving at my home in Frankfort two
+months later, I learned that Judge Veigh had never been heard of
+since that night?  I then regretted bitterly the pride which since
+the first few days after the recovery of my reason had forbidden me
+to repeat my discredited story and insist upon its truth.
+
+"With all that afterward occurred--the examination of the house; the
+failure to find any room corresponding to that which I have
+described; the attempt to have me adjudged insane, and my triumph
+over my accusers--the readers of the Advocate are familiar.  After
+all these years I am still confident that excavations which I have
+neither the legal right to undertake nor the wealth to make would
+disclose the secret of the disappearance of my unhappy friend, and
+possibly of the former occupants and owners of the deserted and now
+destroyed house.  I do not despair of yet bringing about such a
+search, and it is a source of deep grief to me that it has been
+delayed by the undeserved hostility and unwise incredulity of the
+family and friends of the late Judge Veigh."
+
+Colonel McArdle died in Frankfort on the thirteenth day of December,
+in the year 1879.
+
+
+
+THE OTHER LODGERS
+
+
+
+"In order to take that train," said Colonel Levering, sitting in the
+Waldorf-Astoria hotel, "you will have to remain nearly all night in
+Atlanta.  That is a fine city, but I advise you not to put up at the
+Breathitt House, one of the principal hotels.  It is an old wooden
+building in urgent need of repairs.  There are breaches in the walls
+that you could throw a cat through.  The bedrooms have no locks on
+the doors, no furniture but a single chair in each, and a bedstead
+without bedding--just a mattress.  Even these meager accommodations
+you cannot be sure that you will have in monopoly; you must take
+your chance of being stowed in with a lot of others.  Sir, it is a
+most abominable hotel.
+
+"The night that I passed in it was an uncomfortable night.  I got in
+late and was shown to my room on the ground floor by an apologetic
+night-clerk with a tallow candle, which he considerately left with
+me.  I was worn out by two days and a night of hard railway travel
+and had not entirely recovered from a gunshot wound in the head,
+received in an altercation.  Rather than look for better quarters I
+lay down on the mattress without removing my clothing and fell
+asleep.
+
+"Along toward morning I awoke.  The moon had risen and was shining
+in at the uncurtained window, illuminating the room with a soft,
+bluish light which seemed, somehow, a bit spooky, though I dare say
+it had no uncommon quality; all moonlight is that way if you will
+observe it.  Imagine my surprise and indignation when I saw the
+floor occupied by at least a dozen other lodgers!  I sat up,
+earnestly damning the management of that unthinkable hotel, and was
+about to spring from the bed to go and make trouble for the night-
+clerk--him of the apologetic manner and the tallow candle--when
+something in the situation affected me with a strange indisposition
+to move.  I suppose I was what a story-writer might call 'frozen
+with terror.'  For those men were obviously all dead!
+
+"They lay on their backs, disposed orderly along three sides of the
+room, their feet to the walls--against the other wall, farthest from
+the door, stood my bed and the chair.  All the faces were covered,
+but under their white cloths the features of the two bodies that lay
+in the square patch of moonlight near the window showed in sharp
+profile as to nose and chin.
+
+"I thought this a bad dream and tried to cry out, as one does in a
+nightmare, but could make no sound.  At last, with a desperate
+effort I threw my feet to the floor and passing between the two rows
+of clouted faces and the two bodies that lay nearest the door, I
+escaped from the infernal place and ran to the office.  The night-
+clerk was there, behind the desk, sitting in the dim light of
+another tallow candle--just sitting and staring.  He did not rise:
+my abrupt entrance produced no effect upon him, though I must have
+looked a veritable corpse myself.  It occurred to me then that I had
+not before really observed the fellow.  He was a little chap, with a
+colorless face and the whitest, blankest eyes I ever saw.  He had no
+more expression than the back of my hand.  His clothing was a dirty
+gray.
+
+"'Damn you!' I said; 'what do you mean?'
+
+"Just the same, I was shaking like a leaf in the wind and did not
+recognize my own voice.
+
+"The night-clerk rose, bowed (apologetically) and--well, he was no
+longer there, and at that moment I felt a hand laid upon my shoulder
+from behind.  Just fancy that if you can!  Unspeakably frightened, I
+turned and saw a portly, kind-faced gentleman, who asked:
+
+"'What is the matter, my friend?'
+
+"I was not long in telling him, but before I made an end of it he
+went pale himself.  'See here,' he said, 'are you telling the
+truth?'
+
+"I had now got myself in hand and terror had given place to
+indignation.  'If you dare to doubt it,' I said, 'I'll hammer the
+life out of you!'
+
+"'No,' he replied, 'don't do that; just sit down till I tell you.
+This is not a hotel.  It used to be; afterward it was a hospital.
+Now it is unoccupied, awaiting a tenant.  The room that you mention
+was the dead-room--there were always plenty of dead.  The fellow
+that you call the night-clerk used to be that, but later he booked
+the patients as they were brought in.  I don't understand his being
+here.  He has been dead a few weeks.'
+
+"'And who are you?' I blurted out.
+
+"'Oh, I look after the premises.  I happened to be passing just now,
+and seeing a light in here came in to investigate.  Let us have a
+look into that room,' he added, lifting the sputtering candle from
+the desk.
+
+"'I'll see you at the devil first!' said I, bolting out of the door
+into the street.
+
+"Sir, that Breathitt House, in Atlanta, is a beastly place!  Don't
+you stop there."
+
+"God forbid!  Your account of it certainly does not suggest comfort.
+By the way, Colonel, when did all that occur?"
+
+"In September, 1864--shortly after the siege."
+
+
+
+THE THING AT NOLAN
+
+
+
+To the south of where the road between Leesville and Hardy, in the
+State of Missouri, crosses the east fork of May Creek stands an
+abandoned house.  Nobody has lived in it since the summer of 1879,
+and it is fast going to pieces.  For some three years before the
+date mentioned above, it was occupied by the family of Charles May,
+from one of whose ancestors the creek near which it stands took its
+name.
+
+Mr. May's family consisted of a wife, an adult son and two young
+girls.  The son's name was John--the names of the daughters are
+unknown to the writer of this sketch.
+
+John May was of a morose and surly disposition, not easily moved to
+anger, but having an uncommon gift of sullen, implacable hate.  His
+father was quite otherwise; of a sunny, jovial disposition, but with
+a quick temper like a sudden flame kindled in a wisp of straw, which
+consumes it in a flash and is no more.  He cherished no resentments,
+and his anger gone, was quick to make overtures for reconciliation.
+He had a brother living near by who was unlike him in respect of all
+this, and it was a current witticism in the neighborhood that John
+had inherited his disposition from his uncle.
+
+One day a misunderstanding arose between father and son, harsh words
+ensued, and the father struck the son full in the face with his
+fist.  John quietly wiped away the blood that followed the blow,
+fixed his eyes upon the already penitent offender and said with cold
+composure, "You will die for that."
+
+The words were overheard by two brothers named Jackson, who were
+approaching the men at the moment; but seeing them engaged in a
+quarrel they retired, apparently unobserved.  Charles May afterward
+related the unfortunate occurrence to his wife and explained that he
+had apologized to the son for the hasty blow, but without avail; the
+young man not only rejected his overtures, but refused to withdraw
+his terrible threat.  Nevertheless, there was no open rupture of
+relations:  John continued living with the family, and things went
+on very much as before.
+
+One Sunday morning in June, 1879, about two weeks after what has
+been related, May senior left the house immediately after breakfast,
+taking a spade.  He said he was going to make an excavation at a
+certain spring in a wood about a mile away, so that the cattle could
+obtain water.  John remained in the house for some hours, variously
+occupied in shaving himself, writing letters and reading a
+newspaper.  His manner was very nearly what it usually was; perhaps
+he was a trifle more sullen and surly.
+
+At two o'clock he left the house.  At five, he returned.  For some
+reason not connected with any interest in his movements, and which
+is not now recalled, the time of his departure and that of his
+return were noted by his mother and sisters, as was attested at his
+trial for murder.  It was observed that his clothing was wet in
+spots, as if (so the prosecution afterward pointed out) he had been
+removing blood-stains from it.  His manner was strange, his look
+wild.  He complained of illness, and going to his room took to his
+bed.
+
+May senior did not return.  Later that evening the nearest neighbors
+were aroused, and during that night and the following day a search
+was prosecuted through the wood where the spring was.  It resulted
+in little but the discovery of both men's footprints in the clay
+about the spring.  John May in the meantime had grown rapidly worse
+with what the local physician called brain fever, and in his
+delirium raved of murder, but did not say whom he conceived to have
+been murdered, nor whom he imagined to have done the deed.  But his
+threat was recalled by the brothers Jackson and he was arrested on
+suspicion and a deputy sheriff put in charge of him at his home.
+Public opinion ran strongly against him and but for his illness he
+would probably have been hanged by a mob.  As it was, a meeting of
+the neighbors was held on Tuesday and a committee appointed to watch
+the case and take such action at any time as circumstances might
+seem to warrant.
+
+On Wednesday all was changed.  From the town of Nolan, eight miles
+away, came a story which put a quite different light on the matter.
+Nolan consisted of a school house, a blacksmith's shop, a "store"
+and a half-dozen dwellings.  The store was kept by one Henry Odell,
+a cousin of the elder May.  On the afternoon of the Sunday of May's
+disappearance Mr. Odell and four of his neighbors, men of
+credibility, were sitting in the store smoking and talking.  It was
+a warm day; and both the front and the back door were open.  At
+about three o'clock Charles May, who was well known to three of
+them, entered at the front door and passed out at the rear.  He was
+without hat or coat.  He did not look at them, nor return their
+greeting, a circumstance which did not surprise, for he was
+evidently seriously hurt.  Above the left eyebrow was a wound--a
+deep gash from which the blood flowed, covering the whole left side
+of the face and neck and saturating his light-gray shirt.  Oddly
+enough, the thought uppermost in the minds of all was that he had
+been fighting and was going to the brook directly at the back of the
+store, to wash himself.
+
+Perhaps there was a feeling of delicacy--a backwoods etiquette which
+restrained them from following him to offer assistance; the court
+records, from which, mainly, this narrative is drawn, are silent as
+to anything but the fact.  They waited for him to return, but he did
+not return.
+
+Bordering the brook behind the store is a forest extending for six
+miles back to the Medicine Lodge Hills.  As soon as it became known
+in the neighborhood of the missing man's dwelling that he had been
+seen in Nolan there was a marked alteration in public sentiment and
+feeling.  The vigilance committee went out of existence without the
+formality of a resolution.  Search along the wooded bottom lands of
+May Creek was stopped and nearly the entire male population of the
+region took to beating the bush about Nolan and in the Medicine
+Lodge Hills.  But of the missing man no trace was found.
+
+One of the strangest circumstances of this strange case is the
+formal indictment and trial of a man for murder of one whose body no
+human being professed to have seen--one not known to be dead.  We
+are all more or less familiar with the vagaries and eccentricities
+of frontier law, but this instance, it is thought, is unique.
+However that may be, it is of record that on recovering from his
+illness John May was indicted for the murder of his missing father.
+Counsel for the defense appears not to have demurred and the case
+was tried on its merits.  The prosecution was spiritless and
+perfunctory; the defense easily established--with regard to the
+deceased--an alibi.  If during the time in which John May must have
+killed Charles May, if he killed him at all, Charles May was miles
+away from where John May must have been, it is plain that the
+deceased must have come to his death at the hands of someone else.
+
+John May was acquitted, immediately left the country, and has never
+been heard of from that day.  Shortly afterward his mother and
+sisters removed to St. Louis.  The farm having passed into the
+possession of a man who owns the land adjoining, and has a dwelling
+of his own, the May house has ever since been vacant, and has the
+somber reputation of being haunted.
+
+One day after the May family had left the country, some boys,
+playing in the woods along May Creek, found concealed under a mass
+of dead leaves, but partly exposed by the rooting of hogs, a spade,
+nearly new and bright, except for a spot on one edge, which was
+rusted and stained with blood.  The implement had the initials C. M.
+cut into the handle.
+
+This discovery renewed, in some degree, the public excitement of a
+few months before.  The earth near the spot where the spade was
+found was carefully examined, and the result was the finding of the
+dead body of a man.  It had been buried under two or three feet of
+soil and the spot covered with a layer of dead leaves and twigs.
+There was but little decomposition, a fact attributed to some
+preservative property in the mineral-bearing soil.
+
+Above the left eyebrow was a wound--a deep gash from which blood had
+flowed, covering the whole left side of the face and neck and
+saturating the light-gray shirt.  The skull had been cut through by
+the blow.  The body was that of Charles May.
+
+But what was it that passed through Mr. Odell's store at Nolan?
+
+
+
+
+"MYSTERIOUS DISAPPEARANCES"
+
+
+
+
+THE DIFFICULTY OF CROSSING A FIELD
+
+
+
+One morning in July, 1854, a planter named Williamson, living six
+miles from Selma, Alabama, was sitting with his wife and a child on
+the veranda of his dwelling.  Immediately in front of the house was
+a lawn, perhaps fifty yards in extent between the house and public
+road, or, as it was called, the "pike."  Beyond this road lay a
+close-cropped pasture of some ten acres, level and without a tree,
+rock, or any natural or artificial object on its surface.  At the
+time there was not even a domestic animal in the field.  In another
+field, beyond the pasture, a dozen slaves were at work under an
+overseer.
+
+Throwing away the stump of a cigar, the planter rose, saying:  "I
+forgot to tell Andrew about those horses."  Andrew was the overseer.
+
+Williamson strolled leisurely down the gravel walk, plucking a
+flower as he went, passed across the road and into the pasture,
+pausing a moment as he closed the gate leading into it, to greet a
+passing neighbor, Armour Wren, who lived on an adjoining plantation.
+Mr. Wren was in an open carriage with his son James, a lad of
+thirteen.  When he had driven some two hundred yards from the point
+of meeting, Mr. Wren said to his son:  "I forgot to tell Mr.
+Williamson about those horses."
+
+Mr. Wren had sold to Mr. Williamson some horses, which were to have
+been sent for that day, but for some reason not now remembered it
+would be inconvenient to deliver them until the morrow.  The
+coachman was directed to drive back, and as the vehicle turned
+Williamson was seen by all three, walking leisurely across the
+pasture.  At that moment one of the coach horses stumbled and came
+near falling.  It had no more than fairly recovered itself when
+James Wren cried:  "Why, father, what has become of Mr. Williamson?"
+
+It is not the purpose of this narrative to answer that question.
+
+Mr. Wren's strange account of the matter, given under oath in the
+course of legal proceedings relating to the Williamson estate, here
+follows:
+
+"My son's exclamation caused me to look toward the spot where I had
+seen the deceased [sic] an instant before, but he was not there, nor
+was he anywhere visible.  I cannot say that at the moment I was
+greatly startled, or realized the gravity of the occurrence, though
+I thought it singular.  My son, however, was greatly astonished and
+kept repeating his question in different forms until we arrived at
+the gate.  My black boy Sam was similarly affected, even in a
+greater degree, but I reckon more by my son's manner than by
+anything he had himself observed.  [This sentence in the testimony
+was stricken out.]  As we got out of the carriage at the gate of the
+field, and while Sam was hanging [sic] the team to the fence, Mrs.
+Williamson, with her child in her arms and followed by several
+servants, came running down the walk in great excitement, crying:
+'He is gone, he is gone!  O God! what an awful thing!' and many
+other such exclamations, which I do not distinctly recollect.  I got
+from them the impression that they related to something more--than
+the mere disappearance of her husband, even if that had occurred
+before her eyes.  Her manner was wild, but not more so, I think,
+than was natural under the circumstances.  I have no reason to think
+she had at that time lost her mind.  I have never since seen nor
+heard of Mr. Williamson."
+
+This testimony, as might have been expected, was corroborated in
+almost every particular by the only other eye-witness (if that is a
+proper term)--the lad James.  Mrs. Williamson had lost her reason
+and the servants were, of course, not competent to testify.  The boy
+James Wren had declared at first that he SAW the disappearance, but
+there is nothing of this in his testimony given in court.  None of
+the field hands working in the field to which Williamson was going
+had seen him at all, and the most rigorous search of the entire
+plantation and adjoining country failed to supply a clew.  The most
+monstrous and grotesque fictions, originating with the blacks, were
+current in that part of the State for many years, and probably are
+to this day; but what has been here related is all that is certainly
+known of the matter.  The courts decided that Williamson was dead,
+and his estate was distributed according to law.
+
+
+
+AN UNFINISHED RACE
+
+
+
+James Burne Worson was a shoemaker who lived in Leamington,
+Warwickshire, England.  He had a little shop in one of the by-ways
+leading off the road to Warwick.  In his humble sphere he was
+esteemed an honest man, although like many of his class in English
+towns he was somewhat addicted to drink.  When in liquor he would
+make foolish wagers.  On one of these too frequent occasions he was
+boasting of his prowess as a pedestrian and athlete, and the outcome
+was a match against nature.  For a stake of one sovereign he
+undertook to run all the way to Coventry and back, a distance of
+something more than forty miles.  This was on the 3d day of
+September in 1873.  He set out at once, the man with whom he had
+made the bet--whose name is not remembered--accompanied by Barham
+Wise, a linen draper, and Hamerson Burns, a photographer, I think,
+following in a light cart or wagon.
+
+For several miles Worson went on very well, at an easy gait, without
+apparent fatigue, for he had really great powers of endurance and
+was not sufficiently intoxicated to enfeeble them.  The three men in
+the wagon kept a short distance in the rear, giving him occasional
+friendly "chaff" or encouragement, as the spirit moved them.
+Suddenly--in the very middle of the roadway, not a dozen yards from
+them, and with their eyes full upon him--the man seemed to stumble,
+pitched headlong forward, uttered a terrible cry and vanished!  He
+did not fall to the earth--he vanished before touching it.  No trace
+of him was ever discovered.
+
+After remaining at and about the spot for some time, with aimless
+irresolution, the three men returned to Leamington, told their
+astonishing story and were afterward taken into custody.  But they
+were of good standing, had always been considered truthful, were
+sober at the time of the occurrence, and nothing ever transpired to
+discredit their sworn account of their extraordinary adventure,
+concerning the truth of which, nevertheless, public opinion was
+divided, throughout the United Kingdom.  If they had something to
+conceal, their choice of means is certainly one of the most amazing
+ever made by sane human beings.
+
+
+
+CHARLES ASHMORE'S TRAIL
+
+
+
+The family of Christian Ashmore consisted of his wife, his mother,
+two grown daughters, and a son of sixteen years.  They lived in
+Troy, New York, were well-to-do, respectable persons, and had many
+friends, some of whom, reading these lines, will doubtless learn for
+the first time the extraordinary fate of the young man.  From Troy
+the Ashmores moved in 1871 or 1872 to Richmond, Indiana, and a year
+or two later to the vicinity of Quincy, Illinois, where Mr. Ashmore
+bought a farm and lived on it.  At some little distance from the
+farmhouse was a spring with a constant flow of clear, cold water,
+whence the family derived its supply for domestic use at all
+seasons.
+
+On the evening of the 9th of November in 1878, at about nine
+o'clock, young Charles Ashmore left the family circle about the
+hearth, took a tin bucket and started toward the spring.  As he did
+not return, the family became uneasy, and going to the door by which
+he had left the house, his father called without receiving an
+answer.  He then lighted a lantern and with the eldest daughter,
+Martha, who insisted on accompanying him, went in search.  A light
+snow had fallen, obliterating the path, but making the young man's
+trail conspicuous; each footprint was plainly defined.  After going
+a little more than half-way--perhaps seventy-five yards--the father,
+who was in advance, halted, and elevating his lantern stood peering
+intently into the darkness ahead.
+
+"What is the matter, father?" the girl asked.
+
+This was the matter:  the trail of the young man had abruptly ended,
+and all beyond was smooth, unbroken snow.  The last footprints were
+as conspicuous as any in the line; the very nail-marks were
+distinctly visible.  Mr. Ashmore looked upward, shading his eyes
+with his hat held between them and the lantern.  The stars were
+shining; there was not a cloud in the sky; he was denied the
+explanation which had suggested itself, doubtful as it would have
+been--a new snowfall with a limit so plainly defined.  Taking a wide
+circuit round the ultimate tracks, so as to leave them undisturbed
+for further examination, the man proceeded to the spring, the girl
+following, weak and terrified.  Neither had spoken a word of what
+both had observed.  The spring was covered with ice, hours old.
+
+Returning to the house they noted the appearance of the snow on both
+sides of the trail its entire length.  No tracks led away from it.
+
+The morning light showed nothing more.  Smooth, spotless, unbroken,
+the shallow snow lay everywhere.
+
+Four days later the grief-stricken mother herself went to the spring
+for water.  She came back and related that in passing the spot where
+the footprints had ended she had heard the voice of her son and had
+been eagerly calling to him, wandering about the place, as she had
+fancied the voice to be now in one direction, now in another, until
+she was exhausted with fatigue and emotion.
+
+Questioned as to what the voice had said, she was unable to tell,
+yet averred that the words were perfectly distinct.  In a moment the
+entire family was at the place, but nothing was heard, and the voice
+was believed to be an hallucination caused by the mother's great
+anxiety and her disordered nerves.  But for months afterward, at
+irregular intervals of a few days, the voice was heard by the
+several members of the family, and by others.  All declared it
+unmistakably the voice of Charles Ashmore; all agreed that it seemed
+to come from a great distance, faintly, yet with entire distinctness
+of articulation; yet none could determine its direction, nor repeat
+its words.  The intervals of silence grew longer and longer, the
+voice fainter and farther, and by midsummer it was heard no more.
+
+If anybody knows the fate of Charles Ashmore it is probably his
+mother.  She is dead.
+
+
+
+SCIENCE TO THE FRONT
+
+
+
+In connection with this subject of "mysterious disappearance"--of
+which every memory is stored with abundant example--it is pertinent
+to note the belief of Dr. Hem, of Leipsic; not by way of
+explanation, unless the reader may choose to take it so, but because
+of its intrinsic interest as a singular speculation.  This
+distinguished scientist has expounded his views in a book entitled
+"Verschwinden und Seine Theorie," which has attracted some
+attention, "particularly," says one writer, "among the followers of
+Hegel, and mathematicians who hold to the actual existence of a so-
+called non-Euclidean space--that is to say, of space which has more
+dimensions than length, breadth, and thickness--space in which it
+would be possible to tie a knot in an endless cord and to turn a
+rubber ball inside out without 'a solution of its continuity,' or in
+other words, without breaking or cracking it."
+
+Dr. Hem believes that in the visible world there are void places--
+vacua, and something more--holes, as it were, through which animate
+and inanimate objects may fall into the invisible world and be seen
+and heard no more.  The theory is something like this:  Space is
+pervaded by luminiferous ether, which is a material thing--as much a
+substance as air or water, though almost infinitely more attenuated.
+All force, all forms of energy must be propagated in this; every
+process must take place in it which takes place at all.  But let us
+suppose that cavities exist in this otherwise universal medium, as
+caverns exist in the earth, or cells in a Swiss cheese.  In such a
+cavity there would be absolutely nothing.  It would be such a vacuum
+as cannot be artificially produced; for if we pump the air from a
+receiver there remains the luminiferous ether.  Through one of these
+cavities light could not pass, for there would be nothing to bear
+it.  Sound could not come from it; nothing could be felt in it.  It
+would not have a single one of the conditions necessary to the
+action of any of our senses.  In such a void, in short, nothing
+whatever could occur.  Now, in the words of the writer before
+quoted--the learned doctor himself nowhere puts it so concisely:  "A
+man inclosed in such a closet could neither see nor be seen; neither
+hear nor be heard; neither feel nor be felt; neither live nor die,
+for both life and death are processes which can take place only
+where there is force, and in empty space no force could exist."  Are
+these the awful conditions (some will ask) under which the friends
+of the lost are to think of them as existing, and doomed forever to
+exist?
+
+Baldly and imperfectly as here stated, Dr. Hem's theory, in so far
+as it professes to be an adequate explanation of "mysterious
+disappearances," is open to many obvious objections; to fewer as he
+states it himself in the "spacious volubility" of his book.  But
+even as expounded by its author it does not explain, and in truth is
+incompatible with some incidents of, the occurrences related in
+these memoranda:  for example, the sound of Charles Ashmore's voice.
+It is not my duty to indue facts and theories with affinity.
+
+A.B.
+
+
+
+Footnotes:
+
+{1}  The Isle of Pines was once a famous rendezvous of pirates.
+
+End of The Project Gutenberg Etext of Present at a Hanging et. al.
+by Ambrose Bierce
+
