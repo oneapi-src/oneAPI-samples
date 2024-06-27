@@ -1,0 +1,2719 @@
+Project Gutenberg Etext of The Pension Beaurepas, by Henry James
+#35 in our series by Henry James
+
+
+Copyright laws are changing all over the world, be sure to check
+the copyright laws for your country before posting these files!!
+
+Please take a look at the important information in this header.
+We encourage you to keep this file on your own disk, keeping an
+electronic path open for the next readers.  Do not remove this.
+
+*It must legally be the first thing seen when opening the book.*
+In fact, our legal advisors said we can't even change margins.
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*These Etexts Prepared By Hundreds of Volunteers and Donations*
+
+Information on contacting Project Gutenberg to get Etexts, and
+further information is included below.  We need your donations.
+
+
+Title:  The Pension Beaurepas
+
+Author:  Henry James
+
+July, 2001  [Etext #2720]
+
+
+Project Gutenberg Etext of The Pension Beaurepas, by Henry James
+******This file should be named penbr10.txt or penbr10.zip******
+
+Corrected EDITIONS of our etexts get a new NUMBER, penbr11.txt
+VERSIONS based on separate sources get new LETTER, penbr10a.txt
+
+
+This etext was scanned by David Price, email ccx074@coventry.ac.uk
+from the 1886 Macmillan and Co. edition.  Proofing was by Emma
+Hair, Francine Smith and Matthew Garrish.
+
+Project Gutenberg Etexts are usually created from multiple editions,
+all of which are in the Public Domain in the United States, unless a
+copyright notice is included.  Therefore, we usually do NOT keep any
+of these books in compliance with any particular paper edition.
+
+
+We are now trying to release all our books one month in advance
+of the official release dates, leaving time for better editing.
+
+Please note:  neither this list nor its contents are final till
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.  To be sure you have an
+up to date first edition [xxxxx10x.xxx] please check file sizes
+in the first week of the next month.  Since our ftp program has
+a bug in it that scrambles the date [tried to fix and failed] a
+look at the file size will have to do, but we will try to see a
+new copy has at least one byte more or less.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+time it takes us, a rather conservative estimate, is fifty hours
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour this year as we release thirty-six text
+files per month, or 432 more Etexts in 1999 for a total of 2000+
+If these reach just 10% of the computerized population, then the
+total should reach over 200 billion Etexts given away this year.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by December 31, 2001.  [10,000 x 100,000,000 = 1 Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only ~5% of the present number of computer users.
+
+At our revised rates of production, we will reach only one-third
+of that goal by the end of 2001, or about 3,333 Etexts unless we
+manage to get some real funding; currently our funding is mostly
+from Michael Hart's salary at Carnegie-Mellon University, and an
+assortment of sporadic gifts; this salary is only good for a few
+more years, so we are looking for something to replace it, as we
+don't want Project Gutenberg to be so dependent on one person.
+
+We need your donations more than ever!
+
+
+All donations should be made to "Project Gutenberg/CMU": and are
+tax deductible to the extent allowable by law.  (CMU = Carnegie-
+Mellon University).
+
+For these and other matters, please mail to:
+
+Project Gutenberg
+P. O. Box  2782
+Champaign, IL 61825
+
+When all other email fails. . .try our Executive Director:
+Michael S. Hart <hart@pobox.com>
+hart@pobox.com forwards to hart@prairienet.org and archive.org
+if your mail bounces from archive.org, I will still see it, if
+it bounces from prairienet.org, better resend later on. . . .
+
+We would prefer to send you this information by email.
+
+******
+
+To access Project Gutenberg etexts, use any Web browser
+to view http://promo.net/pg.  This site lists Etexts by
+author and by title, and includes information about how
+to get involved with Project Gutenberg.  You could also
+download our past Newsletters, or subscribe here.  This
+is one of our major sites, please email hart@pobox.com,
+for a more complete list of our various sites.
+
+To go directly to the etext collections, use FTP or any
+Web browser to visit a Project Gutenberg mirror (mirror
+sites are available on 7 continents; mirrors are listed
+at http://promo.net/pg).
+
+Mac users, do NOT point and click, typing works better.
+
+Example FTP session:
+
+ftp metalab.unc.edu
+login: anonymous
+password: your@login
+cd pub/docs/books/gutenberg
+cd etext90 through etext99 or etext00 through etext01, etc.
+dir [to see files]
+get or mget [to get files. . .set bin for zip files]
+GET GUTINDEX.??  [to get a year's listing of books, e.g., GUTINDEX.99]
+GET GUTINDEX.ALL [to get a listing of ALL books]
+
+***
+
+**Information prepared by the Project Gutenberg legal advisor**
+
+(Three Pages)
+
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here?  You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault.  So, among other things, this "Small Print!" statement
+disclaims most of our liability to you.  It also tells you how
+you can distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement.  If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from.  If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-
+tm etexts, is a "public domain" work distributed by Professor
+Michael S. Hart through the Project Gutenberg Association at
+Carnegie-Mellon University (the "Project").  Among other
+things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties.  Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the Project's "PROJECT GUTENBERG" trademark.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works.  Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects".  Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] the Project (and any other party you may receive this
+etext from as a PROJECT GUTENBERG-tm etext) disclaims all
+liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from.  If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy.  If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS".  NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold the Project, its directors,
+officers, members and agents harmless from all liability, cost
+and expense, including legal fees, that arise directly or
+indirectly from any of the following that you do or cause:
+[1] distribution of this etext, [2] alteration, modification,
+or addition to the etext, or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word pro-
+     cessing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Project of 20% of the
+     net profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Association/Carnegie-Mellon
+     University" within the 60 days following each
+     date you prepare (or were legally required to prepare)
+     your annual (or equivalent periodic) tax return.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+The Project gratefully accepts contributions in money, time,
+scanning machines, OCR software, public domain etexts, royalty
+free copyright licenses, and every other sort of contribution
+you can think of.  Money should be paid to "Project Gutenberg
+Association / Carnegie-Mellon University".
+
+We are planning on making some changes in our donation structure
+in 2000, so you might want to email me, hart@pobox.com beforehand.
+
+
+
+
+*END THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.04.29.93*END*
+
+
+
+
+
+This etext was scanned by David Price, email ccx074@coventry.ac.uk
+from the 1886 Macmillan and Co. edition.  Proofing was by Emma
+Hair, Francine Smith and Matthew Garrish.
+
+
+
+
+
+The Pension Beaurepas
+
+by Henry James
+
+
+
+
+CHAPTER I.
+
+
+
+I was not rich--on the contrary; and I had been told the Pension
+Beaurepas was cheap.  I had, moreover, been told that a boarding-
+house is a capital place for the study of human nature.  I had a
+fancy for a literary career, and a friend of mine had said to me, "If
+you mean to write you ought to go and live in a boarding-house; there
+is no other such place to pick up material."  I had read something of
+this kind in a letter addressed by Stendhal to his sister:  "I have a
+passionate desire to know human nature, and have a great mind to live
+in a boarding-house, where people cannot conceal their real
+characters."  I was an admirer of La Chartreuse de Parme, and it
+appeared to me that one could not do better than follow in the
+footsteps of its author.  I remembered, too, the magnificent
+boarding-house in Balzac's Pere Goriot,--the "pension bourgeoise des
+deux sexes et autres," kept by Madame Vauquer, nee De Conflans.
+Magnificent, I mean, as a piece of portraiture; the establishment, as
+an establishment, was certainly sordid enough, and I hoped for better
+things from the Pension Beaurepas.  This institution was one of the
+most esteemed in Geneva, and, standing in a little garden of its own,
+not far from the lake, had a very homely, comfortable, sociable
+aspect.  The regular entrance was, as one might say, at the back,
+which looked upon the street, or rather upon a little place, adorned
+like every place in Geneva, great or small, with a fountain.  This
+fact was not prepossessing, for on crossing the threshold you found
+yourself more or less in the kitchen, encompassed with culinary
+odours.  This, however, was no great matter, for at the Pension
+Beaurepas there was no attempt at gentility or at concealment of the
+domestic machinery.  The latter was of a very simple sort.  Madame
+Beaurepas was an excellent little old woman--she was very far
+advanced in life, and had been keeping a pension for forty years--
+whose only faults were that she was slightly deaf, that she was fond
+of a surreptitious pinch of snuff, and that, at the age of seventy-
+three, she wore flowers in her cap.  There was a tradition in the
+house that she was not so deaf as she pretended; that she feigned
+this infirmity in order to possess herself of the secrets of her
+lodgers.  But I never subscribed to this theory; I am convinced that
+Madame Beaurepas had outlived the period of indiscreet curiosity.
+She was a philosopher, on a matter-of-fact basis; she had been having
+lodgers for forty years, and all that she asked of them was that they
+should pay their bills, make use of the door-mat, and fold their
+napkins.  She cared very little for their secrets.  "J'en ai vus de
+toutes les couleurs," she said to me.  She had quite ceased to care
+for individuals; she cared only for types, for categories.  Her large
+observation had made her acquainted with a great number, and her mind
+was a complete collection of "heads."  She flattered herself that she
+knew at a glance where to pigeon-hole a new-comer, and if she made
+any mistakes her deportment never betrayed them.  I think that, as
+regards individuals, she had neither likes nor dislikes; but she was
+capable of expressing esteem or contempt for a species.  She had her
+own ways, I suppose, of manifesting her approval, but her manner of
+indicating the reverse was simple and unvarying.  "Je trouve que
+c'est deplace"--this exhausted her view of the matter.  If one of her
+inmates had put arsenic into the pot-au-feu, I believe Madame
+Beaurepas would have contented herself with remarking that the
+proceeding was out of place.  The line of misconduct to which she
+most objected was an undue assumption of gentility; she had no
+patience with boarders who gave themselves airs.  "When people come
+chez moi, it is not to cut a figure in the world; I have never had
+that illusion," I remember hearing her say; "and when you pay seven
+francs a day, tout compris, it comprises everything but the right to
+look down upon the others.  But there are people who, the less they
+pay, the more they take themselves au serieux.  My most difficult
+boarders have always been those who have had the little rooms."
+
+Madame Beaurepas had a niece, a young woman of some forty odd years;
+and the two ladies, with the assistance of a couple of thick-waisted,
+red-armed peasant women, kept the house going.  If on your exits and
+entrances you peeped into the kitchen, it made very little
+difference; for Celestine, the cook, had no pretension to be an
+invisible functionary or to deal in occult methods.  She was always
+at your service, with a grateful grin she blacked your boots; she
+trudged off to fetch a cab; she would have carried your baggage, if
+you had allowed her, on her broad little back.  She was always
+tramping in and out, between her kitchen and the fountain in the
+place, where it often seemed to me that a large part of the
+preparation for our dinner went forward--the wringing out of towels
+and table-cloths, the washing of potatoes and cabbages, the scouring
+of saucepans and cleansing of water--bottles.  You enjoyed, from the
+doorstep, a perpetual back-view of Celestine and of her large, loose,
+woollen ankles, as she craned, from the waist, over into the fountain
+and dabbled in her various utensils.  This sounds as if life went on
+in a very make-shift fashion at the Pension Beaurepas--as if the tone
+of the establishment were sordid.  But such was not at all the case.
+We were simply very bourgeois; we practised the good old Genevese
+principle of not sacrificing to appearances.  This is an excellent
+principle--when you have the reality.  We had the reality at the
+Pension Beaurepas:  we had it in the shape of soft short beds,
+equipped with fluffy duvets; of admirable coffee, served to us in the
+morning by Celestine in person, as we lay recumbent on these downy
+couches; of copious, wholesome, succulent dinners, conformable to the
+best provincial traditions.  For myself, I thought the Pension
+Beaurepas picturesque, and this, with me, at that time was a great
+word.  I was young and ingenuous:  I had just come from America.  I
+wished to perfect myself in the French tongue, and I innocently
+believed that it flourished by Lake Leman.  I used to go to lectures
+at the Academy, and come home with a violent appetite.  I always
+enjoyed my morning walk across the long bridge (there was only one,
+just there, in those days) which spans the deep blue out-gush of the
+lake, and up the dark steep streets of the old Calvinistic city.  The
+garden faced this way, toward the lake and the old town; and this was
+the pleasantest approach to the house.  There was a high wall, with a
+double gate in the middle, flanked by a couple of ancient massive
+posts; the big rusty grille contained some old-fashioned iron-work.
+The garden was rather mouldy and weedy, tangled and untended; but it
+contained a little thin--flowing fountain, several green benches, a
+rickety little table of the same complexion, and three orange-trees,
+in tubs, which were deposited as effectively as possible in front of
+the windows of the salon.
+
+
+
+CHAPTER II.
+
+
+
+As commonly happens in boarding-houses, the rustle of petticoats was,
+at the Pension Beaurepas, the most familiar form of the human tread.
+There was the usual allotment of economical widows and old maids, and
+to maintain the balance of the sexes there were only an old Frenchman
+and a young American.  It hardly made the matter easier that the old
+Frenchman came from Lausanne.  He was a native of that estimable
+town, but he had once spent six months in Paris, he had tasted of the
+tree of knowledge; he had got beyond Lausanne, whose resources he
+pronounced inadequate.  Lausanne, as he said, "manquait d'agrements."
+When obliged, for reasons which he never specified, to bring his
+residence in Paris to a close, he had fallen back on Geneva; he had
+broken his fall at the Pension Beaurepas.  Geneva was, after all,
+more like Paris, and at a Genevese boarding-house there was sure to
+be plenty of Americans with whom one could talk about the French
+metropolis.  M. Pigeonneau was a little lean man, with a large narrow
+nose, who sat a great deal in the garden, reading with the aid of a
+large magnifying glass a volume from the cabinet de lecture.
+
+One day, a fortnight after my arrival at the Pension Beaurepas, I
+came back, rather earlier than usual from my academic session; it
+wanted half an hour of the midday breakfast.  I went into the salon
+with the design of possessing myself of the day's Galignani before
+one of the little English old maids should have removed it to her
+virginal bower--a privilege to which Madame Beaurepas frequently
+alluded as one of the attractions of the establishment.  In the salon
+I found a new-comer, a tall gentleman in a high black hat, whom I
+immediately recognised as a compatriot.  I had often seen him, or his
+equivalent, in the hotel parlours of my native land.  He apparently
+supposed himself to be at the present moment in a hotel parlour; his
+hat was on his head, or, rather, half off it--pushed back from his
+forehead, and rather suspended than poised.  He stood before a table
+on which old newspapers were scattered, one of which he had taken up
+and, with his eye-glass on his nose, was holding out at arm's-length.
+It was that honourable but extremely diminutive sheet, the Journal de
+Geneve, a newspaper of about the size of a pocket-handkerchief.  As I
+drew near, looking for my Galignani, the tall gentleman gave me, over
+the top of his eye-glass, a somewhat solemn stare.  Presently,
+however, before I had time to lay my hand on the object of my search,
+he silently offered me the Journal de Geneve.
+
+"It appears," he said, "to be the paper of the country."
+
+"Yes," I answered, "I believe it's the best."
+
+He gazed at it again, still holding it at arm's-length, as if it had
+been a looking-glass.  "Well," he said, "I suppose it's natural a
+small country should have small papers.  You could wrap it up,
+mountains and all, in one of our dailies!"
+
+I found my Galignani, and went off with it into the garden, where I
+seated myself on a bench in the shade.  Presently I saw the tall
+gentleman in the hat appear in one of the open windows of the salon,
+and stand there with his hands in his pockets and his legs a little
+apart.  He looked very much bored, and--I don't know why--I
+immediately began to feel sorry for him.  He was not at all a
+picturesque personage; he looked like a jaded, faded man of business.
+But after a little he came into the garden and began to stroll about;
+and then his restless, unoccupied carriage, and the vague,
+unacquainted manner in which his eyes wandered over the place, seemed
+to make it proper that, as an older resident, I should exercise a
+certain hospitality.  I said something to him, and he came and sat
+down beside me on my bench, clasping one of his long knees in his
+hands.
+
+"When is it this big breakfast of theirs comes off?" he inquired.
+"That's what I call it--the little breakfast and the big breakfast.
+I never thought I should live to see the time when I should care to
+eat two breakfasts.  But a man's glad to do anything over here."
+
+"For myself," I observed, "I find plenty to do."
+
+He turned his head and glanced at me with a dry, deliberate, kind-
+looking eye.  "You're getting used to the life, are you?"
+
+"I like the life very much," I answered, laughing.
+
+"How long have you tried it?"
+
+"Do you mean in this place?"
+
+"Well, I mean anywhere.  It seems to me pretty much the same all
+over."
+
+"I have been in this house only a fortnight," I said.
+
+"Well, what should you say, from what you have seen?" my companion
+asked.
+
+"Oh," said I, "you can see all there is immediately.  It's very
+simple."
+
+"Sweet simplicity, eh?  I'm afraid my two ladies will find it too
+simple."
+
+"Everything is very good," I went on.  "And Madame Beaurepas is a
+charming old woman.  And then it's very cheap."
+
+"Cheap, is it?" my friend repeated meditatively.
+
+"Doesn't it strike you so?" I asked.  I thought it very possible he
+had not inquired the terms.  But he appeared not to have heard me; he
+sat there, clasping his knee and blinking, in a contemplative manner,
+at the sunshine.
+
+"Are you from the United States, sir?" he presently demanded, turning
+his head again.
+
+"Yes, sir," I replied; and I mentioned the place of my nativity.
+
+"I presumed," he said, "that you were American or English.  I'm from
+the United States myself; from New York city.  Many of our people
+here?"
+
+"Not so many as, I believe, there have sometimes been.  There are two
+or three ladies."
+
+"Well," my interlocutor declared, "I am very fond of ladies' society.
+I think when it's superior there's nothing comes up to it.  I've got
+two ladies here myself; I must make you acquainted with them."
+
+I rejoined that I should be delighted, and I inquired of my friend
+whether he had been long in Europe.
+
+"Well, it seems precious long," he said, "but my time's not up yet.
+We have been here fourteen weeks and a half."
+
+"Are you travelling for pleasure?" I asked.
+
+My companion turned his head again and looked at me--looked at me so
+long in silence that I at last also turned and met his eyes.
+
+"No, sir," he said presently.  "No, sir," he repeated, after a
+considerable interval.
+
+"Excuse me," said I, for there was something so solemn in his tone
+that I feared I had been indiscreet.
+
+He took no notice of my ejaculation; he simply continued to look at
+me.  "I'm travelling," he said, at last, "to please the doctors.
+They seemed to think they would like it."
+
+"Ah, they sent you abroad for your health?"
+
+"They sent me abroad because they were so confoundedly muddled they
+didn't know what else to do."
+
+"That's often the best thing," I ventured to remark.
+
+"It was a confession of weakness; they wanted me to stop plaguing
+them.  They didn't know enough to cure me, and that's the way they
+thought they would get round it.  I wanted to be cured--I didn't want
+to be transported.  I hadn't done any harm."
+
+I assented to the general proposition of the inefficiency of doctors,
+and asked my companion if he had been seriously ill.
+
+"I didn't sleep," he said, after some delay.
+
+"Ah, that's very annoying.  I suppose you were overworked."
+
+"I didn't eat; I took no interest in my food."
+
+"Well, I hope you both eat and sleep now," I said.
+
+"I couldn't hold a pen," my neighbour went on.  "I couldn't sit
+still.  I couldn't walk from my house to the cars--and it's only a
+little way.  I lost my interest in business."
+
+"You needed a holiday," I observed.
+
+"That's what the doctors said.  It wasn't so very smart of them.  I
+had been paying strict attention to business for twenty-three years."
+
+"In all that time you have never had a holiday?" I exclaimed with
+horror.
+
+My companion waited a little.  "Sundays," he said at last.
+
+"No wonder, then, you were out of sorts."
+
+"Well, sir," said my friend, "I shouldn't have been where I was three
+years ago if I had spent my time travelling round Europe.  I was in a
+very advantageous position.  I did a very large business.  I was
+considerably interested in lumber."  He paused, turned his head, and
+looked at me a moment.  "Have you any business interests yourself?"
+I answered that I had none, and he went on again, slowly, softly,
+deliberately.  "Well, sir, perhaps you are not aware that business in
+the United States is not what it was a short time since.  Business
+interests are very insecure.  There seems to be a general falling-
+off.  Different parties offer different explanations of the fact, but
+so far as I am aware none of their observations have set things going
+again."  I ingeniously intimated that if business was dull, the time
+was good for coming away; whereupon my neighbour threw back his head
+and stretched his legs a while.  "Well, sir, that's one view of the
+matter certainly.  There's something to be said for that.  These
+things should be looked at all round.  That's the ground my wife
+took.  That's the ground," he added in a moment, "that a lady would
+naturally take;" and he gave a little dry laugh.
+
+"You think it's slightly illogical," I remarked.
+
+"Well, sir, the ground I took was, that the worse a man's business
+is, the more it requires looking after.  I shouldn't want to go out
+to take a walk--not even to go to church--if my house was on fire.
+My firm is not doing the business it was; it's like a sick child, it
+requires nursing.  What I wanted the doctors to do was to fix me up,
+so that I could go on at home.  I'd have taken anything they'd have
+given me, and as many times a day.  I wanted to be right there; I had
+my reasons; I have them still.  But I came off all the same," said my
+friend, with a melancholy smile.
+
+I was a great deal younger than he, but there was something so simple
+and communicative in his tone, so expressive of a desire to
+fraternise, and so exempt from any theory of human differences, that
+I quite forgot his seniority, and found myself offering him paternal
+I advice.  "Don't think about all that," said I.  "Simply enjoy
+yourself, amuse yourself, get well.  Travel about and see Europe.  At
+the end of a year, by the time you are ready to go home, things will
+have improved over there, and you will be quite well and happy."
+
+My friend laid his hand on my knee; he looked at me for some moments,
+and I thought he was going to say, "You are very young!" But he said
+presently, "YOU have got used to Europe any way!"
+
+
+
+CHAPTER III.
+
+
+
+At breakfast I encountered his ladies--his wife and daughter.  They
+were placed, however, at a distance from me, and it was not until the
+pensionnaires had dispersed, and some of them, according to custom,
+had come out into the garden, that he had an opportunity of making me
+acquainted with them.
+
+"Will you allow me to introduce you to my daughter?" he said, moved
+apparently by a paternal inclination to provide this young lady with
+social diversion.  She was standing with her mother, in one of the
+paths, looking about with no great complacency, as I imagined, at the
+homely characteristics of the place, and old M. Pigeonneau was
+hovering near, hesitating apparently between the desire to be urbane
+and the absence of a pretext.  "Mrs. Ruck--Miss Sophy Ruck," said my
+friend, leading me up.
+
+Mrs. Ruck was a large, plump, light-coloured person, with a smooth
+fair face, a somnolent eye, and an elaborate coiffure.  Miss Sophy
+was a girl of one-and-twenty, very small and very pretty--what I
+suppose would have been called a lively brunette.  Both of these
+ladies were attired in black silk dresses, very much trimmed; they
+had an air of the highest elegance.
+
+"Do you think highly of this pension?" inquired Mrs. Ruck, after a
+few preliminaries.
+
+"It's a little rough, but it seems to me comfortable," I answered.
+
+"Does it take a high rank in Geneva?" Mrs. Ruck pursued.
+
+"I imagine it enjoys a very fair fame," I said, smiling.
+
+"I should never dream of comparing it to a New York boarding-house,"
+said Mrs. Ruck.
+
+"It's quite a different style," her daughter observed.
+
+Miss Ruck had folded her arms; she was holding her elbows with a pair
+of white little hands, and she was tapping the ground with a pretty
+little foot.
+
+"We hardly expected to come to a pension," said Mrs. Ruck.  "But we
+thought we would try; we had heard so much about Swiss pensions.  I
+was saying to Mr. Ruck that I wondered whether this was a favourable
+specimen.  I was afraid we might have made a mistake."
+
+"We knew some people who had been here; they thought everything of
+Madame Beaurepas," said Miss Sophy.  "They said she was a real
+friend."
+
+"Mr. and Mrs. Parker--perhaps you have heard her speak of them," Mrs.
+Ruck pursued.
+
+"Madame Beaurepas has had a great many Americans; she is very fond of
+Americans," I replied.
+
+"Well, I must say I should think she would be, if she compares them
+with some others."
+
+"Mother is always comparing," observed Miss Ruck.
+
+"Of course I am always comparing," rejoined the elder lady.  "I never
+had a chance till now; I never knew my privileges.  Give me an
+American!"  And Mrs. Ruck indulged in a little laugh.
+
+"Well, I must say there are some things I like over here," said Miss
+Sophy, with courage.  And indeed I could see that she was a young
+woman of great decision.
+
+"You like the shops--that's what you like," her father affirmed.
+
+The young lady addressed herself to me, without heeding this remark.
+"I suppose you feel quite at home here."
+
+"Oh, he likes it; he has got used to the life!" exclaimed Mr. Ruck.
+
+"I wish you'd teach Mr. Ruck," said his wife.  "It seems as if he
+couldn't get used to anything."
+
+"I'm used to you, my dear," the husband retorted, giving me a
+humorous look.
+
+"He's intensely restless," continued Mrs. Ruck.
+
+"That's what made me want to come to a pension.  I thought he would
+settle down more."
+
+"I don't think I AM used to you, after all," said her husband.
+
+In view of a possible exchange of conjugal repartee I took refuge in
+conversation with Miss Ruck, who seemed perfectly able to play her
+part in any colloquy.  I learned from this young lady that, with her
+parents, after visiting the British Islands, she had been spending a
+month in Paris, and that she thought she should have died when she
+left that city.  "I hung out of the carriage, when we left the
+hotel," said Miss Ruck, "I assure you I did.  And mother did, too."
+
+"Out of the other window, I hope," said I.
+
+"Yes, one out of each window," she replied promptly.  "Father had
+hard work, I can tell you.  We hadn't half finished; there were ever
+so many places we wanted to go to."
+
+"Your father insisted on coming away?"
+
+"Yes; after we had been there about a month he said he had enough.
+He's fearfully restless; he's very much out of health.  Mother and I
+said to him that if he was restless in Paris he needn't hope for
+peace anywhere.  We don't mean to leave him alone till he takes us
+back."  There was an air of keen resolution in Miss Ruck's pretty
+face, of lucid apprehension of desirable ends, which made me, as she
+pronounced these words, direct a glance of covert compassion toward
+her poor recalcitrant father.  He had walked away a little with his
+wife, and I saw only his back and his stooping, patient-looking
+shoulders, whose air of acute resignation was thrown into relief by
+the voluminous tranquillity of Mrs. Ruck.  "He will have to take us
+back in September, any way," the young girl pursued; "he will have to
+take us back to get some things we have ordered."
+
+"Have you ordered a great many things?" I asked jocosely.
+
+"Well, I guess we have ordered SOME.  Of course we wanted to take
+advantage of being in Paris--ladies always do.  We have left the
+principal things till we go back.  Of course that is the principal
+interest, for ladies.  Mother said she should feel so shabby if she
+just passed through.  We have promised all the people to be back in
+September, and I never broke a promise yet.  So Mr. Ruck has got to
+make his plans accordingly."
+
+"And what are his plans?"
+
+"I don't know; he doesn't seem able to make any.  His great idea was
+to get to Geneva; but now that he has got here he doesn't seem to
+care.  It's the effect of ill health.  He used to be so bright; but
+now he is quite subdued.  It's about time he should improve, any way.
+We went out last night to look at the jewellers' windows--in that
+street behind the hotel.  I had always heard of those jewellers'
+windows.  We saw some lovely things, but it didn't seem to rouse
+father.  He'll get tired of Geneva sooner than he did of Paris."
+
+"Ah," said I, "there are finer things here than the jewellers'
+windows.  We are very near some of the most beautiful scenery in
+Europe."
+
+"I suppose you mean the mountains.  Well, we have seen plenty of
+mountains at home.  We used to go to the mountains every summer.  We
+are familiar enough with the mountains.  Aren't we, mother?" the
+young lady demanded, appealing to Mrs. Ruck, who, with her husband,
+had drawn near again.
+
+"Aren't we what?" inquired the elder lady.
+
+"Aren't we familiar with the mountains?"
+
+"Well, I hope so," said Mrs. Ruck.
+
+Mr. Ruck, with his hands in his pockets, gave me a sociable wink.--
+"There's nothing much you can tell them!" he said.
+
+The two ladies stood face to face a few moments, surveying each
+other's garments.  "Don't you want to go out?" the young girl at last
+inquired of her mother.
+
+"Well, I think we had better; we have got to go up to that place."
+
+"To what place?" asked Mr. Ruck.
+
+"To that jeweller's--to that big one."
+
+"They all seemed big enough; they were too big!"  And Mr. Ruck gave
+me another wink.
+
+"That one where we saw the blue cross," said his daughter.
+
+"Oh, come, what do you want of that blue cross?" poor Mr. Ruck
+demanded.
+
+"She wants to hang it on a black velvet ribbon and tie it round her
+neck," said his wife.
+
+"A black velvet ribbon?  No, I thank you!" cried the young lady.  "Do
+you suppose I would wear that cross on a black velvet ribbon?  On a
+nice little gold chain, if you please--a little narrow gold chain,
+like an old-fashioned watch-chain.  That's the proper thing for that
+blue cross.  I know the sort of chain I mean; I'm going to look for
+one.  When I want a thing," said Miss Ruck, with decision, "I can
+generally find it."
+
+"Look here, Sophy," her father urged, "you don't want that blue
+cross."
+
+"I do want it--I happen to want it."  And Sophy glanced at me with a
+little laugh.
+
+Her laugh, which in itself was pretty, suggested that there were
+various relations in which one might stand to Miss Ruck; but I think
+I was conscious of a certain satisfaction in not occupying the
+paternal one.  "Don't worry the poor child," said her mother.
+
+"Come on, mother," said Miss Ruck.
+
+"We are going to look about a little," explained the elder lady to
+me, by way of taking leave.
+
+"I know what that means," remarked Mr. Ruck, as his companions moved
+away.  He stood looking at them a moment, while he raised his hand to
+his head, behind, and stood rubbing it a little, with a movement that
+displaced his hat.  (I may remark in parenthesis that I never saw a
+hat more easily displaced than Mr. Ruck's.)  I supposed he was going
+to say something querulous, but I was mistaken.  Mr. Ruck was
+unhappy, but he was very good-natured.  "Well, they want to pick up
+something," he said.  "That's the principal interest, for ladies."
+
+
+
+CHAPTER IV.
+
+
+
+Mr. Ruck distinguished me, as the French say.  He honoured me with
+his esteem, and, as the days elapsed, with a large portion of his
+confidence.  Sometimes he bored me a little, for the tone of his
+conversation was not cheerful, tending as it did almost exclusively
+to a melancholy dirge over the financial prostration of our common
+country.  "No, sir, business in the United States is not what it once
+was," he found occasion to remark several times a day.  "There's not
+the same spring--there's not the same hopeful feeling.  You can see
+it in all departments."  He used to sit by the hour in the little
+garden of the pension, with a roll of American newspapers in his lap
+and his high hat pushed back, swinging one of his long legs and
+reading the New York Herald.  He paid a daily visit to the American
+banker's, on the other side of the Rhone, and remained there a long
+time, turning over the old papers on the green velvet table in the
+middle of the Salon des Etrangers, and fraternising with chance
+compatriots.  But in spite of these diversions his time hung heavily
+upon his hands.  I used sometimes to propose to him to take a walk;
+but he had a mortal horror of pedestrianism, and regarded my own
+taste for it as' a morbid form of activity.  "You'll kill yourself,
+if you don't look out," he said, "walking all over the country.  I
+don't want to walk round that way; I ain't a postman!"  Briefly
+speaking, Mr. Ruck had few resources.  His wife and daughter, on the
+other hand, it was to be supposed, were possessed of a good many that
+could not be apparent to an unobtrusive young man.  They also sat a
+great deal in the garden or in the salon, side by side, with folded
+hands, contemplating material objects, and were remarkably
+independent of most of the usual feminine aids to idleness--light
+literature, tapestry, the use of the piano.  They were, however, much
+fonder of locomotion than their companion, and I often met them in
+the Rue du Rhone and on the quays, loitering in front of the
+jewellers' windows.  They might have had a cavalier in the person of
+old M. Pigeonneau, who possessed a high appreciation of their charms,
+but who, owing to the absence of a common idiom, was deprived of the
+pleasures of intimacy.  He knew no English, and Mrs. Ruck and her
+daughter had, as it seemed, an incurable mistrust of the beautiful
+tongue which, as the old man endeavoured to impress upon them, was
+pre-eminently the language of conversation.
+
+"They have a tournure de princesse--a distinction supreme," he said
+to me.  "One is surprised to find them in a little pension, at seven
+francs a day."
+
+"Oh, they don't come for economy," I answered.  "They must be rich."
+
+"They don't come for my beaux yeux--for mine," said M. Pigeonneau,
+sadly.  "Perhaps it's for yours, young man.  Je vous recommande la
+mere."
+
+I reflected a moment.  "They came on account of Mr. Ruck--because at
+hotels he's so restless."
+
+M. Pigeonneau gave me a knowing nod.  "Of course he is, with such a
+wife as that--a femme superbe.  Madame Ruck is preserved in
+perfection--a miraculous fraicheur.  I like those large, fair, quiet
+women; they are often, dans l'intimite, the most agreeable.  I'll
+warrant you that at heart Madame Ruck is a finished coquette."
+
+"I rather doubt it," I said.
+
+"You suppose her cold?  Ne vous y fiez pas!"
+
+"It is a matter in which I have nothing at stake."
+
+"You young Americans are droll," said M. Pigeonneau; "you never have
+anything at stake! But the little one, for example; I'll warrant you
+she's not cold.  She is admirably made."
+
+"She is very pretty."
+
+"'She is very pretty!'  Vous dites cela d'un ton!  When you pay
+compliments to Mademoiselle Ruck, I hope that's not the way you do
+it."
+
+"I don't pay compliments to Mademoiselle Ruck."
+
+"Ah, decidedly," said M. Pigeonneau, "you young Americans are droll!"
+
+I should have suspected that these two ladies would not especially
+commend themselves to Madame Beaurepas; that as a maitresse de salon,
+which she in some degree aspired to be, she would have found them
+wanting in a certain flexibility of deportment.  But I should have
+gone quite wrong; Madame Beaurepas had no fault at all to find with
+her new pensionnaires.  "I have no observation whatever to make about
+them," she said to me one evening.  "I see nothing in those ladies
+which is at all deplace.  They don't complain of anything; they don't
+meddle; they take what's given them; they leave me tranquil.  The
+Americans are often like that.  Often, but not always," Madame
+Beaurepas pursued.  "We are to have a specimen to-morrow of a very
+different sort."
+
+"An American?" I inquired.
+
+"Two Americaines--a mother and a daughter.  There are Americans and
+Americans:  when you are difficiles, you are more so than any one,
+and when you have pretensions--ah, per exemple, it's serious.  I
+foresee that with this little lady everything will be serious,
+beginning with her cafe au lait.  She has been staying at the Pension
+Chamousset--my concurrent, you know, farther up the street; but she
+is coming away because the coffee is bad.  She holds to her coffee,
+it appears.  I don't know what liquid Madame Chamousset may have
+invented, but we will do the best we can for her.  Only, I know she
+will make me des histoires about something else.  She will demand a
+new lamp for the salon; vous alles voir cela.  She wishes to pay but
+eleven francs a day for herself and her daughter, tout compris; and
+for their eleven francs they expect to be lodged like princesses.
+But she is very 'ladylike'--isn't that what you call it in English?
+Oh, pour cela, she is ladylike!"
+
+I caught a glimpse on the morrow of this ladylike person, who was
+arriving at her new residence as I came in from a walk.  She had come
+in a cab, with her daughter and her luggage; and, with an air of
+perfect softness and serenity, she was disputing the fare as she
+stood among her boxes, on the steps.  She addressed her cabman in a
+very English accent, but with extreme precision and correctness.  "I
+wish to be perfectly reasonable, but I don't wish to encourage you in
+exorbitant demands.  With a franc and a half you are sufficiently
+paid.  It is not the custom at Geneva to give a pour-boire for so
+short a drive.  I have made inquiries, and I find it is not the
+custom, even in the best families.  I am a stranger, yes, but I
+always adopt the custom of the native families.  I think it my duty
+toward the natives."
+
+"But I am a native, too, moi!" said the cabman, with an angry laugh.
+
+"You seem to me to speak with a German accent," continued the lady.
+"You are probably from Basel.  A franc and a half is sufficient.  I
+see you have left behind the little red bag which I asked you to hold
+between your knees; you will please to go back to the other house and
+get it.  Very well, if you are impolite I will make a complaint of
+you to-morrow at the administration.  Aurora, you will find a pencil
+in the outer pocket of my embroidered satchel; please to write down
+his number,--87; do you see it distinctly?--in case we should forget
+it."
+
+The young lady addressed as "Aurora"--a slight, fair girl, holding a
+large parcel of umbrellas--stood at hand while this allocution went
+forward, but she apparently gave no heed to it.  She stood looking
+about her, in a listless manner, at the front of the house, at the
+corridor, at Celestine tucking up her apron in the doorway, at me as
+I passed in amid the disseminated luggage; her mother's parsimonious
+attitude seeming to produce in Miss Aurora neither sympathy nor
+embarrassment.  At dinner the two ladies were placed on the same side
+of the table as myself, below Mrs. Ruck and her daughter, my own
+position being on the right of Mr. Ruck.  I had therefore little
+observation of Mrs. Church--such I learned to be her name--but I
+occasionally heard her soft, distinct voice.
+
+"White wine, if you please; we prefer white wine.  There is none on
+the table?  Then you will please to get some, and to remember to
+place a bottle of it always here, between my daughter and myself."
+
+"That lady seems to know what she wants," said Mr. Ruck, "and she
+speaks so I can understand her.  I can't understand every one, over
+here.  I should like to make that lady's acquaintance.  Perhaps she
+knows what _I_ want, too; it seems hard to find out.  But I don't
+want any of their sour white wine; that's one of the things I don't
+want.  I expect she'll be an addition to the pension."
+
+Mr. Ruck made the acquaintance of Mrs. Church that evening in the
+parlour, being presented to her by his wife, who presumed on the
+rights conferred upon herself by the mutual proximity, at table, of
+the two ladies.  I suspected that in Mrs. Church's view Mrs. Ruck
+presumed too far.  The fugitive from the Pension Chamousset, as M.
+Pigeonneau called her, was a little fresh, plump, comely woman,
+looking less than her age, with a round, bright, serious face.  She
+was very simply and frugally dressed, not at all in the manner of Mr.
+Ruck's companions, and she had an air of quiet distinction which was
+an excellent defensive weapon.  She exhibited a polite disposition to
+listen to what Mr. Ruck might have to say, but her manner was
+equivalent to an intimation that what she valued least in boarding-
+house life was its social opportunities.  She had placed herself near
+a lamp, after carefully screwing it and turning it up, and she had
+opened in her lap, with the assistance of a large embroidered marker,
+an octavo volume, which I perceived to be in German.  To Mrs. Ruck
+and her daughter she was evidently a puzzle, with her economical
+attire and her expensive culture.  The two younger ladies, however,
+had begun to fraternise very freely, and Miss Ruck presently went
+wandering out of the room with her arm round the waist of Miss
+Church.  It was a very warm evening; the long windows of the salon
+stood wide open into the garden, and, inspired by the balmy darkness,
+M. Pigeonneau and Mademoiselle Beaurepas, a most obliging little
+woman, who lisped and always wore a huge cravat, declared they would
+organise a fete de nuit.  They engaged in this undertaking, and the
+fete developed itself, consisting of half-a-dozen red paper lanterns,
+hung about on the trees, and of several glasses of sirop, carried on
+a tray by the stout-armed Celestine.  As the festival deepened to its
+climax I went out into the garden, where M. Pigeonneau was master of
+ceremonies.
+
+"But where are those charming young ladies," he cried, "Miss Ruck and
+the new-comer, l'aimable transfuge?  Their absence has been remarked,
+and they are wanting to the brilliancy of the occasion.  Voyez I have
+selected a glass of syrup--a generous glass--for Mademoiselle Ruck,
+and I advise you, my young friend, if you wish to make a good
+impression, to put aside one which you may offer to the other young
+lady.  What is her name?  Miss Church.  I see; it's a singular name.
+There is a church in which I would willingly worship!"
+
+Mr. Ruck presently came out of the salon, having concluded his
+interview with Mrs. Church.  Through the open window I saw the latter
+lady sitting under the lamp with her German octavo, while Mrs. Ruck,
+established, empty-handed, in an arm-chair near her, gazed at her
+with an air of fascination.
+
+"Well, I told you she would know what I want," said Mr. Ruck.  "She
+says I want to go up to Appenzell, wherever that is; that I want to
+drink whey and live in a high latitude--what did she call it?--a high
+altitude.  She seemed to think we ought to leave for Appenzell to-
+morrow; she'd got it all fixed.  She says this ain't a high enough
+lat--a high enough altitude.  And she says I mustn't go too high
+either; that would be just as bad; she seems to know just the right
+figure.  She says she'll give me a list of the hotels where we must
+stop, on the way to Appenzell.  I asked her if she didn't want to go
+with as, but she says she'd rather sit still and read.  I expect
+she's a big reader."
+
+The daughter of this accomplished woman now reappeared, in company
+with Miss Ruck, with whom she had been strolling through the outlying
+parts of the garden.
+
+"Well," said Miss Ruck, glancing at the red paper lanterns, "are they
+trying to stick the flower-pots into the trees?"
+
+"It's an illumination in honour of our arrival," the other young girl
+rejoined.  "It's a triumph over Madame Chamousset."
+
+"Meanwhile, at the Pension Chamousset," I ventured to suggest, "they
+have put out their lights; they are sitting in darkness, lamenting
+your departure."
+
+She looked at me, smiling; she was standing in the light that came
+from the house.  M. Pigeonneau, meanwhile, who had been awaiting his
+chance, advanced to Miss Ruck with his glass of syrup.  "I have kept
+it for you, Mademoiselle," he said; "I have jealously guarded it.  It
+is very delicious!"
+
+Miss Ruck looked at him and his syrup, without any motion to take the
+glass.  "Well, I guess it's sour," she said in a moment; and she gave
+a little shake of her head.
+
+M. Pigeonneau stood staring with his syrup in his hand; then he
+slowly turned away.  He looked about at the rest of us, as if to
+appeal from Miss Ruck's insensibility, and went to deposit his
+rejected tribute on a bench.
+
+"Won't you give it to me?" asked Miss Church, in faultless French.
+"J'adore le sirop, moi."
+
+M. Pigeonneau came back with alacrity, and presented the glass with a
+very low bow.  "I adore good manners," murmured the old man.
+
+This incident caused me to look at Miss Church with quickened
+interest.  She was not strikingly pretty, but in her charming
+irregular face there was something brilliant and ardent.  Like her
+mother, she was very simply dressed.
+
+"She wants to go to America, and her mother won't let her," said Miss
+Sophy to me, explaining her companion's situation.
+
+"I am very sorry--for America," I answered, laughing.
+
+"Well, I don't want to say anything against your mother, but I think
+it's shameful," Miss Ruck pursued.
+
+"Mamma has very good reasons; she will tell you them all."
+
+"Well, I'm sure I don't want to hear them," said Miss Ruck.  "You
+have got a right to go to your own country; every one has a right to
+go to their own country."
+
+"Mamma is not very patriotic," said Aurora Church, smiling.
+
+"Well, I call that dreadful," her companion declared.  "I have heard
+that there are some Americans like that, but I never believed it."
+
+"There are all sorts of Americans," I said, laughing.
+
+"Aurora's one of the right sort," rejoined Miss Ruck, who had
+apparently become very intimate with her new friend.
+
+"Are you very patriotic?" I asked of the young girl.
+
+"She's right down homesick," said Miss Sophy; "she's dying to go.  If
+I were you my mother would have to take me."
+
+"Mamma is going to take me to Dresden."
+
+"Well, I declare I never heard of anything so dreadful!" cried Miss
+Ruck.  "It's like something in a story."
+
+"I never heard there was anything very dreadful in Dresden," I
+interposed.
+
+Miss Ruck looked at me a moment.  "Well, I don't believe YOU are a
+good American," she replied, "and I never supposed you were.  You had
+better go in there and talk to Mrs. Church."
+
+"Dresden is really very nice, isn't it?" I asked of her companion.
+
+"It isn't nice if you happen to prefer New York," said Miss Sophy.
+"Miss Church prefers New York.  Tell him you are dying to see New
+York; it will make him angry," she went on.
+
+"I have no desire to make him angry," said Aurora, smiling.
+
+"It is only Miss Ruck who can do that," I rejoined.  "Have you been a
+long time in Europe?"
+
+"Always."
+
+"I call that wicked!" Miss Sophy declared.
+
+"You might be in a worse place," I continued.  "I find Europe very
+interesting."
+
+Miss Ruck gave a little laugh.  "I was saying that you wanted to pass
+for a European."
+
+"Yes, I want to pass for a Dalmatian."
+
+Miss Ruck looked at me a moment.  "Well, you had better not come
+home," she said.  "No one will speak to you."
+
+"Were you born in these countries?" I asked of her companion.
+
+"Oh, no; I came to Europe when I was a small child.  But I remember
+America a little, and it seems delightful."
+
+"Wait till you see it again.  It's just too lovely," said Miss Sophy.
+
+"It's the grandest country in the world," I added.
+
+Miss Ruck began to toss her head.  "Come away, my dear," she said.
+"If there's a creature I despise it's a man that tries to say funny
+things about his own country."
+
+"Don't you think one can be tired of Europe?" Aurora asked,
+lingering.
+
+"Possibly--after many years."
+
+"Father was tired of it after three weeks," said Miss Ruck.
+
+"I have been here sixteen years," her friend went on, looking at me
+with a charming intentness, as if she had a purpose in speaking.  "It
+used to be for my education.  I don't know what it's for now."
+
+"She's beautifully educated," said Miss Ruck.  "She knows four
+languages."
+
+"I am not very sure that I know English."
+
+"You should go to Boston!" cried Miss Sophy.  "They speak splendidly
+in Boston."
+
+"C'est mon reve," said Aurora, still looking at me.
+
+"Have you been all over Europe," I asked--"in all the different
+countries?"
+
+She hesitated a moment.  "Everywhere that there's a pension.  Mamma
+is devoted to pensions.  We have lived, at one time or another, in
+every pension in Europe."
+
+"Well, I should think you had seen about enough," said Miss Ruck.
+
+"It's a delightful way of seeing Europe," Aurora rejoined, with her
+brilliant smile.  "You may imagine how it has attached me to the
+different countries.  I have such charming souvenirs!  There is a
+pension awaiting us now at Dresden,--eight francs a day, without
+wine.  That's rather dear.  Mamma means to make them give us wine.
+Mamma is a great authority on pensions; she is known, that way, all
+over Europe.  Last winter we were in Italy, and she discovered one at
+Piacenza,--four francs a day.  We made economies."
+
+"Your mother doesn't seem to mingle much," observed Miss Ruck,
+glancing through the window at the scholastic attitude of Mrs.
+Church.
+
+"No, she doesn't mingle, except in the native society.  Though she
+lives in pensions, she detests them."
+
+"Why does she live in them, then?" asked Miss Sophy, rather
+resentfully.
+
+"Oh, because we are so poor; it's the cheapest way to live.  We have
+tried having a cook, but the cook always steals.  Mamma used to set
+me to watch her; that's the way I passed my jeunesse--my belle
+jeunesse.  We are frightfully poor," the young girl went on, with the
+same strange frankness--a curious mixture of girlish grace and
+conscious cynicism.  "Nous n'avons pas le sou.  That's one of the
+reasons we don't go back to America; mamma says we can't afford to
+live there."
+
+"Well, any one can see that you're an American girl," Miss Ruck
+remarked, in a consolatory manner.  "I can tell an American girl a
+mile off.  You've got the American style."
+
+"I'm afraid I haven't the American toilette," said Aurora, looking at
+the other's superior splendour.
+
+"Well, your dress was cut in France; any one can see that."
+
+"Yes," said Aurora, with a laugh, "my dress was cut in France--at
+Avranches."
+
+"Well, you've got a lovely figure, any way," pursued her companion.
+
+"Ah," said the young girl, "at Avranches, too, my figure was
+admired."  And she looked at me askance, with a certain coquetry.
+But I was an innocent youth, and I only looked back at her,
+wondering.  She was a great deal nicer than Miss Ruck, and yet Miss
+Ruck would not have said that.  "I try to be like an American girl,"
+she continued; "I do my best, though mamma doesn't at all encourage
+it.  I am very patriotic.  I try to copy them, though mamma has
+brought me up a la francaise; that is, as much as one can in
+pensions.  For instance, I have never been out of the house without
+mamma; oh, never, never.  But sometimes I despair; American girls are
+so wonderfully frank.  I can't be frank, like that.  I am always
+afraid.  But I do what I can, as you see.  Excusez du peu!"
+
+I thought this young lady at least as outspoken as most of her
+unexpatriated sisters; there was something almost comical in her
+despondency.  But she had by no means caught, as it seemed to me, the
+American tone.  Whatever her tone was, however, it had a fascination;
+there was something dainty about it, and yet it was decidedly
+audacious.
+
+The young ladies began to stroll about the garden again, and I
+enjoyed their society until M. Pigeonneau's festival came to an end.
+
+
+
+CHAPTER V.
+
+
+
+Mr. Ruck did not take his departure for Appenzell on the morrow, in
+spite of the eagerness to witness such an event which he had
+attributed to Mrs. Church.  He continued, on the contrary, for many
+days after, to hang about the garden, to wander up to the banker's
+and back again, to engage in desultory conversation with his fellow-
+boarders, and to endeavour to assuage his constitutional restlessness
+by perusal of the American journals.  But on the morrow I had the
+honour of making Mrs. Church's acquaintance.  She came into the
+salon, after the midday breakfast, with her German octavo under her
+arm, and she appealed to me for assistance in selecting a quiet
+corner.
+
+"Would you very kindly," she said, "move that large fauteuil a little
+more this way?  Not the largest; the one with the little cushion.
+The fauteuils here are very insufficient; I must ask Madame Beaurepas
+for another.  Thank you; a little more to the left, please; that will
+do.  Are you particularly engaged?" she inquired, after she had
+seated herself.  "If not, I should like to have some conversation
+with you.  It is some time since I have met a young American of your-
+-what shall I call it?--your affiliations.  I have learned your name
+from Madame Beaurepas; I think I used to know some of your people.  I
+don't know what has become of all my friends.  I used to have a
+charming little circle at home, but now I meet no one I know.  Don't
+you think there is a great difference between the people one meets
+and the people one would like to meet?  Fortunately, sometimes,"
+added my interlocutress graciously, "it's quite the same.  I suppose
+you are a specimen, a favourable specimen," she went on, "of young
+America.  Tell me, now, what is young America thinking of in these
+days of ours?  What are its feelings, its opinions, its aspirations?
+What is its IDEAL?"  I had seated myself near Mrs. Church, and she
+had pointed this interrogation with the gaze of her bright little
+eyes.  I felt it embarrassing to be treated as a favourable specimen
+of young America, and to be expected to answer for the great
+republic.  Observing my hesitation, Mrs. Church clasped her hands on
+the open page of her book and gave an intense, melancholy smile.
+"HAS it an ideal?" she softly asked.  "Well, we must talk of this,"
+she went on, without insisting.  "Speak, for the present, for
+yourself simply.  Have you come to Europe with any special design?"
+
+"Nothing to boast of," I said.  "I am studying a little."
+
+"Ah, I am glad to hear that.  You are gathering up a little European
+culture; that's what we lack, you know, at home.  No individual can
+do much, of coarse.  But you must not be discouraged; every little
+counts."
+
+"I see that you, at least, are doing your part," I rejoined
+gallantly, dropping my eyes on my companion's learned volume.
+
+"Yes, I frankly admit that I am fond of study.  There is no one,
+after all, like the Germans.  That is, for facts.  For opinions I by
+no means always go with them.  I form my opinions myself.  I am sorry
+to say, however," Mrs. Church continued, "that I can hardly pretend
+to diffuse my acquisitions.  I am afraid I am sadly selfish; I do
+little to irrigate the soil.  I belong--I frankly confess it--to the
+class of absentees."
+
+"I had the pleasure, last evening," I said, "of making the
+acquaintance of your daughter.  She told me you had been a long time
+in Europe."
+
+Mrs. Church smiled benignantly.  "Can one ever be too long?  We shall
+never leave it."
+
+"Your daughter won't like that," I said, smiling too.
+
+"Has she been taking you into her confidence?  She is a more sensible
+young lady than she sometimes appears.  I have taken great pains with
+her; she is really--I may be permitted to say it--superbly educated."
+
+"She seemed to me a very charming girl," I rejoined.  "And I learned
+that she speaks four languages."
+
+"It is not only that," said Mrs. Church, in a tone which suggested
+that this might be a very superficial species of culture.  "She has
+made what we call de fortes etudes--such as I suppose you are making
+now.  She is familiar with the results of modern science; she keeps
+pace with the new historical school."
+
+"Ah," said I, "she has gone much farther than I!"
+
+"You doubtless think I exaggerate, and you force me, therefore, to
+mention the fact that I am able to speak of such matters with a
+certain intelligence."
+
+"That is very evident," I said.  "But your daughter thinks you ought
+to take her home."  I began to fear, as soon as I had uttered these
+words, that they savoured of treachery to the young lady, but I was
+reassured by seeing that they produced on her mother's placid
+countenance no symptom whatever of irritation.
+
+"My daughter has her little theories," Mrs. Church observed; "she
+has, I may say, her illusions.  And what wonder! What would youth be
+without its illusions?  Aurora has a theory that she would be happier
+in New York, in Boston, in Philadelphia, than in one of the charming
+old cities in which our lot is cast.  But she is mistaken, that is
+all.  We must allow our children their illusions, must we not?  But
+we must watch over them."
+
+Although she herself seemed proof against discomposure, I found
+something vaguely irritating in her soft, sweet positiveness.
+
+"American cities," I said, "are the paradise of young girls."
+
+"Do you mean," asked Mrs. Church, "that the young girls who come from
+those places are angels?"
+
+"Yes," I said, resolutely.
+
+"This young lady--what is her odd name?--with whom my daughter has
+formed a somewhat precipitate acquaintance:  is Miss Ruck an angel?
+But I won't force you to say anything uncivil.  It would be too cruel
+to make a single exception."
+
+"Well," said I, "at any rate, in America young girls have an easier
+lot.  They have much more liberty."
+
+My companion laid her hand for an instant on my arm.  "My dear young
+friend, I know America, I know the conditions of life there, so well.
+There is perhaps no subject on which I have reflected more than on
+our national idiosyncrasies."
+
+"I am afraid you don't approve of them," said I, a little brutally.
+
+Brutal indeed my proposition was, and Mrs. Church was not prepared to
+assent to it in this rough shape.  She dropped her eyes on her book,
+with an air of acute meditation.  Then, raising them, "We are very
+crude," she softly observed--"we are very crude."  Lest even this
+delicately-uttered statement should seem to savour of the vice that
+she deprecated, she went on to explain.  "There are two classes of
+minds, you know--those that hold back, and those that push forward.
+My daughter and I are not pushers; we move with little steps.  We
+like the old, trodden paths; we like the old, old world."
+
+"Ah," said I, "you know what you like; there is a great virtue in
+that."
+
+"Yes, we like Europe; we prefer it.  We like the opportunities of
+Europe; we like the REST.  There is so much in that, you know.  The
+world seems to me to be hurrying, pressing forward so fiercely,
+without knowing where it is going.  'Whither?' I often ask, in my
+little quiet way.  But I have yet to learn that any one can tell me."
+
+"You're a great conservative," I observed, while I wondered whether I
+myself could answer this inquiry.
+
+Mrs. Church gave me a smile which was equivalent to a confession.  "I
+wish to retain a LITTLE--just a little.  Surely, we have done so
+much, we might rest a while; we might pause.  That is all my feeling-
+-just to stop a little, to wait! I have seen so many changes.  I wish
+to draw in, to draw in--to hold back, to hold back."
+
+"You shouldn't hold your daughter back!" I answered, laughing and
+getting up.  I got up, not by way of terminating our interview, for I
+perceived Mrs. Church's exposition of her views to be by no means
+complete, but in order to offer a chair to Miss Aurora, who at this
+moment drew near.  She thanked me and remained standing, but without
+at first, as I noticed, meeting her mother's eye.
+
+"You have been engaged with your new acquaintance, my dear?" this
+lady inquired.
+
+"Yes, mamma, dear," said the young girl, gently.
+
+"Do you find her very edifying?"
+
+Aurora was silent a moment; then she looked at her mother.  "I don't
+know, mamma; she is very fresh."
+
+I ventured to indulge in a respectful laugh.  "Your mother has
+another word for that.  But I must not," I added, "be crude."
+
+"Ah, vous m'en voulez?" inquired Mrs. Church.  "And yet I can't
+pretend I said it in jest.  I feel it too much.  We have been having
+a little social discussion," she said to her daughter.  "There is
+still so much to be said."  "And I wish," she continued, turning to
+me, "that I could give you our point of view.  Don't you wish,
+Aurora, that we could give him our point of view?"
+
+"Yes, mamma," said Aurora.
+
+"We consider ourselves very fortunate in our point of view, don't we,
+dearest?" mamma demanded.
+
+"Very fortunate, indeed, mamma."
+
+"You see we have acquired an insight into European life," the elder
+lady pursued.  "We have our place at many a European fireside.  We
+find so much to esteem--so much to enjoy.  Do we not, my daughter?"
+
+"So very much, mamma," the young girl went on, with a sort of
+inscrutable submissiveness.  I wondered at it; it offered so strange
+a contrast to the mocking freedom of her tone the night before; but
+while I wondered I was careful not to let my perplexity take
+precedence of my good manners.
+
+"I don't know what you ladies may have found at European firesides,"
+I said, "but there can be very little doubt what you have left
+there."
+
+Mrs. Church got up, to acknowledge my compliment.  "We have spent
+some charming hours.  And that reminds me that we have just now such
+an occasion in prospect.  We are to call upon some Genevese friends--
+the family of the Pasteur Galopin.  They are to go with us to the old
+library at the Hotel de Ville, where there are some very interesting
+documents of the period of the Reformation; we are promised a glimpse
+of some manuscripts of poor Servetus, the antagonist and victim, you
+know, of Calvin.  Here, of course, one can only speak of Calvin under
+one's breath, but some day, when we are more private," and Mrs.
+Church looked round the room, "I will give you my view of him.  I
+think it has a touch of originality.  Aurora is familiar with, are
+you not, my daughter, familiar with my view of Calvin?"
+
+"Yes, mamma," said Aurora, with docility, while the two ladies went
+to prepare for their visit to the Pasteur Galopin.
+
+
+
+CHAPTER VI.
+
+
+
+"She has demanded a new lamp; I told you she would!"  This
+communication was made me by Madame Beaurepas a couple of days later.
+"And she has asked for a new tapis de lit, and she has requested me
+to provide Celestine with a pair of light shoes.  I told her that, as
+a general thing, cooks are not shod with satin.  That poor
+Celestine!"
+
+"Mrs. Church may be exacting," I said, "but she is a clever little
+woman."
+
+"A lady who pays but five francs and a half shouldn't be too clever.
+C'est deplace.  I don't like the type."
+
+"What type do you call Mrs. Church's?"
+
+"Mon Dieu," said Madame Beaurepas, "c'est une de ces mamans comme
+vous en avez, qui promenent leur fille."
+
+"She is trying to marry her daughter?  I don't think she's of that
+sort."
+
+But Madame Beaurepas shrewdly held to her idea.  "She is trying it in
+her own way; she does it very quietly.  She doesn't want an American;
+she wants a foreigner.  And she wants a mari serieux.  But she is
+travelling over Europe in search of one.  She would like a
+magistrate."
+
+"A magistrate?"
+
+"A gros bonnet of some kind; a professor or a deputy."
+
+"I am very sorry for the poor girl," I said, laughing.
+
+"You needn't pity her too much; she's a sly thing."
+
+"Ah, for that, no!" I exclaimed.  "She's a charming girl."
+
+Madame Beaurepas gave an elderly grin.  "She has hooked you, eh?  But
+the mother won't have you."
+
+I developed my idea, without heeding this insinuation.  "She's a
+charming girl, but she is a little odd.  It's a necessity of her
+position.  She is less submissive to her mother than she has to
+pretend to be.  That's in self-defence; it's to make her life
+possible."
+
+"She wishes to get away from her mother," continued Madame Beaurepas.
+"She wishes to courir les champs."
+
+"She wishes to go to America, her native country."
+
+"Precisely.  And she will certainly go."
+
+"I hope so!" I rejoined.
+
+"Some fine morning--or evening--she will go off with a young man;
+probably with a young American."
+
+"Allons donc!" said I, with disgust.
+
+"That will be quite America enough," pursued my cynical hostess.  "I
+have kept a boarding-house for forty years.  I have seen that type."
+
+"Have such things as that happened chez vous?" I asked.
+
+"Everything has happened chez moi.  But nothing has happened more
+than once.  Therefore this won't happen here.  It will be at the next
+place they go to, or the next.  Besides, here there is no young
+American pour la partie--none except you, Monsieur.  You are
+susceptible, but you are too reasonable."
+
+"It's lucky for you I am reasonable," I answered.  "It's thanks to
+that fact that you escape a scolding!"
+
+One morning, about this time, instead of coming back to breakfast at
+the pension, after my lectures at the Academy, I went to partake of
+this meal with a fellow-student, at an ancient eating-house in the
+collegiate quarter.  On separating from my friend, I took my way
+along that charming public walk known in Geneva as the Treille, a
+shady terrace, of immense elevation, overhanging a portion of the
+lower town.  There are spreading trees and well-worn benches, and
+over the tiles and chimneys of the ville basse there is a view of the
+snow-crested Alps.  On the other side, as you turn your back to the
+view, the promenade is overlooked by a row of tall, sober-faced
+hotels, the dwellings of the local aristocracy.  I was very fond of
+the place, and often resorted to it to stimulate my sense of the
+picturesque.  Presently, as I lingered there on this occasion, I
+became aware that a gentleman was seated not far from where I stood,
+with his back to the Alpine chain, which this morning was brilliant
+and distinct, and a newspaper, unfolded, in his lap.  He was not
+reading, however; he was staring before him in gloomy contemplation.
+I don't know whether I recognised first the newspaper or its
+proprietor; one, in either case, would have helped me to identify the
+other.  One was the New York Herald; the other, of course, was Mr.
+Ruck.  As I drew nearer, he transferred his eyes from the stony,
+high-featured masks of the gray old houses on the other side of the
+terrace, and I knew by the expression of his face just how he had
+been feeling about these distinguished abodes.  He had made up his
+mind that their proprietors were a dusky, narrow-minded, unsociable
+company; plunging their roots into a superfluous past.  I
+endeavoured, therefore, as I sat down beside him, to suggest
+something more impersonal.
+
+"That's a beautiful view of the Alps," I observed.
+
+"Yes," said Mr. Ruck, without moving, "I've examined it.  Fine thing,
+in its way--fine thing.  Beauties of nature--that sort of thing.  We
+came up on purpose to look at it."
+
+"Your ladies, then, have been with you?"
+
+"Yes; they are just walking round.  They're awfully restless.  They
+keep saying I'm restless, but I'm as quiet as a sleeping child to
+them.  It takes," he added in a moment, drily, "the form of
+shopping."
+
+"Are they shopping now?"
+
+"Well, if they ain't, they're trying to.  They told me to sit here a
+while, and they'd just walk round.  I generally know what that means.
+But that's the principal interest for ladies," he added, retracting
+his irony.  "We thought we'd come up here and see the cathedral; Mrs.
+Church seemed to think it a dead loss that we shouldn't see the
+cathedral, especially as we hadn't seen many yet.  And I had to come
+up to the banker's any way.  Well, we certainly saw the cathedral.  I
+don't know as we are any the better for it, and I don't know as I
+should know it again.  But we saw it, any way.  I don't know as I
+should want to go there regularly; but I suppose it will give us, in
+conversation, a kind of hold on Mrs. Church, eh?  I guess we want
+something of that kind.  Well," Mr. Ruck continued, "I stepped in at
+the banker's to see if there wasn't something, and they handed me out
+a Herald."
+
+"I hope the Herald is full of good news," I said.
+
+"Can't say it is.  D-d bad news."
+
+"Political," I inquired, "or commercial?"
+
+"Oh, hang politics!  It's business, sir.  There ain't any business.
+It's all gone to,"--and Mr. Ruck became profane.  "Nine failures in
+one day.  What do you say-to that?"
+
+"I hope they haven't injured you," I said.
+
+"Well, they haven't helped me much.  So many houses on fire, that's
+all.  If they happen to take place in your own street, they don't
+increase the value of your property.  When mine catches, I suppose
+they'll write and tell me--one of these days, when they've got
+nothing else to do.  I didn't get a blessed letter this morning; I
+suppose they think I'm having such a good time over here it's a pity
+to disturb me.  If I could attend to business for about half an hour,
+I'd find out something.  But I can't, and it's no use talking.  The
+state of my health was never so unsatisfactory as it was about five
+o'clock this morning."
+
+"I am very sorry to hear that," I said, "and I recommend you strongly
+not to think of business."
+
+"I don't," Mr. Ruck replied.  "I'm thinking of cathedrals; I'm
+thinking of the beauties of nature.  Come," he went on, turning round
+on the bench and leaning his elbow on the parapet, "I'll think of
+those mountains over there; they ARE pretty, certainly.  Can't you
+get over there?"
+
+"Over where?"
+
+"Over to those hills.  Don't they run a train right up?"
+
+"You can go to Chamouni," I said.  "You can go to Grindelwald and
+Zermatt and fifty other places.  You can't go by rail, but you can
+drive."
+
+"All right, we'll drive--and not in a one-horse concern, either.
+Yes, Chamouni is one of the places we put down.  I hope there are a
+few nice shops in Chamouni."  Mr. Ruck spoke with a certain quickened
+emphasis, and in a tone more explicitly humorous than he commonly
+employed.  I thought he was excited, and yet he had not the
+appearance of excitement.  He looked like a man who has simply taken,
+in the face of disaster, a sudden, somewhat imaginative, resolution
+not to "worry."  He presently twisted himself about on his bench
+again and began to watch for his companions.  "Well, they ARE walking
+round," he resumed; "I guess they've hit on something, somewhere.
+And they've got a carriage waiting outside of that archway too.  They
+seem to do a big business in archways here, don't they.  They like to
+have a carriage to carry home the things--those ladies of mine.  Then
+they're sure they've got them."  The ladies, after this, to do them
+justice, were not very long in appearing.  They came toward us, from
+under the archway to which Mr. Ruck had somewhat invidiously alluded,
+slowly and with a rather exhausted step and expression.  My companion
+looked at them a moment, as they advanced.  "They're tired," he said
+softly.  "When they're tired, like that, it's very expensive."
+
+"Well," said Mrs. Ruck, "I'm glad you've had some company."  Her
+husband looked at her, in silence, through narrowed eyelids, and I
+suspected that this gracious observation on the lady's part was
+prompted by a restless conscience.
+
+Miss Sophy glanced at me with her little straightforward air of
+defiance.  "It would have been more proper if WE had had the company.
+Why didn't you come after us, instead of sitting there?" she asked of
+Mr. Ruck's companion.
+
+"I was told by your father," I explained, "that you were engaged in
+sacred rites."  Miss Ruck was not gracious, though I doubt whether it
+was because her conscience was better than her mother's.
+
+"Well, for a gentleman there is nothing so sacred as ladies'
+society," replied Miss Ruck, in the manner of a person accustomed to
+giving neat retorts.
+
+"I suppose you refer to the Cathedral," said her mother.  "Well, I
+must say, we didn't go back there.  I don't know what it may be of a
+Sunday, but it gave me a chill."
+
+"We discovered the loveliest little lace-shop," observed the young
+girl, with a serenity that was superior to bravado.
+
+Her father looked at her a while; then turned about again, leaning on
+the parapet, and gazed away at the "hills."
+
+"Well, it was certainly cheap," said Mrs. Ruck, also contemplating
+the Alps.
+
+"We are going to Chamouni," said her husband.  "You haven't any
+occasion for lace at Chamouni."
+
+"Well, I'm glad to hear you have decided to go somewhere," rejoined
+his wife.  "I don't want to be a fixture at a boarding-house."
+
+"You can wear lace anywhere," said Miss Ruck, "if you pat it on
+right.  That's the great thing, with lace.  I don't think they know
+how to wear lace in Europe.  I know how I mean to wear mine; but I
+mean to keep it till I get home."
+
+Her father transferred his melancholy gaze to her elaborately-
+appointed little person; there was a great deal of very new-looking
+detail in Miss Ruck's appearance.  Then, in a tone of voice quite out
+of consonance with his facial despondency, "Have you purchased a
+great deal?" he inquired.
+
+"I have purchased enough for you to make a fuss about."
+
+"He can't make a fuss about that," said Mrs. Ruck.
+
+"Well, you'll see!" declared the young girl with a little sharp
+laugh.
+
+But her father went on, in the same tone:  "Have you got it in your
+pocket?  Why don't you put it on--why don't you hang it round you?"
+
+"I'll hang it round YOU, if you don't look out!" cried Miss Sophy.
+
+"Don't you want to show it to this gentleman?" Mr. Ruck continued.
+
+"Mercy, how you do talk about that lace!" said his wife.
+
+"Well, I want to be lively.  There's every reason for it; we're going
+to Chamouni."
+
+"You're restless; that's what's the matter with you."  And Mrs. Ruck
+got up.
+
+"No, I ain't," said her husband.  "I never felt so quiet; I feel as
+peaceful as a little child."
+
+Mrs. Ruck, who had no sense whatever of humour, looked at her
+daughter and at me.  "Well, I hope you'll improve," she said.
+
+"Send in the bills," Mr. Ruck went on, rising to his feet.  "Don't
+hesitate, Sophy.  I don't care what you do now.  In for a penny, in
+for a pound."
+
+Miss Ruck joined her mother, with a little toss of her head, and we
+followed the ladies to the carriage.  "In your place," said Miss
+Sophy to her father, "I wouldn't talk so much about pennies and
+pounds before strangers."
+
+Poor Mr. Ruck appeared to feel the force of this observation, which,
+in the consciousness of a man who had never been "mean," could hardly
+fail to strike a responsive chord.  He coloured a little, and he was
+silent; his companions got into their vehicle, the front seat of
+which was adorned with a large parcel.  Mr. Ruck gave the parcel a
+little poke with his umbrella, and then, turning to me with a rather
+grimly penitential smile, "After all," he said, "for the ladies
+that's the principal interest."
+
+
+
+CHAPTER VII.
+
+
+
+Old M. Pigeonneau had more than once proposed to me to take a walk,
+but I had hitherto been unable to respond to so alluring an
+invitation.  It befell, however, one afternoon, that I perceived him
+going forth upon a desultory stroll, with a certain lonesomeness of
+demeanour that attracted my sympathy.  I hastily overtook him, and
+passed my hand into his venerable arm, a proceeding which produced in
+the good old man so jovial a sense of comradeship that he ardently
+proposed we should bend our steps to the English Garden; no locality
+less festive was worthy of the occasion.  To the English Garden,
+accordingly, we went; it lay beyond the bridge, beside the lake.  It
+was very pretty and very animated; there was a band playing in the
+middle, and a considerable number of persons sitting under the small
+trees, on benches and little chairs, or strolling beside the blue
+water.  We joined the strollers, we observed our companions, and
+conversed on obvious topics.  Some of these last, of course, were the
+pretty women who embellished the scene, and who, in the light of M.
+Pigeonneau's comprehensive criticism, appeared surprisingly numerous.
+He seemed bent upon our making up our minds as to which was the
+prettiest, and as this was an innocent game I consented to play at
+it.
+
+Suddenly M. Pigeonneau stopped, pressing my arm with the liveliest
+emotion.  "La voila, la voila, the prettiest!" he quickly murmured,
+"coming toward us, in a blue dress, with the other."  It was at the
+other I was looking, for the other, to my surprise, was our
+interesting fellow-pensioner, the daughter of a vigilant mother.  M.
+Pigeonneau, meanwhile, had redoubled his exclamations; he had
+recognised Miss Sophy Ruck.  "Oh, la belle rencontre, nos aimables
+convives; the prettiest girl in the world, in effect!"
+
+We immediately greeted and joined the young ladies, who, like
+ourselves, were walking arm in arm and enjoying the scene.
+
+"I was citing you with admiration to my friend even before I had
+recognised you," said M. Pigeonneau to Miss Ruck.
+
+"I don't believe in French compliments," remarked this young lady,
+presenting her back to the smiling old man.
+
+"Are you and Miss Ruck walking alone?" I asked of her companion.
+"You had better accept of M. Pigeonneau's gallant protection, and of
+mine."
+
+Aurora Church had taken her hand out of Miss Ruck's arm; she looked
+at me, smiling, with her head a little inclined, while, upon her
+shoulder, she made her open parasol revolve.  "Which is most
+improper--to walk alone or to walk with gentlemen?  I wish to do what
+is most improper."
+
+"What mysterious logic governs your conduct?" I inquired.
+
+"He thinks you can't understand him when he talks like that," said
+Miss Ruck.  "But I do understand you, always!"
+
+"So I have always ventured to hope, my dear Miss Ruck."
+
+"Well, if I didn't, it wouldn't be much loss," rejoined this young
+lady.
+
+"Allons, en marche!" cried M. Pigeonneau, smiling still, and
+undiscouraged by her inhumanity.  "Let as make together the tour of
+the garden."  And he imposed his society upon Miss Ruck with a
+respectful, elderly grace which was evidently unable to see anything
+in her reluctance but modesty, and was sublimely conscious of a
+mission to place modesty at its ease.  This ill-assorted couple
+walked in front, while Aurora Church and I strolled along together.
+
+"I am sure this is more improper," said my companion; "this is
+delightfully improper.  I don't say that as a compliment to you," she
+added.  "I would say it to any man, no matter how stupid."
+
+"Oh, I am very stupid," I answered, "but this doesn't seem to me
+wrong."
+
+"Not for you, no; only for me.  There is nothing that a man can do
+that is wrong, is there?  En morale, you know, I mean.  Ah, yes, he
+can steal; but I think there is nothing else, is there?"
+
+"I don't know.  One doesn't know those things until after one has
+done them.  Then one is enlightened."
+
+"And you mean that you have never been enlightened?  You make
+yourself out very good."
+
+"That is better than making one's self out bad, as you do."
+
+The young girl glanced at me a moment, and then, with her charming
+smile, "That's one of the consequences of a false position."
+
+"Is your position false?" I inquired, smiling too at this large
+formula.
+
+"Distinctly so."
+
+"In what way?"
+
+"Oh, in every way.  For instance, I have to pretend to be a jeune
+fille.  I am not a jeune fille; no American girl is a jeune fille; an
+American girl is an intelligent, responsible creature.  I have to
+pretend to be very innocent, but I am not very innocent."
+
+"You don't pretend to be very innocent; you pretend to be--what shall
+I call it?--very wise."
+
+"That's no pretence.  I am wise."
+
+"You are not an American girl," I ventured to observe.
+
+My companion almost stopped, looking at me; there was a little flush
+in her cheek.  "Voila!" she said.  "There's my false position.  I
+want to be an American girl, and I'm not."
+
+"Do you want me to tell you?" I went on.  "An American girl wouldn't
+talk as you are talking now."
+
+"Please tell me," said Aurora Church, with expressive eagerness.
+"How would she talk?"
+
+"I can't tell you all the things an American girl would say, but I
+think I can tell you the things she wouldn't say.  She wouldn't
+reason out her conduct, as you seem to me to do."
+
+Aurora gave me the most flattering attention.  "I see.  She would be
+simpler.  To do very simple things that are not at all simple--that
+is the American girl!"
+
+I permitted myself a small explosion of hilarity.  "I don't know
+whether you are a French girl, or what you are," I said, "but you are
+very witty."
+
+"Ah, you mean that I strike false notes!" cried Aurora Church, sadly.
+"That's just what I want to avoid.  I wish you would always tell me."
+
+The conversational union between Miss Ruck and her neighbour, in
+front of us, had evidently not become a close one.  The young lady
+suddenly turned round to us with a question:  "Don't you want some
+ice-cream?"
+
+"SHE doesn't strike false notes," I murmured.
+
+There was a kind of pavilion or kiosk, which served as a cafe, and at
+which the delicacies procurable at such an establishment were
+dispensed.  Miss Ruck pointed to the little green tables and chairs
+which were set out on the gravel; M. Pigeonneau, fluttering with a
+sense of dissipation, seconded the proposal, and we presently sat
+down and gave our order to a nimble attendant.  I managed again to
+place myself next to Aurora Church; our companions were on the other
+side of the table.
+
+My neighbour was delighted with our situation.  "This is best of
+all," she said.  "I never believed I should come to a cafe with two
+strange men! Now, you can't persuade me this isn't wrong."
+
+"To make it wrong we ought to see your mother coming down that path."
+
+"Ah, my mother makes everything wrong," said the young girl,
+attacking with a little spoon in the shape of a spade the apex of a
+pink ice.  And then she returned to her idea of a moment before:
+"You must promise to tell me--to warn me in some way--whenever I
+strike a false note.  You must give a little cough, like that--ahem!"
+
+"You will keep me very busy, and people will think I am in a
+consumption."
+
+"Voyons," she continued, "why have you never talked to me more?  Is
+that a false note?  Why haven't you been 'attentive?'  That's what
+American girls call it; that's what Miss Ruck calls it."
+
+I assured myself that our companions were out of earshot, and that
+Miss Ruck was much occupied with a large vanilla cream.  "Because you
+are always entwined with that young lady.  There is no getting near
+you."
+
+Aurora looked at her friend while the latter devoted herself to her
+ice.  "You wonder why I like her so much, I suppose.  So does mamma;
+elle s'y perd.  I don't like her particularly; je n'en suis pas
+folle.  But she gives me information; she tells me about America.
+Mamma has always tried to prevent my knowing anything about it, and I
+am all the more curious.  And then Miss Ruck is very fresh."
+
+"I may not be so fresh as Miss Ruck," I said, "but in future, when
+you want information, I recommend you to come to me for it."
+
+"Our friend offers to take me to America; she invites me to go back
+with her, to stay with her.  You couldn't do that, could you?" And
+the young girl looked at me a moment.  "Bon, a false note I can see
+it by your face; you remind me of a maitre de piano."
+
+"You overdo the character--the poor American girl," I said.  "Are you
+going to stay with that delightful family?"
+
+"I will go and stay with any one that will take me or ask me.  It's a
+real nostalgie.  She says that in New York--in Thirty-Seventh Street-
+-I should have the most lovely time."
+
+"I have no doubt you would enjoy it."
+
+"Absolute liberty to begin with."
+
+"It seems to me you have a certain liberty here," I rejoined.
+
+"Ah, THIS?  Oh, I shall pay for this.  I shall be punished by mamma,
+and I shall be lectured by Madame Galopin."
+
+"The wife of the pasteur?"
+
+"His digne epouse.  Madame Galopin, for mamma, is the incarnation of
+European opinion.  That's what vexes me with mamma, her thinking so
+much of people like Madame Galopin.  Going to see Madame Galopin--
+mamma calls that being in European society.  European society!  I'm
+so sick of that expression; I have heard it since I was six years
+old.  Who is Madame Galopin--who thinks anything of her here?  She is
+nobody; she is perfectly third-rate.  If I like America better than
+mamma, I also know Europe better."
+
+"But your mother, certainly," I objected, a trifle timidly, for my
+young lady was excited, and had a charming little passion in her eye-
+-"your mother has a great many social relations all over the
+Continent."
+
+"She thinks so, but half the people don't care for us.  They are not
+so good as we, and they know it--I'll do them that justice--and they
+wonder why we should care for them.  When we are polite to them, they
+think the less of us; there are plenty of people like that.  Mamma
+thinks so much of them simply because they are foreigners.  If I
+could tell you all the dull, stupid, second-rate people I have had to
+talk to, for no better reason than that they were de leur pays!--
+Germans, French, Italians, Turks, everything.  When I complain, mamma
+always says that at any rate it's practice in the language.  And she
+makes so much of the English, too; I don't know what that's practice
+in."
+
+Before I had time to suggest an hypothesis, as regards this latter
+point, I saw something that made me rise, with a certain solemnity,
+from my chair.  This was nothing less than the neat little figure of
+Mrs. Church--a perfect model of the femme comme il faut--approaching
+our table with an impatient step, and followed most unexpectedly in
+her advance by the pre-eminent form of Mr. Ruck.  She had evidently
+come in quest of her daughter, and if she had commanded this
+gentleman's attendance, it had been on no softer ground than that of
+his unenvied paternity to her guilty child's accomplice.  My movement
+had given the alarm, and Aurora Church and M. Pigeonneau got up; Miss
+Ruck alone did not, in the local phrase, derange herself.  Mrs.
+Church, beneath her modest little bonnet, looked very serious, but
+not at all fluttered; she came straight to her daughter, who received
+her with a smile, and then she looked all round at the rest of us,
+very fixedly and tranquilly, without bowing.  I must do both these
+ladies the justice to mention that neither of them made the least
+little "scene."
+
+"I have come for you, dearest," said the mother.
+
+"Yes, dear mamma."
+
+"Come for you--come for you," Mrs. Church repeated, looking down at
+the relics of our little feast.  "I was obliged to ask Mr. Ruck's
+assistance.  I was puzzled; I thought a long time."
+
+"Well, Mrs. Church, I was glad to see you puzzled once in your life!"
+said Mr. Ruck, with friendly jocosity.  "But you came pretty straight
+for all that.  I had hard work to keep up with you."
+
+"We will take a cab, Aurora," Mrs. Church went on, without heeding
+this pleasantry--"a closed one.  Come, my daughter."
+
+"Yes, dear mamma."  The young girl was blushing, yet she was still
+smiling; she looked round at us all, and, as her eyes met mine, I
+thought she was beautiful.  "Good-bye," she said to us.  "I have had
+a LOVELY TIME."
+
+"We must not linger," said her mother; "it is five o'clock.  We are
+to dine, you know, with Madame Galopin."
+
+"I had quite forgotten," Aurora declared.  "That will be charming."
+
+"Do you want me to assist you to carry her back, ma am?" asked Mr.
+Ruck.
+
+Mrs. Church hesitated a moment, with her serene little gaze.  "Do you
+prefer, then, to leave your daughter to finish the evening with these
+gentlemen?"
+
+Mr. Ruck pushed back his hat and scratched the top of his head.
+"Well, I don't know.  How would you like that, Sophy?"
+
+"Well, I never!" exclaimed Sophy, as Mrs. Church marched off with her
+daughter.
+
+
+
+CHAPTER VIII.
+
+
+
+I had half expected that Mrs. Church would make me feel the weight of
+her disapproval of my own share in that little act of revelry in the
+English Garden.  But she maintained her claim to being a highly
+reasonable woman--I could not but admire the justice of this
+pretension--by recognising my irresponsibility.  I had taken her
+daughter as I found her, which was, according to Mrs. Church's view,
+in a very equivocal position.  The natural instinct of a young man,
+in such a situation, is not to protest but to profit; and it was
+clear to Mrs. Church that I had had nothing to do with Miss Aurora's
+appearing in public under the insufficient chaperonage of Miss Ruck.
+Besides, she liked to converse, and she apparently did me the honour
+to believe that of all the members of the Pension Beaurepas I had the
+most cultivated understanding.  I found her in the salon a couple of
+evenings after the incident I have just narrated, and I approached
+her with a view of making my peace with her, if this should prove
+necessary.  But Mrs. Church was as gracious as I could have desired;
+she put her marker into her book, and folded her plump little hands
+on the cover.  She made no specific allusion to the English Garden;
+she embarked, rather, upon those general considerations in which her
+refined intellect was so much at home.
+
+"Always at your studies, Mrs. Church," I ventured to observe.
+
+"Que voulez-vous?  To say studies is to say too much; one doesn't
+study in the parlour of a boarding-house.  But I do what I can; I
+have always done what I can.  That is all I have ever claimed."
+
+"No one can do more, and you seem to have done a great deal."
+
+"Do you know my secret?" she asked, with an air of brightening
+confidence.  And she paused a moment before she imparted her secret--
+"To care only for the BEST!  To do the best, to know the best--to
+have, to desire, to recognise, only the best.  That's what I have
+always done, in my quiet little way.  I have gone through Europe on
+my devoted little errand, seeking, seeing, heeding, only the best.
+And it has not been for myself alone; it has been for my daughter.
+My daughter has had the best.  We are not rich, but I can say that."
+
+"She has had you, madam," I rejoined finely.
+
+"Certainly, such as I am, I have been devoted.  We have got something
+everywhere; a little here, a little there.  That's the real secret--
+to get something everywhere; you always can if you are devoted.
+Sometimes it has been a little music, sometimes a little deeper
+insight into the history of art; every little counts you know.
+Sometimes it has been just a glimpse, a view, a lovely landscape, an
+impression.  We have always been on the look-out.  Sometimes it has
+been a valued friendship, a delightful social tie."
+
+"Here comes the 'European society,' the poor daughter's bugbear," I
+said to myself.  "Certainly," I remarked aloud--I admit, rather
+perversely--"if you have lived a great deal in pensions, you must
+have got acquainted with lots of people."
+
+Mrs. Church dropped her eyes a moment; and then, with considerable
+gravity, "I think the European pension system in many respects
+remarkable, and in some satisfactory.  But of the friendships that we
+have formed, few have been contracted in establishments of this
+kind."
+
+"I am sorry to hear that!" I said, laughing.
+
+"I don't say it for you, though I might say it for some others.  We
+have been interested in European homes."
+
+"Oh, I see!"
+
+"We have the entree of the old Genevese society I like its tone.  I
+prefer it to that of Mr. Ruck," added Mrs. Church, calmly; "to that
+of Mrs. Ruck and Miss Ruck--of Miss Ruck especially."
+
+"Ah, the poor Rucks haven't any tone at all," I said "Don't take them
+more seriously than they take themselves."
+
+"Tell me this," my companion rejoined, "are they fair examples?"
+
+"Examples of what?"
+
+"Of our American tendencies."
+
+"'Tendencies' is a big word, dear lady; tendencies are difficult to
+calculate.  And you shouldn't abuse those good Rucks, who have been
+very kind to your daughter.  They have invited her to go and stay
+with them in Thirty-Seventh Street."
+
+"Aurora has told me.  It might be very serious."
+
+"It might be very droll," I said.
+
+"To me," declared Mrs. Church, "it is simply terrible.  I think we
+shall have to leave the Pension Beaurepas.  I shall go back to Madame
+Chamousset."
+
+"On account of the Rucks?" I asked.
+
+"Pray, why don't they go themselves?  I have given them some
+excellent addresses--written down the very hours of the trains.  They
+were going to Appenzell; I thought it was arranged."
+
+"They talk of Chamouni now," I said; "but they are very helpless and
+undecided."
+
+"I will give them some Chamouni addresses.  Mrs. Ruck will send a
+chaise a porteurs; I will give her the name of a man who lets them
+lower than you get them at the hotels.  After that they MUST go."
+
+"Well, I doubt," I observed, "whether Mr. Ruck will ever really be
+seen on the Mer de Glace--in a high hat.  He's not like you; he
+doesn't value his European privileges.  He takes no interest.  He
+regrets Wall Street, acutely.  As his wife says, he is very restless,
+but he has no curiosity about Chamouni.  So you must not depend too
+much on the effect of your addresses."
+
+"Is it a frequent type?" asked Mrs. Church, with an air of self-
+control.
+
+"I am afraid so.  Mr. Ruck is a broken-down man of business.  He is
+broken down in health, and I suspect he is broken down in fortune.
+He has spent his whole life in buying and selling; he knows how to do
+nothing else.  His wife and daughter have spent their lives, not in
+selling, but in buying; and they, on their side, know how to do
+nothing else.  To get something in a shop that they can put on their
+backs--that is their one idea; they haven't another in their heads.
+Of course they spend no end of money, and they do it with an
+implacable persistence, with a mixture of audacity and of cunning.
+They do it in his teeth and they do it behind his back; the mother
+protects the daughter, and the daughter eggs on the mother.  Between
+them they are bleeding him to death."
+
+"Ah, what a picture!" murmured Mrs. Church.  "I am afraid they are
+very-uncultivated."
+
+"I share your fears.  They are perfectly ignorant; they have no
+resources.  The vision of fine clothes occupies their whole
+imagination.  They have not an idea--even a worse one--to compete
+with it.  Poor Mr. Ruck, who is extremely good-natured and soft,
+seems to me a really tragic figure.  He is getting bad news every day
+from home; his business is going to the dogs.  He is unable to stop
+it; he has to stand and watch his fortunes ebb.  He has been used to
+doing things in a big way, and he feels mean, if he makes a fuss
+about bills.  So the ladies keep sending them in."
+
+"But haven't they common sense?  Don't they know they are ruining
+themselves?"
+
+"They don't believe it.  The duty of an American husband and father
+is to keep them going.  If he asks them how, that's his own affair.
+So, by way of not being mean, of being a good American husband and
+father, poor Ruck stands staring at bankruptcy."
+
+Mrs. Church looked at me a moment, in quickened meditation.  "Why, if
+Aurora were to go to stay with them, she might not even be properly
+fed!"
+
+"I don't, on the whole, recommend," I said, laughing, "that your
+daughter should pay a visit to Thirty-Seventh Street."
+
+"Why should I be subjected to such trials--so sadly eprouvee?  Why
+should a daughter of mine like that dreadful girl?"
+
+"DOES she like her?"
+
+"Pray, do you mean," asked my companion, softly, "that Aurora is a
+hypocrite?"
+
+I hesitated a moment.  "A little, since you ask me.  I think you have
+forced her to be."
+
+Mrs. Church answered this possibly presumptuous charge with a
+tranquil, candid exultation.  "I never force my daughter!"
+
+"She is nevertheless in a false position," I rejoined.  "She hungers
+and thirsts to go back to her own country; she wants 'to come' out in
+New York, which is certainly, socially speaking, the El Dorado of
+young ladies.  She likes any one, for the moment, who will talk to
+her of that, and serve as a connecting-link with her native shores.
+Miss Ruck performs this agreeable office."
+
+"Your idea is, then, that if she were to go with Miss Ruck to America
+she would drop her afterwards."
+
+I complimented Mrs. Church upon her logical mind, but I repudiated
+this cynical supposition.  "I can't imagine her--when it should come
+to the point--embarking with the famille Ruck.  But I wish she might
+go, nevertheless."
+
+Mrs. Church shook her head serenely, and smiled at my inappropriate
+zeal.  "I trust my poor child may never be guilty of so fatal a
+mistake.  She is completely in error; she is wholly unadapted to the
+peculiar conditions of American life.  It would not please her.  She
+would not sympathise.  My daughter's ideal is not the ideal of the
+class of young women to which Miss Ruck belongs.  I fear they are
+very numerous; they give the tone--they give the tone."
+
+"It is you that are mistaken," I said; "go home for six months and
+see."
+
+"I have not, unfortunately, the means to make costly experiments.  My
+daughter has had great advantages--rare advantages--and I should be
+very sorry to believe that au fond she does not appreciate them.  One
+thing is certain:  I must remove her from this pernicious influence.
+We must part company with this deplorable family.  If Mr. Ruck and
+his ladies cannot be induced to go to Chamouni--a journey that no
+traveller with the smallest self-respect would omit--my daughter and
+I shall be obliged to retire.  We shall go to Dresden."
+
+"To Dresden?"
+
+"The capital of Saxony.  I had arranged to go there for the autumn,
+but it will be simpler to go immediately.  There are several works in
+the gallery with which my daughter has not, I think, sufficiently
+familiarised herself; it is especially strong in the seventeenth
+century schools."
+
+As my companion offered me this information I perceived Mr. Ruck come
+lounging in, with his hands in his pockets, and his elbows making
+acute angles.  He had his usual anomalous appearance of both seeking
+and avoiding society, and he wandered obliquely toward Mrs. Church,
+whose last words he had overheard.  "The seventeenth century
+schools," he said, slowly, as if he were weighing some very small
+object in a very large-pair of scales.  "Now, do you suppose they HAD
+schools at that period?"
+
+Mrs. Church rose with a good deal of precision, making no answer to
+this incongruous jest.  She clasped her large volume to her neat
+little bosom, and she fixed a gentle, serious eye upon Mr. Ruck.
+
+"I had a letter this morning from Chamouni," she said.
+
+"Well," replied Mr. Ruck, "I suppose you've got friends all over."
+
+"I have friends at Chamouni, but they are leaving.  To their great
+regret."  I had got up, too; I listened to this statement, and I
+wondered.  I am almost ashamed to mention the subject of my
+agitation.  I asked myself whether this was a sudden improvisation,
+consecrated by maternal devotion; but this point has never been
+elucidated.  "They are giving up some charming rooms; perhaps you
+would like them.  I would suggest your telegraphing.  The weather is
+glorious," continued Mrs. Church, "and the highest peaks are now
+perceived with extraordinary distinctness."
+
+Mr. Ruck listened, as he always listened, respectfully.  "Well," he
+said, "I don't know as I want to go up Mount Blank.  That's the
+principal attraction, isn't it?"
+
+"There are many others.  I thought I would offer you an--an
+exceptional opportunity."
+
+"Well," said Mr. Ruck, "you're right down friendly.  But I seem to
+have more opportunities than I know what to do with.  I don't seem
+able to take hold."
+
+"It only needs a little decision," remarked Mrs. Church, with an air
+which was an admirable example of this virtue.  "I wish you good-
+night, sir."  And she moved noiselessly away.
+
+Mr. Ruck, with his long legs apart, stood staring after her; then he
+transferred his perfectly quiet eyes to me.  "Does she own a hotel
+over there?" he asked.  "Has she got any stock in Mount Blank?"
+
+
+
+CHAPTER IX.
+
+
+
+The next day Madame Beaurepas handed me, with her own elderly
+fingers, a missive, which proved to be a telegram.  After glancing at
+it, I informed her that it was apparently a signal for my departure;
+my brother had arrived in England, and proposed to me to meet him
+there; he had come on business, and was to spend but three weeks in
+Europe.  "But my house empties itself!" cried the old woman.  "The
+famille Ruck talks of leaving me, and Madame Church nous fait la
+reverence."
+
+"Mrs. Church is going away?"
+
+"She is packing her trunk; she is a very extraordinary person.  Do
+you know what she asked me this morning?  To invent some combination
+by which the famille Ruck should move away.  I informed her that I
+was not an inventor.  That poor famille Ruck!  'Oblige me by getting
+rid of them,' said Madame Church, as she would have asked Celestine
+to remove a dish of cabbage.  She speaks as if the world were made
+for Madame Church.  I intimated to her that if she objected to the
+company there was a very simple remedy; and at present elle fait ses
+paquets."
+
+"She really asked you to get the Rucks out of the house?"
+
+"She asked me to tell them that their rooms had been let, three
+months ago, to another family.  She has an APLOMB!"
+
+Mrs. Church's aplomb caused me considerable diversion; I am not sure
+that it was not, in some degree, to laugh over it at my leisure that
+I went out into the garden that evening to smoke a cigar.  The night
+was dark and not particularly balmy, and most of my fellow-
+pensioners, after dinner, had remained in-doors.  A long straight
+walk conducted from the door of the house to the ancient grille that
+I have described, and I stood here for some time, looking through the
+iron bars at the silent empty street.  The prospect was not
+entertaining, and I presently turned away.  At this moment I saw, in
+the distance, the door of the house open and throw a shaft of
+lamplight into the darkness.  Into the lamplight there stepped the
+figure of a female, who presently closed the door behind her.  She
+disappeared in the dusk of the garden, and I had seen her but for an
+instant, but I remained under the impression that Aurora Church, on
+the eve of her departure, had come out for a meditative stroll.
+
+I lingered near the gate, keeping the red tip of my cigar turned
+toward the house, and before long a young lady emerged from among the
+shadows of the trees and encountered the light of a lamp that stood
+just outside the gate.  It was in fact Aurora Church, but she seemed
+more bent upon conversation than upon meditation.  She stood a moment
+looking at me, and then she said, -
+
+"Ought I to retire--to return to the house?"
+
+"If you ought, I should be very sorry to tell you so," I answered.
+
+"But we are all alone; there is no one else in the garden."
+
+"It is not the first time that I have been alone with a young lady.
+I am not at all terrified."
+
+"Ah, but I?" said the young girl.  "I have never been alone--" then,
+quickly, she interrupted herself.  "Good, there's another false
+note!"
+
+"Yes, I am obliged to admit that one is very false."
+
+She stood looking at me.  "I am going away to-morrow; after that
+there will be no one to tell me."
+
+
+
+CHAPTER X.
+
+
+
+"That will matter little," I presently replied.  "Telling you will do
+no good."
+
+"Ah, why do you say that?" murmured Aurora Church.
+
+I said it partly because it was true; but I said it for other reasons
+as well, which it was hard to define.  Standing there bare-headed, in
+the night air, in the vague light, this young lady looked extremely
+interesting; and the interest of her appearance was not diminished by
+a suspicion on my own part that she had come into the garden knowing
+me to be there.  I thought her a charming girl, and I felt very sorry
+for her; but, as I looked at her, the terms in which Madame Beaurepas
+had ventured to characterise her recurred to me with a certain force.
+I had professed a contempt for them at the time, but it now came into
+my head that perhaps this unfortunately situated, this insidiously
+mutinous young creature, was looking out for a preserver.  She was
+certainly not a girl to throw herself at a man's head, but it was
+possible that in her intense--her almost morbid-desire to put into
+effect an ideal which was perhaps after all charged with as many
+fallacies as her mother affirmed, she might do something reckless and
+irregular--something in which a sympathetic compatriot, as yet
+unknown, would find his profit.  The image, unshaped though it was,
+of this sympathetic compatriot, filled me with a sort of envy.  For
+some moments I was silent, conscious of these things, and then I
+answered her question.  "Because some things--some differences are
+felt, not learned.  To you liberty is not natural; you are like a
+person who has bought a repeater, and, in his satisfaction, is
+constantly making it sound.  To a real American girl her liberty is a
+very vulgarly-ticking old clock."
+
+"Ah, you mean, then," said the poor girl, "that my mother has ruined
+me?"
+
+"Ruined you?"
+
+"She has so perverted my mind, that when I try to be natural I am
+necessarily immodest."
+
+"That again is a false note," I said, laughing.
+
+She turned away.  "I think you are cruel."
+
+"By no means," I declared; "because, for my own taste, I prefer you
+as--as--"
+
+I hesitated, and she turned back.  "As what?"
+
+"As you are."
+
+She looked at me a while again, and then she said, in a little
+reasoning voice that reminded me of her mother's, only that it was
+conscious and studied, "I was not aware that I am under any
+particular obligation to please you!"  And then she gave a clear
+laugh, quite at variance with her voice.
+
+"Oh, there is no obligation," I said, "but one has preferences.  I am
+very sorry you are going away."
+
+"What does it matter to you?  You are going yourself."
+
+"As I am going in a different direction that makes all the greater
+separation."
+
+She answered nothing; she stood looking through the bars of the tall
+gate at the empty, dusky street.  "This grille is like a cage," she
+said, at last.
+
+"Fortunately, it is a cage that will open."  And I laid my hand on
+the lock.
+
+"Don't open it," and she pressed the gate back.  "If you should open
+it I would go out--and never return."
+
+"Where should you go?"
+
+"To America."
+
+"Straight away?"
+
+"Somehow or other.  I would go to the American consul.  I would beg
+him to give me money--to help me."
+
+I received this assertion without a smile; I was not in a smiling
+humour.  On the contrary, I felt singularly excited, and I kept my
+hand on the lock of the gate.  I believed (or I thought I believed)
+what my companion said, and I had--absurd as it may appear--an
+irritated vision of her throwing herself upon consular sympathy.  It
+seemed to me, for a moment, that to pass out of that gate with this
+yearning, straining, young creature, would be to pass into some
+mysterious felicity.  If I were only a hero of romance, I would
+offer, myself, to take her to America.
+
+In a moment more, perhaps, I should have persuaded myself that I was
+one, but at this juncture I heard a sound that was not romantic.  It
+proved to be the very realistic tread of Celestine, the cook, who
+stood grinning at us as we turned about from our colloquy.
+
+"I ask bien pardon," said Celestine.  "The mother of Mademoiselle
+desires that Mademoiselle should come in immediately.  M. le Pasteur
+Galopin has come to make his adieux to ces dames."
+
+Aurora gave me only one glance, but it was a touching one.  Then she
+slowly departed with Celestine.
+
+The next morning, on coming into the garden, I found that Mrs. Church
+and her daughter had departed.  I was informed of this fact by old M.
+Pigeonneau, who sat there under a tree, having his coffee at a little
+green table.
+
+"I have nothing to envy you," he said; "I had the last glimpse of
+that charming Miss Aurora."
+
+"I had a very late glimpse," I answered, "and it was all I could
+possibly desire."
+
+"I have always noticed," rejoined M. Pigeonneau, "That your desires
+are more moderate than mine.  Que voulez-vous?  I am of the old
+school.  Je crois que la race se perd.  I regret the departure of
+that young girl:  she had an enchanting smile.  Ce sera une femme
+d'esprit.  For the mother, I can console myself.  I am not sure that
+SHE was a femme d'esprit, though she wished to pass for one.  Round,
+rosy, potelee, she yet had not the temperament of her appearance; she
+was a femme austere.  I have often noticed that contradiction in
+American ladies.  You see a plump little woman, with a speaking eye,
+and the contour and complexion of a ripe peach, and if you venture to
+conduct yourself in the smallest degree in accordance with these
+indices, you discover a species of Methodist--of what do you call
+it?--of Quakeress.  On the other hand, you encounter a tall, lean,
+angular person, without colour, without grace, all elbows and knees,
+and you find it's a nature of the tropics! The women of duty look
+like coquettes, and the others look like alpenstocks! However, we
+have still the handsome Madame Ruck--a real femme de Rubens, celle-
+la.  It is very true that to talk to her one must know the Flemish
+tongue!"
+
+I had determined, in accordance with my brother's telegram, to go
+away in the afternoon; so that, having various duties to perform, I
+left M. Pigeonneau to his international comparisons.  Among other
+things, I went in the course of the morning to the banker's, to draw
+money for my journey, and there I found Mr. Ruck, with a pile of
+crumpled letters in his lap, his chair tipped back, and his eyes
+gloomily fixed on the fringe of the green plush table-cloth.  I
+timidly expressed the hope that he had got better news from home;
+whereupon he gave me a look in which, considering his provocation,
+the absence of irritation was conspicuous.
+
+He took up his letters in his large hand, and crushing them together,
+held it out to me.  "That epistolary matter," he said, "is worth
+about five cents.  But I guess," he added, rising, "I have taken it
+in by this time."  When I had drawn my money I asked him to come and
+breakfast with me at the little brasserie, much favoured by students,
+to which I used to resort in the old town.  "I couldn't eat, sir," he
+said, "I--couldn't eat.  Bad news takes away the appetite.  But I
+guess I'll go with you, so that I needn't go to table down there at
+the pension.  The old woman down there is always accusing me of
+turning up my nose at her food.  Well, I guess I shan't turn up my
+nose at anything now."
+
+We went to the little brasserie, where poor Mr. Ruck made the
+lightest possible breakfast.  But if he ate very little, he talked a
+great deal; he talked about business, going into a hundred details in
+which I was quite unable to follow him.  His talk was not angry nor
+bitter; it was a long, meditative, melancholy monologue; if it had
+been a trifle less incoherent I should almost have called it
+philosophic.  I was very sorry for him; I wanted to do something for
+him, but the only thing I could do was, when we had breakfasted, to
+see him safely back to the Pension Beaurepas.  We went across the
+Treille and down the Corraterie, out of which we turned into the Rue
+du Rhone.  In this latter street, as all the world knows, are many of
+those brilliant jewellers' shops for which Geneva is famous.  I
+always admired their glittering windows, and never passed them
+without a lingering glance.  Even on this occasion, pre-occupied as I
+was with my impending departure, and with my companion's troubles, I
+suffered my eyes to wander along the precious tiers that flashed and
+twinkled behind the huge clear plates of glass.  Thanks to this
+inveterate habit, I made a discovery.  In the largest and most
+brilliant of these establishments I perceived two ladies, seated
+before the counter with an air of absorption, which sufficiently
+proclaimed their identity.  I hoped my companion would not see them,
+but as we came abreast of the door, a little beyond, we found it open
+to the warm summer air.  Mr. Ruck happened to glance in, and he
+immediately recognised his wife and daughter.  He slowly stopped,
+looking at them; I wondered what he would do.  The salesman was
+holding up a bracelet before them, on its velvet cushion, and
+flashing it about in an irresistible manner.
+
+Mr. Ruck said nothing, but he presently went in, and I did the same.
+
+"It will be an opportunity," I remarked, as cheerfully as possible,
+"for me to bid good-bye to the ladies."
+
+They turned round when Mr. Ruck came in, and looked at him without
+confusion.  "Well, you had better go home to breakfast," remarked his
+wife.  Miss Sophy made no remark, but she took the bracelet from the
+attendant and gazed at it very fixedly.  Mr. Ruck seated himself on
+an empty stool and looked round the shop.
+
+"Well, you have been here before," said his wife; "you were here the
+first day we came."
+
+Miss Ruck extended the precious object in her hands towards me.
+"Don't you think that sweet?" she inquired.
+
+I looked at it a moment.  "No, I think it's ugly."
+
+She glanced at me a moment, incredulous.  "Well, I don't believe you
+have any taste."
+
+"Why, sir, it's just lovely," said Mrs. Ruck.
+
+"You'll see it some day on me, any way," her daughter declared.
+
+"No, he won't," said Mr. Ruck, quietly.
+
+"It will be his own fault, then," Miss Sophy observed.
+
+"Well, if we are going to Chamouni we want to get something here,"
+said Mrs. Ruck.  "We may not have another chance."
+
+Mr. Ruck was still looking round the shop, whistling in a very low
+tone.  "We ain't going to Chamouni.  We are going to New York city,
+straight."
+
+"Well, I'm glad to hear that," said Mrs. Ruck.  "Don't you suppose we
+want to take something home?"
+
+"If we are going straight back I must have that bracelet," her
+daughter declared, "Only I don't want a velvet case; I want a satin
+case."
+
+"I must bid you good-bye," I said to the ladies.  "I am leaving
+Geneva in an hour or two."
+
+"Take a good look at that bracelet, so you'll know it when you see
+it," said Miss Sophy.
+
+"She's bound to have something," remarked her mother, almost proudly.
+
+Mr. Ruck was still vaguely inspecting the shop; he was still
+whistling a little.  "I am afraid he is not at all well," I said,
+softly, to his wife.
+
+She twisted her head a little, and glanced at him.
+
+"Well, I wish he'd improve!" she exclaimed.
+
+"A satin case, and a nice one!" said Miss Ruck to the shopman.
+
+I bade Mr. Ruck good-bye.  "Don't wait for me," he said, sitting
+there on his stool, and not meeting my eye.  "I've got to see this
+thing through."
+
+I went back to the Pension Beaurepas, and when, an hour later, I left
+it with my luggage, the family had not returned.
+
+
+
+
+
+End of Project Gutenberg Etext of The Pension Beaurepas, by Henry James
+

@@ -1,0 +1,28 @@
+{
+    "guid": "F96840E5-A4DD-4489-8ED9-957E4A54097A",
+    "name": "pSTL offload",
+    "categories": ["Toolkit/oneAPI Libraries/oneDPL"],
+    "description": "sample demonstrates the offloading of C++ standard parallel algorithms to a SYCL device",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "cmake -D GPU=1 ..",
+                          "make",
+                          "make run_wc",
+                          "make run_fwc0",
+			  "make run_fwc1"
+                   ]
+          }]
+  
+    },
+    "expertise": "Concept and Functionality"
+  }

@@ -1,0 +1,4176 @@
+Project Gutenberg's Etext of Songs of a Savoyard by W. S. Gilbert
+#5 in our series by W. S. Gilbert
+
+
+Copyright laws are changing all over the world, be sure to check
+the copyright laws for your country before posting these files!!
+
+Please take a look at the important information in this header.
+We encourage you to keep this file on your own disk, keeping an
+electronic path open for the next readers.  Do not remove this.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*These Etexts Prepared By Hundreds of Volunteers and Donations*
+
+Information on contacting Project Gutenberg to get Etexts, and
+further information is included below.  We need your donations.
+
+
+Songs of a Savoyard
+
+by W. S. Gilbert
+
+June, 1997  [Etext #934]
+
+
+Project Gutenberg's Etext of Songs of a Savoyard by W. S. Gilbert
+*****This file should be named svyrd10.txt or svyrd10.zip******
+
+Corrected EDITIONS of our etexts get a new NUMBER, svyrd11.txt.
+VERSIONS based on separate sources get new LETTER,svyrdb10a.txt.
+
+
+Scanned and proofed by
+David Price, ccx074@coventry.ac.uk
+
+
+We are now trying to release all our books one month in advance
+of the official release dates, for time for better editing.
+
+Please note:  neither this list nor its contents are final till
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.  To be sure you have an
+up to date first edition [xxxxx10x.xxx] please check file sizes
+in the first week of the next month.  Since our ftp program has
+a bug in it that scrambles the date [tried to fix and failed] a
+look at the file size will have to do, but we will try to see a
+new copy has at least one byte more or less.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+fifty hours is one conservative estimate for how long it we take
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour this year as we release thirty-two text
+files per month:  or 400 more Etexts in 1996 for a total of 800.
+If these reach just 10% of the computerized population, then the
+total should reach 80 billion Etexts.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by the December 31, 2001.  [10,000 x 100,000,000=Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only 10% of the present number of computer users.  2001
+should have at least twice as many computer users as that, so it
+will require us reaching less than 5% of the users in 2001.
+
+
+We need your donations more than ever!
+
+
+All donations should be made to "Project Gutenberg/CMU": and are
+tax deductible to the extent allowable by law.  (CMU = Carnegie-
+Mellon University).
+
+For these and other matters, please mail to:
+
+Project Gutenberg
+P. O. Box  2782
+Champaign, IL 61825
+
+When all other email fails try our Executive Director:
+Michael S. Hart <hart@pobox.com>
+
+We would prefer to send you this information by email
+(Internet, Bitnet, Compuserve, ATTMAIL or MCImail).
+
+******
+If you have an FTP program (or emulator), please
+FTP directly to the Project Gutenberg archives:
+[Mac users, do NOT point and click. . .type]
+
+ftp uiarchive.cso.uiuc.edu
+login:  anonymous
+password:  your@login
+cd etext/etext90 through /etext96
+or cd etext/articles [get suggest gut for more information]
+dir [to see files]
+get or mget [to get files. . .set bin for zip files]
+GET INDEX?00.GUT
+for a list of books
+and
+GET NEW GUT for general information
+and
+MGET GUT* for newsletters.
+
+**Information prepared by the Project Gutenberg legal advisor**
+(Three Pages)
+
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here?  You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault.  So, among other things, this "Small Print!" statement
+disclaims most of our liability to you.  It also tells you how
+you can distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement.  If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from.  If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-
+tm etexts, is a "public domain" work distributed by Professor
+Michael S. Hart through the Project Gutenberg Association at
+Carnegie-Mellon University (the "Project").  Among other
+things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties.  Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the Project's "PROJECT GUTENBERG" trademark.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works.  Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects".  Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] the Project (and any other party you may receive this
+etext from as a PROJECT GUTENBERG-tm etext) disclaims all
+liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from.  If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy.  If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS".  NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold the Project, its directors,
+officers, members and agents harmless from all liability, cost
+and expense, including legal fees, that arise directly or
+indirectly from any of the following that you do or cause:
+[1] distribution of this etext, [2] alteration, modification,
+or addition to the etext, or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word pro-
+     cessing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Project of 20% of the
+     net profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Association/Carnegie-Mellon
+     University" within the 60 days following each
+     date you prepare (or were legally required to prepare)
+     your annual (or equivalent periodic) tax return.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+The Project gratefully accepts contributions in money, time,
+scanning machines, OCR software, public domain etexts, royalty
+free copyright licenses, and every other sort of contribution
+you can think of.  Money should be paid to "Project Gutenberg
+Association / Carnegie-Mellon University".
+
+*END*THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.04.29.93*END*
+
+
+
+
+
+Songs of a Savoyard by W. S. Gilbert
+Scanned and proofed by David Price, email ccx074@coventry.ac.uk
+
+
+
+
+
+Songs of a Savoyard
+
+
+
+
+Contents:
+
+The Darned Mounseer
+The Englishman
+The Disagreeable Man
+The Coming By-And-By
+The Highly Respectable Gondolier
+The Fairy Queen's Song
+Is Life A Boon
+The Modern Major-General
+The Heavy Dragoon
+Proper Pride
+The Policeman's Lot
+The Baffled Grumbler
+The House Of Peers
+A Merry Madrigal
+The Duke And The Duchess
+Eheu Fugaces -!
+They'll None Of `Em Be Missed
+Girl Graduates
+Braid The Raven Hair
+The Working Monarch
+The Ape And The Lady
+Only Roses
+The Rover's Apology
+An Appeal
+The Reward Of Merit
+The Magnet And The Churn
+The Family Fool
+Sans Souci
+A Recipe
+The Merryman And His Maid
+The Susceptible Chancellor
+When A Merry Maiden Marries
+The British Tar
+A Man Who Would Woo A Fair Maid
+The Sorcerer's Song
+The Fickle Breeze
+The First Lord's Song
+Would You Know?
+Speculation
+Ah Me!
+The Duke Of Plaza-Toro
+The Aesthete
+Said I To Myself, Said I
+Sorry Her Lot
+The Contemplative Sentry
+The Philosophic Pill
+Blue Blood
+The Judge's Song
+When I First Put This Uniform On
+Solatium
+A Nightmare
+Don't Forget!
+The Suicide's Grave
+He And She
+The Mighty Must
+A Mirage
+The Ghosts' High Noon
+The Humane Mikado
+Willow Waly!
+Life Is Lovely All The Year
+The Usher's Charge
+The Great Oak Tree
+King Goodheart
+Sleep On!
+The Love-Sick Boy
+Poetry Everywhere
+He Loves!
+True Diffidence
+The Tangled Skein
+My Lady
+One Against The World
+Put A Penny In The Slot
+Good Little Girls
+Life
+Limited Liability
+Anglicised Utopia
+An English Girl
+A Manager's Perplexities
+Out Of Sorts
+How It's Done
+A Classical Revival
+The Practical Joker
+The National Anthem
+Her Terms
+The Independent Bee
+The Disconcerted Tenor
+The Played-Out Humorist
+
+
+
+Ballad: The Darned Mounseer
+
+
+
+I shipped, d'ye see, in a Revenue sloop,
+And, off Cape Finisteere,
+A merchantman we see,
+A Frenchman, going free,
+So we made for the bold Mounseer,
+D'ye see?
+We made for the bold Mounseer!
+But she proved to be a Frigate - and she up with her ports,
+And fires with a thirty-two!
+It come uncommon near,
+But we answered with a cheer,
+Which paralysed the Parley-voo,
+D'ye see?
+Which paralysed the Parley-voo!
+
+Then our Captain he up and he says, says he,
+"That chap we need not fear, -
+We can take her, if we like,
+She is sartin for to strike,
+For she's only a darned Mounseer,
+D'ye see?
+She's only a darned Mounseer!
+But to fight a French fal-lal - it's like hittin' of a gal -
+It's a lubberly thing for to do;
+For we, with all our faults,
+Why, we're sturdy British salts,
+While she's but a Parley-voo,
+D'ye see?
+A miserable Parley-voo!"
+
+So we up with our helm, and we scuds before the breeze,
+As we gives a compassionating cheer;
+Froggee answers with a shout
+As he sees us go about,
+Which was grateful of the poor Mounseer,
+D'ye see?
+Which was grateful of the poor Mounseer!
+And I'll wager in their joy they kissed each other's cheek
+(Which is what them furriners do),
+And they blessed their lucky stars
+We were hardy British tars
+Who had pity on a poor Parley-voo,
+D'ye see?
+Who had pity on a poor Parley-voo!
+
+
+
+Ballad: The Englishman
+
+
+
+He is an Englishman!
+For he himself has said it,
+And it's greatly to his credit,
+That he is an Englishman!
+For he might have been a Roosian,
+A French, or Turk, or Proosian,
+Or perhaps Itali-an!
+But in spite of all temptations,
+To belong to other nations,
+He remains an Englishman!
+Hurrah!
+For the true-born Englishman!
+
+
+
+Ballad: The Disagreeable Man
+
+
+
+If you give me your attention, I will tell you what I am:
+I'm a genuine philanthropist - all other kinds are sham.
+Each little fault of temper and each social defect
+In my erring fellow-creatures, I endeavour to correct.
+To all their little weaknesses I open people's eyes,
+And little plans to snub the self-sufficient I devise;
+I love my fellow-creatures - I do all the good I can -
+Yet everybody says I'm such a disagreeable man!
+And I can't think why!
+
+To compliments inflated I've a withering reply,
+And vanity I always do my best to mortify;
+A charitable action I can skilfully dissect;
+And interested motives I'm delighted to detect.
+I know everybody's income and what everybody earns,
+And I carefully compare it with the income-tax returns;
+But to benefit humanity, however much I plan,
+Yet everybody says I'm such a disagreeable man!
+And I can't think why!
+
+I'm sure I'm no ascetic; I'm as pleasant as can be;
+You'll always find me ready with a crushing repartee;
+I've an irritating chuckle, I've a celebrated sneer,
+I've an entertaining snigger, I've a fascinating leer;
+To everybody's prejudice I know a thing or two;
+I can tell a woman's age in half a minute - and I do -
+But although I try to make myself as pleasant as I can,
+Yet everybody says I'm such a disagreeable man!
+And I can't think why!
+
+
+
+Ballad: The Coming By-And-By
+
+
+
+Sad is that woman's lot who, year by year,
+Sees, one by one, her beauties disappear;
+As Time, grown weary of her heart-drawn sighs,
+Impatiently begins to "dim her eyes"! -
+Herself compelled, in life's uncertain gloamings,
+To wreathe her wrinkled brow with well-saved "combings" -
+Reduced, with rouge, lipsalve, and pearly grey,
+To "make up" for lost time, as best she may!
+
+Silvered is the raven hair,
+Spreading is the parting straight,
+Mottled the complexion fair,
+Halting is the youthful gait,
+
+Hollow is the laughter free,
+Spectacled the limpid eye,
+Little will be left of me,
+In the coming by-and-by!
+Fading is the taper waist -
+Shapeless grows the shapely limb,
+And although securely laced,
+Spreading is the figure trim!
+Stouter than I used to be,
+Still more corpulent grow I -
+There will be too much of me
+In the coming by-and-by!
+
+
+
+Ballad: The Highly Respectable Gondolier
+
+
+
+I stole the Prince, and I brought him here,
+And left him, gaily prattling
+With a highly respectable Gondolier,
+Who promised the Royal babe to rear,
+And teach him the trade of a timoneer
+With his own beloved bratling.
+
+Both of the babes were strong and stout,
+And, considering all things, clever.
+Of that there is no manner of doubt -
+No probable, possible shadow of doubt -
+No possible doubt whatever.
+
+Time sped, and when at the end of a year
+I sought that infant cherished,
+That highly respectable Gondolier
+Was lying a corpse on his humble bier -
+I dropped a Grand Inquisitor's tear -
+That Gondolier had perished!
+
+A taste for drink, combined with gout,
+Had doubled him up for ever.
+Of THAT there is no manner of doubt -
+No probable, possible shadow of doubt -
+No possible doubt whatever.
+
+But owing, I'm much disposed to fear,
+To his terrible taste for tippling,
+That highly respectable Gondolier
+Could never declare with a mind sincere
+Which of the two was his offspring dear,
+And which the Royal stripling!
+
+Which was which he could never make out,
+Despite his best endeavour.
+Of THAT there is no manner of doubt -
+No probable, possible shadow of doubt -
+No possible doubt whatever.
+
+The children followed his old career -
+(This statement can't be parried)
+Of a highly respectable Gondolier:
+Well, one of the two (who will soon be here) -
+But WHICH of the two is not quite clear -
+Is the Royal Prince you married!
+
+Search in and out and round about
+And you'll discover never
+A tale so free from every doubt -
+All probable, possible shadow of doubt -
+All possible doubt whatever!
+
+
+
+Ballad: The Fairy Queen's Song
+
+
+
+Oh, foolish fay,
+Think you because
+Man's brave array
+My bosom thaws
+I'd disobey
+Our fairy laws?
+Because I fly
+In realms above,
+In tendency
+To fall in love
+Resemble I
+The amorous dove?
+
+Oh, amorous dove!
+Type of Ovidius Naso!
+This heart of mine
+Is soft as thine,
+Although I dare not say so!
+
+On fire that glows
+With heat intense
+I turn the hose
+Of Common Sense,
+And out it goes
+At small expense!
+We must maintain
+Our fairy law;
+That is the main
+On which to draw -
+In that we gain
+A Captain Shaw.
+
+Oh, Captain Shaw!
+Type of true love kept under!
+Could thy Brigade
+With cold cascade
+Quench my great love, I wonder!
+
+
+
+Ballad: Is Life A Boon
+
+
+
+Is life a boon?
+If so, it must befall
+That Death, whene'er he call,
+Must call too soon.
+Though fourscore years he give
+Yet one would pray to live
+Another moon!
+What kind of plaint have I,
+Who perish in July?
+I might have had to die
+Perchance in June!
+
+Is life a thorn?
+Then count it not a whit!
+Man is well done with it;
+Soon as he's born
+He should all means essay
+To put the plague away;
+And I, war-worn,
+Poor captured fugitive,
+My life most gladly give -
+I might have had to live
+Another morn!
+
+
+
+Ballad: The Modern Major-General
+
+
+
+I am the very pattern of a modern Major-Gineral,
+I've information vegetable, animal, and mineral;
+I know the kings of England, and I quote the fights historical,
+From Marathon to Waterloo, in order categorical;
+I'm very well acquainted, too, with matters mathematical,
+I understand equations, both the simple and quadratical;
+About binomial theorem I'm teeming with a lot o' news,
+With interesting facts about the square of the hypotenuse,
+I'm very good at integral and differential calculus,
+I know the scientific names of beings animalculous.
+In short, in matters vegetable, animal, and mineral,
+I am the very model of a modern Major-Gineral.
+
+I know our mythic history - KING ARTHUR'S and SIR CARADOC'S,
+I answer hard acrostics, I've a pretty taste for paradox;
+I quote in elegiacs all the crimes of HELIOGABALUS,
+In conics I can floor peculiarities parabolous.
+I tell undoubted RAPHAELS from GERARD DOWS and ZOFFANIES,
+I know the croaking chorus from the "Frogs" of ARISTOPHANES;
+Then I can hum a fugue, of which I've heard the music's din afore,
+And whistle all the airs from that confounded nonsense "Pinafore."
+Then I can write a washing-bill in Babylonic cuneiform,
+And tell you every detail of CARACTACUS'S uniform.
+In short, in matters vegetable, animal, and mineral,
+I am the very model of a modern Major-Gineral.
+
+In fact, when I know what is meant by "mamelon" and "ravelin,"
+When I can tell at sight a Chassepot rifle from a javelin,
+When such affairs as SORTIES and surprises I'm more wary at,
+And when I know precisely what is meant by Commissariat,
+When I have learnt what progress has been made in modern gunnery,
+When I know more of tactics than a novice in a nunnery,
+In short, when I've a smattering of elementary strategy,
+You'll say a better Major-GenerAL has never SAT a gee -
+For my military knowledge, though I'm plucky and adventury,
+Has only been brought down to the beginning of the century.
+But still in learning vegetable, animal, and mineral,
+I am the very model of a modern Major-Gineral!
+
+
+
+Ballad: The Heavy Dragoon
+
+
+
+If you want a receipt for that popular mystery,
+Known to the world as a Heavy Dragoon,
+Take all the remarkable people in history,
+Rattle them off to a popular tune!
+The pluck of LORD NELSON on board of the VICTORY -
+Genius of BISMARCK devising a plan;
+The humour of FIELDING (which sounds contradictory) -
+Coolness of PAGET about to trepan -
+The grace of MOZART, that unparalleled musico -
+Wit of MACAULAY, who wrote of QUEEN ANNE -
+The pathos of PADDY, as rendered by BOUCICAULT -
+Style of the BISHOP OF SODOR AND MAN -
+The dash of a D'ORSAY, divested of quackery -
+Narrative powers of DICKENS and THACKERAY -
+VICTOR EMMANUEL - peak-haunting PEVERIL -
+THOMAS AQUINAS, and DOCTOR SACHEVERELL -
+TUPPER and TENNYSON - DANIEL DEFOE -
+ANTHONY TROLLOPE and MISTER GUIZOT!
+Take of these elements all that is fusible,
+Melt 'em all down in a pipkin or crucible,
+Set 'em to simmer and take off the scum,
+And a Heavy Dragoon is the residuum!
+
+If you want a receipt for this soldierlike paragon,
+Get at the wealth of the CZAR (if you can) -
+The family pride of a Spaniard from Arragon -
+Force of MEPHISTO pronouncing a ban -
+A smack of LORD WATERFORD, reckless and rollicky -
+Swagger of RODERICK, heading his clan -
+The keen penetration of PADDINGTON POLLAKY -
+Grace of an Odalisque on a divan -
+The genius strategic of CAESAR or HANNIBAL -
+Skill of LORD WOLSELEY in thrashing a cannibal -
+Flavour of HAMLET - the STRANGER, a touch of him -
+Little of MANFRED (but not very much of him) -
+Beadle of Burlington - RICHARDSON'S show -
+MR. MICAWBER and MADAME TUSSAUD!
+Take of these elements all that is fusible -
+Melt 'em all down in a pipkin or crucible -
+Set 'em to simmer and take off the scum,
+And a Heavy Dragoon is the residuum!
+
+
+
+Ballad: Proper Pride
+
+
+
+The Sun, whose rays
+Are all ablaze
+With ever-living glory,
+Will not deny
+His majesty -
+He scorns to tell a story:
+He won't exclaim,
+"I blush for shame,
+So kindly be indulgent,"
+But, fierce and bold,
+In fiery gold,
+He glories all effulgent!
+
+I mean to rule the earth,
+As he the sky -
+We really know our worth,
+The Sun and I!
+
+Observe his flame,
+That placid dame,
+The Moon's Celestial Highness;
+There's not a trace
+Upon her face
+Of diffidence or shyness:
+She borrows light
+That, through the night,
+Mankind may all acclaim her!
+And, truth to tell,
+She lights up well,
+So I, for one, don't blame her!
+
+Ah, pray make no mistake,
+We are not shy;
+We're very wide awake,
+The Moon and I!
+
+
+
+Ballad: The Policeman's Lot
+
+
+
+When a felon's not engaged in his employment,
+Or maturing his felonious little plans,
+His capacity for innocent enjoyment
+Is just as great as any honest man's.
+Our feelings we with difficulty smother
+When constabulary duty's to be done:
+Ah, take one consideration with another,
+A policeman's lot is not a happy one!
+
+When the enterprising burglar isn't burgling,
+When the cut-throat isn't occupied in crime,
+He loves to hear the little brook a-gurgling,
+And listen to the merry village chime.
+When the coster's finished jumping on his mother,
+He loves to lie a-basking in the sun:
+Ah, take one consideration with another,
+The policeman's lot is not a happy one!
+
+
+
+Ballad: The Baffled Grumbler
+
+
+
+Whene'er I poke
+Sarcastic joke
+Replete with malice spiteful,
+The people vile
+Politely smile
+And vote me quite delightful!
+Now, when a wight
+Sits up all night
+Ill-natured jokes devising,
+And all his wiles
+Are met with smiles,
+It's hard, there's no disguising!
+Oh, don't the days seem lank and long
+When all goes right and nothing goes wrong,
+And isn't your life extremely flat
+With nothing whatever to grumble at!
+
+When German bands,
+From music stands
+Play Wagner imperFECTly -
+I bid them go -
+They don't say no,
+But off they trot directly!
+The organ boys
+They stop their noise
+With readiness surprising,
+And grinning herds
+Of hurdy-gurds
+Retire apologising!
+Oh, don't the days seem lank and long
+When all goes right and nothing goes wrong,
+And isn't your life extremely flat
+With nothing whatever to grumble at!
+
+I've offered gold,
+In sums untold,
+To all who'd contradict me -
+I've said I'd pay
+A pound a day
+To any one who kicked me -
+I've bribed with toys
+Great vulgar boys
+To utter something spiteful,
+But, bless you, no!
+They WILL be so
+Confoundedly politeful!
+In short, these aggravating lads,
+They tickle my tastes, they feed my fads,
+They give me this and they give me that,
+And I've nothing whatever to grumble at!
+
+
+
+Ballad: The House Of Peers
+
+
+
+When Britain really ruled the waves -
+(In good Queen Bess's time)
+The House of Peers made no pretence
+To intellectual eminence,
+Or scholarship sublime;
+Yet Britain won her proudest bays
+In good Queen Bess's glorious days!
+
+When Wellington thrashed Bonaparte,
+As every child can tell,
+The House of Peers, throughout the war,
+Did nothing in particular,
+And did it very well;
+Yet Britain set the world ablaze
+In good King George's glorious days!
+
+And while the House of Peers withholds
+Its legislative hand,
+And noble statesmen do not itch
+To interfere with matters which
+They do not understand,
+As bright will shine Great Britain's rays,
+As in King George's glorious days!
+
+
+
+Ballad: A Merry Madrigal
+
+
+
+Brightly dawns our wedding day;
+Joyous hour, we give thee greeting!
+Whither, whither art thou fleeting?
+Fickle moment, prithee stay!
+What though mortal joys be hollow?
+Pleasures come, if sorrows follow.
+Though the tocsin sound, ere long,
+Ding dong!  Ding dong!
+Yet until the shadows fall
+Over one and over all,
+Sing a merry madrigal -
+Fal la!
+
+Let us dry the ready tear;
+Though the hours are surely creeping,
+Little need for woeful weeping
+Till the sad sundown is near.
+All must sip the cup of sorrow,
+I to-day and thou to-morrow:
+This the close of every song -
+Ding dong!  Ding dong!
+What though solemn shadows fall,
+Sooner, later, over all?
+Sing a merry madrigal -
+Fal la!
+
+
+
+Ballad: The Duke And The Duchess
+
+
+
+[THE DUKE.]
+Small titles and orders
+For Mayors and Recorders
+I get - and they're highly delighted.
+M.P.s baronetted,
+Sham Colonels gazetted,
+And second-rate Aldermen knighted.
+Foundation-stone laying
+I find very paying,
+It adds a large sum to my makings.
+At charity dinners
+The best of speech-spinners,
+I get ten per cent on the takings!
+
+[THE DUCHESS.]
+I present any lady
+Whose conduct is shady
+Or smacking of doubtful propriety;
+When Virtue would quash her
+I take and whitewash her
+And launch her in first-rate society.
+I recommend acres
+Of clumsy dressmakers -
+Their fit and their finishing touches;
+A sum in addition
+They pay for permission
+To say that they make for the Duchess!
+
+[THE DUKE.]
+Those pressing prevailers,
+The ready-made tailors,
+Quote me as their great double-barrel;
+I allow them to do so,
+Though ROBINSON CRUSOE
+Would jib at their wearing apparel!
+I sit, by selection,
+Upon the direction
+Of several Companies bubble;
+As soon as they're floated
+I'm freely bank-noted -
+I'm pretty well paid for my trouble!
+
+[THE DUCHESS.]
+At middle-class party
+I play at ECARTE -
+And I'm by no means a beginner;
+To one of my station
+The remuneration -
+Five guineas a night and my dinner.
+I write letters blatant
+On medicines patent -
+And use any other you mustn't;
+And vow my complexion
+Derives its perfection
+From somebody's soap - which it doesn't.
+
+[THE DUKE.]
+We're ready as witness
+To any one's fitness
+To fill any place or preferment;
+We're often in waiting
+At junket FETING,
+And sometimes attend an interment.
+In short, if you'd kindle
+The spark of a swindle,
+Lure simpletons into your clutches,
+Or hoodwink a debtor,
+You cannot do better
+Than trot out a Duke or a Duchess!
+
+
+
+Ballad: Eheu Fugaces -!
+
+
+
+The air is charged with amatory numbers -
+Soft madrigals, and dreamy lovers' lays.
+Peace, peace, old heart!  Why waken from its slumbers
+The aching memory of the old, old days?
+
+Time was when Love and I were well acquainted;
+Time was when we walked ever hand in hand;
+A saintly youth, with worldly thought untainted,
+None better loved than I in all the land!
+Time was, when maidens of the noblest station,
+Forsaking even military men,
+Would gaze upon me, rapt in adoration -
+Ah me, I was a fair young curate then!
+
+Had I a headache? sighed the maids assembled;
+Had I a cold? welled forth the silent tear;
+Did I look pale? then half a parish trembled;
+And when I coughed all thought the end was near!
+I had no care - no jealous doubts hung o'er me -
+For I was loved beyond all other men.
+Fled gilded dukes and belted earls before me -
+Ah me, I was a pale young curate then!
+
+
+
+Ballad: They'll None Of 'Em Be Missed
+
+
+
+As some day it may happen that a victim must be found,
+I've got a little list - I've got a little list
+Of social offenders who might well be underground,
+And who never would be missed - who never would be missed!
+There's the pestilential nuisances who write for autographs -
+All people who have flabby hands and irritating laughs -
+All children who are up in dates, and floor you with 'em flat -
+All persons who in shaking hands, shake hands with you like THAT -
+And all third persons who on spoiling TETE-E-TETES insist -
+They'd none of 'em be missed - they'd none of 'em be missed!
+
+There's the nigger serenader, and the others of his race,
+And the piano organist - I've got him on the list!
+And the people who eat peppermint and puff it in your face,
+They never would be missed - they never would be missed!
+Then the idiot who praises, with enthusiastic tone,
+All centuries but this, and every country but his own;
+And the lady from the provinces, who dresses like a guy,
+And who "doesn't think she waltzes, but would rather like to try";
+And that FIN-DE-SIECLE anomaly, the scorching motorist -
+I don't think he'd be missed - I'm SURE he'd not be missed!
+
+And that NISI PRIUS nuisance, who just now is rather rife,
+The Judicial humorist - I've got HIM on the list!
+All funny fellows, comic men, and clowns of private life -
+They'd none of 'em be missed - they'd none of 'em be missed!
+And apologetic statesmen of the compromising kind,
+Such as - What-d'ye-call-him - Thing'em-Bob, and likewise - Never-
+mind,
+And 'St - 'st - 'st - and What's-his-name, and also - You-know-who
+-
+(The task of filling up the blanks I'd rather leave to YOU!)
+But it really doesn't matter whom you put upon the list,
+For they'd none of 'em be missed - they'd none of 'em be missed!
+
+
+
+Ballad: Girl Graduates
+
+
+
+They intend to send a wire
+To the moon;
+And they'll set the Thames on fire
+Very soon;
+Then they learn to make silk purses
+With their rigs
+From the ears of LADY CIRCE'S
+Piggy-wigs.
+And weasels at their slumbers
+They'll trepan;
+To get sunbeams from cuCUMbers
+They've a plan.
+They've a firmly rooted notion
+They can cross the Polar Ocean,
+And they'll find Perpetual Motion
+If they can!
+
+These are the phenomena
+That every pretty domina
+Hopes that we shall see
+At this Universitee!
+
+As for fashion, they forswear it,
+So they say,
+And the circle - they will square it
+Some fine day;
+Then the little pigs they're teaching
+For to fly;
+And the niggers they'll be bleaching
+By-and-by!
+Each newly joined aspirant
+To the clan
+Must repudiate the tyrant
+Known as Man;
+They mock at him and flout him,
+For they do not care about him,
+And they're "going to do without him"
+If they can!
+
+These are the phenomena
+That every pretty domina
+Hopes that we shall see
+At this Universitee!
+
+
+
+Ballad: Braid The Raven Hair
+
+
+
+Braid the raven hair,
+Weave the supple tress,
+Deck the maiden fair
+In her loveliness;
+Paint the pretty face,
+Dye the coral lip,
+Emphasise the grace
+Of her ladyship!
+Art and nature, thus allied,
+Go to make a pretty bride!
+
+Sit with downcast eye,
+Let it brim with dew;
+Try if you can cry,
+We will do so, too.
+When you're summoned, start
+Like a frightened roe;
+Flutter, little heart,
+Colour, come and go!
+Modesty at marriage tide
+Well becomes a pretty bride!
+
+
+
+Ballad: The Working Monarch
+
+
+
+Rising early in the morning,
+We proceed to light the fire,
+Then our Majesty adorning
+In its work-a-day attire,
+We embark without delay
+On the duties of the day.
+
+First, we polish off some batches
+Of political despatches,
+And foreign politicians circumvent;
+Then, if business isn't heavy,
+We may hold a Royal LEVEE,
+Or ratify some Acts of Parliament:
+Then we probably review the household troops -
+With the usual "Shalloo humps" and "Shalloo hoops!"
+Or receive with ceremonial and state
+An interesting Eastern Potentate.
+After that we generally
+Go and dress our private VALET -
+
+(It's a rather nervous duty - he a touchy little man) -
+Write some letters literary
+For our private secretary -
+(He is shaky in his spelling, so we help him if we can.)
+Then, in view of cravings inner,
+We go down and order dinner;
+Or we polish the Regalia and the Coronation Plate -
+Spend an hour in titivating
+All our Gentlemen-in-Waiting;
+Or we run on little errands for the Ministers of State.
+Oh, philosophers may sing
+Of the troubles of a King,
+Yet the duties are delightful, and the privileges great;
+But the privilege and pleasure
+That we treasure beyond measure
+Is to run on little errands for the Ministers of State!
+
+After luncheon (making merry
+On a bun and glass of sherry),
+If we've nothing in particular to do,
+We may make a Proclamation,
+Or receive a Deputation -
+Then we possibly create a Peer or two.
+Then we help a fellow-creature on his path
+With the Garter or the Thistle or the Bath:
+Or we dress and toddle off in semi-State
+To a festival, a function, or a FETE.
+Then we go and stand as sentry
+At the Palace (private entry),
+Marching hither, marching thither, up and down and to and fro,
+While the warrior on duty
+Goes in search of beer and beauty
+(And it generally happens that he hasn't far to go).
+He relieves us, if he's able,
+Just in time to lay the table.
+
+Then we dine and serve the coffee; and at half-past twelve or one,
+With a pleasure that's emphatic;
+Then we seek our little attic
+With the gratifying feeling that our duty has been done.
+Oh, philosophers may sing
+Of the troubles of a King,
+But of pleasures there are many and of troubles there are none;
+And the culminating pleasure
+That we treasure beyond measure
+Is the gratifying feeling that our duty has been done!
+
+
+
+Ballad: The Ape And The Lady
+
+
+
+A LADY fair, of lineage high,
+Was loved by an Ape, in the days gone by -
+The Maid was radiant as the sun,
+The Ape was a most unsightly one -
+So it would not do -
+His scheme fell through;
+For the Maid, when his love took formal shape,
+Expressed such terror
+At his monstrous error,
+That he stammered an apology and made his 'scape,
+The picture of a disconcerted Ape.
+
+With a view to rise in the social scale,
+He shaved his bristles, and he docked his tail,
+He grew moustachios, and he took his tub,
+And he paid a guinea to a toilet club.
+But it would not do,
+The scheme fell through -
+For the Maid was Beauty's fairest Queen,
+With golden tresses,
+Like a real princess's,
+While the Ape, despite his razor keen,
+Was the apiest Ape that ever was seen!
+
+He bought white ties, and he bought dress suits,
+He crammed his feet into bright tight boots,
+And to start his life on a brand-new plan,
+He christened himself Darwinian Man!
+But it would not do,
+The scheme fell through -
+For the Maiden fair, whom the monkey craved,
+Was a radiant Being,
+With a brain far-seeing -
+While a Man, however well-behaved,
+At best is only a monkey shaved!
+
+
+
+Ballad: Only Roses
+
+
+
+To a garden full of posies
+Cometh one to gather flowers;
+And he wanders through its bowers
+Toying with the wanton roses,
+Who, uprising from their beds,
+Hold on high their shameless heads
+With their pretty lips a-pouting,
+Never doubting - never doubting
+That for Cytherean posies
+He would gather aught but roses.
+
+In a nest of weeds and nettles,
+Lay a violet, half hidden;
+Hoping that his glance unbidden
+Yet might fall upon her petals.
+Though she lived alone, apart,
+Hope lay nestling at her heart,
+But, alas! the cruel awaking
+Set her little heart a-breaking,
+For he gathered for his posies
+Only roses - only roses!
+
+
+
+Ballad: The Rover's Apology
+
+
+
+Oh, gentlemen, listen, I pray;
+Though I own that my heart has been ranging,
+Of nature the laws I obey,
+For nature is constantly changing.
+The moon in her phases is found,
+The time and the wind and the weather,
+The months in succession come round,
+And you don't find two Mondays together.
+Consider the moral, I pray,
+Nor bring a young fellow to sorrow,
+Who loves this young lady to-day,
+And loves that young lady to-morrow!
+
+You cannot eat breakfast all day.
+Nor is it the act of a sinner,
+When breakfast is taken away,
+To turn your attention to dinner;
+And it's not in the range of belief
+That you could hold him as a glutton,
+Who, when he is tired of beef,
+Determines to tackle the mutton.
+But this I am ready to say,
+If it will diminish their sorrow,
+I'll marry this lady to-day,
+And I'll marry that lady to-morrow!
+
+
+
+Ballad: An Appeal
+
+
+
+Oh! is there not one maiden breast
+Which does not feel the moral beauty
+Of making worldly interest
+Subordinate to sense of duty?
+Who would not give up willingly
+All matrimonial ambition
+To rescue such a one as I
+From his unfortunate position?
+
+Oh, is there not one maiden here,
+Whose homely face and bad complexion
+Have caused all hopes to disappear
+Of ever winning man's affection?
+To such a one, if such there be,
+I swear by heaven's arch above you,
+If you will cast your eyes on me, -
+However plain you be - I'll love you!
+
+
+
+Ballad: The Reward Of Merit
+
+
+
+DR. BELVILLE was regarded as the CRICHTON of his age:
+His tragedies were reckoned much too thoughtful for the stage;
+His poems held a noble rank, although it's very true
+That, being very proper, they were read by very few.
+He was a famous Painter, too, and shone upon the "line,"
+And even MR. RUSKIN came and worshipped at his shrine;
+But, alas, the school he followed was heroically high -
+The kind of Art men rave about, but very seldom buy;
+And everybody said
+"How can he be repaid -
+This very great - this very good - this very gifted man?"
+But nobody could hit upon a practicable plan!
+
+He was a great Inventor, and discovered, all alone,
+A plan for making everybody's fortune but his own;
+For, in business, an Inventor's little better than a fool,
+And my highly-gifted friend was no exception to the rule.
+His poems - people read them in the Quarterly Reviews -
+His pictures - they engraved them in the ILLUSTRATED NEWS -
+His inventions - they, perhaps, might have enriched him by degrees,
+But all his little income went in Patent Office fees;
+And everybody said
+"How can he be repaid -
+This very great - this very good - this very gifted man?"
+But nobody could hit upon a practicable plan!
+
+At last the point was given up in absolute despair,
+When a distant cousin died, and he became a millionaire,
+With a county seat in Parliament, a moor or two of grouse,
+And a taste for making inconvenient speeches in the House!
+THEN it flashed upon Britannia that the fittest of rewards
+Was, to take him from the Commons and to put him in the Lords!
+And who so fit to sit in it, deny it if you can,
+As this very great - this very good - this very gifted man?
+(Though I'm more than half afraid
+That it sometimes may be said
+That we never should have revelled in that source of proper pride,
+However great his merits - if his cousin hadn't died!)
+
+
+
+Ballad: The Magnet And The Churn
+
+
+
+A MAGNET hung in a hardware shop,
+And all around was a loving crop
+Of scissors and needles, nails and knives,
+Offering love for all their lives;
+But for iron the Magnet felt no whim,
+Though he charmed iron, it charmed not him,
+From needles and nails and knives he'd turn,
+For he'd set his love on a Silver Churn!
+His most aesthetic,
+Very magnetic
+Fancy took this turn -
+"If I can wheedle
+A knife or needle,
+Why not a Silver Churn?"
+
+And Iron and Steel expressed surprise,
+The needles opened their well-drilled eyes,
+The pen-knives felt "shut up," no doubt,
+The scissors declared themselves "cut out,"
+The kettles they boiled with rage, 'tis said,
+While every nail went off its head,
+And hither and thither began to roam,
+Till a hammer came up - and drove it home,
+While this magnetic
+Peripatetic
+Lover he lived to learn,
+By no endeavour,
+Can Magnet ever
+Attract a Silver Churn!
+
+
+
+Ballad: The Family Fool
+
+
+
+Oh! a private buffoon is a light-hearted loon,
+If you listen to popular rumour;
+From morning to night he's so joyous and bright,
+And he bubbles with wit and good humour!
+He's so quaint and so terse, both in prose and in verse;
+Yet though people forgive his transgression,
+There are one or two rules that all Family Fools
+Must observe, if they love their profession.
+There are one or two rules,
+Half-a-dozen, maybe,
+That all family fools,
+Of whatever degree,
+Must observe if they love their profession.
+
+If you wish to succeed as a jester, you'll need
+To consider each person's auricular:
+What is all right for B would quite scandalise C
+(For C is so very particular);
+And D may be dull, and E's very thick skull
+Is as empty of brains as a ladle;
+While F is F sharp, and will cry with a carp,
+That he's known your best joke from his cradle!
+When your humour they flout,
+You can't let yourself go;
+And it DOES put you out
+When a person says, "Oh!
+I have known that old joke from my cradle!"
+
+If your master is surly, from getting up early
+(And tempers are short in the morning),
+An inopportune joke is enough to provoke
+Him to give you, at once, a month's warning.
+Then if you refrain, he is at you again,
+For he likes to get value for money:
+He'll ask then and there, with an insolent stare,
+"If you know that you're paid to be funny?"
+It adds to the tasks
+Of a merryman's place,
+When your principal asks,
+With a scowl on his face,
+If you know that you're paid to be funny?
+
+Comes a Bishop, maybe, or a solemn D.D. -
+Oh, beware of his anger provoking!
+Better not pull his hair - don't stick pins in his chair;
+He won't understand practical joking.
+If the jests that you crack have an orthodox smack,
+You may get a bland smile from these sages;
+But should it, by chance, be imported from France,
+Half-a-crown is stopped out of your wages!
+It's a general rule,
+Though your zeal it may quench,
+If the Family Fool
+Makes a joke that's TOO French,
+Half-a-crown is stopped out of his wages!
+
+Though your head it may rack with a bilious attack,
+And your senses with toothache you're losing,
+And you're mopy and flat - they don't fine you for that
+If you're properly quaint and amusing!
+Though your wife ran away with a soldier that day,
+And took with her your trifle of money;
+Bless your heart, they don't mind - they're exceedingly kind -
+They don't blame you - as long as you're funny!
+It's a comfort to feel
+If your partner should flit,
+Though YOU suffer a deal,
+THEY don't mind it a bit -
+They don't blame you - so long as you're funny!
+
+
+
+Ballad: Sans Souci
+
+
+
+I cannot tell what this love may be
+That cometh to all but not to me.
+It cannot be kind as they'd imply,
+Or why do these gentle ladies sigh?
+It cannot be joy and rapture deep,
+Or why do these gentle ladies weep?
+It cannot be blissful, as 'tis said,
+Or why are their eyes so wondrous red?
+
+If love is a thorn, they show no wit
+Who foolishly hug and foster it.
+If love is a weed, how simple they
+Who gather and gather it, day by day!
+If love is a nettle that makes you smart,
+Why do you wear it next your heart?
+And if it be neither of these, say I,
+Why do you sit and sob and sigh?
+
+
+
+Ballad: A Recipe
+
+
+
+Take a pair of sparkling eyes,
+Hidden, ever and anon,
+In a merciful eclipse -
+Do not heed their mild surprise -
+Having passed the Rubicon.
+Take a pair of rosy lips;
+Take a figure trimly planned -
+Such as admiration whets
+(Be particular in this);
+Take a tender little hand,
+Fringed with dainty fingerettes,
+Press it - in parenthesis; -
+Take all these, you lucky man -
+Take and keep them, if you can.
+
+Take a pretty little cot -
+Quite a miniature affair -
+Hung about with trellised vine,
+Furnish it upon the spot
+With the treasures rich and rare
+I've endeavoured to define.
+Live to love and love to live -
+You will ripen at your ease,
+Growing on the sunny side -
+Fate has nothing more to give.
+You're a dainty man to please
+If you are not satisfied.
+Take my counsel, happy man:
+Act upon it, if you can!
+
+
+
+Ballad: The Merryman And His Maid
+
+
+
+[HE]  I have a song to sing, O!
+[SHE]  Sing me your song, O!
+[HE]  It is sung to the moon
+By a love-lorn loon,
+Who fled from the mocking throng, O!
+It's the song of a merryman, moping mum,
+Whose soul was sad, whose glance was glum,
+Who sipped no sup, and who craved no crumb,
+As he sighed for the love of a ladye.
+Heighdy! heighdy!
+Misery me - lackadaydee!
+He sipped no sup, and he craved no crumb,
+As he sighed for the love of a ladye!
+
+[SHE]  I have a song to sing, O!
+[HE]  Sing me your song, O!
+[SHE]  It is sung with the ring
+Of the song maids sing
+Who love with a love life-long, O!
+It's the song of a merrymaid, peerly proud,
+Who loved a lord, and who laughed aloud
+At the moan of the merryman, moping mum,
+Whose soul was sore, whose glance was glum,
+Who sipped no sup, and who craved no crumb,
+As he sighed for the love of a ladye!
+Heighdy! heighdy!
+Misery me - lackadaydee!
+He sipped no sup, and he craved no crumb,
+As he sighed for the love of a ladye!
+
+[HE]  I have a song to sing, O!
+[SHE]  Sing me your song, O!
+[HE]  It is sung to the knell
+Of a churchyard bell,
+And a doleful dirge, ding dong, O!
+It's a song of a popinjay, bravely born,
+Who turned up his noble nose with scorn
+At the humble merrymaid, peerly proud,
+Who loved that lord, and who laughed aloud
+At the moan of the merryman, moping mum,
+Whose soul was sad, whose glance was glum,
+Who sipped no sup, and who craved no crumb,
+As he sighed for the love of a ladye!
+Heighdy! heighdy!
+Misery me - lackadaydee!
+He sipped no sup, and he craved no crumb,
+As he sighed for the love of a ladye!
+
+[SHE]  I have a song to sing, O!
+[HE]  Sing me your song, O!
+[SHE]  It is sung with a sigh
+And a tear in the eye,
+For it tells of a righted wrong, O!
+It's a song of a merrymaid, once so gay,
+Who turned on her heel and tripped away
+From the peacock popinjay, bravely born,
+Who turned up his noble nose with scorn
+At the humble heart that he did not prize;
+And it tells how she begged, with downcast eyes,
+For the love of a merryman, moping mum,
+Whose soul was sad, whose glance was glum,
+Who sipped no sup, and who craved no crumb,
+As he sighed for the love of a ladye!
+[BOTH]  Heighdy! heighdy!
+Misery me - lackadaydee!
+His pains were o'er, and he sighed no more.
+For he lived in the love of a ladye!
+
+
+
+Ballad: The Susceptible Chancellor
+
+
+
+The law is the true embodiment
+Of everything that's excellent.
+It has no kind of fault or flaw,
+And I, my lords, embody the Law.
+The constitutional guardian I
+Of pretty young Wards in Chancery,
+All very agreeable girls - and none
+Is over the age of twenty-one.
+A pleasant occupation for
+A rather susceptible Chancellor!
+
+But though the compliment implied
+Inflates me with legitimate pride,
+It nevertheless can't be denied
+That it has its inconvenient side.
+For I'm not so old, and not so plain,
+And I'm quite prepared to marry again,
+But there'd be the deuce to pay in the Lords
+If I fell in love with one of my Wards:
+Which rather tries my temper, for
+I'm SUCH a susceptible Chancellor!
+
+And every one who'd marry a Ward
+Must come to me for my accord:
+So in my court I sit all day,
+Giving agreeable girls away,
+With one for him - and one for he -
+And one for you - and one for ye -
+And one for thou - and one for thee -
+But never, oh never a one for me!
+Which is exasperating, for
+A highly susceptible Chancellor!
+
+
+
+Ballad: When A Merry Maiden Marries
+
+
+
+When a merry maiden marries,
+Sorrow goes and pleasure tarries;
+Every sound becomes a song,
+All is right and nothing's wrong!
+From to-day and ever after
+Let your tears be tears of laughter -
+Every sigh that finds a vent
+Be a sigh of sweet content!
+When you marry merry maiden,
+Then the air with love is laden;
+Every flower is a rose,
+Every goose becomes a swan,
+Every kind of trouble goes
+Where the last year's snows have gone;
+Sunlight takes the place of shade
+When you marry merry maid!
+
+When a merry maiden marries
+Sorrow goes and pleasure tarries;
+Every sound becomes a song,
+All is right, and nothing's wrong.
+Gnawing Care and aching Sorrow,
+Get ye gone until to-morrow;
+Jealousies in grim array,
+Ye are things of yesterday!
+When you marry merry maiden,
+Then the air with joy is laden;
+All the corners of the earth
+Ring with music sweetly played,
+Worry is melodious mirth,
+Grief is joy in masquerade;
+Sullen night is laughing day -
+All the year is merry May!
+
+
+
+Ballad: The British Tar
+
+
+
+A British tar is a soaring soul,
+As free as a mountain bird,
+His energetic fist should be ready to resist
+A dictatorial word.
+His nose should pant and his lip should curl,
+His cheeks should flame and his brow should furl,
+His bosom should heave and his heart should glow,
+And his fist be ever ready for a knock-down blow.
+
+His eyes should flash with an inborn fire,
+His brow with scorn be rung;
+He never should bow down to a domineering frown,
+Or the tang of a tyrant tongue.
+His foot should stamp and his throat should growl,
+His hair should twirl and his face should scowl;
+His eyes should flash and his breast protrude,
+And this should be his customary attitude!
+
+
+
+Ballad: A Man Who Would Woo A Fair Maid
+
+
+
+A man who would woo a fair maid,
+Should 'prentice himself to the trade;
+And study all day,
+In methodical way,
+How to flatter, cajole, and persuade.
+He should 'prentice himself at fourteen
+And practise from morning to e'en;
+And when he's of age,
+If he will, I'll engage,
+He may capture the heart of a queen!
+It is purely a matter of skill,
+Which all may attain if they will:
+But every Jack
+He must study the knack
+If he wants to make sure of his Jill!
+
+If he's made the best use of his time,
+His twig he'll so carefully lime
+That every bird
+Will come down at his word.
+Whatever its plumage and clime.
+He must learn that the thrill of a touch
+May mean little, or nothing, or much;
+It's an instrument rare,
+To be handled with care,
+And ought to be treated as such.
+It is purely a matter of skill,
+Which all may attain if they will:
+But every Jack,
+He must study the knack
+If he wants to make sure of his Jill!
+
+Then a glance may be timid or free;
+It will vary in mighty degree,
+From an impudent stare
+To a look of despair
+That no maid without pity can see.
+And a glance of despair is no guide -
+It may have its ridiculous side;
+It may draw you a tear
+Or a box on the ear;
+You can never be sure till you've tried.
+It is purely a matter of skill,
+Which all may attain if they will:
+But every Jack
+He must study the knack
+If he wants to make sure of his Jill!
+
+
+
+Ballad: The Sorcerer's Song
+
+
+
+Oh! my name is JOHN WELLINGTON WELLS -
+I'm a dealer in magic and spells,
+In blessings and curses,
+And ever-filled purses,
+In prophecies, witches, and knells!
+If you want a proud foe to "make tracks" -
+If you'd melt a rich uncle in wax -
+You've but to look in
+On our resident Djinn,
+Number seventy, Simmery Axe.
+
+We've a first-class assortment of magic;
+And for raising a posthumous shade
+With effects that are comic or tragic,
+There's no cheaper house in the trade.
+Love-philtre - we've quantities of it;
+And for knowledge if any one burns,
+We keep an extremely small prophet, a prophet
+Who brings us unbounded returns:
+For he can prophesy
+With a wink OF his eye,
+Peep with security
+Into futurity,
+Sum up your history,
+Clear up a mystery,
+Humour proclivity
+For a nativity.
+With mirrors so magical,
+Tetrapods tragical,
+Bogies spectacular,
+Answers oracular,
+Facts astronomical,
+Solemn or comical,
+And, if you want it, he
+Makes a reduction on taking a quantity!
+Oh!
+If any one anything lacks,
+He'll find it all ready in stacks,
+If he'll only look in
+On the resident Djinn,
+Number seventy, Simmery Axe!
+
+He can raise you hosts,
+Of ghosts,
+And that without reflectors;
+And creepy things
+With wings,
+And gaunt and grisly spectres!
+He can fill you crowds
+Of shrouds,
+And horrify you vastly;
+He can rack your brains
+With chains,
+And gibberings grim and ghastly.
+Then, if you plan it, he
+Changes organity
+With an urbanity,
+Full of Satanity,
+Vexes humanity
+With an inanity
+Fatal to vanity -
+Driving your foes to the verge of insanity.
+Barring tautology,
+In demonology,
+'Lectro biology,
+Mystic nosology,
+Spirit philology,
+High class astrology,
+Such is his knowledge, he
+Isn't the man to require an apology
+Oh!
+My name is JOHN WELLINGTON WELLS,
+I'm a dealer in magic and spells,
+In blessings and curses,
+And ever-filled purses -
+In prophecies, witches, and knells.
+If any one anything lacks,
+He'll find it all ready in stacks,
+If he'll only look in
+On the resident Djinn,
+Number seventy, Simmery Axe!
+
+
+
+Ballad: The Fickle Breeze
+
+
+
+Sighing softly to the river
+Comes the loving breeze,
+Setting nature all a-quiver,
+Rustling through the trees!
+And the brook in rippling measure
+Laughs for very love,
+While the poplars, in their pleasure,
+Wave their arms above!
+River, river, little river,
+May thy loving prosper ever.
+Heaven speed thee, poplar tree,
+May thy wooing happy be!
+
+Yet, the breeze is but a rover,
+When he wings away,
+Brook and poplar mourn a lover!
+Sighing well-a-day!
+Ah, the doing and undoing
+That the rogue could tell!
+When the breeze is out a-wooing,
+Who can woo so well?
+Pretty brook, thy dream is over,
+For thy love is but a rover!
+Sad the lot of poplar trees,
+Courted by the fickle breeze!
+
+
+
+Ballad: The First Lord's Song
+
+
+
+When I was a lad I served a term
+As office boy to an Attorney's firm;
+I cleaned the windows and I swept the floor,
+And I polished up the handle of the big front door.
+I polished up that handle so successfullee,
+That now I am the Ruler of the Queen's Navee!
+
+As office boy I made such a mark
+That they gave me the post of a junior clerk;
+I served the writs with a smile so bland,
+And I copied all the letters in a big round hand.
+I copied all the letters in a hand so free,
+That now I am the Ruler of the Queen's Navee!
+
+In serving writs I made such a name
+That an articled clerk I soon became;
+I wore clean collars and a brand-new suit
+For the Pass Examination at the Institute:
+And that Pass Examination did so well for me,
+That now I am the Ruler of the Queen's Navee!
+
+Of legal knowledge I acquired such a grip
+That they took me into the partnership,
+And that junior partnership I ween,
+Was the only ship that I ever had seen:
+But that kind of ship so suited me,
+That now I am the Ruler of the Queen's Navee!
+
+I grew so rich that I was sent
+By a pocket borough into Parliament;
+I always voted at my Party's call,
+And I never thought of thinking for myself at all.
+I thought so little, they rewarded me,
+By making me the Ruler of the Queen's Navee!
+
+Now, landsmen all, whoever you may be,
+If you want to rise to the top of the tree -
+If your soul isn't fettered to an office stool,
+Be careful to be guided by this golden rule -
+Stick close to your desks and NEVER GO TO SEA,
+And you all may be Rulers of the Queen's Navee!
+
+
+
+Ballad: Would You Know?
+
+
+
+Would you know the kind of maid
+Sets my heart a flame-a?
+Eyes must be downcast and staid,
+Cheeks must flush for shame-a!
+She may neither dance nor sing,
+But, demure in everything,
+Hang her head in modest way
+With pouting lips that seem to say,
+"Kiss me, kiss me, kiss me, kiss me,
+Though I die of shame-a!"
+Please you, that's the kind of maid
+Sets my heart a flame-a!
+
+When a maid is bold and gay
+With a tongue goes clang-a,
+Flaunting it in brave array,
+Maiden may go hang-a!
+Sunflower gay and hollyhock
+Never shall my garden stock;
+Mine the blushing rose of May,
+With pouting lips that seem to say
+"Oh, kiss me, kiss me, kiss me, kiss me,
+Though I die for shame-a!"
+Please you, that's the kind of maid
+Sets my heart a flame-a!
+
+
+
+Ballad: Speculation
+
+
+
+Comes a train of little ladies
+From scholastic trammels free,
+Each a little bit afraid is,
+Wondering what the world can be!
+
+Is it but a world of trouble -
+Sadness set to song?
+Is its beauty but a bubble
+Bound to break ere long?
+
+Are its palaces and pleasures
+Fantasies that fade?
+And the glory of its treasures
+Shadow of a shade?
+
+Schoolgirls we, eighteen and under,
+From scholastic trammels free,
+And we wonder - how we wonder! -
+What on earth the world can be!
+
+
+
+Ballad: Ah Me!
+
+
+
+When maiden loves, she sits and sighs,
+She wanders to and fro;
+Unbidden tear-drops fill her eyes,
+And to all questions she replies,
+With a sad heigho!
+'Tis but a little word - "heigho!"
+So soft, 'tis scarcely heard - "heigho!"
+An idle breath -
+Yet life and death
+May hang upon a maid's "heigho!"
+
+When maiden loves, she mopes apart,
+As owl mopes on a tree;
+Although she keenly feels the smart,
+She cannot tell what ails her heart,
+With its sad "Ah me!"
+'Tis but a foolish sigh - "Ah me!"
+Born but to droop and die - "Ah me!"
+Yet all the sense
+Of eloquence
+Lies hidden in a maid's "Ah me!"
+
+
+
+Ballad: The Duke Of Plaza-Toro
+
+
+
+In enterprise of martial kind,
+When there was any fighting,
+He led his regiment from behind
+(He found it less exciting).
+But when away his regiment ran,
+His place was at the fore, O-
+That celebrated,
+Cultivated,
+Underrated
+Nobleman,
+The Duke of Plaza-Toro!
+In the first and foremost flight, ha, ha!
+You always found that knight, ha, ha!
+That celebrated,
+Cultivated,
+Underrated
+Nobleman,
+The Duke of Plaza-Toro!
+
+When, to evade Destruction's hand,
+To hide they all proceeded,
+No soldier in that gallant band
+Hid half as well as he did.
+He lay concealed throughout the war,
+And so preserved his gore, O!
+That unaffected,
+Undetected,
+Well connected
+Warrior,
+The Duke of Plaza-Toro!
+In every doughty deed, ha, ha!
+He always took the lead, ha, ha!
+That unaffected,
+Undetected,
+Well connected
+Warrior,
+The Duke of Plaza-Toro!
+
+When told that they would all be shot
+Unless they left the service,
+That hero hesitated not,
+So marvellous his nerve is.
+He sent his resignation in,
+The first of all his corps, O!
+That very knowing,
+Overflowing,
+Easy-going
+Paladin,
+The Duke of Plaza-Toro!
+To men of grosser clay, ha, ha!
+He always showed the way, ha, ha!
+That very knowing,
+Overflowing,
+Easy-going
+Paladin,
+The Duke of Plaza-Toro!
+
+
+
+Ballad: The Aesthete
+
+
+
+If you're anxious for to shine in the high aesthetic line, as a man
+of culture rare,
+You must get up all the germs of the transcendental terms, and
+plant them everywhere.
+You must lie upon the daisies and discourse in novel phrases of
+your complicated state of mind
+(The meaning doesn't matter if it's only idle chatter of a
+transcendental kind).
+And every one will say,
+As you walk your mystic way,
+"If this young man expresses himself in terms too deep for ME,
+Why, what a very singularly deep young man this deep young man must
+be!"
+
+Be eloquent in praise of the very dull old days which have long
+since passed away,
+And convince 'em, if you can, that the reign of good QUEEN ANNE was
+Culture's palmiest day.
+Of course you will pooh-pooh whatever's fresh and new, and declare
+it's crude and mean,
+And that Art stopped short in the cultivated court of the EMPRESS
+JOSEPHINE.
+And every one will say,
+As you walk your mystic way,
+"If that's not good enough for him which is good enough for ME,
+Why, what a very cultivated kind of youth this kind of youth must
+be!"
+
+Then a sentimental passion of a vegetable fashion must excite your
+languid spleen,
+An attachment E LA Plato for a bashful young potato, or a not-too-
+French French bean.
+Though the Philistines may jostle, you will rank as an apostle in
+the high aesthetic band,
+If you walk down Piccadilly with a poppy or a lily in your
+mediaeval hand.
+And every one will say,
+As you walk your flowery way,
+"If he's content with a vegetable love which would certainly not
+suit ME,
+Why, what a most particularly pure young man this pure young man
+must be!"
+
+
+
+Ballad: Said I To Myself, Said I
+
+
+
+When I went to the Bar as a very young man
+(Said I to myself - said I),
+I'll work on a new and original plan
+(Said I to myself - said I),
+I'll never assume that a rogue or a thief
+Is a gentleman worthy implicit belief,
+Because his attorney, has sent me a brief
+(Said I to myself - said I!)
+
+I'll never throw dust in a juryman's eyes
+(Said I to myself - said I),
+Or hoodwink a judge who is not over-wise
+(Said I to myself - said I),
+Or assume that the witnesses summoned in force
+In Exchequer, Queen's Bench, Common Pleas, or Divorce,
+Have perjured themselves as a matter of course
+(Said I to myself - said I!)
+
+Ere I go into court I will read my brief through
+(Said I to myself - said I),
+And I'll never take work I'm unable to do
+(Said I to myself - said I).
+My learned profession I'll never disgrace
+By taking a fee with a grin on my face,
+When I haven't been there to attend to the case
+(Said I to myself - said I!)
+
+In other professions in which men engage
+(Said I to myself - said I),
+The Army, the Navy, the Church, and the Stage,
+(Said I to myself - said I),
+Professional licence, if carried too far,
+Your chance of promotion will certainly mar -
+And I fancy the rule might apply to the Bar
+(Said I to myself - said I!)
+
+
+
+Ballad: Sorry Her Lot
+
+
+
+Sorry her lot who loves too well,
+Heavy the heart that hopes but vainly,
+Sad are the sighs that own the spell
+Uttered by eyes that speak too plainly;
+Heavy the sorrow that bows the head
+When Love is alive and Hope is dead!
+
+Sad is the hour when sets the Sun -
+Dark is the night to Earth's poor daughters,
+When to the ark the wearied one
+Flies from the empty waste of waters!
+Heavy the sorrow that bows the head
+When Love is alive and Hope is dead!
+
+
+
+Ballad: The Contemplative Sentry
+
+
+
+When all night long a chap remains
+On sentry-go, to chase monotony
+He exercises of his brains,
+That is, assuming that he's got any.
+Though never nurtured in the lap
+Of luxury, yet I admonish you,
+I am an intellectual chap,
+And think of things that would astonish you.
+I often think it's comical
+How Nature always does contrive
+That every boy and every gal,
+That's born into the world alive,
+Is either a little Liberal,
+Or else a little Conservative!
+Fal lal la!
+
+When in that house M.P.'s divide,
+If they've a brain and cerebellum, too,
+They've got to leave that brain outside,
+And vote just as their leaders tell 'em to.
+But then the prospect of a lot
+Of statesmen, all in close proximity,
+A-thinking for themselves, is what
+No man can face with equanimity.
+Then let's rejoice with loud Fal lal
+That Nature wisely does contrive
+That every boy and every gal,
+That's born into the world alive,
+Is either a little Liberal,
+Or else a little Conservative!
+Fal lal la!
+
+
+
+Ballad: The Philosophic Pill
+
+
+
+I've wisdom from the East and from the West,
+That's subject to no academic rule;
+You may find it in the jeering of a jest,
+Or distil it from the folly of a fool.
+I can teach you with a quip, if I've a mind;
+I can trick you into learning with a laugh;
+Oh, winnow all my folly, and you'll find
+A grain or two of truth among the chaff!
+
+I can set a braggart quailing with a quip,
+The upstart I can wither with a whim;
+He may wear a merry laugh upon his lip,
+But his laughter has an echo that is grim.
+When they've offered to the world in merry guise,
+Unpleasant truths are swallowed with a will -
+For he who'd make his fellow-creatures wise
+Should always gild the philosophic pill!
+
+
+
+Ballad: Blue Blood
+
+
+
+Spurn not the nobly born
+With love affected,
+Nor treat with virtuous scorn
+The well connected.
+High rank involves no shame -
+We boast an equal claim
+With him of humble name
+To be respected!
+Blue blood!  Blue blood!
+When virtuous love is sought,
+Thy power is naught,
+Though dating from the Flood,
+Blue blood!
+
+Spare us the bitter pain
+Of stern denials,
+Nor with low-born disdain
+Augment our trials.
+Hearts just as pure and fair
+May beat in Belgrave Square
+As in the lowly air
+Of Seven Dials!
+Blue blood!  Blue blood!
+Of what avail art thou
+To serve me now?
+Though dating from the Flood,
+Blue blood!
+
+
+
+Ballad: The Judge's Song
+
+
+
+When I, good friends, was called to the Bar,
+I'd an appetite fresh and hearty,
+But I was, as many young barristers are,
+An impecunious party.
+I'd a swallow-tail coat of a beautiful blue -
+A brief which was brought by a booby -
+A couple of shirts and a collar or two,
+And a ring that looked like a ruby!
+
+In Westminster Hall I danced a dance,
+Like a semi-despondent fury;
+For I thought I should never hit on a chance
+Of addressing a British Jury -
+But I soon got tired of third-class journeys,
+And dinners of bread and water;
+So I fell in love with a rich attorney's
+Elderly, ugly daughter.
+
+The rich attorney, he wiped his eyes,
+And replied to my fond professions:
+"You shall reap the reward of your enterprise,
+At the Bailey and Middlesex Sessions.
+You'll soon get used to her looks," said he,
+"And a very nice girl you'll find her -
+She may very well pass for forty-three
+In the dusk, with a light behind her!"
+
+The rich attorney was as good as his word:
+The briefs came trooping gaily,
+And every day my voice was heard
+At the Sessions or Ancient Bailey.
+All thieves who could my fees afford
+Relied on my orations,
+And many a burglar I've restored
+To his friends and his relations.
+
+At length I became as rich as the GURNEYS -
+An incubus then I thought her,
+So I threw over that rich attorney's
+Elderly, ugly daughter.
+The rich attorney my character high
+Tried vainly to disparage -
+And now, if you please, I'm ready to try
+This Breach of Promise of Marriage!
+
+
+
+Ballad: When I First Put This Uniform On
+
+
+
+When I first put this uniform on,
+I said, as I looked in the glass,
+"It's one to a million
+That any civilian
+My figure and form will surpass.
+Gold lace has a charm for the fair,
+And I've plenty of that, and to spare,
+While a lover's professions,
+When uttered in Hessians,
+Are eloquent everywhere!"
+A fact that I counted upon,
+When I first put this uniform on!
+
+I said, when I first put it on,
+"It is plain to the veriest dunce
+That every beauty
+Will feel it her duty
+To yield to its glamour at once.
+They will see that I'm freely gold-laced
+In a uniform handsome and chaste" -
+But the peripatetics
+Of long-haired aesthetics,
+Are very much more to their taste -
+Which I never counted upon
+When I first put this uniform on!
+
+
+
+Ballad: Solatium
+
+
+
+Comes the broken flower -
+Comes the cheated maid -
+Though the tempest lower,
+Rain and cloud will fade!
+Take, O maid, these posies:
+Though thy beauty rare
+Shame the blushing roses,
+They are passing fair!
+Wear the flowers till they fade;
+Happy be thy life, O maid!
+
+O'er the season vernal,
+Time may cast a shade;
+Sunshine, if eternal,
+Makes the roses fade:
+Time may do his duty;
+Let the thief alone -
+Winter hath a beauty
+That is all his own.
+Fairest days are sun and shade:
+Happy be thy life, O maid!
+
+
+
+Ballad: A Nightmare
+
+
+
+When you're lying awake with a dismal headache, and repose is
+taboo'd by anxiety,
+I conceive you may use any language you choose to indulge in
+without impropriety;
+For your brain is on fire - the bedclothes conspire of usual
+slumber to plunder you:
+First your counterpane goes and uncovers your toes, and your sheet
+slips demurely from under you;
+Then the blanketing tickles - you feel like mixed pickles, so
+terribly sharp is the pricking,
+And you're hot, and you're cross, and you tumble and toss till
+there's nothing 'twixt you and the ticking.
+Then the bedclothes all creep to the ground in a heap, and you pick
+'em all up in a tangle;
+Next your pillow resigns and politely declines to remain at its
+usual angle!
+Well, you get some repose in the form of a doze, with hot eyeballs
+and head ever aching,
+But your slumbering teems with such horrible dreams that you'd very
+much better be waking;
+For you dream you are crossing the Channel, and tossing about in a
+steamer from Harwich,
+Which is something between a large bathing-machine and a very small
+second-class carriage;
+And you're giving a treat (penny ice and cold meat) to a party of
+friends and relations -
+They're a ravenous horde - and they all came on board at Sloane
+Square and South Kensington Stations.
+And bound on that journey you find your attorney (who started that
+morning from Devon);
+He's a bit undersized, and you don't feel surprised when he tells
+you he's only eleven.
+Well, you're driving like mad with this singular lad (by the bye
+the ship's now a four-wheeler),
+And you're playing round games, and he calls you bad names when you
+tell him that "ties pay the dealer";
+But this you can't stand, so you throw up your hand, and you find
+you're as cold as an icicle,
+In your shirt and your socks (the black silk with gold clocks),
+crossing Salisbury Plain on a bicycle:
+And he and the crew are on bicycles too - which they've somehow or
+other invested in -
+And he's telling the tars all the particuLARS of a company he's
+interested in -
+It's a scheme of devices, to get at low prices, all goods from
+cough mixtures to cables
+(Which tickled the sailors) by treating retailers, as though they
+were all vegeTAbles -
+You get a good spadesman to plant a small tradesman (first take off
+his boots with a boot-tree),
+And his legs will take root, and his fingers will shoot, and
+they'll blossom and bud like a fruit-tree -
+From the greengrocer tree you get grapes and green pea,
+cauliflower, pineapple, and cranberries,
+While the pastry-cook plant cherry-brandy will grant - apple puffs,
+and three-corners, and banberries -
+The shares are a penny, and ever so many are taken by ROTHSCHILD
+and BARING,
+And just as a few are allotted to you, you awake with a shudder
+despairing -
+You're a regular wreck, with a crick in your neck, and no wonder
+you snore, for your head's on the floor, and you've needles and
+pins from your soles to your shins, and your flesh is a-creep, for
+your left leg's asleep, and you've cramp in your toes, and a fly on
+your nose, and some fluff in your lung, and a feverish tongue, and
+a thirst that's intense, and a general sense that you haven't been
+sleeping in clover;
+But the darkness has passed, and it's daylight at last, and the
+night has been long - ditto, ditto my song - and thank goodness
+they're both of them over!
+
+
+
+Ballad: Don't Forget!
+
+
+
+Now, Marco, dear,
+My wishes hear:
+While you're away
+It's understood
+You will be good,
+And not too gay.
+To every trace
+Of maiden grace
+You will be blind,
+And will not glance
+By any chance
+On womankind!
+If you are wise,
+You'll shut your eyes
+Till we arrive,
+And not address
+A lady less
+Than forty-five;
+You'll please to frown
+On every gown
+That you may see;
+And O, my pet,
+You won't forget
+You've married me!
+
+O, my darling, O, my pet,
+Whatever else you may forget,
+In yonder isle beyond the sea,
+O, don't forget you've married me!
+
+You'll lay your head
+Upon your bed
+At set of sun.
+You will not sing
+Of anything
+To any one:
+You'll sit and mope
+All day, I hope,
+And shed a tear
+Upon the life
+Your little wife
+Is passing here!
+And if so be
+You think of me,
+Please tell the moon;
+I'll read it all
+In rays that fall
+On the lagoon:
+You'll be so kind
+As tell the wind
+How you may be,
+And send me words
+By little birds
+To comfort me!
+
+And O, my darling, O, my pet,
+Whatever else you may forget,
+In yonder isle beyond the sea,
+O, don't forget you've married me!
+
+
+
+Ballad: The Suicide's Grave
+
+
+
+On a tree by a river a little tomtit
+Sang "Willow, titwillow, titwillow!"
+And I said to him, "Dicky-bird, why do you sit
+Singing 'Willow, titwillow, titwillow'?
+Is it weakness of intellect, birdie?" I cried,
+"Or a rather tough worm in your little inside?"
+With a shake of his poor little head he replied,
+"Oh, willow, titwillow, titwillow!"
+
+He slapped at his chest, as he sat on that bough,
+Singing "Willow, titwillow, titwillow!"
+And a cold perspiration bespangled his brow,
+Oh, willow, titwillow, titwillow!
+He sobbed and he sighed, and a gurgle he gave,
+Then he threw himself into the billowy wave,
+And an echo arose from the suicide's grave -
+"Oh, willow, titwillow, titwillow!"
+
+Now I feel just as sure as I'm sure that my name
+Isn't Willow, titwillow, titwillow,
+That 'twas blighted affection that made him exclaim,
+"Oh, willow, titwillow, titwillow!"
+And if you remain callous and obdurate, I
+Shall perish as he did, and you will know why,
+Though I probably shall not exclaim as I die,
+"Oh, willow, titwillow, titwillow!"
+
+
+
+Ballad: He And She
+
+
+
+[HE.]  I know a youth who loves a little maid -
+(Hey, but his face is a sight for to see!)
+Silent is he, for he's modest and afraid -
+(Hey, but he's timid as a youth can be!)
+[SHE.]  I know a maid who loves a gallant youth -
+(Hey, but she sickens as the days go by!)
+SHE cannot tell him all the sad, sad truth -
+(Hey, but I think that little maid will die!)
+[BOTH.]  Now tell me pray, and tell me true,
+What in the world should the poor soul do?
+
+[HE.]  He cannot eat and he cannot sleep -
+(Hey, but his face is a sight for to see!)
+Daily he goes for to wail - for to weep -
+(Hey, but he's wretched as a youth can be!)
+[SHE.]  She's very thin and she's very pale -
+(Hey, but she sickens as the days go by!)
+Daily she goes for to weep - for to wail -
+(Hey, but I think that little maid will die!)
+[BOTH.]  Now tell me pray, and tell me true,
+What in the world should the poor soul do?
+
+[SHE.]  If I were the youth I should offer her my name -
+(Hey, but her face is a sight for to see!)
+[HE.]  If I were the maid I should fan his honest flame -
+(Hey, but he's bashful as a youth can be!)
+[SHE.]  If I were the youth I should speak to her to-day -
+(Hey, but she sickens as the days go by!)
+[HE.]  If I were the maid I should meet the lad half way -
+(For I really do believe that timid youth will die!)
+[BOTH.]  I thank you much for your counsel true;
+I've learnt what that poor soul ought to do!
+
+
+
+Ballad: The Mighty Must
+
+
+
+Come mighty Must!
+Inevitable Shall!
+In thee I trust.
+Time weaves my coronal!
+Go mocking Is!
+Go disappointing Was!
+That I am this
+Ye are the cursed cause!
+Yet humble Second shall be First,
+I ween;
+And dead and buried be the curst
+Has Been!
+
+Oh weak Might Be!
+Oh May, Might, Could, Would, Should!
+How powerless ye
+For evil or for good!
+In every sense
+Your moods I cheerless call,
+Whate'er your tense
+Ye are Imperfect, all!
+Ye have deceived the trust I've shown
+In ye!
+Away!  The Mighty Must alone
+Shall be!
+
+
+
+Ballad: A Mirage
+
+
+
+Were I thy bride,
+Then the whole world beside
+Were not too wide
+To hold my wealth of love -
+Were I thy bride!
+Upon thy breast
+My loving head would rest,
+As on her nest
+The tender turtle-dove -
+Were I thy bride!
+
+This heart of mine
+Would be one heart with thine,
+And in that shrine
+Our happiness would dwell -
+Were I thy bride!
+And all day long
+Our lives should be a song:
+No grief, no wrong
+Should make my heart rebel -
+Were I thy bride!
+
+The silvery flute,
+The melancholy lute,
+Were night-owl's hoot
+To my low-whispered coo -
+Were I thy bride!
+The skylark's trill
+Were but discordance shrill
+To the soft thrill
+Of wooing as I'd woo -
+Were I thy bride!
+
+The rose's sigh
+Were as a carrion's cry
+To lullaby
+Such as I'd sing to thee -
+Were I thy bride!
+A feather's press
+Were leaden heaviness
+To my caress.
+But then, unhappily,
+I'm not thy bride!
+
+
+
+Ballad: The Ghosts' High Noon
+
+
+
+When the night wind howls in the chimney cowls, and the bat in the
+moonlight flies,
+And inky clouds, like funeral shrouds, sail over the midnight skies
+-
+When the footpads quail at the night-bird's wail, and black dogs
+bay the moon,
+Then is the spectres' holiday - then is the ghosts' high noon!
+
+As the sob of the breeze sweeps over the trees, and the mists lie
+low on the fen,
+From grey tombstones are gathered the bones that once were women
+and men,
+And away they go, with a mop and a mow, to the revel that ends too
+soon,
+For cockcrow limits our holiday - the dead of the night's high
+noon!
+
+And then each ghost with his ladye-toast to their churchyard beds
+take flight,
+With a kiss, perhaps, on her lantern chaps, and a grisly grim "good
+night";
+Till the welcome knell of the midnight bell rings forth its
+jolliest tune,
+And ushers our next high holiday - the dead of the night's high
+noon!
+
+
+
+Ballad: The Humane Mikado
+
+
+
+A more humane Mikado never
+Did in Japan exist;
+To nobody second,
+I'm certainly reckoned
+A true philanthropist.
+It is my very humane endeavour
+To make, to some extent,
+Each evil liver
+A running river
+Of harmless merriment.
+
+My object all sublime
+I shall achieve in time -
+To let the punishment fit the crime -
+The punishment fit the crime;
+And make each prisoner pent
+Unwillingly represent
+A source of innocent merriment -
+Of innocent merriment!
+
+All prosy dull society sinners,
+Who chatter and bleat and bore,
+Are sent to hear sermons
+From mystical Germans
+Who preach from ten to four:
+The amateur tenor, whose vocal villainies
+All desire to shirk,
+Shall, during off-hours,
+Exhibit his powers
+To Madame Tussaud's waxwork:
+The lady who dyes a chemical yellow,
+Or stains her grey hair puce,
+Or pinches her figger,
+Is blacked like a nigger
+With permanent walnut juice:
+The idiot who, in railway carriages,
+Scribbles on window panes,
+We only suffer
+To ride on a buffer
+In Parliamentary trains.
+
+My object all sublime
+I shall achieve in time -
+To let the punishment fit the crime -
+The punishment fit the crime;
+And make each prisoner pent
+Unwillingly represent
+A source of innocent merriment -
+Of innocent merriment!
+
+The advertising quack who wearies
+With tales of countless cures,
+His teeth, I've enacted,
+Shall all be extracted
+By terrified amateurs:
+The music-hall singer attends a series
+Of masses and fugues and "ops"
+By Bach, interwoven
+With Spohr and Beethoven,
+At classical Monday Pops:
+The billiard sharp whom any one catches
+His doom's extremely hard -
+He's made to dwell
+In a dungeon cell
+On a spot that's always barred;
+And there he plays extravagant matches
+In fitless finger-stalls,
+On a cloth untrue
+With a twisted cue,
+And elliptical billiard balls!
+
+My object all sublime
+I shall achieve in time -
+To let the punishment fit the crime -
+The punishment fit the crime;
+And make each prisoner pent
+Unwillingly represent
+A source of innocent merriment,
+Of innocent merriment!
+
+
+
+Ballad: Willow Waly!
+
+
+
+[HE.]  PRITHEE, pretty maiden - prithee, tell me true
+(Hey, but I'm doleful, willow, willow waly!)
+Have you e'er a lover a-dangling after you?
+Hey, willow waly O!
+I would fain discover
+If you have a lover?
+Hey, willow waly O!
+
+[SHE.]  Gentle sir, my heart is frolicsome and free -
+(Hey, but he's doleful, willow, willow waly!)
+Nobody I care for comes a-courting me -
+Hey, willow waly O!
+Nobody I care for
+Comes a-courting - therefore,
+Hey, willow waly O!
+
+[HE.]  Prithee, pretty maiden, will you marry me?
+(Hey, but I'm hopeful, willow, willow waly!)
+I may say, at once, I'm a man of propertee -
+Hey, willow waly O!
+Money, I despise it,
+But many people prize it,
+Hey, willow waly O!
+
+[SHE.]  Gentle sir, although to marry I design -
+(Hey, but he's hopeful, willow, willow waly!)
+As yet I do not know you, and so I must decline.
+Hey, willow waly O!
+To other maidens go you -
+As yet I do not know you,
+Hey, willow waly O!
+
+
+
+Ballad: Life Is Lovely All The Year
+
+
+
+When the buds are blossoming,
+Smiling welcome to the spring,
+Lovers choose a wedding day -
+Life is love in merry May!
+
+Spring is green - Fal lal la!
+Summer's rose - Fal lal la!
+It is sad when Summer goes,
+Fal la!
+Autumn's gold - Fal lal la!
+Winter's grey - Fal lal la!
+Winter still is far away -
+Fal la!
+Leaves in Autumn fade and fall;
+Winter is the end of all.
+Spring and summer teem with glee:
+Spring and summer, then, for me!
+Fal la!
+
+In the Spring-time seed is sown:
+In the Summer grass is mown:
+In the Autumn you may reap:
+Winter is the time for sleep.
+
+Spring is hope - Fal lal la!
+Summer's joy - Fal lal la!
+Spring and Summer never cloy,
+Fal la!
+Autumn, toil - Fal lal la!
+Winter, rest - Fal lal la!
+Winter, after all, is best -
+Fal la!
+Spring and summer pleasure you,
+Autumn, ay, and winter, too -
+Every season has its cheer;
+Life is lovely all the year!
+Fal la!
+
+
+
+Ballad: The Usher's Charge
+
+
+
+Now, Jurymen, hear my advice -
+All kinds of vulgar prejudice
+I pray you set aside:
+With stern judicial frame of mind -
+From bias free of every kind,
+This trial must be tried!
+
+Oh, listen to the plaintiff's case:
+Observe the features of her face -
+The broken-hearted bride!
+Condole with her distress of mind -
+From bias free of every kind,
+This trial must be tried!
+
+And when amid the plaintiff's shrieks,
+The ruffianly defendant speaks -
+Upon the other side;
+What HE may say you need not mind -
+From bias free of every kind,
+This trial must be tried!
+
+
+
+Ballad: The Great Oak Tree
+
+
+
+There grew a little flower
+'Neath a great oak tree:
+When the tempest 'gan to lower
+Little heeded she:
+No need had she to cower,
+For she dreaded not its power -
+She was happy in the bower
+Of her great oak tree!
+Sing hey,
+Lackaday!
+Let the tears fall free
+For the pretty little flower and the great oak tree!
+
+When she found that he was fickle,
+Was that great oak tree,
+She was in a pretty pickle,
+As she well might be -
+But his gallantries were mickle,
+For Death followed with his sickle,
+And her tears began to trickle
+For her great oak tree!
+Sing hey,
+Lackaday!
+Let the tears fall free
+For the pretty little flower and the great oak tree!
+
+Said she, "He loved me never,
+Did that great oak tree,
+But I'm neither rich nor clever,
+And so why should he?
+But though fate our fortunes sever,
+To be constant I'll endeavour,
+Ay, for ever and for ever,
+To my great oak tree!"
+Sing hey,
+Lackaday!
+Let the tears fall free
+For the pretty little flower and the great oak tree!
+
+
+
+Ballad: King Goodheart
+
+
+
+There lived a King, as I've been told
+In the wonder-working days of old,
+When hearts were twice as good as gold,
+And twenty times as mellow.
+Good temper triumphed in his face,
+And in his heart he found a place
+For all the erring human race
+And every wretched fellow.
+When he had Rhenish wine to drink
+It made him very sad to think
+That some, at junket or at jink,
+Must be content with toddy:
+He wished all men as rich as he
+(And he was rich as rich could be),
+So to the top of every tree
+Promoted everybody.
+
+Ambassadors cropped up like hay,
+Prime Ministers and such as they
+Grew like asparagus in May,
+And Dukes were three a penny:
+Lord Chancellors were cheap as sprats,
+And Bishops in their shovel hats
+Were plentiful as tabby cats -
+If possible, too many.
+On every side Field-Marshals gleamed,
+Small beer were Lords-Lieutenants deemed,
+With Admirals the ocean teemed,
+All round his wide dominions;
+And Party Leaders you might meet
+In twos and threes in every street
+Maintaining, with no little heat,
+Their various opinions.
+
+That King, although no one denies,
+His heart was of abnormal size,
+Yet he'd have acted otherwise
+If he had been acuter.
+The end is easily foretold,
+When every blessed thing you hold
+Is made of silver, or of gold,
+You long for simple pewter.
+When you have nothing else to wear
+But cloth of gold and satins rare,
+For cloth of gold you cease to care -
+Up goes the price of shoddy:
+In short, whoever you may be,
+To this conclusion you'll agree,
+When every one is somebody,
+Then no one's anybody!
+
+
+
+Ballad: Sleep On!
+
+
+
+Fear no unlicensed entry,
+Heed no bombastic talk,
+While guards the British Sentry
+Pall Mall and Birdcage Walk.
+Let European thunders
+Occasion no alarms,
+Though diplomatic blunders
+May cause a cry "To arms!"
+Sleep on, ye pale civilians;
+All thunder-clouds defy:
+On Europe's countless millions
+The Sentry keeps his eye!
+
+Should foreign-born rapscallions
+In London dare to show
+Their overgrown battalions,
+Be sure I'll let you know.
+Should Russians or Norwegians
+Pollute our favoured clime
+With rough barbaric legions,
+I'll mention it in time.
+So sleep in peace, civilians,
+The Continent defy;
+While on its countless millions
+The Sentry keeps his eye !
+
+
+
+Ballad: The Love-Sick Boy
+
+
+
+When first my old, old love I knew,
+My bosom welled with joy;
+My riches at her feet I threw;
+I was a love-sick boy!
+No terms seemed too extravagant
+Upon her to employ -
+I used to mope, and sigh, and pant,
+Just like a love-sick boy!
+
+But joy incessant palls the sense;
+And love unchanged will cloy,
+And she became a bore intense
+Unto her love-sick boy?
+With fitful glimmer burnt my flame,
+And I grew cold and coy,
+At last, one morning, I became
+Another's love-sick boy!
+
+
+
+Ballad: Poetry Everywhere
+
+
+
+What time the poet hath hymned
+The writhing maid, lithe-limbed,
+Quivering on amaranthine asphodel,
+How can he paint her woes,
+Knowing, as well he knows,
+That all can be set right with calomel?
+
+When from the poet's plinth
+The amorous colocynth
+Yearns for the aloe, faint with rapturous thrills,
+How can he hymn their throes
+Knowing, as well he knows,
+That they are only uncompounded pills?
+
+Is it, and can it be,
+Nature hath this decree,
+Nothing poetic in the world shall dwell?
+Or that in all her works
+Something poetic lurks,
+Even in colocynth and calomel?
+
+
+
+Ballad: He Loves!
+
+
+
+He loves!  If in the bygone years
+Thine eyes have ever shed
+Tears - bitter, unavailing tears,
+For one untimely dead -
+If in the eventide of life
+Sad thoughts of her arise,
+Then let the memory of thy wife
+Plead for my boy - he dies!
+
+He dies!  If fondly laid aside
+In some old cabinet,
+Memorials of thy long-dead bride
+Lie, dearly treasured yet,
+Then let her hallowed bridal dress -
+Her little dainty gloves -
+Her withered flowers - her faded tress -
+Plead for my boy - he loves!
+
+
+
+Ballad: True Diffidence
+
+
+
+My boy, you may take it from me,
+That of all the afflictions accurst
+With which a man's saddled
+And hampered and addled,
+A diffident nature's the worst.
+Though clever as clever can be -
+A Crichton of early romance -
+You must stir it and stump it,
+And blow your own trumpet,
+Or, trust me, you haven't a chance.
+
+Now take, for example, MY case:
+I've a bright intellectual brain -
+In all London city
+There's no one so witty -
+I've thought so again and again.
+I've a highly intelligent face -
+My features cannot be denied -
+But, whatever I try, sir,
+I fail in - and why, sir?
+I'm modesty personified!
+
+As a poet, I'm tender and quaint -
+I've passion and fervour and grace -
+From Ovid and Horace
+To Swinburne and Morris,
+They all of them take a back place.
+Then I sing and I play and I paint;
+Though none are accomplished as I,
+To say so were treason:
+You ask me the reason?
+I'm diffident, modest, and shy!
+
+
+
+Ballad: The Tangled Skein
+
+
+
+Try we life-long, we can never
+Straighten out life's tangled skein,
+Why should we, in vain endeavour,
+Guess and guess and guess again?
+Life's a pudding full of plums
+Care's a canker that benumbs.
+Wherefore waste our elocution
+On impossible solution?
+Life's a pleasant institution,
+Let us take it as it comes!
+
+Set aside the dull enigma,
+We shall guess it all too soon;
+Failure brings no kind of stigma -
+Dance we to another tune!
+String the lyre and fill the cup,
+Lest on sorrow we should sup;
+Hop and skip to Fancy's fiddle,
+Hands across and down the middle -
+Life's perhaps the only riddle
+That we shrink from giving up!
+
+
+
+Ballad: My Lady
+
+
+
+Bedecked in fashion trim,
+With every curl a-quiver;
+Or leaping, light of limb,
+O'er rivulet and river;
+Or skipping o'er the lea
+On daffodil and daisy;
+Or stretched beneath a tree,
+All languishing and lazy;
+Whatever be her mood -
+Be she demurely prude
+Or languishingly lazy -
+My lady drives me crazy!
+In vain her heart is wooed,
+Whatever be her mood!
+
+What profit should I gain
+Suppose she loved me dearly?
+Her coldness turns my brain
+To VERGE of madness merely.
+Her kiss - though, Heaven knows,
+To dream of it were treason -
+Would tend, as I suppose,
+To utter loss of reason!
+My state is not amiss;
+I would not have a kiss
+Which, in or out of season,
+Might tend to loss of reason:
+What profit in such bliss?
+A fig for such a kiss!
+
+
+
+Ballad: One Against The World
+
+
+
+It's my opinion - though I own
+In thinking so I'm quite alone -
+In some respects I'm but a fright.
+YOU like my features, I suppose?
+I'M disappointed with my nose:
+Some rave about it - perhaps they're right.
+My figure just sets off a fit;
+But when they say it's exquisite
+(And they DO say so), that's too strong.
+I hope I'm not what people call
+Opinionated!  After all,
+I'm but a goose, and may be wrong!
+
+When charms enthral
+There's some excuse
+For measures strong;
+And after all
+I'm but a goose,
+And may be wrong!
+
+My teeth are very neat, no doubt;
+But after all they MAY fall out:
+I think they will - some think they won't.
+My hands are small, as you may see,
+But not as small as they might be,
+At least, I think so - others don't.
+But there, a girl may preach and prate
+From morning six to evening eight,
+And never stop to dine,
+When all the world, although misled,
+Is quite agreed on any head -
+And it is quite agreed on mine!
+
+All said and done,
+It's little I
+Against a throng.
+I'm only one,
+And possibly
+I may be wrong!
+
+
+
+Ballad: Put A Penny In The Slot
+
+
+
+If my action's stiff and crude,
+Do not laugh, because it's rude.
+If my gestures promise larks,
+Do not make unkind remarks.
+Clockwork figures may be found
+Everywhere and all around.
+Ten to one, if I but knew,
+You are clockwork figures too.
+And the motto of the lot,
+"Put a penny in the slot!"
+
+Usurer, for money lent,
+Making out his cent per cent -
+Widow plump or maiden rare,
+Deaf and dumb to suitor's prayer -
+Tax collectors, whom in vain
+You implore to "call again" -
+Cautious voter, whom you find
+Slow in making up his mind -
+If you'd move them on the spot,
+Put a penny in the slot!
+
+Bland reporters in the courts,
+Who suppress police reports -
+Sheriff's yeoman, pen in fist,
+Making out a jury list -
+Stern policemen, tall and spare,
+Acting all "upon the square" -
+(Which in words that plainer fall,
+Means that you can square them all) -
+If you want to move the lot,
+Put a penny in the slot!
+
+
+
+Ballad: Good Little Girls
+
+
+
+Although of native maids the cream,
+We're brought up on the English scheme -
+The best of all
+For great and small
+Who modesty adore.
+For English girls are good as gold,
+Extremely modest (so we're told),
+Demurely coy - divinely cold -
+And we are that - and more.
+To please papa, who argues thus -
+All girls should mould themselves on us,
+Because we are,
+By furlongs far,
+The best of all the bunch;
+We show ourselves to loud applause
+From ten to four without a pause -
+Which is an awkward time because
+It cuts into our lunch.
+
+Oh, maids of high and low degree,
+Whose social code is rather free,
+Please look at us and you will see
+What good young ladies ought to be!
+
+And as we stand, like clockwork toys,
+A lecturer papa employs
+To puff and praise
+Our modest ways
+And guileless character -
+Our well-known blush - our downcast eyes -
+Our famous look of mild surprise
+(Which competition still defies) -
+Our celebrated "Sir!!!"
+Then all the crowd take down our looks
+In pocket memorandum books.
+To diagnose,
+Our modest pose
+The kodaks do their best:
+If evidence you would possess
+Of what is maiden bashfulness,
+You only need a button press -
+And WE do all the rest.
+
+
+
+Ballad: Life
+
+
+
+First you're born - and I'll be bound you
+Find a dozen strangers round you.
+"Hallo," cries the new-born baby,
+"Where's my parents? which may they be?"
+Awkward silence - no reply -
+Puzzled baby wonders why!
+Father rises, bows politely -
+Mother smiles (but not too brightly) -
+Doctor mumbles like a dumb thing -
+Nurse is busy mixing something. -
+Every symptom tends to show
+You're decidedly DE TROP -
+Ho! ho! ho! ho! ho! he! ho! ho!
+Time's teetotum,
+If you spin it,
+Give its quotum
+Once a minute:
+I'll go bail
+You hit the nail,
+And if you fail
+The deuce is in it!
+
+You grow up, and you discover
+What it is to be a lover.
+Some young lady is selected -
+Poor, perhaps, but well-connected,
+Whom you hail (for Love is blind
+As the Queen of Fairy-kind.
+Though she's plain - perhaps unsightly,
+Makes her face up - laces tightly,
+In her form your fancy traces
+All the gifts of all the graces.
+Rivals none the maiden woo,
+So you take her and she takes you!
+Ho! ho! ho! ho! ho! ho! ho! ho!
+Joke beginning,
+Never ceases,
+Till your inning
+Time releases;
+On your way
+You blindly stray,
+And day by day
+The joke increases!
+
+Ten years later - Time progresses -
+Sours your temper - thins your tresses;
+Fancy, then, her chain relaxes;
+Rates are facts and so are taxes.
+Fairy Queen's no longer young -
+Fairy Queen has such a tongue!
+Twins have probably intruded -
+Quite unbidden - just as you did;
+They're a source of care and trouble -
+Just as you were - only double.
+Comes at last the final stroke -
+Time has had his little joke!
+Ho! ho! ho! ho! ho! ho! ho! ho!
+Daily driven
+(Wife as drover)
+Ill you've thriven -
+Ne'er in clover:
+Lastly, when
+Threescore and ten
+(And not till then),
+The joke is over!
+Ho! ho! ho! ho! ho! ho! ho! ho!
+Then - and then
+The joke is over!
+
+
+
+Ballad: Limited Liability
+
+
+
+Some seven men form an Association
+(If possible, all Peers and Baronets),
+They start off with a public declaration
+To what extent they mean to pay their debts.
+That's called their Capital:  if they are wary
+They will not quote it at a sum immense.
+The figure's immaterial - it may vary
+From eighteen million down to eighteenpence.
+I should put it rather low;
+The good sense of doing so
+Will be evident at once to any debtor.
+When it's left to you to say
+What amount you mean to pay,
+Why, the lower you can put it at, the better.
+
+They then proceed to trade with all who'll trust 'em,
+Quite irrespective of their capital
+(It's shady, but it's sanctified by custom);
+Bank, Railway, Loan, or Panama Canal.
+You can't embark on trading too tremendous -
+It's strictly fair, and based on common sense -
+If you succeed, your profits are stupendous -
+And if you fail, pop goes your eighteenpence.
+Make the money-spinner spin!
+For you only stand to win,
+And you'll never with dishonesty be twitted.
+For nobody can know,
+To a million or so,
+To what extent your capital's committed!
+
+If you come to grief, and creditors are craving
+(For nothing that is planned by mortal head
+Is certain in this Vale of Sorrow - saving
+That one's Liability is Limited), -
+Do you suppose that signifies perdition?
+If so you're but a monetary dunce -
+You merely file a Winding-Up Petition,
+And start another Company at once!
+Though a Rothschild you may be
+In your own capacity,
+As a Company you've come to utter sorrow -
+But the Liquidators say,
+"Never mind - you needn't pay,"
+So you start another Company to-morrow!
+
+
+
+Ballad: Anglicised Utopia
+
+
+
+Society has quite forsaken all her wicked courses,
+Which empties our police courts, and abolishes divorces.
+(Divorce is nearly obsolete in England.)
+No tolerance we show to undeserving rank and splendour;
+For the higher his position is, the greater the offender.
+(That's a maxim that is prevalent in England.)
+No Peeress at our Drawing-Room before the Presence passes
+Who wouldn't be accepted by the lower-middle classes;
+Each shady dame, whatever be her rank, is bowed out neatly.
+In short, this happy country has been Anglicised completely!
+It really is surprising
+What a thorough Anglicising
+We've brought about - Utopia's quite another land;
+In her enterprising movements,
+She is England - with improvements,
+Which we dutifully offer to our mother-land!
+
+Our city we have beautified - we've done it willy-nilly -
+And all that isn't Belgrave Square is Strand and Piccadilly.
+(They haven't any slummeries in England.)
+We have solved the labour question with discrimination polished,
+So poverty is obsolete and hunger is abolished -
+(They are going to abolish it in England.)
+The Chamberlain our native stage has purged, beyond a question,
+Of "risky" situation and indelicate suggestion;
+No piece is tolerated if it's costumed indiscreetly -
+In short, this happy country has been Anglicised completely!
+It really is surprising
+What a thorough Anglicising
+We've brought about - Utopia's quite another land;
+In her enterprising movements,
+She is England - with improvements,
+Which we dutifully offer to our mother-land!
+
+Our Peerage we've remodelled on an intellectual basis,
+Which certainly is rough on our hereditary races -
+(They are going to remodel it in England.)
+The Brewers and the Cotton Lords no longer seek admission,
+And Literary Merit meets with proper recognition -
+(As Literary Merit does in England!)
+Who knows but we may count among our intellectual chickens
+Like them an Earl of Thackeray and p'raps a Duke of Dickens -
+Lord Fildes and Viscount Millais (when they come) we'll welcome
+sweetly -
+And then, this happy country will be Anglicised completely!
+It really is surprising
+What a thorough Anglicising
+We've brought about - Utopia's quite another land;
+In her enterprising movements,
+She is England - with improvements,
+Which we dutifully offer to our mother-land!
+
+
+
+Ballad: An English Girl
+
+
+
+A wonderful joy our eyes to bless,
+In her magnificent comeliness,
+Is an English girl of eleven stone two,
+And five foot ten in her dancing shoe!
+She follows the hounds, and on she pounds -
+The "field" tails off and the muffs diminish -
+Over the hedges and brooks she bounds -
+Straight as a crow, from find to finish.
+At cricket, her kin will lose or win -
+She and her maids, on grass and clover,
+Eleven maids out - eleven maids in -
+(And perhaps an occasional "maiden over").
+Go search the world and search the sea,
+Then come you home and sing with me
+There's no such gold and no such pearl
+As a bright and beautiful English girl!
+
+With a ten-mile spin she stretches her limbs,
+She golfs, she punts, she rows, she swims -
+She plays, she sings, she dances, too,
+From ten or eleven till all is blue!
+At ball or drum, till small hours come
+(Chaperon's fan conceals her yawning),
+She'll waltz away like a teetotum,
+And never go home till daylight's dawning.
+Lawn tennis may share her favours fair -
+Her eyes a-dance and her cheeks a-glowing -
+Down comes her hair, but what does she care?
+It's all her own and it's worth the showing!
+Go search the world and search the sea,
+Then come you home and sing with me
+There's no such gold and no such pearl
+As a bright and beautiful English girl!
+
+Her soul is sweet as the ocean air,
+For prudery knows no haven there;
+To find mock-modesty, please apply
+To the conscious blush and the downcast eye.
+Rich in the things contentment brings,
+In every pure enjoyment wealthy,
+Blithe as a beautiful bird she sings,
+For body and mind are hale and healthy.
+Her eyes they thrill with right goodwill -
+Her heart is light as a floating feather -
+As pure and bright as the mountain rill
+That leaps and laughs in the Highland heather!
+Go search the world and search the sea,
+Then come you home and sing with me
+There's no such gold and no such pearl
+As a bright and beautiful English girl!
+
+
+
+Ballad: A Manager's Perplexities
+
+
+
+Were I a king in very truth,
+And had a son - a guileless youth -
+In probable succession;
+To teach him patience, teach him tact,
+How promptly in a fix to act,
+He should adopt, in point of fact,
+A manager's profession.
+To that condition he should stoop
+(Despite a too fond mother),
+With eight or ten "stars" in his troupe,
+All jealous of each other!
+Oh, the man who can rule a theatrical crew,
+Each member a genius (and some of them two),
+And manage to humour them, little and great,
+Can govern a tuppenny-ha'penny State!
+
+Both A and B rehearsal slight -
+They say they'll be "all right at night"
+(They've both to go to school yet);
+C in each act MUST change her dress,
+D WILL attempt to "square the press";
+E won't play Romeo unless
+His grandmother plays Juliet;
+F claims all hoydens as her rights
+(She's played them thirty seasons);
+And G must show herself in tights
+For two convincing reasons -
+Two very well-shaped reasons!
+Oh, the man who can drive a theatrical team,
+With wheelers and leaders in order supreme,
+Can govern and rule, with a wave of his fin,
+All Europe and Asia - with Ireland thrown in!
+
+
+
+Ballad: Out Of Sorts
+
+
+
+When you find you're a broken-down critter,
+Who is all of a trimmle and twitter,
+With your palate unpleasantly bitter,
+As if you'd just bitten a pill -
+When your legs are as thin as dividers,
+And you're plagued with unruly insiders,
+And your spine is all creepy with spiders,
+And you're highly gamboge in the gill -
+When you've got a beehive in your head,
+And a sewing machine in each ear,
+And you feel that you've eaten your bed,
+And you've got a bad headache DOWN HERE -
+When such facts are about,
+And these symptoms you find
+In your body or crown -
+Well, it's time to look out,
+You may make up your mind
+You had better lie down!
+
+When your lips are all smeary - like tallow,
+And your tongue is decidedly yallow,
+With a pint of warm oil in your swAllow,
+And a pound of tin-tacks in your chest -
+When you're down in the mouth with the vapours,
+And all over your new Morris papers
+Black-beetles are cutting their capers,
+And crawly things never at rest -
+When you doubt if your head is your own,
+And you jump when an open door slams -
+Then you've got to a state which is known
+To the medical world as "jim-jams."
+If such symptoms you find
+In your body or head,
+They're not easy to quell -
+You may make up your mind
+You are better in bed,
+For you're not at all well!
+
+
+
+Ballad: How It's Done
+
+
+
+Bold-faced ranger
+(Perfect stranger)
+Meets two well-behaved young ladies
+He's attractive,
+Young and active -
+Each a little bit afraid is.
+Youth advances,
+At his glances
+To their danger they awaken;
+They repel him
+As they tell him
+He is very much mistaken.
+Though they speak to him politely,
+Please observe they're sneering slightly,
+Just to show he's acting vainly.
+This is Virtue saying plainly,
+"Go away, young bachelor,
+We are not what you take us for!"
+(When addressed impertinently,
+English ladies answer gently,
+"Go away, young bachelor,
+We are not what you take us for!")
+
+As he gazes,
+Hat he raises,
+Enters into conversation.
+Makes excuses -
+This produces
+Interesting agitation.
+He, with daring,
+Undespairing,
+Gives his card - his rank discloses -
+Little heeding
+This proceeding,
+They turn up their little noses.
+Pray observe this lesson vital -
+When a man of rank and title
+His position first discloses,
+Always cock your little noses.
+When at home, let all the class
+Try this in the looking-glass.
+(English girls of well-bred notions
+Shun all unrehearsed emotions,
+English girls of highest class
+Practise them before the glass.)
+
+His intentions
+Then he mentions,
+Something definite to go on -
+Makes recitals
+Of his titles,
+Hints at settlements, and so on.
+Smiling sweetly,
+They, discreetly,
+Ask for further evidences:
+Thus invited,
+He, delighted,
+Gives the usual references.
+This is business.  Each is fluttered
+When the offer's fairly uttered.
+"Which of them has his affection?"
+He declines to make selection.
+Do they quarrel for his dross?
+Not a bit of it - they toss!
+Please observe this cogent moral -
+English ladies never quarrel.
+When a doubt they come across,
+English ladies always toss.
+
+
+
+Ballad: A Classical Revival
+
+
+
+At the outset I may mention it's my sovereign intention
+To revive the classic memories of Athens at its best,
+For my company possesses all the necessary dresses,
+And a course of quiet cramming will supply us with the rest.
+We've a choir hyporchematic (that is, ballet-operatic)
+Who respond to the CHOREUTAE of that cultivated age,
+And our clever chorus-master, all but captious criticaster,
+Would accept as the CHOREGUS of the early Attic stage.
+This return to classic ages is considered in their wages,
+Which are always calculated by the day or by the week -
+And I'll pay 'em (if they'll back me) all in OBOLOI and DRACHMAE,
+Which they'll get (if they prefer it) at the Kalends that are
+Greek!
+
+(At this juncture I may mention
+That this erudition sham
+Is but classical pretension,
+The result of steady "cram.":
+Periphrastic methods spurning,
+To my readers all discerning
+I admit this show of learning
+Is the fruit of steady cram."!)
+
+In the period Socratic every dining-room was Attic
+(Which suggests an architecture of a topsy-turvy kind),
+There they'd satisfy their twist on a RECHERCHE cold [Greek text
+which cannot be reproduced],
+Which is what they called their lunch - and so may you, if you're
+inclined.
+As they gradually got on, they'd [Greek text which cannot be
+reproduced]
+(Which is Attic for a steady and a conscientious drink).
+But they mixed their wine with water - which I'm sure they didn't
+oughter -
+And we Anglo-Saxons know a trick worth two of that, I think!
+Then came rather risky dances (under certain circumstances)
+Which would shock that worthy gentleman, the Licenser of Plays,
+Corybantian maniAC kick - Dionysiac or Bacchic -
+And the Dithyrambic revels of those indecorous days.
+
+(And perhaps I'd better mention
+Lest alarming you I am,
+That it isn't our intention
+To perform a Dithyramb -
+It displays a lot of stocking,
+Which is always very shocking,
+And of course I'm only mocking
+At the prevalence of "cram.")
+
+Yes, on reconsideration, there are customs of that nation
+Which are not in strict accordance with the habits of our day,
+And when I come to codify, their rules I mean to modify,
+Or Mrs. Grundy, p'r'aps, may have a word or two to say:
+For they hadn't macintoshes or umbrellas or goloshes -
+And a shower with their dresses must have played the very deuce,
+And it must have been unpleasing when they caught a fit of
+sneezing,
+For, it seems, of pocket-handkerchiefs they didn't know the use.
+They wore little underclothing - scarcely anything - or no-thing -
+And their dress of Coan silk was quite transparent in design -
+Well, in fact, in summer weather, something like the "altogether."
+And it's THERE, I rather fancy, I shall have to draw the line!
+
+(And again I wish to mention
+That this erudition sham
+Is but classical pretension,
+The result of steady "cram."
+Yet my classic love aggressive,
+If you'll pardon the possessive,
+Is exceedingly impressive
+When you're passing an exam.)
+
+
+
+Ballad: The Practical Joker
+
+
+
+Oh what a fund of joy jocund lies hid in harmless hoaxes!
+What keen enjoyment springs
+From cheap and simple things!
+What deep delight from sources trite inventive humour coaxes,
+That pain and trouble brew
+For every one but you!
+Gunpowder placed inside its waist improves a mild Havanah,
+Its unexpected flash
+Burns eyebrows and moustache;
+When people dine no kind of wine beats ipecacuanha,
+But common sense suggests
+You keep it for your guests -
+Then naught annoys the organ boys like throwing red-hot coppers,
+And much amusement bides
+In common butter-slides.
+And stringy snares across the stairs cause unexpected croppers.
+Coal scuttles, recollect,
+Produce the same effect.
+A man possessed
+Of common sense
+Need not invest
+At great expense -
+It does not call
+For pocket deep,
+These jokes are all
+Extremely cheap.
+If you commence with eighteenpence (it's all you'll have to pay),
+You may command a pleasant and a most instructive day.
+
+A good spring gun breeds endless fun, and makes men jump like
+rockets,
+And turnip-heads on posts
+Make very decent ghosts:
+Then hornets sting like anything, when placed in waist-coat pockets
+-
+Burnt cork and walnut juice
+Are not without their use.
+No fun compares with easy chairs whose seats are stuffed with
+needles -
+Live shrimps their patience tax
+When put down people's backs -
+Surprising, too, what one can do with fifty fat black beedles -
+And treacle on a chair
+Will make a Quaker swear!
+Then sharp tin tacks
+And pocket squirts -
+And cobblers' wax
+For ladies' skirts -
+And slimy slugs
+On bedroom floors -
+And water jugs
+On open doors -
+Prepared with these cheap properties, amusing tricks to play,
+Upon a friend a man may spend a most delightful day!
+
+
+
+Ballad: The National Anthem
+
+
+
+A monarch is pestered with cares,
+Though, no doubt, he can often trepan them;
+But one comes in a shape he can never escape -
+The implacable National Anthem!
+Though for quiet and rest he may yearn,
+It pursues him at every turn -
+No chance of forsaking
+Its ROCOCO numbers;
+They haunt him when waking -
+They poison his slumbers -
+Like the Banbury Lady, whom every one knows,
+He's cursed with its music wherever he goes!
+Though its words but imperfectly rhyme,
+And the devil himself couldn't scan them;
+With composure polite he endures day and night
+That illiterate National Anthem!
+
+It serves a good purpose, I own:
+Its strains are devout and impressive -
+Its heart-stirring notes raise a lump in our throats
+As we burn with devotion excessive:
+But the King, who's been bored by that song
+From his cradle - each day - all day long -
+Who's heard it loud-shouted
+By throats operatic,
+And loyally spouted
+By courtiers emphatic -
+By soldier - by sailor - by drum and by fife -
+Small blame if he thinks it the plague of his life!
+While his subjects sing loudly and long,
+Their King - who would willingly ban them -
+Sits, worry disguising, anathematising
+That Bogie, the National Anthem!
+
+
+
+Ballad: Her Terms
+
+
+
+My wedded life
+Must every pleasure bring
+On scale extensive!
+If I'm your wife
+I must have everything
+That's most expensive -
+A lady's-maid -
+(My hair alone to do
+I am not able) -
+And I'm afraid
+I've been accustomed to
+A first-rate table.
+These things one must consider when one marries -
+And everything I wear must come from Paris!
+Oh, think of that!
+Oh, think of that!
+I can't wear anything that's not from Paris!
+From top to toes
+Quite Frenchified I am,
+If you examine.
+And then - who knows? -
+Perhaps some day a fam -
+Perhaps a famine!
+My argument's correct, if you examine,
+What should we do, if there should come a f-famine!
+
+Though in green pea
+Yourself you needn't stint
+In July sunny,
+In Januaree
+It really costs a mint -
+A mint of money!
+No lamb for us -
+House lamb at Christmas sells
+At prices handsome:
+Asparagus,
+In winter, parallels
+A Monarch's ransom:
+When purse to bread and butter barely reaches,
+What is your wife to do for hot-house peaches?
+Ah! tell me that!
+Ah! tell me that!
+What IS your wife to do for hot-house peaches?
+Your heart and hand
+Though at my feet you lay,
+All others scorning!
+As matters stand,
+There's nothing now to say
+Except - good morning!
+Though virtue be a husband's best adorning,
+That won't pay rates and taxes - so, good morning!
+
+
+
+Ballad: The Independent Bee
+
+
+
+A hive of bees, as I've heard say,
+Said to their Queen one sultry day,
+"Please your Majesty's high position,
+The hive is full and the weather is warm,
+We rather think, with a due submission,
+The time has come when we ought to swarm."
+Buzz, buzz, buzz, buzz.
+Up spake their Queen and thus spake she -
+"This is a matter that rests with me,
+Who dares opinions thus to form?
+I'LL tell you when it is time to swarm!"
+Buzz, buzz, buzz, buzz.
+
+Her Majesty wore an angry frown,
+In fact, her Majesty's foot was down -
+Her Majesty sulked - declined to sup -
+In short, her Majesty's back was up.
+Buzz, buzz, buzz, buzz.
+Her foot was down and her back was up!
+
+That hive contained one obstinate bee
+(His name was Peter), and thus spake he -
+"Though every bee has shown white feather,
+To bow to tyranny I'm not prone -
+Why should a hive swarm all together?
+Surely a bee can swarm alone?"
+Buzz, buzz, buzz, buzz.
+Upside down and inside out,
+Backwards, forwards, round about,
+Twirling here and twisting there,
+Topsy turvily everywhere -
+Buzz, buzz, buzz, buzz.
+Pitiful sight it was to see
+Respectable elderly high-class bee,
+Who kicked the beam at sixteen stone,
+Trying his best to swarm alone!
+Buzz, buzz, buzz, buzz.
+Trying his best to swarm alone!
+
+The hive were shocked to see their chum
+(A strict teetotaller) teetotum -
+The Queen exclaimed, "How terrible, very!
+It's perfectly clear to all the throng
+Peter's been at the old brown sherry.
+Old brown sherry is much too strong -
+Buzz, buzz, buzz, buzz.
+Of all who thus themselves degrade,
+A stern example must be made,
+To Coventry go, you tipsy bee!"
+So off to Coventry town went he.
+Buzz, buzz, buzz, buzz.
+There, classed with all who misbehave,
+Both plausible rogue and noisome knave,
+In dismal dumps he lived to own
+The folly of trying to swarm alone!
+Buzz, buzz, buzz, buzz.
+All came of trying to swarm alone.
+
+
+
+Ballad: The Disconcerted Tenor
+
+
+
+A tenor, all singers above
+(This doesn't admit of a question),
+Should keep himself quiet,
+Attend to his diet,
+And carefully nurse his digestion.
+But when he is madly in love,
+It's certain to tell on his singing -
+You can't do chromatics
+With proper emphatics
+When anguish your bosom is wringing!
+When distracted with worries in plenty,
+And his pulse is a hundred and twenty,
+And his fluttering bosom the slave of mistrust is,
+A tenor can't do himself justice.
+Now observe - (SINGS A HIGH NOTE) -
+You see, I can't do myself justice!
+
+I could sing, if my fervour were mock,
+It's easy enough if you're acting,
+But when one's emotion
+Is born of devotion,
+You mustn't be over-exacting.
+One ought to be firm as a rock
+To venture a shake in VIBRATO;
+When fervour's expected,
+Keep cool and collected,
+Or never attempt AGITATO.
+But, of course, when his tongue is of leather,
+And his lips appear pasted together,
+And his sensitive palate as dry as a crust is,
+A tenor can't do himself justice.
+Now observe - (SINGS A CADENCE) -
+It's no use - I can't do myself justice!
+
+
+
+Ballad: The Played-Out Humorist
+
+
+
+Quixotic is his enterprise, and hopeless his adventure is,
+Who seeks for jocularities that haven't yet been said.
+The world has joked incessantly for over fifty centuries,
+And every joke that's possible has long ago been made.
+I started as a humorist with lots of mental fizziness,
+But humour is a drug which it's the fashion to abuse;
+For my stock-in-trade, my fixtures, and the goodwill of the
+business
+No reasonable offer I am likely to refuse.
+And if anybody choose
+He may circulate the news
+That no reasonable offer I'm likely to refuse.
+
+Oh happy was that humorist - the first that made a pun at all -
+Who when a joke occurred to him, however poor and mean,
+Was absolutely certain that it never had been done at all -
+How popular at dinners must that humorist have been!
+
+Oh the days when some stepfather for the query held a handle out,
+The door-mat from the scraper, is it distant very far?
+And when no one knew where Moses was when Aaron blew the candle
+out,
+And no one had discovered that a door could be a-jar!
+But your modern hearers are
+In their tastes particular,
+And they sneer if you inform them that a door can be a-jar!
+
+In search of quip and quiddity, I've sat all day, alone, apart -
+And all that I could hit on as a problem was - to find
+Analogy between a scrag of mutton and a Bony-part,
+Which offers slight employment to the speculative mind:
+For you cannot call it very good, however great your charity -
+It's not the sort of humour that is greeted with a shout -
+And I've come to the conclusion that my mine of jocularity
+In present Anno Domini, is worked completely out!
+Though the notion you may scout,
+I can prove beyond a doubt
+That my mine of jocularity is utterly worked out.
+
+
+
+
+
+End of Project Gutenberg's Etext of The Bab Ballads by W. S. Gilbert
+

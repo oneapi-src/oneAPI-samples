@@ -1,0 +1,2187 @@
+Project Gutenberg's Etext of Beast in the Jungle, by Henry James
+#15 in our series by Henry James
+
+
+Copyright laws are changing all over the world, be sure to check
+the copyright laws for your country before posting these files!!
+
+Please take a look at the important information in this header.
+We encourage you to keep this file on your own disk, keeping an
+electronic path open for the next readers.  Do not remove this.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*These Etexts Prepared By Hundreds of Volunteers and Donations*
+
+Information on contacting Project Gutenberg to get Etexts, and
+further information is included below.  We need your donations.
+
+
+The Beast in the Jungle
+
+by Henry James
+
+November, 1997  [Etext #1093]
+
+
+Project Gutenberg's Etext of Beast in the Jungle, by Henry James
+******This file should be named bstjg10.txt or bstjg10.zip******
+
+Corrected EDITIONS of our etexts get a new NUMBER, bstjg11.txt.
+VERSIONS based on separate sources get new LETTER, bstjg10a.txt.
+
+
+This etext was prepared by David Price, email ccx074@coventry.ac.uk,
+from the 1915 Martin Secker edition
+
+
+Project Gutenberg Etexts are usually created from multiple editions,
+all of which are in the Public Domain in the United States, unless a
+copyright notice is included.  Therefore, we do NOT keep these books
+in compliance with any particular paper edition, usually otherwise.
+
+
+We are now trying to release all our books one month in advance
+of the official release dates, for time for better editing.
+
+Please note:  neither this list nor its contents are final till
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.  To be sure you have an
+up to date first edition [xxxxx10x.xxx] please check file sizes
+in the first week of the next month.  Since our ftp program has
+a bug in it that scrambles the date [tried to fix and failed] a
+look at the file size will have to do, but we will try to see a
+new copy has at least one byte more or less.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+fifty hours is one conservative estimate for how long it we take
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour this year as we release thirty-two text
+files per month, or 384 more Etexts in 1997 for a total of 1000+
+If these reach just 10% of the computerized population, then the
+total should reach over 100 billion Etexts given away.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by the December 31, 2001.  [10,000 x 100,000,000=Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only 10% of the present number of computer users.  2001
+should have at least twice as many computer users as that, so it
+will require us reaching less than 5% of the users in 2001.
+
+
+We need your donations more than ever!
+
+
+All donations should be made to "Project Gutenberg/CMU": and are
+tax deductible to the extent allowable by law.  (CMU = Carnegie-
+Mellon University).
+
+For these and other matters, please mail to:
+
+Project Gutenberg
+P. O. Box  2782
+Champaign, IL 61825
+
+When all other email fails try our Executive Director:
+Michael S. Hart <hart@pobox.com>
+
+We would prefer to send you this information by email
+(Internet, Bitnet, Compuserve, ATTMAIL or MCImail).
+
+******
+If you have an FTP program (or emulator), please
+FTP directly to the Project Gutenberg archives:
+[Mac users, do NOT point and click. . .type]
+
+ftp uiarchive.cso.uiuc.edu
+login:  anonymous
+password:  your@login
+cd etext/etext90 through /etext96
+or cd etext/articles [get suggest gut for more information]
+dir [to see files]
+get or mget [to get files. . .set bin for zip files]
+GET INDEX?00.GUT
+for a list of books
+and
+GET NEW GUT for general information
+and
+MGET GUT* for newsletters.
+
+**Information prepared by the Project Gutenberg legal advisor**
+(Three Pages)
+
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here?  You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault.  So, among other things, this "Small Print!" statement
+disclaims most of our liability to you.  It also tells you how
+you can distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement.  If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from.  If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-
+tm etexts, is a "public domain" work distributed by Professor
+Michael S. Hart through the Project Gutenberg Association at
+Carnegie-Mellon University (the "Project").  Among other
+things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties.  Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the Project's "PROJECT GUTENBERG" trademark.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works.  Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects".  Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] the Project (and any other party you may receive this
+etext from as a PROJECT GUTENBERG-tm etext) disclaims all
+liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from.  If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy.  If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS".  NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold the Project, its directors,
+officers, members and agents harmless from all liability, cost
+and expense, including legal fees, that arise directly or
+indirectly from any of the following that you do or cause:
+[1] distribution of this etext, [2] alteration, modification,
+or addition to the etext, or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word pro-
+     cessing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Project of 20% of the
+     net profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Association/Carnegie-Mellon
+     University" within the 60 days following each
+     date you prepare (or were legally required to prepare)
+     your annual (or equivalent periodic) tax return.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+The Project gratefully accepts contributions in money, time,
+scanning machines, OCR software, public domain etexts, royalty
+free copyright licenses, and every other sort of contribution
+you can think of.  Money should be paid to "Project Gutenberg
+Association / Carnegie-Mellon University".
+
+*END*THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.04.29.93*END*
+
+
+
+
+
+The Beast in the Jungle
+
+by Henry James
+
+
+
+
+CHAPTER I
+
+
+
+What determined the speech that startled him in the course of their
+encounter scarcely matters, being probably but some words spoken by
+himself quite without intention--spoken as they lingered and slowly
+moved together after their renewal of acquaintance.  He had been
+conveyed by friends an hour or two before to the house at which she
+was staying; the party of visitors at the other house, of whom he
+was one, and thanks to whom it was his theory, as always, that he
+was lost in the crowd, had been invited over to luncheon.  There
+had been after luncheon much dispersal, all in the interest of the
+original motive, a view of Weatherend itself and the fine things,
+intrinsic features, pictures, heirlooms, treasures of all the arts,
+that made the place almost famous; and the great rooms were so
+numerous that guests could wander at their will, hang back from the
+principal group and in cases where they took such matters with the
+last seriousness give themselves up to mysterious appreciations and
+measurements.  There were persons to be observed, singly or in
+couples, bending toward objects in out-of-the-way corners with
+their hands on their knees and their heads nodding quite as with
+the emphasis of an excited sense of smell.  When they were two they
+either mingled their sounds of ecstasy or melted into silences of
+even deeper import, so that there were aspects of the occasion that
+gave it for Marcher much the air of the "look round," previous to a
+sale highly advertised, that excites or quenches, as may be, the
+dream of acquisition.  The dream of acquisition at Weatherend would
+have had to be wild indeed, and John Marcher found himself, among
+such suggestions, disconcerted almost equally by the presence of
+those who knew too much and by that of those who knew nothing.  The
+great rooms caused so much poetry and history to press upon him
+that he needed some straying apart to feel in a proper relation
+with them, though this impulse was not, as happened, like the
+gloating of some of his companions, to be compared to the movements
+of a dog sniffing a cupboard.  It had an issue promptly enough in a
+direction that was not to have been calculated.
+
+It led, briefly, in the course of the October afternoon, to his
+closer meeting with May Bartram, whose face, a reminder, yet not
+quite a remembrance, as they sat much separated at a very long
+table, had begun merely by troubling him rather pleasantly.  It
+affected him as the sequel of something of which he had lost the
+beginning.  He knew it, and for the time quite welcomed it, as a
+continuation, but didn't know what it continued, which was an
+interest or an amusement the greater as he was also somehow aware--
+yet without a direct sign from her--that the young woman herself
+hadn't lost the thread.  She hadn't lost it, but she wouldn't give
+it back to him, he saw, without some putting forth of his hand for
+it; and he not only saw that, but saw several things more, things
+odd enough in the light of the fact that at the moment some
+accident of grouping brought them face to face he was still merely
+fumbling with the idea that any contact between them in the past
+would have had no importance.  If it had had no importance he
+scarcely knew why his actual impression of her should so seem to
+have so much; the answer to which, however, was that in such a life
+as they all appeared to be leading for the moment one could but
+take things as they came.  He was satisfied, without in the least
+being able to say why, that this young lady might roughly have
+ranked in the house as a poor relation; satisfied also that she was
+not there on a brief visit, but was more or less a part of the
+establishment--almost a working, a remunerated part.  Didn't she
+enjoy at periods a protection that she paid for by helping, among
+other services, to show the place and explain it, deal with the
+tiresome people, answer questions about the dates of the building,
+the styles of the furniture, the authorship of the pictures, the
+favourite haunts of the ghost?  It wasn't that she looked as if you
+could have given her shillings--it was impossible to look less so.
+Yet when she finally drifted toward him, distinctly handsome,
+though ever so much older--older than when he had seen her before--
+it might have been as an effect of her guessing that he had, within
+the couple of hours, devoted more imagination to her than to all
+the others put together, and had thereby penetrated to a kind of
+truth that the others were too stupid for.  She WAS there on harder
+terms than any one; she was there as a consequence of things
+suffered, one way and another, in the interval of years; and she
+remembered him very much as she was remembered--only a good deal
+better.
+
+By the time they at last thus came to speech they were alone in one
+of the rooms--remarkable for a fine portrait over the chimney-
+place--out of which their friends had passed, and the charm of it
+was that even before they had spoken they had practically arranged
+with each other to stay behind for talk.  The charm, happily, was
+in other things too--partly in there being scarce a spot at
+Weatherend without something to stay behind for.  It was in the way
+the autumn day looked into the high windows as it waned; the way
+the red light, breaking at the close from under a low sombre sky,
+reached out in a long shaft and played over old wainscots, old
+tapestry, old gold, old colour.  It was most of all perhaps in the
+way she came to him as if, since she had been turned on to deal
+with the simpler sort, he might, should he choose to keep the whole
+thing down, just take her mild attention for a part of her general
+business.  As soon as he heard her voice, however, the gap was
+filled up and the missing link supplied; the slight irony he
+divined in her attitude lost its advantage.  He almost jumped at it
+to get there before her.  "I met you years and years ago in Rome.
+I remember all about it."  She confessed to disappointment--she had
+been so sure he didn't; and to prove how well he did he began to
+pour forth the particular recollections that popped up as he called
+for them.  Her face and her voice, all at his service now, worked
+the miracle--the impression operating like the torch of a
+lamplighter who touches into flame, one by one, a long row of gas-
+jets.  Marcher flattered himself the illumination was brilliant,
+yet he was really still more pleased on her showing him, with
+amusement, that in his haste to make everything right he had got
+most things rather wrong.  It hadn't been at Rome--it had been at
+Naples; and it hadn't been eight years before--it had been more
+nearly ten.  She hadn't been, either, with her uncle and aunt, but
+with her mother and brother; in addition to which it was not with
+the Pembles HE had been, but with the Boyers, coming down in their
+company from Rome--a point on which she insisted, a little to his
+confusion, and as to which she had her evidence in hand.  The
+Boyers she had known, but didn't know the Pembles, though she had
+heard of them, and it was the people he was with who had made them
+acquainted.  The incident of the thunderstorm that had raged round
+them with such violence as to drive them for refuge into an
+excavation--this incident had not occurred at the Palace of the
+Caesars, but at Pompeii, on an occasion when they had been present
+there at an important find.
+
+He accepted her amendments, he enjoyed her corrections, though the
+moral of them was, she pointed out, that he REALLY didn't remember
+the least thing about her; and he only felt it as a drawback that
+when all was made strictly historic there didn't appear much of
+anything left.  They lingered together still, she neglecting her
+office--for from the moment he was so clever she had no proper
+right to him--and both neglecting the house, just waiting as to see
+if a memory or two more wouldn't again breathe on them.  It hadn't
+taken them many minutes, after all, to put down on the table, like
+the cards of a pack, those that constituted their respective hands;
+only what came out was that the pack was unfortunately not perfect-
+-that the past, invoked, invited, encouraged, could give them,
+naturally, no more than it had.  It had made them anciently meet--
+her at twenty, him at twenty-five; but nothing was so strange, they
+seemed to say to each other, as that, while so occupied, it hadn't
+done a little more for them.  They looked at each other as with the
+feeling of an occasion missed; the present would have been so much
+better if the other, in the far distance, in the foreign land,
+hadn't been so stupidly meagre.  There weren't, apparently, all
+counted, more than a dozen little old things that had succeeded in
+coming to pass between them; trivialities of youth, simplicities of
+freshness, stupidities of ignorance, small possible germs, but too
+deeply buried--too deeply (didn't it seem?) to sprout after so many
+years.  Marcher could only feel he ought to have rendered her some
+service--saved her from a capsized boat in the bay or at least
+recovered her dressing-bag, filched from her cab in the streets of
+Naples by a lazzarone with a stiletto.  Or it would have been nice
+if he could have been taken with fever all alone at his hotel, and
+she could have come to look after him, to write to his people, to
+drive him out in convalescence.  THEN they would be in possession
+of the something or other that their actual show seemed to lack.
+It yet somehow presented itself, this show, as too good to be
+spoiled; so that they were reduced for a few minutes more to
+wondering a little helplessly why--since they seemed to know a
+certain number of the same people--their reunion had been so long
+averted.  They didn't use that name for it, but their delay from
+minute to minute to join the others was a kind of confession that
+they didn't quite want it to be a failure.  Their attempted
+supposition of reasons for their not having met but showed how
+little they knew of each other.  There came in fact a moment when
+Marcher felt a positive pang.  It was vain to pretend she was an
+old friend, for all the communities were wanting, in spite of which
+it was as an old friend that he saw she would have suited him.  He
+had new ones enough--was surrounded with them for instance on the
+stage of the other house; as a new one he probably wouldn't have so
+much as noticed her.  He would have liked to invent something, get
+her to make-believe with him that some passage of a romantic or
+critical kind HAD originally occurred.  He was really almost
+reaching out in imagination--as against time--for something that
+would do, and saying to himself that if it didn't come this sketch
+of a fresh start would show for quite awkwardly bungled.  They
+would separate, and now for no second or no third chance.  They
+would have tried and not succeeded.  Then it was, just at the turn,
+as he afterwards made it out to himself, that, everything else
+failing, she herself decided to take up the case and, as it were,
+save the situation.  He felt as soon as she spoke that she had been
+consciously keeping back what she said and hoping to get on without
+it; a scruple in her that immensely touched him when, by the end of
+three or four minutes more, he was able to measure it.  What she
+brought out, at any rate, quite cleared the air and supplied the
+link--the link it was so odd he should frivolously have managed to
+lose.
+
+"You know you told me something I've never forgotten and that again
+and again has made me think of you since; it was that tremendously
+hot day when we went to Sorrento, across the bay, for the breeze.
+What I allude to was what you said to me, on the way back, as we
+sat under the awning of the boat enjoying the cool.  Have you
+forgotten?"
+
+He had forgotten, and was even more surprised than ashamed.  But
+the great thing was that he saw in this no vulgar reminder of any
+"sweet" speech.  The vanity of women had long memories, but she was
+making no claim on him of a compliment or a mistake.  With another
+woman, a totally different one, he might have feared the recall
+possibly even some imbecile "offer."  So, in having to say that he
+had indeed forgotten, he was conscious rather of a loss than of a
+gain; he already saw an interest in the matter of her mention.  "I
+try to think--but I give it up.  Yet I remember the Sorrento day."
+
+"I'm not very sure you do," May Bartram after a moment said; "and
+I'm not very sure I ought to want you to.  It's dreadful to bring a
+person back at any time to what he was ten years before.  If you've
+lived away from it," she smiled, "so much the better."
+
+"Ah if YOU haven't why should I?" he asked.
+
+"Lived away, you mean, from what I myself was?"
+
+"From what I was.  I was of course an ass," Marcher went on; "but I
+would rather know from you just the sort of ass I was than--from
+the moment you have something in your mind--not know anything."
+
+Still, however, she hesitated.  "But if you've completely ceased to
+be that sort--?"
+
+"Why I can then all the more bear to know.  Besides, perhaps I
+haven't."
+
+"Perhaps.  Yet if you haven't," she added, "I should suppose you'd
+remember.  Not indeed that I in the least connect with my
+impression the invidious name you use.  If I had only thought you
+foolish," she explained, "the thing I speak of wouldn't so have
+remained with me.  It was about yourself."  She waited as if it
+might come to him; but as, only meeting her eyes in wonder, he gave
+no sign, she burnt her ships.  "Has it ever happened?"
+
+Then it was that, while he continued to stare, a light broke for
+him and the blood slowly came to his face, which began to burn with
+recognition.
+
+"Do you mean I told you--?"  But he faltered, lest what came to him
+shouldn't be right, lest he should only give himself away.
+
+"It was something about yourself that it was natural one shouldn't
+forget--that is if one remembered you at all.  That's why I ask
+you," she smiled, "if the thing you then spoke of has ever come to
+pass?"
+
+Oh then he saw, but he was lost in wonder and found himself
+embarrassed.  This, he also saw, made her sorry for him, as if her
+allusion had been a mistake.  It took him but a moment, however, to
+feel it hadn't been, much as it had been a surprise.  After the
+first little shock of it her knowledge on the contrary began, even
+if rather strangely, to taste sweet to him.  She was the only other
+person in the world then who would have it, and she had had it all
+these years, while the fact of his having so breathed his secret
+had unaccountably faded from him.  No wonder they couldn't have met
+as if nothing had happened.  "I judge," he finally said, "that I
+know what you mean.  Only I had strangely enough lost any sense of
+having taken you so far into my confidence."
+
+"Is it because you've taken so many others as well?"
+
+"I've taken nobody.  Not a creature since then."
+
+"So that I'm the only person who knows?"
+
+"The only person in the world."
+
+"Well," she quickly replied, "I myself have never spoken.  I've
+never, never repeated of you what you told me."  She looked at him
+so that he perfectly believed her.  Their eyes met over it in such
+a way that he was without a doubt.  "And I never will."
+
+She spoke with an earnestness that, as if almost excessive, put him
+at ease about her possible derision.  Somehow the whole question
+was a new luxury to him--that is from the moment she was in
+possession.  If she didn't take the sarcastic view she clearly took
+the sympathetic, and that was what he had had, in all the long
+time, from no one whomsoever.  What he felt was that he couldn't at
+present have begun to tell her, and yet could profit perhaps
+exquisitely by the accident of having done so of old.  "Please
+don't then.  We're just right as it is."
+
+"Oh I am," she laughed, "if you are!"  To which she added:  "Then
+you do still feel in the same way?"
+
+It was impossible he shouldn't take to himself that she was really
+interested, though it all kept coining as a perfect surprise.  He
+had thought of himself so long as abominably alone, and lo he
+wasn't alone a bit.  He hadn't been, it appeared, for an hour--
+since those moments on the Sorrento boat.  It was she who had been,
+he seemed to see as he looked at her--she who had been made so by
+the graceless fact of his lapse of fidelity.  To tell her what he
+had told her--what had it been but to ask something of her?
+something that she had given, in her charity, without his having,
+by a remembrance, by a return of the spirit, failing another
+encounter, so much as thanked her.  What he had asked of her had
+been simply at first not to laugh at him.  She had beautifully not
+done so for ten years, and she was not doing so now.  So he had
+endless gratitude to make up.  Only for that he must see just how
+he had figured to her.  "What, exactly, was the account I gave--?"
+
+"Of the way you did feel?  Well, it was very simple.  You said you
+had had from your earliest time, as the deepest thing within you,
+the sense of being kept for something rare and strange, possibly
+prodigious and terrible, that was sooner or later to happen to you,
+that you had in your bones the foreboding and the conviction of,
+and that would perhaps overwhelm you."
+
+"Do you call that very simple?" John Marcher asked.
+
+She thought a moment.  "It was perhaps because I seemed, as you
+spoke, to understand it."
+
+"You do understand it?" he eagerly asked.
+
+Again she kept her kind eyes on him.  "You still have the belief?"
+
+"Oh!" he exclaimed helplessly.  There was too much to say.
+
+"Whatever it's to be," she clearly made out, "it hasn't yet come."
+
+He shook his head in complete surrender now.  "It hasn't yet come.
+Only, you know, it isn't anything I'm to do, to achieve in the
+world, to be distinguished or admired for.  I'm not such an ass as
+THAT.  It would be much better, no doubt, if I were."
+
+"It's to be something you're merely to suffer?"
+
+"Well, say to wait for--to have to meet, to face, to see suddenly
+break out in my life; possibly destroying all further
+consciousness, possibly annihilating me; possibly, on the other
+hand, only altering everything, striking at the root of all my
+world and leaving me to the consequences, however they shape
+themselves."
+
+She took this in, but the light in her eyes continued for him not
+to be that of mockery.  "Isn't what you describe perhaps but the
+expectation--or at any rate the sense of danger, familiar to so
+many people--of falling in love?"
+
+John Marcher thought.  "Did you ask me that before?"
+
+"No--I wasn't so free-and-easy then.  But it's what strikes me
+now."
+
+"Of course," he said after a moment, "it strikes you.  Of course it
+strikes ME.  Of course what's in store for me may be no more than
+that.  The only thing is," he went on, "that I think if it had been
+that I should by this time know."
+
+"Do you mean because you've BEEN in love?"  And then as he but
+looked at her in silence:  "You've been in love, and it hasn't
+meant such a cataclysm, hasn't proved the great affair?"
+
+"Here I am, you see.  It hasn't been overwhelming."
+
+"Then it hasn't been love," said May Bartram.
+
+"Well, I at least thought it was.  I took it for that--I've taken
+it till now.  It was agreeable, it was delightful, it was
+miserable," he explained.  "But it wasn't strange.  It wasn't what
+my affair's to be."
+
+"You want something all to yourself--something that nobody else
+knows or HAS known?"
+
+"It isn't a question of what I 'want'--God knows I don't want
+anything.  It's only a question of the apprehension that haunts me-
+-that I live with day by day."
+
+He said this so lucidly and consistently that he could see it
+further impose itself.  If she hadn't been interested before she'd
+have been interested now.
+
+"Is it a sense of coming violence?"
+
+Evidently now too again he liked to talk of it.  "I don't think of
+it as--when it does come--necessarily violent.  I only think of it
+as natural and as of course above all unmistakeable.  I think of it
+simply as THE thing.  THE thing will of itself appear natural."
+
+"Then how will it appear strange?"
+
+Marcher bethought himself.  "It won't--to ME."
+
+"To whom then?"
+
+"Well," he replied, smiling at last, "say to you."
+
+"Oh then I'm to be present?"
+
+"Why you are present--since you know."
+
+"I see."  She turned it over.  "But I mean at the catastrophe."
+
+At this, for a minute, their lightness gave way to their gravity;
+it was as if the long look they exchanged held them together.  "It
+will only depend on yourself--if you'll watch with me."
+
+"Are you afraid?" she asked.
+
+"Don't leave me now," he went on.
+
+"Are you afraid?" she repeated.
+
+"Do you think me simply out of my mind?" he pursued instead of
+answering.  "Do I merely strike you as a harmless lunatic?"
+
+"No," said May Bartram.  "I understand you.  I believe you."
+
+"You mean you feel how my obsession--poor old thing--may correspond
+to some possible reality?"
+
+"To some possible reality."
+
+"Then you WILL watch with me?"
+
+She hesitated, then for the third time put her question.  "Are you
+afraid?"
+
+"Did I tell you I was--at Naples?"
+
+"No, you said nothing about it."
+
+"Then I don't know.  And I should like to know," said John Marcher.
+"You'll tell me yourself whether you think so.  If you'll watch
+with me you'll see."
+
+"Very good then."  They had been moving by this time across the
+room, and at the door, before passing out, they paused as for the
+full wind-up of their understanding.  "I'll watch with you," said
+May Bartram.
+
+
+
+CHAPTER II
+
+
+
+The fact that she "knew"--knew and yet neither chaffed him nor
+betrayed him--had in a short time begun to constitute between them
+a goodly bond, which became more marked when, within the year that
+followed their afternoon at Weatherend, the opportunities for
+meeting multiplied.  The event that thus promoted these occasions
+was the death of the ancient lady her great-aunt, under whose wing,
+since losing her mother, she had to such an extent found shelter,
+and who, though but the widowed mother of the new successor to the
+property, had succeeded--thanks to a high tone and a high temper--
+in not forfeiting the supreme position at the great house.  The
+deposition of this personage arrived but with her death, which,
+followed by many changes, made in particular a difference for the
+young woman in whom Marcher's expert attention had recognised from
+the first a dependent with a pride that might ache though it didn't
+bristle.  Nothing for a long time had made him easier than the
+thought that the aching must have been much soothed by Miss
+Bartram's now finding herself able to set up a small home in
+London.  She had acquired property, to an amount that made that
+luxury just possible, under her aunt's extremely complicated will,
+and when the whole matter began to be straightened out, which
+indeed took time, she let him know that the happy issue was at last
+in view.  He had seen her again before that day, both because she
+had more than once accompanied the ancient lady to town and because
+he had paid another visit to the friends who so conveniently made
+of Weatherend one of the charms of their own hospitality.  These
+friends had taken him back there; he had achieved there again with
+Mss Bartram some quiet detachment; and he had in London succeeded
+in persuading her to more than one brief absence from her aunt.
+They went together, on these latter occasions, to the National
+Gallery and the South Kensington Museum, where, among vivid
+reminders, they talked of Italy at large--not now attempting to
+recover, as at first, the taste of their youth and their ignorance.
+That recovery, the first day at Weatherend, had served its purpose
+well, had given them quite enough; so that they were, to Marcher's
+sense, no longer hovering about the head-waters of their stream,
+but had felt their boat pushed sharply off and down the current.
+
+They were literally afloat together; for our gentleman this was
+marked, quite as marked as that the fortunate cause of it was just
+the buried treasure of her knowledge.  He had with his own hands
+dug up this little hoard, brought to light--that is to within reach
+of the dim day constituted by their discretions and privacies--the
+object of value the hiding-place of which he had, after putting it
+into the ground himself, so strangely, so long forgotten.  The rare
+luck of his having again just stumbled on the spot made him
+indifferent to any other question; he would doubtless have devoted
+more time to the odd accident of his lapse of memory if he hadn't
+been moved to devote so much to the sweetness, the comfort, as he
+felt, for the future, that this accident itself had helped to keep
+fresh.  It had never entered into his plan that any one should
+"know", and mainly for the reason that it wasn't in him to tell any
+one.  That would have been impossible, for nothing but the
+amusement of a cold world would have waited on it.  Since, however,
+a mysterious fate had opened his mouth betimes, in spite of him, he
+would count that a compensation and profit by it to the utmost.
+That the right person SHOULD know tempered the asperity of his
+secret more even than his shyness had permitted him to imagine; and
+May Bartram was clearly right, because--well, because there she
+was.  Her knowledge simply settled it; he would have been sure
+enough by this time had she been wrong.  There was that in his
+situation, no doubt, that disposed him too much to see her as a
+mere confidant, taking all her light for him from the fact--the
+fact only--of her interest in his predicament; from her mercy,
+sympathy, seriousness, her consent not to regard him as the
+funniest of the funny.  Aware, in fine, that her price for him was
+just in her giving him this constant sense of his being admirably
+spared, he was careful to remember that she had also a life of her
+own, with things that might happen to HER, things that in
+friendship one should likewise take account of.  Something fairly
+remarkable came to pass with him, for that matter, in this
+connexion--something represented by a certain passage of his
+consciousness, in the suddenest way, from one extreme to the other.
+
+He had thought himself, so long as nobody knew, the most
+disinterested person in the world, carrying his concentrated
+burden, his perpetual suspense, ever so quietly, holding his tongue
+about it, giving others no glimpse of it nor of its effect upon his
+life, asking of them no allowance and only making on his side all
+those that were asked.  He hadn't disturbed people with the
+queerness of their having to know a haunted man, though he had had
+moments of rather special temptation on hearing them say they were
+forsooth "unsettled."  If they were as unsettled as he was--he who
+had never been settled for an hour in his life--they would know
+what it meant.  Yet it wasn't, all the same, for him to make them,
+and he listened to them civilly enough.  This was why he had such
+good--though possibly such rather colourless--manners; this was
+why, above all, he could regard himself, in a greedy world, as
+decently--as in fact perhaps even a little sublimely--unselfish.
+Our point is accordingly that he valued this character quite
+sufficiently to measure his present danger of letting it lapse,
+against which he promised himself to be much on his guard.  He was
+quite ready, none the less, to be selfish just a little, since
+surely no more charming occasion for it had come to him.  "Just a
+little," in a word, was just as much as Mss Bartram, taking one day
+with another, would let him.  He never would be in the least
+coercive, and would keep well before him the lines on which
+consideration for her--the very highest--ought to proceed.  He
+would thoroughly establish the heads under which her affairs, her
+requirements, her peculiarities--he went so far as to give them the
+latitude of that name--would come into their intercourse.  All this
+naturally was a sign of how much he took the intercourse itself for
+granted.  There was nothing more to be done about that.  It simply
+existed; had sprung into being with her first penetrating question
+to him in the autumn light there at Weatherend.  The real form it
+should have taken on the basis that stood out large was the form of
+their marrying.  But the devil in this was that the very basis
+itself put marrying out of the question.  His conviction, his
+apprehension, his obsession, in short, wasn't a privilege he could
+invite a woman to share; and that consequence of it was precisely
+what was the matter with him.  Something or other lay in wait for
+him, amid the twists and the turns of the months and the years,
+like a crouching Beast in the Jungle.  It signified little whether
+the crouching Beast were destined to slay him or to be slain.  The
+definite point was the inevitable spring of the creature; and the
+definite lesson from that was that a man of feeling didn't cause
+himself to be accompanied by a lady on a tiger-hunt.  Such was the
+image under which he had ended by figuring his life.
+
+They had at first, none the less, in the scattered hours spent
+together, made no allusion to that view of it; which was a sign he
+was handsomely alert to give that he didn't expect, that he in fact
+didn't care, always to be talking about it.  Such a feature in
+one's outlook was really like a hump on one's back.  The difference
+it made every minute of the day existed quite independently of
+discussion.  One discussed of course LIKE a hunchback, for there
+was always, if nothing else, the hunchback face.  That remained,
+and she was watching him; but people watched best, as a general
+thing, in silence, so that such would be predominantly the manner
+of their vigil.  Yet he didn't want, at the same time, to be tense
+and solemn; tense and solemn was what he imagined he too much
+showed for with other people.  The thing to be, with the one person
+who knew, was easy and natural--to make the reference rather than
+be seeming to avoid it, to avoid it rather than be seeming to make
+it, and to keep it, in any case, familiar, facetious even, rather
+than pedantic and portentous.  Some such consideration as the
+latter was doubtless in his mind for instance when he wrote
+pleasantly to Miss Bartram that perhaps the great thing he had so
+long felt as in the lap of the gods was no more than this
+circumstance, which touched him so nearly, of her acquiring a house
+in London.  It was the first allusion they had yet again made,
+needing any other hitherto so little; but when she replied, after
+having given him the news, that she was by no means satisfied with
+such a trifle as the climax to so special a suspense, she almost
+set him wondering if she hadn't even a larger conception of
+singularity for him than he had for himself.  He was at all events
+destined to become aware little by little, as time went by, that
+she was all the while looking at his life, judging it, measuring
+it, in the light of the thing she knew, which grew to be at last,
+with the consecration of the years, never mentioned between them
+save as "the real truth" about him.  That had always been his own
+form of reference to it, but she adopted the form so quietly that,
+looking back at the end of a period, he knew there was no moment at
+which it was traceable that she had, as he might say, got inside
+his idea, or exchanged the attitude of beautifully indulging for
+that of still more beautifully believing him.
+
+It was always open to him to accuse her of seeing him but as the
+most harmless of maniacs, and this, in the long run--since it
+covered so much ground--was his easiest description of their
+friendship.  He had a screw loose for her but she liked him in
+spite of it and was practically, against the rest of the world, his
+kind wise keeper, unremunerated but fairly amused and, in the
+absence of other near ties, not disreputably occupied.  The rest of
+the world of course thought him queer, but she, she only, knew how,
+and above all why, queer; which was precisely what enabled her to
+dispose the concealing veil in the right folds.  She took his
+gaiety from him--since it had to pass with them for gaiety--as she
+took everything else; but she certainly so far justified by her
+unerring touch his finer sense of the degree to which he had ended
+by convincing her.  SHE at least never spoke of the secret of his
+life except as "the real truth about you," and she had in fact a
+wonderful way of making it seem, as such, the secret of her own
+life too.  That was in fine how he so constantly felt her as
+allowing for him; he couldn't on the whole call it anything else.
+He allowed for himself, but she, exactly, allowed still more;
+partly because, better placed for a sight of the matter, she traced
+his unhappy perversion through reaches of its course into which he
+could scarce follow it.  He knew how he felt, but, besides knowing
+that, she knew how he looked as well; he knew each of the things of
+importance he was insidiously kept from doing, but she could add up
+the amount they made, understand how much, with a lighter weight on
+his spirit, he might have done, and thereby establish how, clever
+as he was, he fell short.  Above all she was in the secret of the
+difference between the forms he went through--those of his little
+office under Government, those of caring for his modest patrimony,
+for his library, for his garden in the country, for the people in
+London whose invitations he accepted and repaid--and the detachment
+that reigned beneath them and that made of all behaviour, all that
+could in the least be called behaviour, a long act of
+dissimulation.  What it had come to was that he wore a mask painted
+with the social simper, out of the eye-holes of which there looked
+eyes of an expression not in the least matching the other features.
+This the stupid world, even after years, had never more than half
+discovered.  It was only May Bartram who had, and she achieved, by
+an art indescribable, the feat of at once--or perhaps it was only
+alternately--meeting the eyes from in front and mingling her own
+vision, as from over his shoulder, with their peep through the
+apertures.
+
+So while they grew older together she did watch with him, and so
+she let this association give shape and colour to her own
+existence.  Beneath HER forms as well detachment had learned to
+sit, and behaviour had become for her, in the social sense, a false
+account of herself.  There was but one account of her that would
+have been true all the while and that she could give straight to
+nobody, least of all to John Marcher.  Her whole attitude was a
+virtual statement, but the perception of that only seemed called to
+take its place for him as one of the many things necessarily
+crowded out of his consciousness.  If she had moreover, like
+himself, to make sacrifices to their real truth, it was to be
+granted that her compensation might have affected her as more
+prompt and more natural.  They had long periods, in this London
+time, during which, when they were together, a stranger might have
+listened to them without in the least pricking up his ears; on the
+other hand the real truth was equally liable at any moment to rise
+to the surface, and the auditor would then have wondered indeed
+what they were talking about.  They had from an early hour made up
+their mind that society was, luckily, unintelligent, and the margin
+allowed them by this had fairly become one of their commonplaces.
+Yet there were still moments when the situation turned almost
+fresh--usually under the effect of some expression drawn from
+herself.  Her expressions doubtless repeated themselves, but her
+intervals were generous.  "What saves us, you know, is that we
+answer so completely to so usual an appearance:  that of the man
+and woman whose friendship has become such a daily habit--or
+almost--as to be at last indispensable."  That for instance was a
+remark she had frequently enough had occasion to make, though she
+had given it at different times different developments.  What we
+are especially concerned with is the turn it happened to take from
+her one afternoon when he had come to see her in honour of her
+birthday.  This anniversary had fallen on a Sunday, at a season of
+thick fog and general outward gloom; but he had brought her his
+customary offering, having known her now long enough to have
+established a hundred small traditions.  It was one of his proofs
+to himself, the present he made her on her birthday, that he hadn't
+sunk into real selfishness.  It was mostly nothing more than a
+small trinket, but it was always fine of its kind, and he was
+regularly careful to pay for it more than he thought he could
+afford.  "Our habit saves you, at least, don't you see?" because it
+makes you, after all, for the vulgar, indistinguishable from other
+men.  What's the most inveterate mark of men in general?  Why the
+capacity to spend endless time with dull women--to spend it I won't
+say without being bored, but without minding that they are, without
+being driven off at a tangent by it; which comes to the same thing.
+I'm your dull woman, a part of the daily bread for which you pray
+at church.  That covers your tracks more than anything."
+
+"And what covers yours?" asked Marcher, whom his dull woman could
+mostly to this extent amuse.  "I see of course what you mean by
+your saving me, in this way and that, so far as other people are
+concerned--I've seen it all along.  Only what is it that saves YOU?
+I often think, you know, of that."
+
+She looked as if she sometimes thought of that too, but rather in a
+different way.  "Where other people, you mean, are concerned?"
+
+"Well, you're really so in with me, you know--as a sort of result
+of my being so in with yourself.  I mean of my having such an
+immense regard for you, being so tremendously mindful of all you've
+done for me.  I sometimes ask myself if it's quite fair.  Fair I
+mean to have so involved and--since one may say it--interested you.
+I almost feel as if you hadn't really had time to do anything
+else."
+
+"Anything else but be interested?" she asked.  "Ah what else does
+one ever want to be?  If I've been 'watching' with you, as we long
+ago agreed I was to do, watching's always in itself an absorption."
+
+"Oh certainly," John Marcher said, "if you hadn't had your
+curiosity -!  Only doesn't it sometimes come to you as time goes on
+that your curiosity isn't being particularly repaid?"
+
+May Bartram had a pause.  "Do you ask that, by any chance, because
+you feel at all that yours isn't?  I mean because you have to wait
+so long."
+
+Oh he understood what she meant!  "For the thing to happen that
+never does happen?  For the Beast to jump out?  No, I'm just where
+I was about it.  It isn't a matter as to which I can CHOOSE, I can
+decide for a change.  It isn't one as to which there CAN be a
+change.  It's in the lap of the gods.  One's in the hands of one's
+law--there one is.  As to the form the law will take, the way it
+will operate, that's its own affair."
+
+"Yes," Miss Bartram replied; "of course one's fate's coming, of
+course it HAS come in its own form and its own way, all the while.
+Only, you know, the form and the way in your case were to have
+been--well, something so exceptional and, as one may say, so
+particularly YOUR own."
+
+Something in this made him look at her with suspicion.  "You say
+'were to HAVE been,' as if in your heart you had begun to doubt."
+
+"Oh!" she vaguely protested.
+
+"As if you believed," he went on, "that nothing will now take
+place."
+
+She shook her head slowly but rather inscrutably.  "You're far from
+my thought."
+
+He continued to look at her.  "What then is the matter with you?"
+
+"Well," she said after another wait, "the matter with me is simply
+that I'm more sure than ever my curiosity, as you call it, will be
+but too well repaid."
+
+They were frankly grave now; he had got up from his seat, had
+turned once more about the little drawing-room to which, year after
+year, he brought his inevitable topic; in which he had, as he might
+have said, tasted their intimate community with every sauce, where
+every object was as familiar to him as the things of his own house
+and the very carpets were worn with his fitful walk very much as
+the desks in old counting-houses are worn by the elbows of
+generations of clerks.  The generations of his nervous moods had
+been at work there, and the place was the written history of his
+whole middle life.  Under the impression of what his friend had
+just said he knew himself, for some reason, more aware of these
+things; which made him, after a moment, stop again before her.  "Is
+it possibly that you've grown afraid?"
+
+"Afraid?"  He thought, as she repeated the word, that his question
+had made her, a little, change colour; so that, lest he should have
+touched on a truth, he explained very kindly:  "You remember that
+that was what you asked ME long ago--that first day at Weatherend."
+
+"Oh yes, and you told me you didn't know--that I was to see for
+myself.  We've said little about it since, even in so long a time."
+
+"Precisely," Marcher interposed--"quite as if it were too delicate
+a matter for us to make free with.  Quite as if we might find, on
+pressure, that I AM afraid.  For then," he said, "we shouldn't,
+should we? quite know what to do."
+
+She had for the time no answer to this question.  "There have been
+days when I thought you were.  Only, of course," she added, "there
+have been days when we have thought almost anything."
+
+"Everything.  Oh!" Marcher softly groaned, as with a gasp, half
+spent, at the face, more uncovered just then than it had been for a
+long while, of the imagination always with them.  It had always had
+it's incalculable moments of glaring out, quite as with the very
+eyes of the very Beast, and, used as he was to them, they could
+still draw from him the tribute of a sigh that rose from the depths
+of his being.  All they had thought, first and last, rolled over
+him; the past seemed to have been reduced to mere barren
+speculation.  This in fact was what the place had just struck him
+as so full of--the simplification of everything but the state of
+suspense.  That remained only by seeming to hang in the void
+surrounding it.  Even his original fear, if fear it as had been,
+had lost itself in the desert.  "I judge, however," he continued,
+"that you see I'm not afraid now."
+
+"What I see, as I make it out, is that you've achieved something
+almost unprecedented in the way of getting used to danger.  Living
+with it so long and so closely you've lost your sense of it; you
+know it's there, but you're indifferent, and you cease even, as of
+old, to have to whistle in the dark.  Considering what the danger
+is," May Bartram wound up, "I'm bound to say I don't think your
+attitude could well be surpassed."
+
+John Marcher faintly smiled.  "It's heroic?"
+
+"Certainly--call it that."
+
+It was what he would have liked indeed to call it.  "I AM then a
+man of courage?"
+
+"That's what you were to show me."
+
+He still, however, wondered.  "But doesn't the man of courage know
+what he's afraid of--or not afraid of?  I don't know THAT, you see.
+I don't focus it.  I can't name it.  I only know I'm exposed."
+
+"Yes, but exposed--how shall I say?--so directly.  So intimately.
+That's surely enough."
+
+"Enough to make you feel then--as what we may call the end and the
+upshot of our watch--that I'm not afraid?"
+
+"You're not afraid.  But it isn't," she said, "the end of our
+watch.  That is it isn't the end of yours.  You've everything still
+to see."
+
+"Then why haven't you?" he asked.  He had had, all along, to-day,
+the sense of her keeping something back, and he still had it.  As
+this was his first impression of that it quite made a date.  The
+case was the more marked as she didn't at first answer; which in
+turn made him go on.  "You know something I don't."  Then his
+voice, for that of a man of courage, trembled a little.  "You know
+what's to happen."  Her silence, with the face she showed, was
+almost a confession--it made him sure.  "You know, and you're
+afraid to tell me.  It's so bad that you're afraid I'll find out."
+
+All this might be true, for she did look as if, unexpectedly to
+her, he had crossed some mystic line that she had secretly drawn
+round her.  Yet she might, after all, not have worried; and the
+real climax was that he himself, at all events, needn't.  "You'll
+never find out."
+
+
+
+CHAPTER III
+
+
+
+It was all to have made, none the less, as I have said, a date;
+which came out in the fact that again and again, even after long
+intervals, other things that passed between them were in relation
+to this hour but the character of recalls and results.  Its
+immediate effect had been indeed rather to lighten insistence--
+almost to provoke a reaction; as if their topic had dropped by its
+own weight and as if moreover, for that matter, Marcher had been
+visited by one of his occasional warnings against egotism.  He had
+kept up, he felt, and very decently on the whole, his consciousness
+of the importance of not being selfish, and it was true that he had
+never sinned in that direction without promptly enough trying to
+press the scales the other way.  He often repaired his fault, the
+season permitting, by inviting his friend to accompany him to the
+opera; and it not infrequently thus happened that, to show he
+didn't wish her to have but one sort of food for her mind, he was
+the cause of her appearing there with him a dozen nights in the
+month.  It even happened that, seeing her home at such times, he
+occasionally went in with her to finish, as he called it, the
+evening, and, the better to make his point, sat down to the frugal
+but always careful little supper that awaited his pleasure.  His
+point was made, he thought, by his not eternally insisting with her
+on himself; made for instance, at such hours, when it befell that,
+her piano at hand and each of them familiar with it, they went over
+passages of the opera together.  It chanced to be on one of these
+occasions, however, that he reminded her of her not having answered
+a certain question he had put to her during the talk that had taken
+place between them on her last birthday.  "What is it that saves
+YOU?"--saved her, he meant, from that appearance of variation from
+the usual human type.  If he had practically escaped remark, as she
+pretended, by doing, in the most important particular, what most
+men do--find the answer to life in patching up an alliance of a
+sort with a woman no better than himself--how had she escaped it,
+and how could the alliance, such as it was, since they must suppose
+it had been more or less noticed, have failed to make her rather
+positively talked about?
+
+"I never said," May Bartram replied, "that it hadn't made me a good
+deal talked about."
+
+"Ah well then you're not 'saved.'"
+
+"It hasn't been a question for me.  If you've had your woman I've
+had," she said, "my man."
+
+"And you mean that makes you all right?"
+
+Oh it was always as if there were so much to say!
+
+"I don't know why it shouldn't make me--humanly, which is what
+we're speaking of--as right as it makes you."
+
+"I see," Marcher returned.  "'Humanly,' no doubt, as showing that
+you're living for something.  Not, that is, just for me and my
+secret."
+
+May Bartram smiled.  "I don't pretend it exactly shows that I'm not
+living for you.  It's my intimacy with you that's in question."
+
+He laughed as he saw what she meant.  "Yes, but since, as you say,
+I'm only, so far as people make out, ordinary, you're--aren't you?
+no more than ordinary either.  You help me to pass for a man like
+another.  So if I AM, as I understand you, you're not compromised.
+Is that it?"
+
+She had another of her waits, but she spoke clearly enough.
+"That's it.  It's all that concerns me--to help you to pass for a
+man like another."
+
+He was careful to acknowledge the remark handsomely.  "How kind,
+how beautiful, you are to me!  How shall I ever repay you?"
+
+She had her last grave pause, as if there might be a choice of
+ways.  But she chose.  "By going on as you are."
+
+It was into this going on as he was that they relapsed, and really
+for so long a time that the day inevitably came for a further
+sounding of their depths.  These depths, constantly bridged over by
+a structure firm enough in spite of its lightness and of its
+occasional oscillation in the somewhat vertiginous air, invited on
+occasion, in the interest of their nerves, a dropping of the
+plummet and a measurement of the abyss.  A difference had been made
+moreover, once for all, by the fact that she had all the while not
+appeared to feel the need of rebutting his charge of an idea within
+her that she didn't dare to express--a charge uttered just before
+one of the fullest of their later discussions ended.  It had come
+up for him then that she "knew" something and that what she knew
+was bad--too bad to tell him.  When he had spoken of it as visibly
+so bad that she was afraid he might find it out, her reply had left
+the matter too equivocal to be let alone and yet, for Marcher's
+special sensibility, almost too formidable again to touch.  He
+circled about it at a distance that alternately narrowed and
+widened and that still wasn't much affected by the consciousness in
+him that there was nothing she could "know," after all, any better
+than he did.  She had no source of knowledge he hadn't equally--
+except of course that she might have finer nerves.  That was what
+women had where they were interested; they made out things, where
+people were concerned, that the people often couldn't have made out
+for themselves.  Their nerves, their sensibility, their
+imagination, were conductors and revealers, and the beauty of May
+Bartram was in particular that she had given herself so to his
+case.  He felt in these days what, oddly enough, he had never felt
+before, the growth of a dread of losing her by some catastrophe--
+some catastrophe that yet wouldn't at all be the catastrophe:
+partly because she had almost of a sudden begun to strike him as
+more useful to him than ever yet, and partly by reason of an
+appearance of uncertainty in her health, co-incident and equally
+new.  It was characteristic of the inner detachment he had hitherto
+so successfully cultivated and to which our whole account of him is
+a reference, it was characteristic that his complications, such as
+they were, had never yet seemed so as at this crisis to thicken
+about him, even to the point of making him ask himself if he were,
+by any chance, of a truth, within sight or sound, within touch or
+reach, within the immediate jurisdiction, of the thing that waited.
+
+When the day came, as come it had to, that his friend confessed to
+him her fear of a deep disorder in her blood, he felt somehow the
+shadow of a change and the chill of a shock.  He immediately began
+to imagine aggravations and disasters, and above all to think of
+her peril as the direct menace for himself of personal privation.
+This indeed gave him one of those partial recoveries of equanimity
+that were agreeable to him--it showed him that what was still first
+in his mind was the loss she herself might suffer.  "What if she
+should have to die before knowing, before seeing--?"  It would have
+been brutal, in the early stages of her trouble, to put that
+question to her; but it had immediately sounded for him to his own
+concern, and the possibility was what most made him sorry for her.
+If she did "know," moreover, in the sense of her having had some--
+what should he think?--mystical irresistible light, this would make
+the matter not better, but worse, inasmuch as her original adoption
+of his own curiosity had quite become the basis of her life.  She
+had been living to see what would BE to be seen, and it would quite
+lacerate her to have to give up before the accomplishment of the
+vision.  These reflexions, as I say, quickened his generosity; yet,
+make them as he might, he saw himself, with the lapse of the
+period, more and more disconcerted.  It lapsed for him with a
+strange steady sweep, and the oddest oddity was that it gave him,
+independently of the threat of much inconvenience, almost the only
+positive surprise his career, if career it could be called, had yet
+offered him.  She kept the house as she had never done; he had to
+go to her to see her--she could meet him nowhere now, though there
+was scarce a corner of their loved old London in which she hadn't
+in the past, at one time or another, done so; and he found her
+always seated by her fire in the deep old-fashioned chair she was
+less and less able to leave.  He had been struck one day, after an
+absence exceeding his usual measure, with her suddenly looking much
+older to him than he had ever thought of her being; then he
+recognised that the suddenness was all on his side--he had just
+simply and suddenly noticed.  She looked older because inevitably,
+after so many years, she WAS old, or almost; which was of course
+true in still greater measure of her companion.  If she was old, or
+almost, John Marcher assuredly was, and yet it was her showing of
+the lesson, not his own, that brought the truth home to him.  His
+surprises began here; when once they had begun they multiplied;
+they came rather with a rush:  it was as if, in the oddest way in
+the world, they had all been kept back, sown in a thick cluster,
+for the late afternoon of life, the time at which for people in
+general the unexpected has died out.
+
+One of them was that he should have caught himself--for he HAD so
+done--REALLY wondering if the great accident would take form now as
+nothing more than his being condemned to see this charming woman,
+this admirable friend, pass away from him.  He had never so
+unreservedly qualified her as while confronted in thought with such
+a possibility; in spite of which there was small doubt for him that
+as an answer to his long riddle the mere effacement of even so fine
+a feature of his situation would be an abject anticlimax.  It would
+represent, as connected with his past attitude, a drop of dignity
+under the shadow of which his existence could only become the most
+grotesques of failures.  He had been far from holding it a failure-
+-long as he had waited for the appearance that was to make it a
+success.  He had waited for quite another thing, not for such a
+thing as that.  The breath of his good faith came short, however,
+as he recognised how long he had waited, or how long at least his
+companion had.  That she, at all events, might be recorded as
+having waited in vain--this affected him sharply, and all the more
+because of his it first having done little more than amuse himself
+with the idea.  It grew more grave as the gravity of her condition
+grew, and the state of mind it produced in him, which he himself
+ended by watching as if it had been some definite disfigurement of
+his outer person, may pass for another of his surprises.  This
+conjoined itself still with another, the really stupefying
+consciousness of a question that he would have allowed to shape
+itself had he dared.  What did everything mean--what, that is, did
+SHE mean, she and her vain waiting and her probable death and the
+soundless admonition of it all--unless that, at this time of day,
+it was simply, it was overwhelmingly too late?  He had never at any
+stage of his queer consciousness admitted the whisper of such a
+correction; he had never till within these last few months been so
+false to his conviction as not to hold that what was to come to him
+had time, whether HE struck himself as having it or not.  That at
+last, at last, he certainly hadn't it, to speak of, or had it but
+in the scantiest measure--such, soon enough, as things went with
+him, became the inference with which his old obsession had to
+reckon:  and this it was not helped to do by the more and more
+confirmed appearance that the great vagueness casting the long
+shadow in which he had lived had, to attest itself, almost no
+margin left.  Since it was in Time that he was to have met his
+fate, so it was in Time that his fate was to have acted; and as he
+waked up to the sense of no longer being young, which was exactly
+the sense of being stale, just as that, in turn, was the sense of
+being weak, he waked up to another matter beside.  It all hung
+together; they were subject, he and the great vagueness, to an
+equal and indivisible law.  When the possibilities themselves had
+accordingly turned stale, when the secret of the gods had grown
+faint, had perhaps even quite evaporated, that, and that only, was
+failure.  It wouldn't have been failure to be bankrupt,
+dishonoured, pilloried, hanged; it was failure not to be anything.
+And so, in the dark valley into which his path had taken its
+unlooked-for twist, he wondered not a little as he groped.  He
+didn't care what awful crash might overtake him, with what ignominy
+or what monstrosity he might yet he associated--since he wasn't
+after all too utterly old to suffer--if it would only be decently
+proportionate to the posture he had kept, all his life, in the
+threatened presence of it.  He had but one desire left--that he
+shouldn't have been "sold."
+
+
+
+CHAPTER IV
+
+
+
+Then it was that, one afternoon, while the spring of the year was
+young and new she met all in her own way his frankest betrayal of
+these alarms.  He had gone in late to see her, but evening hadn't
+settled and she was presented to him in that long fresh light of
+waning April days which affects us often with a sadness sharper
+than the greyest hours of autumn.  The week had been warm, the
+spring was supposed to have begun early, and May Bartram sat, for
+the first time in the year, without a fire; a fact that, to
+Marcher's sense, gave the scene of which she formed part a smooth
+and ultimate look, an air of knowing, in its immaculate order and
+cold meaningless cheer, that it would never see a fire again.  Her
+own aspect--he could scarce have said why--intensified this note.
+Almost as white as wax, with the marks and signs in her face as
+numerous and as fine as if they had been etched by a needle, with
+soft white draperies relieved by a faded green scarf on the
+delicate tone of which the years had further refined, she was the
+picture of a serene and exquisite but impenetrable sphinx, whose
+head, or indeed all whose person, might have been powdered with
+silver.  She was a sphinx, yet with her white petals and green
+fronds she might have been a lily too--only an artificial lily,
+wonderfully imitated and constantly kept, without dust or stain,
+though not exempt from a slight droop and a complexity of faint
+creases, under some clear glass bell.  The perfection of household
+care, of high polish and finish, always reigned in her rooms, but
+they now looked most as if everything had been wound up, tucked in,
+put away, so that she might sit with folded hands and with nothing
+more to do.  She was "out of it," to Marcher's vision; her work was
+over; she communicated with him as across some gulf or from some
+island of rest that she had already reached, and it made him feel
+strangely abandoned.  Was it--or rather wasn't it--that if for so
+long she had been watching with him the answer to their question
+must have swum into her ken and taken on its name, so that her
+occupation was verily gone?  He had as much as charged her with
+this in saying to her, many months before, that she even then knew
+something she was keeping from him.  It was a point he had never
+since ventured to press, vaguely fearing as he did that it might
+become a difference, perhaps a disagreement, between them.  He had
+in this later time turned nervous, which was what he in all the
+other years had never been; and the oddity was that his nervousness
+should have waited till he had begun to doubt, should have held off
+so long as he was sure.  There was something, it seemed to him,
+that the wrong word would bring down on his head, something that
+would so at least ease off his tension.  But he wanted not to speak
+the wrong word; that would make everything ugly.  He wanted the
+knowledge he lacked to drop on him, if drop it could, by its own
+august weight.  If she was to forsake him it was surely for her to
+take leave.  This was why he didn't directly ask her again what she
+knew; but it was also why, approaching the matter from another
+side, he said to her in the course of his visit:  "What do you
+regard as the very worst that at this time of day CAN happen to
+me?"
+
+He had asked her that in the past often enough; they had, with the
+odd irregular rhythm of their intensities and avoidances, exchanged
+ideas about it and then had seen the ideas washed away by cool
+intervals, washed like figures traced in sea-sand.  It had ever
+been the mark of their talk that the oldest allusions in it
+required but a little dismissal and reaction to come out again,
+sounding for the hour as new.  She could thus at present meet his
+enquiry quite freshly and patiently.  "Oh yes, I've repeatedly
+thought, only it always seemed to me of old that I couldn't quite
+make up my mind.  I thought of dreadful things, between which it
+was difficult to choose; and so must you have done."
+
+"Rather!  I feel now as if I had scarce done anything else.  I
+appear to myself to have spent my life in thinking of nothing but
+dreadful things.  A great many of them I've at different times
+named to you, but there were others I couldn't name."
+
+"They were too, too dreadful?"
+
+"Too, too dreadful--some of them."
+
+She looked at him a minute, and there came to him as he met it, an
+inconsequent sense that her eyes, when one got their full
+clearness, were still as beautiful as they had been in youth, only
+beautiful with a strange cold light--a light that somehow was a
+part of the effect, if it wasn't rather a part of the cause, of the
+pale hard sweetness of the season and the hour.  "And yet," she
+said at last, "there are horrors we've mentioned."
+
+It deepened the strangeness to see her, as such a figure in such a
+picture, talk of "horrors," but she was to do in a few minutes
+something stranger yet--though even of this he was to take the full
+measure but afterwards--and the note of it already trembled.  It
+was, for the matter of that, one of the signs that her eyes were
+having again the high flicker of their prime.  He had to admit,
+however, what she said.  "Oh yes, there were times when we did go
+far."  He caught himself in the act of speaking as if it all were
+over.  Well, he wished it were; and the consummation depended for
+him clearly more and more on his friend.
+
+But she had now a soft smile.  "Oh far--!"
+
+It was oddly ironic.  "Do you mean you're prepared to go further?"
+
+She was frail and ancient and charming as she continued to look at
+him, yet it was rather as if she had lost the thread.  "Do you
+consider that we went far?"
+
+"Why I thought it the point you were just making--that we HAD
+looked most things in the face."
+
+"Including each other?"  She still smiled.  "But you're quite
+right.  We've had together great imaginations, often great fears;
+but some of them have been unspoken."
+
+"Then the worst--we haven't faced that.  I COULD face it, I
+believe, if I knew what you think it.  I feel," he explained, "as
+if I had lost my power to conceive such things."  And he wondered
+if he looked as blank as he sounded.  "It's spent."
+
+"Then why do you assume," she asked, "that mine isn't?"
+
+"Because you've given me signs to the contrary.  It isn't a
+question for you of conceiving, imagining, comparing.  It isn't a
+question now of choosing."  At last he came out with it.  "You know
+something I don't.  You've shown me that before."
+
+These last words had affected her, he made out in a moment,
+exceedingly, and she spoke with firmness.  "I've shown you, my
+dear, nothing."
+
+He shook his head.  "You can't hide it."
+
+"Oh, oh!" May Bartram sounded over what she couldn't hide.  It was
+almost a smothered groan.
+
+"You admitted it months ago, when I spoke of it to you as of
+something you were afraid I should find out.  Your answer was that
+I couldn't, that I wouldn't, and I don't pretend I have.  But you
+had something therefore in mind, and I see now how it must have
+been, how it still is, the possibility that, of all possibilities,
+has settled itself for you as the worst.  This," he went on, "is
+why I appeal to you.  I'm only afraid of ignorance to-day--I'm not
+afraid of knowledge."  And then as for a while she said nothing:
+"What makes me sure is that I see in your face and feel here, in
+this air and amid these appearances, that you're out of it.  You've
+done.  You've had your experience.  You leave me to my fate."
+
+Well, she listened, motionless and white in her chair, as on a
+decision to be made, so that her manner was fairly an avowal,
+though still, with a small fine inner stiffness, an imperfect
+surrender.  "It WOULD be the worst," she finally let herself say.
+"I mean the thing I've never said."
+
+It hushed him a moment.  "More monstrous than all the monstrosities
+we've named?"
+
+"More monstrous.  Isn't that what you sufficiently express," she
+asked, "in calling it the worst?"
+
+Marcher thought.  "Assuredly--if you mean, as I do, something that
+includes all the loss and all the shame that are thinkable."
+
+"It would if it SHOULD happen," said May Bartram.  "What we're
+speaking of, remember, is only my idea."
+
+"It's your belief," Marcher returned.  "That's enough for me.  I
+feel your beliefs are right.  Therefore if, having this one, you
+give me no more light on it, you abandon me."
+
+"No, no!" she repeated.  "I'm with you--don't you see?--still."
+And as to make it more vivid to him she rose from her chair--a
+movement she seldom risked in these days--and showed herself, all
+draped and all soft, in her fairness and slimness.  "I haven't
+forsaken you."
+
+It was really, in its effort against weakness, a generous
+assurance, and had the success of the impulse not, happily, been
+great, it would have touched him to pain more than to pleasure.
+But the cold charm in her eyes had spread, as she hovered before
+him, to all the rest of her person, so that it was for the minute
+almost a recovery of youth.  He couldn't pity her for that; he
+could only take her as she showed--as capable even yet of helping
+him.  It was as if, at the same time, her light might at any
+instant go out; wherefore he must make the most of it.  There
+passed before him with intensity the three or four things he wanted
+most to know; but the question that came of itself to his lips
+really covered the others.  "Then tell me if I shall consciously
+suffer."
+
+She promptly shook her head.  "Never!"
+
+It confirmed the authority he imputed to her, and it produced on
+him an extraordinary effect.  "Well, what's better than that?  Do
+you call that the worst?"
+
+"You think nothing is better?" she asked.
+
+She seemed to mean something so special that he again sharply
+wondered, though still with the dawn of a prospect of relief.  "Why
+not, if one doesn't KNOW?"  After which, as their eyes, over his
+question, met in a silence, the dawn deepened, and something to his
+purpose came prodigiously out of her very face.  His own, as he
+took it in, suddenly flushed to the forehead, and he gasped with
+the force of a perception to which, on the instant, everything
+fitted.  The sound of his gasp filled the air; then he became
+articulate.  "I see--if I don't suffer!"
+
+In her own look, however, was doubt.  "You see what?"
+
+"Why what you mean--what you've always meant."
+
+She again shook her head.  "What I mean isn't what I've always
+meant.  It's different."
+
+"It's something new?"
+
+She hung back from it a little.  "Something new.  It's not what you
+think.  I see what you think."
+
+His divination drew breath then; only her correction might be
+wrong.  "It isn't that I AM a blockhead?" he asked between
+faintness and grimness.  "It isn't that it's all a mistake?"
+
+"A mistake?" she pityingly echoed.  THAT possibility, for her, he
+saw, would be monstrous; and if she guaranteed him the immunity
+from pain it would accordingly not be what she had in mind.  "Oh
+no," she declared; "it's nothing of that sort.  You've been right."
+
+Yet he couldn't help asking himself if she weren't, thus pressed,
+speaking but to save him.  It seemed to him he should be most in a
+hole if his history should prove all a platitude.  "Are you telling
+me the truth, so that I shan't have been a bigger idiot than I can
+bear to know?  I HAVEN'T lived with a vain imagination, in the most
+besotted illusion?  I haven't waited but to see the door shut in my
+face?"
+
+She shook her head again.  "However the case stands THAT isn't the
+truth.  Whatever the reality, it IS a reality.  The door isn't
+shut.  The door's open," said May Bartram.
+
+"Then something's to come?"
+
+She waited once again, always with her cold sweet eyes on him.
+"It's never too late."  She had, with her gliding step, diminished
+the distance between them, and she stood nearer to him, close to
+him, a minute, as if still charged with the unspoken.  Her movement
+might have been for some finer emphasis of what she was at once
+hesitating and deciding to say.  He had been standing by the
+chimney-piece, fireless and sparely adorned, a small perfect old
+French clock and two morsels of rosy Dresden constituting all its
+furniture; and her hand grasped the shelf while she kept him
+waiting, grasped it a little as for support and encouragement.  She
+only kept him waiting, however; that is he only waited.  It had
+become suddenly, from her movement and attitude, beautiful and
+vivid to him that she had something more to give him; her wasted
+face delicately shone with it--it glittered almost as with the
+white lustre of silver in her expression.  She was right,
+incontestably, for what he saw in her face was the truth, and
+strangely, without consequence, while their talk of it as dreadful
+was still in the air, she appeared to present it as inordinately
+soft.  This, prompting bewilderment, made him but gape the more
+gratefully for her revelation, so that they continued for some
+minutes silent, her face shining at him, her contact imponderably
+pressing, and his stare all kind but all expectant.  The end, none
+the less, was that what he had expected failed to come to him.
+Something else took place instead, which seemed to consist at first
+in the mere closing of her eyes.  She gave way at the same instant
+to a slow fine shudder, and though he remained staring--though he
+stared in fact but the harder--turned off and regained her chair.
+It was the end of what she had been intending, but it left him
+thinking only of that.
+
+"Well, you don't say--?"
+
+She had touched in her passage a bell near the chimney and had sunk
+back strangely pale.  "I'm afraid I'm too ill."
+
+"Too ill to tell me?" it sprang up sharp to him, and almost to his
+lips, the fear she might die without giving him light.  He checked
+himself in time from so expressing his question, but she answered
+as if she had heard the words.
+
+"Don't you know--now?"
+
+"'Now' -?"   She had spoken as if some difference had been made
+within the moment.  But her maid, quickly obedient to her bell, was
+already with them.  "I know nothing."  And he was afterwards to say
+to himself that he must have spoken with odious impatience, such an
+impatience as to show that, supremely disconcerted, he washed his
+hands of the whole question.
+
+"Oh!" said May Bartram.
+
+"Are you in pain?" he asked as the woman went to her.
+
+"No," said May Bartram.
+
+Her maid, who had put an arm round her as if to take her to her
+room, fixed on him eyes that appealingly contradicted her; in spite
+of which, however, he showed once more his mystification.
+
+"What then has happened?"
+
+She was once more, with her companion's help, on her feet, and,
+feeling withdrawal imposed on him, he had blankly found his hat and
+gloves and had reached the door.  Yet he waited for her answer.
+"What WAS to," she said.
+
+
+
+CHAPTER V
+
+
+
+He came back the next day, but she was then unable to see him, and
+as it was literally the first time this had occurred in the long
+stretch of their acquaintance he turned away, defeated and sore,
+almost angry--or feeling at least that such a break in their custom
+was really the beginning of the end--and wandered alone with his
+thoughts, especially with the one he was least able to keep down.
+She was dying and he would lose her; she was dying and his life
+would end.  He stopped in the Park, into which he had passed, and
+stared before him at his recurrent doubt.  Away from her the doubt
+pressed again; in her presence he had believed her, but as he felt
+his forlornness he threw himself into the explanation that, nearest
+at hand, had most of a miserable warmth for him and least of a cold
+torment.  She had deceived him to save him--to put him off with
+something in which he should be able to rest.  What could the thing
+that was to happen to him be, after all, but just this thing that
+had began to happen?  Her dying, her death, his consequent
+solitude--that was what he had figured as the Beast in the Jungle,
+that was what had been in the lap of the gods.  He had had her word
+for it as he left her--what else on earth could she have meant?  It
+wasn't a thing of a monstrous order; not a fate rare and
+distinguished; not a stroke of fortune that overwhelmed and
+immortalised; it had only the stamp of the common doom.  But poor
+Marcher at this hour judged the common doom sufficient.  It would
+serve his turn, and even as the consummation of infinite waiting he
+would bend his pride to accept it.  He sat down on a bench in the
+twilight.  He hadn't been a fool.  Something had BEEN, as she had
+said, to come.  Before he rose indeed it had quite struck him that
+the final fact really matched with the long avenue through which he
+had had to reach it.  As sharing his suspense and as giving herself
+all, giving her life, to bring it to an end, she had come with him
+every step of the way.  He had lived by her aid, and to leave her
+behind would be cruelly, damnably to miss her.  What could be more
+overwhelming than that?
+
+Well, he was to know within the week, for though she kept him a
+while at bay, left him restless and wretched during a series of
+days on each of which he asked about her only again to have to turn
+away, she ended his trial by receiving him where she had always
+received him.  Yet she had been brought out at some hazard into the
+presence of so many of the things that were, consciously, vainly,
+half their past, and there was scant service left in the gentleness
+of her mere desire, all too visible, to check his obsession and
+wind up his long trouble.  That was clearly what she wanted; the
+one thing more for her own peace while she could still put out her
+hand.  He was so affected by her state that, once seated by her
+chair, he was moved to let everything go; it was she herself
+therefore who brought him back, took up again, before she dismissed
+him, her last word of the other time.  She showed how she wished to
+leave their business in order.  "I'm not sure you understood.
+You've nothing to wait for more.  It HAS come."
+
+Oh how he looked at her!  "Really?"
+
+"Really."
+
+"The thing that, as you said, WAS to?"
+
+"The thing that we began in our youth to watch for."
+
+Face to face with her once more he believed her; it was a claim to
+which he had so abjectly little to oppose.  "You mean that it has
+come as a positive definite occurrence, with a name and a date?"
+
+"Positive.  Definite.  I don't know about the 'name,' but, oh with
+a date!"
+
+He found himself again too helplessly at sea.  "But come in the
+night--come and passed me by?"
+
+May Bartram had her strange faint smile.  "Oh no, it hasn't passed
+you by!"
+
+"But if I haven't been aware of it and it hasn't touched me--?"
+
+"Ah your not being aware of it"--and she seemed to hesitate an
+instant to deal with this--"your not being aware of it is the
+strangeness in the strangeness.  It's the wonder OF the wonder."
+She spoke as with the softness almost of a sick child, yet now at
+last, at the end of all, with the perfect straightness of a sibyl.
+She visibly knew that she knew, and the effect on him was of
+something co-ordinate, in its high character, with the law that had
+ruled him.  It was the true voice of the law; so on her lips would
+the law itself have sounded.  "It HAS touched you," she went on.
+"It has done its office.  It has made you all its own."
+
+"So utterly without my knowing it?"
+
+"So utterly without your knowing it."  His hand, as he leaned to
+her, was on the arm of her chair, and, dimly smiling always now,
+she placed her own on it.  "It's enough if I know it."
+
+"Oh!" he confusedly breathed, as she herself of late so often had
+done.
+
+"What I long ago said is true.  You'll never know now, and I think
+you ought to be content.  You've HAD it," said May Bartram.
+
+"But had what?"
+
+"Why what was to have marked you out.  The proof of your law.  It
+has acted.  I'm too glad," she then bravely added, "to have been
+able to see what it's NOT."
+
+He continued to attach his eyes to her, and with the sense that it
+was all beyond him, and that SHE was too, he would still have
+sharply challenged her hadn't he so felt it an abuse of her
+weakness to do more than take devoutly what she gave him, take it
+hushed as to a revelation.  If he did speak, it was out of the
+foreknowledge of his loneliness to come.  "If you're glad of what
+it's 'not' it might then have been worse?"
+
+She turned her eyes away, she looked straight before her; with
+which after a moment:  "Well, you know our fears."
+
+He wondered.  "It's something then we never feared?"
+
+On this slowly she turned to him.  "Did we ever dream, with all our
+dreams, that we should sit and talk of it thus?"
+
+He tried for a little to make out that they had; but it was as if
+their dreams, numberless enough, were in solution in some thick
+cold mist through which thought lost itself.  "It might have been
+that we couldn't talk."
+
+"Well"--she did her best for him--"not from this side.  This, you
+see," she said, "is the OTHER side."
+
+"I think," poor Marcher returned, "that all sides are the same to
+me."  Then, however, as she gently shook her head in correction:
+"We mightn't, as it were, have got across--?"
+
+"To where we are--no.  We're HERE"--she made her weak emphasis.
+
+"And much good does it do us!" was her friend's frank comment.
+
+"It does us the good it can.  It does us the good that IT isn't
+here.  It's past.  It's behind," said May Bartram.  "Before--" but
+her voice dropped.
+
+He had got up, not to tire her, but it was hard to combat his
+yearning.  She after all told him nothing but that his light had
+failed--which he knew well enough without her.  "Before--?" he
+blankly echoed.
+
+"Before you see, it was always to COME.  That kept it present."
+
+"Oh I don't care what comes now!  Besides," Marcher added, "it
+seems to me I liked it better present, as you say, than I can like
+it absent with YOUR absence."
+
+"Oh mine!"--and her pale hands made light of it.
+
+"With the absence of everything."  He had a dreadful sense of
+standing there before her for--so far as anything but this proved,
+this bottomless drop was concerned--the last time of their life.
+It rested on him with a weight he felt he could scarce bear, and
+this weight it apparently was that still pressed out what remained
+in him of speakable protest.  "I believe you; but I can't begin to
+pretend I understand.  NOTHING, for me, is past; nothing WILL pass
+till I pass myself, which I pray my stars may be as soon as
+possible.  Say, however," he added, "that I've eaten my cake, as
+you contend, to the last crumb--how can the thing I've never felt
+at all be the thing I was marked out to feel?"
+
+She met him perhaps less directly, but she met him unperturbed.
+"You take your 'feelings' for granted.  You were to suffer your
+fate.  That was not necessarily to know it."
+
+"How in the world--when what is such knowledge but suffering?"
+
+She looked up at him a while in silence.  "No--you don't
+understand."
+
+"I suffer," said John Marcher.
+
+"Don't, don't!"
+
+"How can I help at least THAT?"
+
+"DON'T!" May Bartram repeated.
+
+She spoke it in a tone so special, in spite of her weakness, that
+he stared an instant--stared as if some light, hitherto hidden, had
+shimmered across his vision.  Darkness again closed over it, but
+the gleam had already become for him an idea.  "Because I haven't
+the right--?"
+
+"Don't KNOW--when you needn't," she mercifully urged.  "You
+needn't--for we shouldn't."
+
+"Shouldn't?"  If he could but know what she meant!
+
+"No--it's too much."
+
+"Too much?" he still asked but with a mystification that was the
+next moment of a sudden to give way.  Her words, if they meant
+something, affected him in this light--the light also of her wasted
+face--as meaning ALL, and the sense of what knowledge had been for
+herself came over him with a rush which broke through into a
+question.  "Is it of that then you're dying?"
+
+She but watched him, gravely at first, as to see, with this, where
+he was, and she might have seen something or feared something that
+moved her sympathy.  "I would live for you still--if I could."  Her
+eyes closed for a little, as if, withdrawn into herself, she were
+for a last time trying.  "But I can't!" she said as she raised them
+again to take leave of him.
+
+She couldn't indeed, as but too promptly and sharply appeared, and
+he had no vision of her after this that was anything but darkness
+and doom.  They had parted for ever in that strange talk; access to
+her chamber of pain, rigidly guarded, was almost wholly forbidden
+him; he was feeling now moreover, in the face of doctors, nurses,
+the two or three relatives attracted doubtless by the presumption
+of what she had to "leave," how few were the rights, as they were
+called in such cases, that he had to put forward, and how odd it
+might even seem that their intimacy shouldn't have given him more
+of them.  The stupidest fourth cousin had more, even though she had
+been nothing in such a person's life.  She had been a feature of
+features in HIS, for what else was it to have been so
+indispensable?  Strange beyond saying were the ways of existence,
+baffling for him the anomaly of his lack, as he felt it to be, of
+producible claim.  A woman might have been, as it were, everything
+to him, and it might yet present him, in no connexion that any one
+seemed held to recognise.  If this was the case in these closing
+weeks it was the case more sharply on the occasion of the last
+offices rendered, in the great grey London cemetery, to what had
+been mortal, to what had been precious, in his friend.  The
+concourse at her grave was not numerous, but he saw himself treated
+as scarce more nearly concerned with it than if there had been a
+thousand others.  He was in short from this moment face to face
+with the fact that he was to profit extraordinarily little by the
+interest May Bartram had taken in him.  He couldn't quite have said
+what he expected, but he hadn't surely expected this approach to a
+double privation.  Not only had her interest failed him, but he
+seemed to feel himself unattended--and for a reason he couldn't
+seize--by the distinction, the dignity, the propriety, if nothing
+else, of the man markedly bereaved.  It was as if, in the view of
+society he had not BEEN markedly bereaved, as if there still failed
+some sign or proof of it, and as if none the less his character
+could never be affirmed nor the deficiency ever made up.  There
+were moments as the weeks went by when he would have liked, by some
+almost aggressive act, to take his stand on the intimacy of his
+loss, in order that it MIGHT be questioned and his retort, to the
+relief of his spirit, so recorded; but the moments of an irritation
+more helpless followed fast on these, the moments during which,
+turning things over with a good conscience but with a bare horizon,
+he found himself wondering if he oughtn't to have begun, so to
+speak, further back.
+
+He found himself wondering indeed at many things, and this last
+speculation had others to keep it company.  What could he have
+done, after all, in her lifetime, without giving them both, as it
+were, away?  He couldn't have made known she was watching him, for
+that would have published the superstition of the Beast.  This was
+what closed his mouth now--now that the Jungle had been thrashed to
+vacancy and that the Beast had stolen away.  It sounded too foolish
+and too flat; the difference for him in this particular, the
+extinction in his life of the element of suspense, was such as in
+fact to surprise him.  He could scarce have said what the effect
+resembled; the abrupt cessation, the positive prohibition, of music
+perhaps, more than anything else, in some place all adjusted and
+all accustomed to sonority and to attention.  If he could at any
+rate have conceived lifting the veil from his image at some moment
+of the past (what had he done, after all, if not lift it to HER?)
+so to do this to-day, to talk to people at large of the Jungle
+cleared and confide to them that he now felt it as safe, would have
+been not only to see them listen as to a goodwife's tale, but
+really to hear himself tell one.  What it presently came to in
+truth was that poor Marcher waded through his beaten grass, where
+no life stirred, where no breath sounded, where no evil eye seemed
+to gleam from a possible lair, very much as if vaguely looking for
+the Beast, and still more as if acutely missing it.  He walked
+about in an existence that had grown strangely more spacious, and,
+stopping fitfully in places where the undergrowth of life struck
+him as closer, asked himself yearningly, wondered secretly and
+sorely, if it would have lurked here or there.  It would have at
+all events sprung; what was at least complete was his belief in the
+truth itself of the assurance given him.  The change from his old
+sense to his new was absolute and final:  what was to happen had so
+absolutely and finally happened that he was as little able to know
+a fear for his future as to know a hope; so absent in short was any
+question of anything still to come.  He was to live entirely with
+the other question, that of his unidentified past, that of his
+having to see his fortune impenetrably muffled and masked.
+
+The torment of this vision became then his occupation; he couldn't
+perhaps have consented to live but for the possibility of guessing.
+She had told him, his friend, not to guess; she had forbidden him,
+so far as he might, to know, and she had even in a sort denied the
+power in him to learn:  which were so many things, precisely, to
+deprive him of rest.  It wasn't that he wanted, he argued for
+fairness, that anything past and done should repeat itself; it was
+only that he shouldn't, as an anticlimax, have been taken sleeping
+so sound as not to be able to win back by an effort of thought the
+lost stuff of consciousness.  He declared to himself at moments
+that he would either win it back or have done with consciousness
+for ever; he made this idea his one motive in fine, made it so much
+his passion that none other, to compare with it, seemed ever to
+have touched him.  The lost stuff of consciousness became thus for
+him as a strayed or stolen child to an unappeasable father; he
+hunted it up and down very much as if he were knocking at doors and
+enquiring of the police.  This was the spirit in which, inevitably,
+he set himself to travel; he started on a journey that was to be as
+long as he could make it; it danced before him that, as the other
+side of the globe couldn't possibly have less to say to him, it
+might, by a possibility of suggestion, have more.  Before he
+quitted London, however, he made a pilgrimage to May Bartram's
+grave, took his way to it through the endless avenues of the grim
+suburban necropolis, sought it out in the wilderness of tombs, and,
+though he had come but for the renewal of the act of farewell,
+found himself, when he had at last stood by it, beguiled into long
+intensities.  He stood for an hour, powerless to turn away and yet
+powerless to penetrate the darkness of death; fixing with his eyes
+her inscribed name and date, beating his forehead against the fact
+of the secret they kept, drawing his breath, while he waited, as if
+some sense would in pity of him rise from the stones.  He kneeled
+on the stones, however, in vain; they kept what they concealed; and
+if the face of the tomb did become a face for him it was because
+her two names became a pair of eyes that didn't know him.  He gave
+them a last long look, but no palest light broke.
+
+
+
+CHAPTER VI
+
+
+
+He stayed away, after this, for a year; he visited the depths of
+Asia, spending himself on scenes of romantic interest, of
+superlative sanctity; but what was present to him everywhere was
+that for a man who had known what HE had known the world was vulgar
+and vain.  The state of mind in which he had lived for so many
+years shone out to him, in reflexion, as a light that coloured and
+refined, a light beside which the glow of the East was garish cheap
+and thin.  The terrible truth was that he had lost--with everything
+else--a distinction as well the things he saw couldn't help being
+common when he had become common to look at them.  He was simply
+now one of them himself--he was in the dust, without a peg for the
+sense of difference; and there were hours when, before the temples
+of gods and the sepulchres of kings, his spirit turned for
+nobleness of association to the barely discriminated slab in the
+London suburb.  That had become for him, and more intensely with
+time and distance, his one witness of a past glory.  It was all
+that was left to him for proof or pride, yet the past glories of
+Pharaohs were nothing to him as he thought of it.  Small wonder
+then that he came back to it on the morrow of his return.  He was
+drawn there this time as irresistibly as the other, yet with a
+confidence, almost, that was doubtless the effect of the many
+months that had elapsed.  He had lived, in spite of himself, into
+his change of feeling, and in wandering over the earth had
+wandered, as might be said, from the circumference to the centre of
+his desert.  He had settled to his safety and accepted perforce his
+extinction; figuring to himself, with some colour, in the likeness
+of certain little old men he remembered to have seen, of whom, all
+meagre and wizened as they might look, it was related that they had
+in their time fought twenty duels or been loved by ten princesses.
+They indeed had been wondrous for others while he was but wondrous
+for himself; which, however, was exactly the cause of his haste to
+renew the wonder by getting back, as he might put it, into his own
+presence.  That had quickened his steps and checked his delay.  If
+his visit was prompt it was because he had been separated so long
+from the part of himself that alone he now valued.
+
+It's accordingly not false to say that he reached his goal with a
+certain elation and stood there again with a certain assurance.
+The creature beneath the sod knew of his rare experience, so that,
+strangely now, the place had lost for him its mere blankness of
+expression.  It met him in mildness--not, as before, in mockery; it
+wore for him the air of conscious greeting that we find, after
+absence, in things that have closely belonged to us and which seem
+to confess of themselves to the connexion.  The plot of ground, the
+graven tablet, the tended flowers affected him so as belonging to
+him that he resembled for the hour a contented landlord reviewing a
+piece of property.  Whatever had happened--well, had happened.  He
+had not come back this time with the vanity of that question, his
+former worrying "What, WHAT?" now practically so spent.  Yet he
+would none the less never again so cut himself off from the spot;
+he would come back to it every month, for if he did nothing else by
+its aid he at least held up his head.  It thus grew for him, in the
+oddest way, a positive resource; he carried out his idea of
+periodical returns, which took their place at last among the most
+inveterate of his habits.  What it all amounted to, oddly enough,
+was that in his finally so simplified world this garden of death
+gave him the few square feet of earth on which he could still most
+live.  It was as if, being nothing anywhere else for any one,
+nothing even for himself, he were just everything here, and if not
+for a crowd of witnesses or indeed for any witness but John
+Marcher, then by clear right of the register that he could scan
+like an open page.  The open page was the tomb of his friend, and
+there were the facts of the past, there the truth of his life,
+there the backward reaches in which he could lose himself.  He did
+this from time to time with such effect that he seemed to wander
+through the old years with his hand in the arm of a companion who
+was, in the most extraordinary manner, his other, his younger self;
+and to wander, which was more extraordinary yet, round and round a
+third presence--not wandering she, but stationary, still, whose
+eyes, turning with his revolution, never ceased to follow him, and
+whose seat was his point, so to speak, of orientation.  Thus in
+short he settled to live--feeding all on the sense that he once HAD
+lived, and dependent on it not alone for a support but for an
+identity.
+
+It sufficed him in its way for months and the year elapsed; it
+would doubtless even have carried him further but for an accident,
+superficially slight, which moved him, quite in another direction,
+with a force beyond any of his impressions of Egypt or of India.
+It was a thing of the merest chance--the turn, as he afterwards
+felt, of a hair, though he was indeed to live to believe that if
+light hadn't come to him in this particular fashion it would still
+have come in another.  He was to live to believe this, I say,
+though he was not to live, I may not less definitely mention, to do
+much else.  We allow him at any rate the benefit of the conviction,
+struggling up for him at the end, that, whatever might have
+happened or not happened, he would have come round of himself to
+the light.  The incident of an autumn day had put the match to the
+train laid from of old by his misery.  With the light before him he
+knew that even of late his ache had only been smothered.  It was
+strangely drugged, but it throbbed; at the touch it began to bleed.
+And the touch, in the event, was the face of a fellow-mortal.  This
+face, one grey afternoon when the leaves were thick in the alleys,
+looked into Marcher's own, at the cemetery, with an expression like
+the cut of a blade.  He felt it, that is, so deep down that he
+winced at the steady thrust.  The person who so mutely assaulted
+him was a figure he had noticed, on reaching his own goal, absorbed
+by a grave a short distance away, a grave apparently fresh, so that
+the emotion of the visitor would probably match it for frankness.
+This fact alone forbade further attention, though during the time
+he stayed he remained vaguely conscious of his neighbour, a middle-
+aged man apparently, in mourning, whose bowed back, among the
+clustered monuments and mortuary yews, was constantly presented.
+Marcher's theory that these were elements in contact with which he
+himself revived, had suffered, on this occasion, it may be granted,
+a marked, an excessive check.  The autumn day was dire for him as
+none had recently been, and he rested with a heaviness he had not
+yet known on the low stone table that bore May Bartram's name.  He
+rested without power to move, as if some spring in him, some spell
+vouchsafed, had suddenly been broken for ever.  If he could have
+done that moment as he wanted he would simply have stretched
+himself on the slab that was ready to take him, treating it as a
+place prepared to receive his last sleep.  What in all the wide
+world had he now to keep awake for?  He stared before him with the
+question, and it was then that, as one of the cemetery walks passed
+near him, he caught the shock of the face.
+
+His neighbour at the other grave had withdrawn, as he himself, with
+force enough in him, would have done by now, and was advancing
+along the path on his way to one of the gates.  This brought him
+close, and his pace, was slow, so that--and all the more as there
+was a kind of hunger in his look--the two men were for a minute
+directly confronted.  Marcher knew him at once for one of the
+deeply stricken--a perception so sharp that nothing else in the
+picture comparatively lived, neither his dress, his age, nor his
+presumable character and class; nothing lived but the deep ravage
+of the features that he showed.  He SHOWED them--that was the
+point; he was moved, as he passed, by some impulse that was either
+a signal for sympathy or, more possibly, a challenge to an opposed
+sorrow.  He might already have been aware of our friend, might at
+some previous hour have noticed in him the smooth habit of the
+scene, with which the state of his own senses so scantly consorted,
+and might thereby have been stirred as by an overt discord.  What
+Marcher was at all events conscious of was in the first place that
+the image of scarred passion presented to him was conscious too--of
+something that profaned the air; and in the second that, roused,
+startled, shocked, he was yet the next moment looking after it, as
+it went, with envy.  The most extraordinary thing that had happened
+to him--though he had given that name to other matters as well--
+took place, after his immediate vague stare, as a consequence of
+this impression.  The stranger passed, but the raw glare of his
+grief remained, making our friend wonder in pity what wrong, what
+wound it expressed, what injury not to be healed.  What had the man
+HAD, to make him by the loss of it so bleed and yet live?
+
+Something--and this reached him with a pang--that HE, John Marcher,
+hadn't; the proof of which was precisely John Marcher's arid end.
+No passion had ever touched him, for this was what passion meant;
+he had survived and maundered and pined, but where had been HIS
+deep ravage?  The extraordinary thing we speak of was the sudden
+rush of the result of this question.  The sight that had just met
+his eyes named to him, as in letters of quick flame, something he
+had utterly, insanely missed, and what he had missed made these
+things a train of fire, made them mark themselves in an anguish of
+inward throbs.  He had seen OUTSIDE of his life, not learned it
+within, the way a woman was mourned when she had been loved for
+herself:  such was the force of his conviction of the meaning of
+the stranger's face, which still flared for him as a smoky torch.
+It hadn't come to him, the knowledge, on the wings of experience;
+it had brushed him, jostled him, upset him, with the disrespect of
+chance, the insolence of accident.  Now that the illumination had
+begun, however, it blazed to the zenith, and what he presently
+stood there gazing at was the sounded void of his life.  He gazed,
+he drew breath, in pain; he turned in his dismay, and, turning, he
+had before him in sharper incision than ever the open page of his
+story.  The name on the table smote him as the passage of his
+neighbour had done, and what it said to him, full in the face, was
+that she was what he had missed.  This was the awful thought, the
+answer to all the past, the vision at the dread clearness of which
+he turned as cold as the stone beneath him.  Everything fell
+together, confessed, explained, overwhelmed; leaving him most of
+all stupefied at the blindness he had cherished.  The fate he had
+been marked for he had met with a vengeance--he had emptied the cup
+to the lees; he had been the man of his time, THE man, to whom
+nothing on earth was to have happened.  That was the rare stroke--
+that was his visitation.  So he saw it, as we say, in pale horror,
+while the pieces fitted and fitted.  So SHE had seen it while he
+didn't, and so she served at this hour to drive the truth home.  It
+was the truth, vivid and monstrous, that all the while he had
+waited the wait was itself his portion.  This the companion of his
+vigil had at a given moment made out, and she had then offered him
+the chance to baffle his doom.  One's doom, however, was never
+baffled, and on the day she told him his own had come down she had
+seen him but stupidly stare at the escape she offered him.
+
+The escape would have been to love her; then, THEN he would have
+lived.  SHE had lived--who could say now with what passion?--since
+she had loved him for himself; whereas he had never thought of her
+(ah how it hugely glared at him!) but in the chill of his egotism
+and the light of her use.  Her spoken words came back to him--the
+chain stretched and stretched.  The Beast had lurked indeed, and
+the Beast, at its hour, had sprung; it had sprung in that twilight
+of the cold April when, pale, ill, wasted, but all beautiful, and
+perhaps even then recoverable, she had risen from her chair to
+stand before him and let him imaginably guess.  It had sprung as he
+didn't guess; it had sprung as she hopelessly turned from him, and
+the mark, by the time he left her, had fallen where it WAS to fall.
+He had justified his fear and achieved his fate; he had failed,
+with the last exactitude, of all he was to fail of; and a moan now
+rose to his lips as he remembered she had prayed he mightn't know.
+This horror of waking--THIS was knowledge, knowledge under the
+breath of which the very tears in his eyes seemed to freeze.
+Through them, none the less, he tried to fix it and hold it; he
+kept it there before him so that he might feel the pain.  That at
+least, belated and bitter, had something of the taste of life.  But
+the bitterness suddenly sickened him, and it was as if, horribly,
+he saw, in the truth, in the cruelty of his image, what had been
+appointed and done.  He saw the Jungle of his life and saw the
+lurking Beast; then, while he looked, perceived it, as by a stir of
+the air, rise, huge and hideous, for the leap that was to settle
+him.  His eyes darkened--it was close; and, instinctively turning,
+in his hallucination, to avoid it, he flung himself, face down,
+on the tomb.
+
+
+
+
+
+End of Project Gutenberg's Etext of Beast in the Jungle, by Henry James
+

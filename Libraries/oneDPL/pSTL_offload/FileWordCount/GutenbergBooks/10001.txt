@@ -1,0 +1,958 @@
+The Project Gutenberg EBook of Apocolocyntosis, by Lucius Seneca
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.net
+
+
+Title: Apocolocyntosis
+
+Author: Lucius Seneca
+
+Release Date: November 10, 2003 [EBook #10001]
+[Date last updated: April 9, 2005]
+
+Language: English
+
+Character set encoding: ASCII
+
+*** START OF THIS PROJECT GUTENBERG EBOOK APOCOLOCYNTOSIS ***
+
+
+
+
+Produced by Ted Garvin, Ben Courtney and PG Distributed Proofreaders
+
+
+
+
+                       SENECA
+
+                  APOCOLOCYNTOSIS
+
+          WITH AN ENGLISH TRANSLATION BY
+
+            W.H.D. ROUSE, M.A. LITT. D.
+
+                       MCMXX
+
+
+
+
+
+INTRODUCTION
+
+This piece is ascribed to Seneca by ancient tradition; it is impossible
+to prove that it is his, and impossible to prove that it is not. The
+matter will probably continue to be decided by every one according to his
+view of Seneca's character and abilities: in the matters of style and of
+sentiment much may be said on both sides. Dion Cassius (lx, 35) says that
+Seneca composed an [Greek: apokolokuntosis] or Pumpkinification of
+Claudius after his death, the title being a parody of the usual
+[Greek: apotheosis]; but this title is not given in the MSS. of the Ludus
+de Morte Claudii, nor is there anything in the piece which suits the title
+very well.
+
+As a literary form, the piece belongs to the class called
+_Satura Menippea_, a satiric medley in prose and verse.
+
+This text is that of Buecheler, with a few trifling changes, which are
+indicated in the notes. We have been courteously allowed by Messrs
+Weidmann to use this text. I have to acknowledge the help of Mr Ball's
+notes, from which I have taken a few references; but my translation was
+made many years ago.
+
+W.H.D. ROUSE.
+
+
+
+
+
+BIBLIOGRAPHY
+
+_Editio Princeps:_ Lucii Annaei Senecae in morte
+  Claudii Caesaris Ludus nuper repertus: Rome,
+  1513.
+
+_Latest critical text:_ Franz Buecheler, Weidmann, 1904
+  (a reprint with a few changes of the text from
+  a larger work, Divi Claudii [Greek: Apokolokuntosis] in
+  the Symbola Philologorum Bonnensium, fasc. i,
+  1864).
+
+_Translations and helps:_ The Satire of Seneca on the
+  Apotheosis of Claudius, by A.P. Ball (with introduction,
+  notes, and translations): New York:
+  Columbia University Press; London, Macmillan,
+  1902.
+
+
+
+
+SENECA
+
+APOCOLOCYNTOSIS, OR LUDUS DE MORTE CLAUDII: THE PUMPKINIFICATION OF
+CLAUDIUS.
+
+I wish to place on record the proceedings in heaven                       1
+October 13 last, of the new year which begins this auspicious age. It
+shall be done without malice or favour. This is the truth. Ask if you like
+how I know it? To begin with, I am not bound to please you with my answer.
+Who will compel me? I know the same day made me free, which was the last
+day for him who made the proverb true--One must be born either a Pharaoh
+or a fool. If I choose to answer, I will say whatever trips off my tongue.
+Who has ever made the historian produce witness to swear for him? But if
+an authority must be produced, ask of the man who saw Drusilla translated
+to heaven: the same man will aver he saw Claudius on the road, dot and
+carry one. [Sidenote: Virg. Aen. ii, 724] Will he nill he, all that happens
+in heaven he needs must see. He is the custodian of the Appian Way; by that
+route, you know, both Tiberius and Augustus went up to the gods. Question
+him, he will tell you the tale when you are alone; before company he is
+dumb. You see he swore in the Senate that he beheld Drusilla mounting
+heavenwards, and all he got for his good news was that everybody gave him
+the lie: since when he solemnly swears he will never bear witness again to
+what he has seen, not even if he had seen a man murdered in open market.
+What he told me I report plain and clear, as I hope for his health and
+happiness.
+
+  Now had the sun with shorter course drawn in his risen light,           2
+  And by equivalent degrees grew the dark hours of night:
+  Victorious Cynthia now held sway over a wider space,
+  Grim winter drove rich autumn out, and now usurped his place;
+  And now the fiat had gone forth that Bacchus must grow old,
+  The few last clusters of the vine were gathered ere the cold:
+
+I shall make myself better understood, if I say the month was October, the
+day was the thirteenth. What hour it was I cannot certainly tell;
+philosophers will agree more often than clocks; but it was between midday
+and one after noon. "Clumsy creature!" you say. "The poets are not content
+to describe sunrise and sunset, and now they even disturb the midday
+siesta. Will you thus neglect so good an hour?"
+
+  Now the sun's chariot had gone by the middle of his way;
+  Half wearily he shook the reins, nearer to night than day,
+  And led the light along the slope that down before him lay.
+
+Claudius began to breathe his last, and could not                         3
+make an end of the matter. Then Mercury, who had always been much pleased
+with his wit, drew aside one of the three Fates, and said: "Cruel beldame,
+why do you let the poor wretch be tormented? After all this torture cannot
+he have a rest? Four and sixty years it is now since he began to pant for
+breath. What grudge is this you bear against him and the whole empire? Do
+let the astrologers tell the truth for once; since he became emperor, they
+have never let a year pass, never a month, without laying him out for his
+burial. Yet it is no wonder if they are wrong, and no one knows his hour.
+Nobody ever believed he was really quite born. [Footnote: A proverb for a
+nobody, as Petron, 58 _qui te natum non putat._] Do what has to be done:
+Kill him, and let a better man rule in empty court."
+[Sidenote: Virg. Georg iv. 90]
+
+Clotho replied: "Upon my word, I did wish to give him another hour or two,
+until he should make Roman citizens of the half dozen who are still
+outsiders. (He made up his mind, you know, to see the whole world in the
+toga, Greeks, Gauls, Spaniards, Britons, and all.) But since it is your
+pleasure to leave a few foreigners for seed, and since you command me, so
+be it." She opened her box and out came three spindles. One was for
+Augurinus, one for Baba, one for Claudius. [Footnote: "Augurinus" unknown.
+Baba: see Sep. Ep. 159, a fool.] "These three," she says, "I will cause to
+die within one year and at no great distance apart, and I will not dismiss
+him unattended. Think of all the thousands of men he was wont to see
+following after him, thousands going before, thousands all crowding about
+him, and it would never do to leave him alone on a sudden. These boon
+companions will satisfy him for the nonce."
+
+  This said, she twists the thread around his ugly spindle once,          4
+  Snaps off the last bit of the life of that Imperial dunce.
+  But Lachesis, her hair adorned, her tresses neatly bound,
+  Pierian laurel on her locks, her brows with garlands crowned,
+  Plucks me from out the snowy wool new threads as white as snow,
+  Which handled with a happy touch change colour as they go,
+  Not common wool, but golden wire; the Sisters wondering gaze,
+  As age by age the pretty thread runs down the golden days.
+  World without end they spin away, the happy fleeces pull;
+  What joy they take to fill their hands with that delightful wool!
+  Indeed, the task performs itself: no toil the spinners know:
+  Down drops the soft and silken thread as round the spindles go;
+  Fewer than these are Tithon's years, not Nestor's life so long.
+  Phoebus is present: glad he is to sing a merry song;
+  Now helps the work, now full of hope upon the harp doth play;
+  The Sisters listen to the song that charms their toil away.
+  They praise their brother's melodies, and still the spindles run,
+  Till more than man's allotted span the busy hands have spun.
+  Then Phoebus says, "O sister Fates! I pray take none away,
+  But suffer this one life to be longer than mortal day.
+  Like me in face and lovely grace, like me in voice and song,
+  He'll bid the laws at length speak out that have been dumb so long,
+  Will give unto the weary world years prosperous and bright.
+  Like as the daystar from on high scatters the stars of night,
+  As, when the stars return again, clear Hesper brings his light,
+  Or as the ruddy dawn drives out the dark, and brings the day,
+  As the bright sun looks on the world, and speeds along its way
+  His rising car from morning's gates: so Caesar doth arise,
+  So Nero shows his face to Rome before the people's eyes,
+  His bright and shining countenance illumines all the air,
+  While down upon his graceful neck fall rippling waves of hair."
+  Thus Apollo. But Lachesis, quite as ready to cast a
+  favourable eye on a handsome man, spins away by the
+  handful, and bestows years and years upon Nero out
+  of her own pocket. As for Claudius, they tell everybody
+                     to speed him on his way
+         With cries of joy and solemn litany.
+
+At once he bubbled up the ghost, and there was an end to that shadow of a
+life. He was listening to a troupe of comedians when he died, so you see I
+have reason to fear those gentry. The last words he was heard to speak in
+this world were these. When he had made a great noise with that end of him
+which talked easiest, he cried out, "Oh dear, oh dear! I think I have made
+a mess of myself." Whether he did or no, I cannot say, but certain it is
+he always did make a mess of everything.
+
+What happened next on earth it is mere waste of                           5
+time to tell, for you know it all well enough, and there is no fear of your
+ever forgetting the impression which that public rejoicing made on your
+memory. No one forgets his own happiness. What happened in heaven you shall
+hear: for proof please apply to my informant. Word comes to Jupiter that a
+stranger had arrived, a man well set up, pretty grey; he seemed to be
+threatening something, for he wagged his head ceaselessly; he dragged the
+right foot. They asked him what nation he was of; he answered something in
+a confused mumbling voice: his language they did not understand. He was no
+Greek and no Roman, nor of any known race. On this Jupiter bids Hercules go
+and find out what country he comes from; you see Hercules had travelled
+over the whole world, and might be expected to know all the nations in it.
+But Hercules, the first glimpse he got, was really much taken aback,
+although not all the monsters in the world could frighten him; when he saw
+this new kind of object, with its extraordinary gait, and the voice of no
+terrestrial beast, but such as you might hear in the leviathans of the
+deep, hoarse and inarticulate, he thought his thirteenth labour had come
+upon him. When he looked closer, the thing seemed to be a kind of man.
+Up he goes, then, and says what your Greek finds readiest to his tongue:
+
+  "Who art thou, and what thy people? Who thy
+  parents, where thy home?"
+  [Sidenote: Od. i, 17]
+
+Claudius was delighted to find literary men up there, and began to hope
+there might be some corner for his own historical works. So he caps him
+with another Homeric verse, explaining that he was Caesar:
+
+  "Breezes wafted me from Ilion unto the Ciconian land."
+  [Sidenote: Od. ix, 39]
+
+But the next verse was more true, and no less Homeric:
+
+  "Thither come, I sacked a city, slew the people every one."
+
+He would have taken in poor simple Hercules, but                          6
+that Our Lady of Malaria was there, who left her temple and came alone with
+him: all the other gods he had left at Rome. Quoth she, "The fellow's tale
+is nothing but lies. I have lived with him all these years, and I tell you,
+he was born at Lyons. You behold a fellow-burgess of Marcus. [Footnote:
+Reference unknown.] As I say, he was born at the sixteenth milestone from
+Vienne, a native Gaul. So of course he took Rome, as a good Gaul ought to
+do. I pledge you my word that in Lyons he was born, where Licinus
+[Footnote: A Gallic slave, appointed by Augustus Procurator of Gallia
+Lugudunensis, when he made himself notorious by his extortions. See Dion
+Cass. liv, 21.] was king so many years. But you that have trudged over more
+roads than any muleteer that plies for hire, you must have come across the
+people of Lyons, and you must know that it is a far cry from Xanthus to the
+Rhone." At this point Claudius flared up, and expressed his wrath with as
+big a growl as he could manage. What he said nobody understood; as a matter
+of fact, he was ordering my lady of Fever to be taken away, and making that
+sign with his trembling hand (which was always steady enough for that, if
+for nothing else) by which he used to decapitate men. He had ordered her
+head to be chopped off. For all the notice the others took of him, they
+might have been his own freedmen.
+
+Then Hercules said, "You just listen to me, and                           7
+stop playing the fool. You have come to the place where the mice nibble
+iron. [Footnote: A proverb, found also in Herondas iii, 76: apparently
+fairy-land, the land of Nowhere.] Out with the truth, and look sharp, or
+I'll knock your quips and quiddities out of you." Then to make himself all
+the more awful, he strikes an attitude and proceeds in his most tragic
+vein:
+
+  "Declare with speed what spot you claim by birth.
+  Or with this club fall stricken to the earth!
+  This club hath ofttimes slaughtered haughty kings!
+  Why mumble unintelligible things?
+  What land, what tribe produced that shaking head?
+  Declare it! On my journey when I sped
+  Far to the Kingdom of the triple King,
+  And from the Main Hesperian did bring
+  The goodly cattle to the Argive town,
+  There I beheld a mountain looking down
+  Upon two rivers: this the Sun espies
+  Right opposite each day he doth arise.
+  Hence, mighty Rhone, thy rapid torrents flow,
+  And Arar, much in doubt which way to go,
+  Ripples along the banks with shallow roll.
+  Say, is this land the nurse that bred thy soul?"
+
+These lines he delivered with much spirit and a bold front. All the same,
+he was not quite master of his wits, and had some fear of a blow from
+the fool. Claudius, seeing a mighty man before him, saw things looked
+serious and understood that here he had not quite the same pre-eminence
+as at Rome, where no one was his equal: the Gallic cock was worth most on
+his own dunghill. So this is what he was thought to say, as far as could
+be made out: "I did hope, Hercules, bravest of all the gods, that you
+would take my part with the rest, and if I should need a voucher, I meant
+to name you who know me so well. Do but call it to mind, how it was I used
+to sit in judgment before your temple whole days together during July and
+August. You know what miseries I endured there, in hearing the lawyers
+plead day and night. If you had fallen amongst these, you may think
+yourself very strong, but you would have found it worse than the sewers of
+Augeas: I drained out more filth than you did. But since I want..."
+
+(Some pages have fallen out, in which Hercules must have been persuaded.
+The gods are now discussing what Hercules tells them).
+
+"No wonder you have forced your way into the                              8
+Senate House: no bars or bolts can hold against you. Only do say what
+species of god you want the fellow to be made. An Epicurean god he cannot
+be: for they have no troubles and cause none. A Stoic, then? How can he be
+globular, as Varro says, without a head or any other projection? There is
+in him something of the Stoic god, as I can see now: he has neither heart
+nor head. Upon my word, if he had asked this boon from Saturn, he would not
+have got it, though he kept up Saturn's feast all the year round, a truly
+Saturnalian prince. A likely thing he will get it from Jove, whom he
+condemned for incest as far as in him lay: for he killed his son-in-law
+Silanus, because Silanus had a sister, a most charming girl, called Venus
+by all the world, and he preferred to call her Juno. Why, says he, I want
+to know why, his own sister? Read your books, stupid: you may go half-way
+at Athens, the whole way at Alexandria. Because the mice lick meal at Rome,
+you say. Is this creature to mend our crooked ways? What goes on in his own
+closet he knows not;[Footnote: Perhaps alluding to a mock marriage of
+Silius and Messalina.] and now he searches the regions of the sky, wants to
+be a god. Is it not enough that he has a temple in Britain, that savages
+worship him and pray to him as a god, so that they may find a fool
+[Footnote: Again [GREEK: morou] for [GREEK: theou] as in ch. 6.] to have
+mercy upon them?"
+
+At last it came into Jove's head, that while strangers                    9
+were in the House it was not lawful to speak or debate. "My lords and
+gentlemen," said he, "I gave you leave to ask questions, and you have made
+a regular farmyard [Footnote: Proverb: meaning unknown.] of the place. Be
+so good as to keep the rules of the House. What will this person think of
+us, whoever he is?" So Claudius was led out, and the first to be asked his
+opinion was Father Janus: he had been made consul elect for the afternoon
+of the next first of July,[Footnote: Perhaps an allusion to the shortening
+of the consul's term, which was done to give more candidates a chance of
+the honour.] being as shrewd a man as you could find on a summer's day: for
+he could see, as they say, before and behind. [Footnote 8: II, iii, 109;
+alluding here to Janus's double face.] He made an eloquent harangue,
+because his life was passed in the forum, but too fast for the notary to
+take down. That is why I give no full report of it, for I don't want to
+change the words he used. He said a great deal of the majesty of the gods,
+and how the honour ought not to be given away to every Tom, Dick, or Harry.
+"Once," said he, "it was a great thing to become a god; now you have made
+it a farce. Therefore, that you may not think I am speaking against one
+person instead of the general custom, I propose that from this day forward
+the godhead be given to none of those who eat the fruits of the earth, or
+whom mother earth doth nourish. After this bill has been read a third time,
+whosoever is made, said, or portrayed to be god, I vote he be delivered
+over to the bogies, and at the next public show be flogged with a birch
+amongst the new gladiators." The next to be asked was Diespiter, son of
+Vica Pota, he also being consul elect, and a moneylender; by this trade he
+made a living, used to sell rights of citizenship in a small way. Hercules
+trips me up to him daintily, and tweaks him by the ear. So he uttered his
+opinion in these words: "Inasmuch as the blessed Claudius is akin to the
+blessed Augustus, and also to the blessed Augusta, his grandmother, whom he
+ordered to be made a goddess, and whereas he far surpasses all mortal men
+in wisdom, and seeing that it is for the public good that there be some one
+able to join Romulus in devouring boiled turnips, I propose that from this
+day forth blessed Claudius be a god, to enjoy that honour with all its
+appurtenances in as full a degree as any other before him, and that a note
+to that effect be added to Ovid's Metamorphoses." The meeting was divided,
+and it looked as though Claudius was to win the day. For Hercules saw his
+iron was in the fire, trotted here and trotted there, saying, "Don't deny
+me; I make a point of the matter. I'll do as much for you again, when you
+like; you roll my log, and I'll roll yours: one hand washes another."
+
+Then arose the blessed Augustus, when his turn                           10
+came, and spoke with much eloquence. [Footnote: The speech seems to contain
+a parody of Augustus's style and sayings.] "I call you to witness, my lords
+and gentlemen," said he, "that since the day I was made a god I have never
+uttered one word. I always mind my own business. But now I can keep on the
+mask no longer, nor conceal the sorrow which shame makes all the greater.
+Is it for this I have made peace by land and sea? For this have I calmed
+intestine wars? For this, laid a firm foundation of law for Rome, adorned
+it with buildings, and all that--my lords, words fail me; there are none
+can rise to the height of my indignation. I must borrow that saying of the
+eloquent Messala Corvinus, I am ashamed of my authority. [Footnote: M.
+Valerius Messala Corvinus, appointed praefectus urbi, resigned within a
+week.] This man, my lords, who looks as though he could not hurt a fly,
+used to chop off heads as easily as a dog sits down. But why should I speak
+of all those men, and such men? There is no time to lament for public
+disasters, when one has so many private sorrows to think of. I leave that,
+therefore, and say only this; for even if my sister knows no Greek, I do:
+The knee is nearer than the shin. [Footnote: A proverb, like "Charity
+begins at home." The reading of the passage is uncertain; "sister" is only
+a conjecture, and it is hard to see why his sister should be mentioned.]
+This man you see, who for so many years has been masquerading under my
+name, has done me the favour of murdering two Julias, great-granddaughters
+of mine, one by cold steel and one by starvation; and one great grandson,
+L. Silanus--see, Jupiter, whether he had a case against him (at least it is
+your own if you will be fair.) Come tell me, blessed Claudius, why of all
+those you killed, both men and women, without a hearing, why you did not
+hear their side of the case first, before putting them to death? Where do
+we find that custom? It is not done in heaven.
+Look at Jupiter: all these years he has been                             11
+king, and never did more than once to break Vulcan's leg,
+
+  'Whom seizing by the foot he cast from the threshold of the sky,'
+  [Sidenote: Illiad i, 591]
+
+and once he fell in a rage with his wife and strung her up: did he do any
+killing? You killed Messalina, whose great-uncle I was no less than yours.
+'I don't know,' did you say? Curse you! that is just it: not to know was
+worse than to kill. Caligula he went on persecuting even when he was dead.
+Caligula murdered his father-in-law, Claudius his son-in-law to boot.
+Caligula would not have Crassus' son called Great; Claudius gave him his
+name back, and took away his head. In one family he destroyed Crassus,
+Magnus, Scribonia, the Tristionias, Assario, noble though they were;
+Crassus indeed such a fool that he might have been emperor. Is this he you
+want now to make a god? Look at his body, born under the wrath of heaven!
+In fine, let him say the three words [Footnote: Some formula such as _ais
+esse meum_.] quickly, and he may have me for a slave. God! who will worship
+this god, who will believe in him? While you make gods of such as he, no
+one will believe you to be gods. To be brief, my lords: if I have lived
+honourably among you, if I have never given plain speech to any, avenge my
+wrongs. This is my motion": then he read out his amendment, which he had
+committed to writing: "Inasmuch as the blessed Claudius murdered his
+father-in-law Appius Silanus, his two sons-in-law, Pompeius Magnus and L.
+Silanus, Crassus Frugi his daughter's father-in-law, as like him as two
+eggs in a basket, Scribonia his daughter's mother-in-law, his wife
+Messalina, and others too numerous to mention; I propose that strong
+measures be taken against him, that he be allowed no delay of process, that
+immediate sentence of banishment be passed on him, that he be deported from
+heaven within thirty days, and from Olympus within thirty hours."
+
+This motion was passed without further debate. Not a moment was lost:
+Mercury screwed his neck and haled him to the lower regions, to that bourne
+"from which they say no traveller returns." [Footnote: Catullus iii, 12.]
+As they passed downwards along the Sacred Way, Mercury asked what was that
+great concourse of men? could it be Claudius' funeral? It was certainly a
+most gorgeous spectacle, got up regardless of expense, clear it was that a
+god was being borne to the grave: tootling of flutes, roaring of horns, an
+immense brass band of all sorts, such a din that even Claudius could hear
+it. Joy and rejoicing on every side, the Roman people walking about like
+free men. Agatho and a few pettifoggers were weeping for grief, and for
+once in a way they meant it. The Barristers were crawling out of their
+dark corners, pale and thin, with hardly a breath in their bodies, as
+though just coming to life again. One of them when he saw the pettifoggers
+putting their heads together, and lamenting their sad lot, up comes he and
+says: "Did not I tell you the Saturnalia could not last for ever?"
+
+When Claudius saw his own funeral train, he understood that he was dead.
+For they were chanting his dirge in anapaests, with much mopping and
+mouthing:
+
+  "Pour forth your laments, your sorrow declare,
+  Let the sounds of grief rise high in the air:
+  For he that is dead had a wit most keen,
+  Was bravest of all that on earth have been.
+  Racehorses are nothing to his swift feet:
+  Rebellious Parthians he did defeat;
+  Swift after the Persians his light shafts go:
+  For he well knew how to fit arrow to bow,
+  Swiftly the striped barbarians fled:
+  With one little wound he shot them dead.
+  And the Britons beyond in their unknown seas,
+  Blue-shielded Brigantians too, all these
+  He chained by the neck as the Romans' slaves.
+  He spake, and the Ocean with trembling waves
+  Accepted the axe of the Roman law.
+  O weep for the man! This world never saw
+  One quicker a troublesome suit to decide,
+  When only one part of the case had been tried,
+  (He could do it indeed and not hear either side).
+  Who'll now sit in judgment the whole year round?
+  Now he that is judge of the shades underground
+  Once ruler of fivescore cities in Crete,
+  Must yield to his better and take a back seat.
+  Mourn, mourn, pettifoggers, ye venal crew,
+  And you, minor poets, woe, woe is to you!
+  And you above all, who get rich quick
+  By the rattle of dice and the three card trick."
+
+Claudius was charmed to hear his own praises sung,                       13
+and would have stayed longer to see the show. But the Talthybius
+[Footnote: Talthybius was a herald, and _nuntius_ is obviously a gloss on
+this. He means Mercury.] of the gods laid a hand on him, and led him across
+the Campus Martius, first wrapping his head up close that no one might know
+him, until betwixt Tiber and the Subway he went down to the lower regions.
+[Footnote: By the Cloaca?] His freedman Narcissus had gone down before him
+by a short cut, ready to welcome his master. Out he comes to meet him,
+smooth and shining (he had just left the bath), and says he: "What make the
+gods among mortals?" "Look alive," says Mercury, "go and tell them we are
+coming." Away he flew, quicker than tongue can tell. It is easy going by
+that road, all down hill. So although he had a touch of the gout, in a
+trice they were come to Dis's door. There lay Cerberus, or, as Horace puts
+it, the hundred-headed monster. [Sidenote: Odes ii, 13, 35] Claudius was a
+trifle perturbed (it was a little white bitch he used to keep for a pet)
+when he spied this black shag-haired hound, not at all the kind of thing
+you could wish to meet in the dark.  In a loud voice he cried, "Claudius is
+coming!" All marched before him singing, "The lost is found, O let us
+rejoice together!" [Footnote: With a slight change, a cry used in the
+worship of Osiris.] Here were found C. Silius consul elect, Juncus the
+ex-praetor, Sextus Traulus, M. Helvius, Trogus, Cotta, Vettius Valens,
+Fabius, Roman Knights whom Narcissus had ordered for execution. In the
+midst of this chanting company was Mnester the mime, whom Claudius for
+honour's sake had made shorter by a head. The news was soon blown about
+that Claudius had come: to Messalina they throng: first his freedmen,
+Polybius, Myron, Harpocras, Amphaeus, Pheronactus, all sent before him by
+Claudius that he might not be unattended anywhere; next two prefects,
+Justus Catonius and Rufrius Pollio; then his friends, Saturninus, Lusius
+and Pedo Pompeius and Lupus and Celer Asinius, these of consular rank; last
+came his brother's daughter, his sister's daughter, sons-in-law, fathers
+and mothers-in-law, the whole family in fact. In a body they came to meet
+Claudius; and when Claudius saw them, he exclaimed, "Friends everywhere, on
+my word! How came you all here?" To this Pedo Pompeius answered, "What,
+cruel man? How came we here? Who but you sent us, you, the murderer of all
+the friends that ever you had? To court with you! I'll show you where their
+lordships sit."
+
+Pedo brings him before the judgement seat of                             14
+Aeacus, who was holding court under the Lex Cornelia to try cases of murder
+and assassination. Pedo requests the judge to take the prisoner's name, and
+produces a summons with this charge: Senators killed, 35; Roman Knights,
+221; others as the sands of the sea-shore for multitude. [Sidenote:  Il. ix,
+385] Claudius finds no counsel. At length out steps P. Petronius, an old
+chum of his, a finished scholar in the Claudian tongue and claims a remand.
+Not granted. Pedo Pompeius prosecutes with loud outcry. The counsel for the
+defence tries to reply; but Aeacus, who is the soul of justice, will not
+have it. Aeacus hears the case against Claudius, refuses to hear the other
+side and passes sentence against him, quoting the line:
+
+  "As he did, so be he done by, this is justice undefiled."
+  [Footnote: A proverbial line.]
+
+A great silence fell. Not a soul but was stupefied at this new way of
+managing matters; they had never known anything like it before. It was no
+new thing to Claudius, yet he thought it unfair. There was a long
+discussion as to the punishment he ought to endure. Some said that Sisyphus
+had done his job of porterage long enough; Tantalus would be dying of
+thirst, if he were not relieved; the drag must be put at last on wretched
+Ixion's wheel. But it was determined not to let off any of the old stagers,
+lest Claudius should dare to hope for any such relief. It was agreed that
+some new punishment must be devised: they must devise some new task,
+something senseless, to suggest some craving without result. Then Aeacus
+decreed he should rattle dice for ever in a box with no bottom. At once the
+poor wretch began his fruitless task of hunting for the dice, which for
+ever slipped from his fingers.
+
+  "For when he rattled with the box, and thought he now had got 'em.     15
+  The little cubes would vanish thro' the perforated bottom.
+  Then he would pick 'em up again, and once more set a-trying:
+  The dice but served him the same trick: away they went a-flying.
+  So still he tries, and still he fails; still searching long he lingers;
+  And every time the tricksy things go slipping thro' his fingers.
+  Just so when Sisyphus at last once gets there with his boulder,
+  He finds the labour all in vain--it rolls down off his shoulder."
+
+All on a sudden who should turn up but Caligula, and claims the man for a
+slave: brings witnesses, who said they had seen him being flogged, caned,
+fisticuffed by him. He is handed over to Caligula, and Caligula makes him
+a present to Aeacus. Aeacus delivers him to his freedman Menander, to be
+his law-clerk.
+
+
+
+
+
+End of the Project Gutenberg EBook of Apocolocyntosis, by Lucius Seneca
+
+*** END OF THIS PROJECT GUTENBERG EBOOK APOCOLOCYNTOSIS ***
+
+***** This file should be named 10001.txt or 10001.zip *****
+This and all associated files of various formats will be found in:
+        http://www.gutenberg.net/1/0/0/0/10001/
+
+Produced by Ted Garvin, Ben Courtney and PG Distributed Proofreaders
+
+Updated editions will replace the previous one--the old editions
+will be renamed.
+
+Creating the works from public domain print editions means that no
+one owns a United States copyright in these works, so the Foundation
+(and you!) can copy and distribute it in the United States without
+permission and without paying copyright royalties.  Special rules,
+set forth in the General Terms of Use part of this license, apply to
+copying and distributing Project Gutenberg-tm electronic works to
+protect the PROJECT GUTENBERG-tm concept and trademark.  Project
+Gutenberg is a registered trademark, and may not be used if you
+charge for the eBooks, unless you receive specific permission.  If you
+do not charge anything for copies of this eBook, complying with the
+rules is very easy.  You may use this eBook for nearly any purpose
+such as creation of derivative works, reports, performances and
+research.  They may be modified and printed and given away--you may do
+practically ANYTHING with public domain eBooks.  Redistribution is
+subject to the trademark license, especially commercial
+redistribution.
+
+
+
+*** START: FULL LICENSE ***
+
+THE FULL PROJECT GUTENBERG LICENSE
+PLEASE READ THIS BEFORE YOU DISTRIBUTE OR USE THIS WORK
+
+To protect the Project Gutenberg-tm mission of promoting the free
+distribution of electronic works, by using or distributing this work
+(or any other work associated in any way with the phrase "Project
+Gutenberg"), you agree to comply with all the terms of the Full Project
+Gutenberg-tm License (available with this file or online at
+http://gutenberg.net/license).
+
+
+Section 1.  General Terms of Use and Redistributing Project Gutenberg-tm
+electronic works
+
+1.A.  By reading or using any part of this Project Gutenberg-tm
+electronic work, you indicate that you have read, understand, agree to
+and accept all the terms of this license and intellectual property
+(trademark/copyright) agreement.  If you do not agree to abide by all
+the terms of this agreement, you must cease using and return or destroy
+all copies of Project Gutenberg-tm electronic works in your possession.
+If you paid a fee for obtaining a copy of or access to a Project
+Gutenberg-tm electronic work and you do not agree to be bound by the
+terms of this agreement, you may obtain a refund from the person or
+entity to whom you paid the fee as set forth in paragraph 1.E.8.
+
+1.B.  "Project Gutenberg" is a registered trademark.  It may only be
+used on or associated in any way with an electronic work by people who
+agree to be bound by the terms of this agreement.  There are a few
+things that you can do with most Project Gutenberg-tm electronic works
+even without complying with the full terms of this agreement.  See
+paragraph 1.C below.  There are a lot of things you can do with Project
+Gutenberg-tm electronic works if you follow the terms of this agreement
+and help preserve free future access to Project Gutenberg-tm electronic
+works.  See paragraph 1.E below.
+
+1.C.  The Project Gutenberg Literary Archive Foundation ("the Foundation"
+or PGLAF), owns a compilation copyright in the collection of Project
+Gutenberg-tm electronic works.  Nearly all the individual works in the
+collection are in the public domain in the United States.  If an
+individual work is in the public domain in the United States and you are
+located in the United States, we do not claim a right to prevent you from
+copying, distributing, performing, displaying or creating derivative
+works based on the work as long as all references to Project Gutenberg
+are removed.  Of course, we hope that you will support the Project
+Gutenberg-tm mission of promoting free access to electronic works by
+freely sharing Project Gutenberg-tm works in compliance with the terms of
+this agreement for keeping the Project Gutenberg-tm name associated with
+the work.  You can easily comply with the terms of this agreement by
+keeping this work in the same format with its attached full Project
+Gutenberg-tm License when you share it without charge with others.
+
+1.D.  The copyright laws of the place where you are located also govern
+what you can do with this work.  Copyright laws in most countries are in
+a constant state of change.  If you are outside the United States, check
+the laws of your country in addition to the terms of this agreement
+before downloading, copying, displaying, performing, distributing or
+creating derivative works based on this work or any other Project
+Gutenberg-tm work.  The Foundation makes no representations concerning
+the copyright status of any work in any country outside the United
+States.
+
+1.E.  Unless you have removed all references to Project Gutenberg:
+
+1.E.1.  The following sentence, with active links to, or other immediate
+access to, the full Project Gutenberg-tm License must appear prominently
+whenever any copy of a Project Gutenberg-tm work (any work on which the
+phrase "Project Gutenberg" appears, or with which the phrase "Project
+Gutenberg" is associated) is accessed, displayed, performed, viewed,
+copied or distributed:
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.net
+
+1.E.2.  If an individual Project Gutenberg-tm electronic work is derived
+from the public domain (does not contain a notice indicating that it is
+posted with permission of the copyright holder), the work can be copied
+and distributed to anyone in the United States without paying any fees
+or charges.  If you are redistributing or providing access to a work
+with the phrase "Project Gutenberg" associated with or appearing on the
+work, you must comply either with the requirements of paragraphs 1.E.1
+through 1.E.7 or obtain permission for the use of the work and the
+Project Gutenberg-tm trademark as set forth in paragraphs 1.E.8 or
+1.E.9.
+
+1.E.3.  If an individual Project Gutenberg-tm electronic work is posted
+with the permission of the copyright holder, your use and distribution
+must comply with both paragraphs 1.E.1 through 1.E.7 and any additional
+terms imposed by the copyright holder.  Additional terms will be linked
+to the Project Gutenberg-tm License for all works posted with the
+permission of the copyright holder found at the beginning of this work.
+
+1.E.4.  Do not unlink or detach or remove the full Project Gutenberg-tm
+License terms from this work, or any files containing a part of this
+work or any other work associated with Project Gutenberg-tm.
+
+1.E.5.  Do not copy, display, perform, distribute or redistribute this
+electronic work, or any part of this electronic work, without
+prominently displaying the sentence set forth in paragraph 1.E.1 with
+active links or immediate access to the full terms of the Project
+Gutenberg-tm License.
+
+1.E.6.  You may convert to and distribute this work in any binary,
+compressed, marked up, nonproprietary or proprietary form, including any
+word processing or hypertext form.  However, if you provide access to or
+distribute copies of a Project Gutenberg-tm work in a format other than
+"Plain Vanilla ASCII" or other format used in the official version
+posted on the official Project Gutenberg-tm web site (www.gutenberg.net),
+you must, at no additional cost, fee or expense to the user, provide a
+copy, a means of exporting a copy, or a means of obtaining a copy upon
+request, of the work in its original "Plain Vanilla ASCII" or other
+form.  Any alternate format must include the full Project Gutenberg-tm
+License as specified in paragraph 1.E.1.
+
+1.E.7.  Do not charge a fee for access to, viewing, displaying,
+performing, copying or distributing any Project Gutenberg-tm works
+unless you comply with paragraph 1.E.8 or 1.E.9.
+
+1.E.8.  You may charge a reasonable fee for copies of or providing
+access to or distributing Project Gutenberg-tm electronic works provided
+that
+
+- You pay a royalty fee of 20% of the gross profits you derive from
+     the use of Project Gutenberg-tm works calculated using the method
+     you already use to calculate your applicable taxes.  The fee is
+     owed to the owner of the Project Gutenberg-tm trademark, but he
+     has agreed to donate royalties under this paragraph to the
+     Project Gutenberg Literary Archive Foundation.  Royalty payments
+     must be paid within 60 days following each date on which you
+     prepare (or are legally required to prepare) your periodic tax
+     returns.  Royalty payments should be clearly marked as such and
+     sent to the Project Gutenberg Literary Archive Foundation at the
+     address specified in Section 4, "Information about donations to
+     the Project Gutenberg Literary Archive Foundation."
+
+- You provide a full refund of any money paid by a user who notifies
+     you in writing (or by e-mail) within 30 days of receipt that s/he
+     does not agree to the terms of the full Project Gutenberg-tm
+     License.  You must require such a user to return or
+     destroy all copies of the works possessed in a physical medium
+     and discontinue all use of and all access to other copies of
+     Project Gutenberg-tm works.
+
+- You provide, in accordance with paragraph 1.F.3, a full refund of any
+     money paid for a work or a replacement copy, if a defect in the
+     electronic work is discovered and reported to you within 90 days
+     of receipt of the work.
+
+- You comply with all other terms of this agreement for free
+     distribution of Project Gutenberg-tm works.
+
+1.E.9.  If you wish to charge a fee or distribute a Project Gutenberg-tm
+electronic work or group of works on different terms than are set
+forth in this agreement, you must obtain permission in writing from
+both the Project Gutenberg Literary Archive Foundation and Michael
+Hart, the owner of the Project Gutenberg-tm trademark.  Contact the
+Foundation as set forth in Section 3 below.
+
+1.F.
+
+1.F.1.  Project Gutenberg volunteers and employees expend considerable
+effort to identify, do copyright research on, transcribe and proofread
+public domain works in creating the Project Gutenberg-tm
+collection.  Despite these efforts, Project Gutenberg-tm electronic
+works, and the medium on which they may be stored, may contain
+"Defects," such as, but not limited to, incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other intellectual
+property infringement, a defective or damaged disk or other medium, a
+computer virus, or computer codes that damage or cannot be read by
+your equipment.
+
+1.F.2.  LIMITED WARRANTY, DISCLAIMER OF DAMAGES - Except for the "Right
+of Replacement or Refund" described in paragraph 1.F.3, the Project
+Gutenberg Literary Archive Foundation, the owner of the Project
+Gutenberg-tm trademark, and any other party distributing a Project
+Gutenberg-tm electronic work under this agreement, disclaim all
+liability to you for damages, costs and expenses, including legal
+fees.  YOU AGREE THAT YOU HAVE NO REMEDIES FOR NEGLIGENCE, STRICT
+LIABILITY, BREACH OF WARRANTY OR BREACH OF CONTRACT EXCEPT THOSE
+PROVIDED IN PARAGRAPH F3.  YOU AGREE THAT THE FOUNDATION, THE
+TRADEMARK OWNER, AND ANY DISTRIBUTOR UNDER THIS AGREEMENT WILL NOT BE
+LIABLE TO YOU FOR ACTUAL, DIRECT, INDIRECT, CONSEQUENTIAL, PUNITIVE OR
+INCIDENTAL DAMAGES EVEN IF YOU GIVE NOTICE OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+1.F.3.  LIMITED RIGHT OF REPLACEMENT OR REFUND - If you discover a
+defect in this electronic work within 90 days of receiving it, you can
+receive a refund of the money (if any) you paid for it by sending a
+written explanation to the person you received the work from.  If you
+received the work on a physical medium, you must return the medium with
+your written explanation.  The person or entity that provided you with
+the defective work may elect to provide a replacement copy in lieu of a
+refund.  If you received the work electronically, the person or entity
+providing it to you may choose to give you a second opportunity to
+receive the work electronically in lieu of a refund.  If the second copy
+is also defective, you may demand a refund in writing without further
+opportunities to fix the problem.
+
+1.F.4.  Except for the limited right of replacement or refund set forth
+in paragraph 1.F.3, this work is provided to you 'AS-IS," WITH NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+WARRANTIES OF MERCHANTIBILITY OR FITNESS FOR ANY PURPOSE.
+
+1.F.5.  Some states do not allow disclaimers of certain implied
+warranties or the exclusion or limitation of certain types of damages.
+If any disclaimer or limitation set forth in this agreement violates the
+law of the state applicable to this agreement, the agreement shall be
+interpreted to make the maximum disclaimer or limitation permitted by
+the applicable state law.  The invalidity or unenforceability of any
+provision of this agreement shall not void the remaining provisions.
+
+1.F.6.  INDEMNITY - You agree to indemnify and hold the Foundation, the
+trademark owner, any agent or employee of the Foundation, anyone
+providing copies of Project Gutenberg-tm electronic works in accordance
+with this agreement, and any volunteers associated with the production,
+promotion and distribution of Project Gutenberg-tm electronic works,
+harmless from all liability, costs and expenses, including legal fees,
+that arise directly or indirectly from any of the following which you do
+or cause to occur: (a) distribution of this or any Project Gutenberg-tm
+work, (b) alteration, modification, or additions or deletions to any
+Project Gutenberg-tm work, and (c) any Defect you cause.
+
+
+Section  2.  Information about the Mission of Project Gutenberg-tm
+
+Project Gutenberg-tm is synonymous with the free distribution of
+electronic works in formats readable by the widest variety of computers
+including obsolete, old, middle-aged and new computers.  It exists
+because of the efforts of hundreds of volunteers and donations from
+people in all walks of life.
+
+Volunteers and financial support to provide volunteers with the
+assistance they need, is critical to reaching Project Gutenberg-tm's
+goals and ensuring that the Project Gutenberg-tm collection will
+remain freely available for generations to come.  In 2001, the Project
+Gutenberg Literary Archive Foundation was created to provide a secure
+and permanent future for Project Gutenberg-tm and future generations.
+To learn more about the Project Gutenberg Literary Archive Foundation
+and how your efforts and donations can help, see Sections 3 and 4
+and the Foundation web page at http://www.pglaf.org.
+
+
+Section 3.  Information about the Project Gutenberg Literary Archive
+Foundation
+
+The Project Gutenberg Literary Archive Foundation is a non profit
+501(c)(3) educational corporation organized under the laws of the
+state of Mississippi and granted tax exempt status by the Internal
+Revenue Service.  The Foundation's EIN or federal tax identification
+number is 64-6221541.  Its 501(c)(3) letter is posted at
+http://pglaf.org/fundraising.  Contributions to the Project Gutenberg
+Literary Archive Foundation are tax deductible to the full extent
+permitted by U.S. federal laws and your state's laws.
+
+The Foundation's principal office is located at 4557 Melan Dr. S.
+Fairbanks, AK, 99712., but its volunteers and employees are scattered
+throughout numerous locations.  Its business office is located at
+809 North 1500 West, Salt Lake City, UT 84116, (801) 596-1887, email
+business@pglaf.org.  Email contact links and up to date contact
+information can be found at the Foundation's web site and official
+page at http://pglaf.org
+
+For additional contact information:
+     Dr. Gregory B. Newby
+     Chief Executive and Director
+     gbnewby@pglaf.org
+
+Section 4.  Information about Donations to the Project Gutenberg
+Literary Archive Foundation
+
+Project Gutenberg-tm depends upon and cannot survive without wide
+spread public support and donations to carry out its mission of
+increasing the number of public domain and licensed works that can be
+freely distributed in machine readable form accessible by the widest
+array of equipment including outdated equipment.  Many small donations
+($1 to $5,000) are particularly important to maintaining tax exempt
+status with the IRS.
+
+The Foundation is committed to complying with the laws regulating
+charities and charitable donations in all 50 states of the United
+States.  Compliance requirements are not uniform and it takes a
+considerable effort, much paperwork and many fees to meet and keep up
+with these requirements.  We do not solicit donations in locations
+where we have not received written confirmation of compliance.  To
+SEND DONATIONS or determine the status of compliance for any
+particular state visit http://pglaf.org
+
+While we cannot and do not solicit contributions from states where we
+have not met the solicitation requirements, we know of no prohibition
+against accepting unsolicited donations from donors in such states who
+approach us with offers to donate.
+
+International donations are gratefully accepted, but we cannot make
+any statements concerning tax treatment of donations received from
+outside the United States.  U.S. laws alone swamp our small staff.
+
+Please check the Project Gutenberg Web pages for current donation
+methods and addresses.  Donations are accepted in a number of other
+ways including including checks, online payments and credit card
+donations.  To donate, please visit: http://pglaf.org/donate
+
+
+Section 5.  General Information About Project Gutenberg-tm electronic
+works.
+
+Professor Michael S. Hart is the originator of the Project Gutenberg-tm
+concept of a library of electronic works that could be freely shared
+with anyone.  For thirty years, he produced and distributed Project
+Gutenberg-tm eBooks with only a loose network of volunteer support.
+
+Project Gutenberg-tm eBooks are often created from several printed
+editions, all of which are confirmed as Public Domain in the U.S.
+unless a copyright notice is included.  Thus, we do not necessarily
+keep eBooks in compliance with any particular paper edition.
+
+Each eBook is in a subdirectory of the same number as the eBook's
+eBook number, often in several formats including plain vanilla ASCII,
+compressed (zipped), HTML and others.
+
+Corrected EDITIONS of our eBooks replace the old file and take over
+the old filename and etext number.  The replaced older file is renamed.
+VERSIONS based on separate sources are treated as new eBooks receiving
+new filenames and etext numbers.
+
+Most people start at our Web site which has the main PG search facility:
+
+     http://www.gutenberg.net
+
+This Web site includes information about Project Gutenberg-tm,
+including how to make donations to the Project Gutenberg Literary
+Archive Foundation, how to help produce our new eBooks, and how to
+subscribe to our email newsletter to hear about new eBooks.
+
+EBooks posted prior to November 2003, with eBook numbers BELOW #10000,
+are filed in directories based on their release date.  If you want to
+download any of these eBooks directly, rather than using the regular
+search system you may utilize the following addresses and just
+download by the etext year.
+
+     http://www.ibiblio.org/gutenberg/etext06
+
+    (Or /etext 05, 04, 03, 02, 01, 00, 99,
+     98, 97, 96, 95, 94, 93, 92, 92, 91 or 90)
+
+EBooks posted since November 2003, with etext numbers OVER #10000, are
+filed in a different way.  The year of a release date is no longer part
+of the directory path.  The path is based on the etext number (which is
+identical to the filename).  The path to the file is made up of single
+digits corresponding to all but the last digit in the filename.  For
+example an eBook of filename 10234 would be found at:
+
+     http://www.gutenberg.net/1/0/2/3/10234
+
+or filename 24689 would be found at:
+     http://www.gutenberg.net/2/4/6/8/24689
+
+An alternative method of locating eBooks:
+     http://www.gutenberg.net/GUTINDEX.ALL
+
+

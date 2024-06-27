@@ -1,0 +1,4395 @@
+The Project Gutenberg Etext of Ceiriog, by John Ceiriog Hughes
+#1 in our series by John Ceiriog Hughes
+
+This Etext is in Welsh
+
+Copyright laws are changing all over the world, be sure to check
+the laws for your country before redistributing these files!!!
+
+Please take a look at the important information in this header.
+We encourage you to keep this file on your own disk, keeping an
+electronic path open for the next readers.
+
+Please do not remove this.
+
+This should be the first thing seen when anyone opens the book.
+Do not change or edit it without written permission.  The words
+are carefully chosen to provide users with the information they
+need about what they can legally do with the texts.
+
+
+**Welcome To The World of Free Plain Vanilla Electronic Texts**
+
+**Etexts Readable By Both Humans and By Computers, Since 1971**
+
+*These Etexts Prepared By Hundreds of Volunteers and Donations*
+
+Information on contacting Project Gutenberg to get Etexts, and
+further information is included below.  We need your donations.
+The Project Gutenberg Literary Archive Foundation is a 501(c)(3)
+organization with EIN [Employee Identification Number] 64-6221541
+
+As of 12/12/00 contributions are only being solicited from people in:
+Colorado, Connecticut, Idaho, Indiana, Iowa,
+Kentucky, Louisiana, Massachusetts, Montana,
+Nevada, Oklahoma, South Carolina, South Dakota,
+Texas, Vermont, and Wyoming.
+
+As the requirements for other states are met,
+additions to this list will be made and fund raising
+will begin in the additional states.  Please feel
+free to ask to check the status of your state.
+
+International donations are accepted,
+but we don't know ANYTHING about how
+to make them tax-deductible, or
+even if they CAN be made deductible,
+and don't have the staff to handle it
+even if there are ways.
+
+These donations should be made to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Ave.
+Oxford, MS 38655-4109
+
+
+Title: Ceiriog
+
+Author: John Ceiriog Hughes
+
+Official Release Date: October, 2002  [Etext #3500]
+[Yes, we are about one year ahead of schedule]
+[The actual date this file first posted = 04/30/01]
+
+Edition: 10
+
+Language: Welsh
+
+The Project Gutenberg Etext of Ceiriog, by John Ceiriog Hughes
+*****This file should be named ceirg10.txt or ceirg10.zip*****
+
+Corrected EDITIONS of our etexts get a new NUMBER, ceirg11.txt
+VERSIONS based on separate sources get new LETTER, ceirg10a.txt
+
+This etext was produced by David Price, email ccx074@coventry.ac.uk,
+from the 1902 Ab Owen edition.
+
+Project Gutenberg Etexts are usually created from multiple editions,
+all of which are in the Public Domain in the United States, unless a
+copyright notice is included.  Therefore, we usually do NOT keep any
+of these books in compliance with any particular paper edition.
+
+We are now trying to release all our books one year in advance
+of the official release dates, leaving time for better editing.
+Please be encouraged to send us error messages even years after
+the official publication date.
+
+Please note:  neither this list nor its contents are final till
+midnight of the last day of the month of any such announcement.
+The official release date of all Project Gutenberg Etexts is at
+Midnight, Central Time, of the last day of the stated month.  A
+preliminary version may often be posted for suggestion, comment
+and editing by those who wish to do so.
+
+Most people start at our sites at:
+http://gutenberg.net
+http://promo.net/pg
+
+
+Those of you who want to download any Etext before announcement
+can surf to them as follows, and just download by date; this is
+also a good way to get them instantly upon announcement, as the
+indexes our cataloguers produce obviously take a while after an
+announcement goes out in the Project Gutenberg Newsletter.
+
+http://www.ibiblio.org/gutenberg/etext02
+or
+ftp://ftp.ibiblio.org/pub/docs/books/gutenberg/etext02
+
+Or /etext01, 00, 99, 98, 97, 96, 95, 94, 93, 92, 92, 91 or 90
+
+Just search by the first five letters of the filename you want,
+as it appears in our Newsletters.
+
+
+Information about Project Gutenberg (one page)
+
+We produce about two million dollars for each hour we work.  The
+time it takes us, a rather conservative estimate, is fifty hours
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar then we produce $2
+million dollars per hour this year as we release fifty new Etext
+files per month, or 500 more Etexts in 2000 for a total of 3000+
+If they reach just 1-2% of the world's population then the total
+should reach over 300 billion Etexts given away by year's end.
+
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by December 31, 2001.  [10,000 x 100,000,000 = 1 Trillion]
+This is ten thousand titles each to one hundred million readers,
+which is only about 4% of the present number of computer users.
+
+At our revised rates of production, we will reach only one-third
+of that goal by the end of 2001, or about 3,333 Etexts unless we
+manage to get some real funding.
+
+The Project Gutenberg Literary Archive Foundation has been created
+to secure a future for Project Gutenberg into the next millennium.
+
+We need your donations more than ever!
+
+Presently, contributions are only being solicited from people in:
+Colorado, Connecticut, Idaho, Indiana, Iowa,
+Kentucky, Louisiana, Massachusetts, Montana,
+Nevada, Oklahoma, South Carolina, South Dakota,
+Texas, Vermont, and Wyoming.
+
+As the requirements for other states are met,
+additions to this list will be made and fund raising
+will begin in the additional states.
+
+These donations should be made to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Ave.
+Oxford, MS 38655-4109
+
+
+Project Gutenberg Literary Archive Foundation,
+EIN [Employee Identification Number] 64-6221541,
+has been approved as a 501(c)(3) organization by the US Internal
+Revenue Service (IRS).  Donations are tax-deductible to the extent
+permitted by law.  As the requirements for other states are met,
+additions to this list will be made and fund raising will begin in the
+additional states.
+
+All donations should be made to the Project Gutenberg Literary
+Archive Foundation.  Mail to:
+
+Project Gutenberg Literary Archive Foundation
+PMB 113
+1739 University Avenue
+Oxford, MS 38655-4109  [USA]
+
+
+We need your donations more than ever!
+
+You can get up to date donation information at:
+
+http://www.gutenberg.net/donation.html
+
+
+***
+
+If you can't reach Project Gutenberg,
+you can always email directly to:
+
+Michael S. Hart <hart@pobox.com>
+
+hart@pobox.com forwards to hart@prairienet.org and archive.org
+if your mail bounces from archive.org, I will still see it, if
+it bounces from prairienet.org, better resend later on. . . .
+
+Prof. Hart will answer or forward your message.
+
+We would prefer to send you information by email.
+
+
+***
+
+
+Example command-line FTP session:
+
+ftp ftp.ibiblio.org
+login: anonymous
+password: your@login
+cd pub/docs/books/gutenberg
+cd etext90 through etext99 or etext00 through etext02, etc.
+dir [to see files]
+get or mget [to get files. . .set bin for zip files]
+GET GUTINDEX.??  [to get a year's listing of books, e.g., GUTINDEX.99]
+GET GUTINDEX.ALL [to get a listing of ALL books]
+
+
+**The Legal Small Print**
+
+
+(Three Pages)
+
+***START**THE SMALL PRINT!**FOR PUBLIC DOMAIN ETEXTS**START***
+Why is this "Small Print!" statement here?  You know: lawyers.
+They tell us you might sue us if there is something wrong with
+your copy of this etext, even if you got it for free from
+someone other than us, and even if what's wrong is not our
+fault.  So, among other things, this "Small Print!" statement
+disclaims most of our liability to you.  It also tells you how
+you may distribute copies of this etext if you want to.
+
+*BEFORE!* YOU USE OR READ THIS ETEXT
+By using or reading any part of this PROJECT GUTENBERG-tm
+etext, you indicate that you understand, agree to and accept
+this "Small Print!" statement.  If you do not, you can receive
+a refund of the money (if any) you paid for this etext by
+sending a request within 30 days of receiving it to the person
+you got it from.  If you received this etext on a physical
+medium (such as a disk), you must return it with your request.
+
+ABOUT PROJECT GUTENBERG-TM ETEXTS
+This PROJECT GUTENBERG-tm etext, like most PROJECT GUTENBERG-tm etexts,
+is a "public domain" work distributed by Professor Michael S. Hart
+through the Project Gutenberg Association (the "Project").
+Among other things, this means that no one owns a United States copyright
+on or for this work, so the Project (and you!) can copy and
+distribute it in the United States without permission and
+without paying copyright royalties.  Special rules, set forth
+below, apply if you wish to copy and distribute this etext
+under the "PROJECT GUTENBERG" trademark.
+
+Please do not use the "PROJECT GUTENBERG" trademark to market
+any commercial products without permission.
+
+To create these etexts, the Project expends considerable
+efforts to identify, transcribe and proofread public domain
+works.  Despite these efforts, the Project's etexts and any
+medium they may be on may contain "Defects".  Among other
+things, Defects may take the form of incomplete, inaccurate or
+corrupt data, transcription errors, a copyright or other
+intellectual property infringement, a defective or damaged
+disk or other etext medium, a computer virus, or computer
+codes that damage or cannot be read by your equipment.
+
+LIMITED WARRANTY; DISCLAIMER OF DAMAGES
+But for the "Right of Replacement or Refund" described below,
+[1] Michael Hart and the Foundation (and any other party you may
+receive this etext from as a PROJECT GUTENBERG-tm etext) disclaims
+all liability to you for damages, costs and expenses, including
+legal fees, and [2] YOU HAVE NO REMEDIES FOR NEGLIGENCE OR
+UNDER STRICT LIABILITY, OR FOR BREACH OF WARRANTY OR CONTRACT,
+INCLUDING BUT NOT LIMITED TO INDIRECT, CONSEQUENTIAL, PUNITIVE
+OR INCIDENTAL DAMAGES, EVEN IF YOU GIVE NOTICE OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+If you discover a Defect in this etext within 90 days of
+receiving it, you can receive a refund of the money (if any)
+you paid for it by sending an explanatory note within that
+time to the person you received it from.  If you received it
+on a physical medium, you must return it with your note, and
+such person may choose to alternatively give you a replacement
+copy.  If you received it electronically, such person may
+choose to alternatively give you a second opportunity to
+receive it electronically.
+
+THIS ETEXT IS OTHERWISE PROVIDED TO YOU "AS-IS".  NO OTHER
+WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, ARE MADE TO YOU AS
+TO THE ETEXT OR ANY MEDIUM IT MAY BE ON, INCLUDING BUT NOT
+LIMITED TO WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Some states do not allow disclaimers of implied warranties or
+the exclusion or limitation of consequential damages, so the
+above disclaimers and exclusions may not apply to you, and you
+may have other legal rights.
+
+INDEMNITY
+You will indemnify and hold Michael Hart, the Foundation,
+and its trustees and agents, and any volunteers associated
+with the production and distribution of Project Gutenberg-tm
+texts harmless, from all liability, cost and expense, including
+legal fees, that arise directly or indirectly from any of the
+following that you do or cause:  [1] distribution of this etext,
+[2] alteration, modification, or addition to the etext,
+or [3] any Defect.
+
+DISTRIBUTION UNDER "PROJECT GUTENBERG-tm"
+You may distribute copies of this etext electronically, or by
+disk, book or any other medium if you either delete this
+"Small Print!" and all other references to Project Gutenberg,
+or:
+
+[1]  Only give exact copies of it.  Among other things, this
+     requires that you do not remove, alter or modify the
+     etext or this "small print!" statement.  You may however,
+     if you wish, distribute this etext in machine readable
+     binary, compressed, mark-up, or proprietary form,
+     including any form resulting from conversion by word
+     processing or hypertext software, but only so long as
+     *EITHER*:
+
+     [*]  The etext, when displayed, is clearly readable, and
+          does *not* contain characters other than those
+          intended by the author of the work, although tilde
+          (~), asterisk (*) and underline (_) characters may
+          be used to convey punctuation intended by the
+          author, and additional characters may be used to
+          indicate hypertext links; OR
+
+     [*]  The etext may be readily converted by the reader at
+          no expense into plain ASCII, EBCDIC or equivalent
+          form by the program that displays the etext (as is
+          the case, for instance, with most word processors);
+          OR
+
+     [*]  You provide, or agree to also provide on request at
+          no additional cost, fee or expense, a copy of the
+          etext in its original plain ASCII form (or in EBCDIC
+          or other equivalent proprietary form).
+
+[2]  Honor the etext refund and replacement provisions of this
+     "Small Print!" statement.
+
+[3]  Pay a trademark license fee to the Foundation of 20% of the
+     gross profits you derive calculated using the method you
+     already use to calculate your applicable taxes.  If you
+     don't derive profits, no royalty is due.  Royalties are
+     payable to "Project Gutenberg Literary Archive Foundation"
+     the 60 days following each date you prepare (or were
+     legally required to prepare) your annual (or equivalent
+     periodic) tax return.  Please contact us beforehand to
+     let us know your plans and to work out the details.
+
+WHAT IF YOU *WANT* TO SEND MONEY EVEN IF YOU DON'T HAVE TO?
+Project Gutenberg is dedicated to increasing the number of
+public domain and licensed works that can be freely distributed
+in machine readable form.
+
+The Project gratefully accepts contributions of money, time,
+public domain materials, or royalty free copyright licenses.
+Money should be paid to the:
+"Project Gutenberg Literary Archive Foundation."
+
+If you are interested in contributing scanning equipment or
+software or other items, please contact Michael Hart at:
+hart@pobox.com
+
+**END THE SMALL PRINT! FOR PUBLIC DOMAIN ETEXTS*Ver.04.08.01*END**
+[Portions of this header are copyright (C) 2001 by Michael S. Hart
+and may be reprinted only when these Etexts are free of all fees.]
+[Project Gutenberg is a TradeMark and may not be used in any sales
+of Project Gutenberg Etexts or other materials be they hardware or
+software or any other related product without express permission.]
+
+
+
+
+
+This etext was produced by David Price, email ccx074@coventry.ac.uk,
+from the 1902 Ab Owen edition.
+
+
+
+
+
+This Etext is in Welsh
+
+
+
+
+
+CEIRIOG
+
+by John Ceiriog Hughes
+
+
+
+
+CYNHWYSIAD.
+
+Rhagymadrodd
+Nant y Mynydd
+Meddyliau am y Nefoedd
+Mae John yn mynd i Loegr
+Bugail yr Hafod
+Ti wyddost beth ddywed fy nghalon
+Y fenyw fach a'r Beibl mawr
+Dychweliad y Cymro
+Addfwyn fiwsig
+Y Carnadau
+Bugeilio'r Gwenith Gwyn
+Mae'n Gymro byth
+Mi welaf mewf adgof
+Dim ond unwaith
+Y march ar gwddw brith
+Y Ferch o'r Scer
+Pa le mae'r hen Gymry
+Maes Crogen
+Tros y Garreg
+Bardd yn ei Awen
+Codiad yr haul
+Llongau Madog
+Serch Hudol
+Breuddwyd y Bardd
+Corn y Gad
+Dafydd y Garreg Wen
+Toriad y Dydd
+Yr Eneth Ddall
+Codiad yr Hedydd
+Ar hyd y Nos
+Morfa Rhuddlan
+Dim ond dechreu
+Difyrrwch Gwyr Harlech
+Trot y Gaseg
+Llances y Dyffryn
+Yn Ynys Mon
+Cadlef Morgannwg
+Mwyn yw myned tua Mon
+Hun Gwenllian
+Ar ddol pendefig
+A laeswn ni ddwylaw
+Llwybr y Pererin
+Bedd Llywelyn
+A ddywedaist ti fod Cymru 'n dlawd
+Peidiwch byth a dwedyd hynny
+Dydd trwy 'r ffenestr
+Cerddi Cymru
+I gadw 'r hen wlad
+Myfi sy'n magu 'r baban
+Tua Thegid dewch
+Hen gwrwg fy ngwlad
+Pob rhyw seren fechan wenai
+Claddedigaeth Morgan Hen
+Myfanwy
+Gofidiau Serch
+Wrth weld yr haul yn machlud
+Y fodrwy briodasol
+O weddi daer
+Y baban diwrnod oed
+Y fam ieuanc
+Ceisiais drysor
+Y fynwent yn y coed
+Claddasom di, Elen
+Annie Lisle
+Y defnyn cyntaf o eira
+Cavour
+Y milwr na ddychwel
+Garibaldi a charcharor Naples
+Glogwyn anwyl
+Ffarwel iti, Gymru fad
+Tros un o drumiau Berwyn
+Dychweliad yr hen filwr
+Trwy wledydd dwyreiniol
+Y Garreg Wen
+Tuag adre
+Beibl fy mam
+Alun Mabon
+
+
+
+
+RHAGYMADRODD.
+
+
+
+Ar un o lethrau'r Berwyn y ganwyd ac y magwyd Ceiriog.  Gadawodd ei
+gartref anghysbell a mynyddig pan yn fachgen; a'i hiraeth am
+fynyddoedd a bugeiliaid bro ei febyd, tra ym mwg a thwrw Manceinion,
+roddodd fod i'w gan pan ar ei thlysaf ac ar ei thyneraf.
+
+Mab Richard a Phoebe Hughes, Pen y Bryn, Llanarmon Dyffryn Ceiriog,
+oedd John Ceiriog Hughes.  Ganwyd ef Medi 25ain, 1832.  Aeth i'r
+ysgol yn Nant y Glog, ger y llan.  Yn lle aros gartref ym Mhen y
+Bryn i amaethu ac i fugeila wedi gadael yr ysgol, trodd tua
+Chroesoswallt yn 1848, i swyddfa argraffydd.  Oddiyno, yn 1849, aeth
+i Fanceinion; ac yno y bu nes y daeth ei enw yn adnabyddus trwy
+Gymru.  Deffrowyd ei awen gan gapel, a chyfarfod llenyddol, a chwmni
+rhai, fel Idris Vychan, oedd yn rhoddi pris ar draddodiadau ac
+alawon Cymru.
+
+Yn 1858 yr oedd yn adrodd rhannau o'i gan fuddugol,--"Myfanwy
+Fychan,"--yn Eisteddfod Llangollen, am y mynydd a'i gartref.  Yn
+1860 cyhoeddwyd ei "Oriau'r Hwyr;" daeth hwn ar unwaith yn un o'r
+llyfrau mwyaf poblogaidd yng Nghymru.  Yn 1861 priododd un o rianod
+gwlad Ceiriog.  Yn 1862 cyhoeddwyd ei "Oriau'r Bore," lle mae ei
+awen ar ei thlysaf ac ar ei grymusaf.  O hynny hyd ddiwedd ei oes,
+daliodd i ganu.  Y mae dros chwe chant o'i ganeuon wedi dod a
+llawenydd i galon miloedd o Gymry, ac ambell un ddeigryn i lawer
+llygad.
+
+Yn 1865, daeth Ceiriog yn orsaf feistr i Lanidloes.  Aeth oddiyno i
+Dowyn yn 1870, oddiyno i Drefeglwys yn 1871, ac oddiyno i Gaersws yn
+yr un flwyddyu.  Yno y bu farw, Ebrill 23ain, 1887.  Treuliodd ei
+febyd, felly, yn Nyffryn Ceiriog, rhan ganol ei oes ym Manceinion,
+a'r rhan olaf ym mlaen Dyffryn yr Hafren.
+
+Trwy'r blynyddoedd yr oedd tri pheth yn agos iawn at ei galon,--
+llenyddiaeth Cymru, yr Eisteddfod, ac addysg Cymru.  Yr oedd yn hoff
+o Ddafydd ab Gwilym; yr oedd ganddo gariad greddfol at y naturiol
+a'r cain.  Yr oedd ei fryd ar ddiwygio'r Eisteddfod, ac ar ei gwneyd
+yn allu cenhedlaethol.  Hiraethai am ddadblygiad cyfundrefn addysg,
+ac ymfalchiai yng Ngholeg Prifysgol Cymru.  Un o wir feibion y
+mynyddoedd oedd.
+
+
+Wrth drefnu'r gyfrol hon, ceisiais ddewis darnau perffeithiaf
+Ceiriog, gan adael allan bopeth lle na welir y bardd ar ei oreu.  Y
+canlyniad ydyw hyn,--dewiswn, er fy ngwaethaf, y dwys a'r tyner yn
+ei awen, ac nid y digrif.  I'r dwys y rhoddodd Ceiriog fwyaf o'i
+enaid, ac ymarllwysiad teimlad ei oriau pruddaf yw ei ganeuon goreu.
+
+Dymunwn ddiolch yn gynnes i'r Mri. Hughes am gyhoeddi y gyfrol hon
+imi.  Y mae ganddynt hwy hawl ar y rhan fwyaf o lawer o'r caneuon
+sydd yn y gyfrol.  Ni buaswn yn gofyn iddynt gyhoeddi y pigion hyn,
+oni buasai fy mod yn gwybod y codir awydd ymysg llawer i brynnu y
+ddwy gyfrol brydferth gyhoeddwyd yn ystod bywyd Ceiriog, a than ei
+ofal, ganddynt hwy.
+
+Ceiriog, yn ddiameu, yw bardd telynegol mwyaf Cymru.  Y mae ei
+naturioldeb syml a'i gydymdemlad dwys wedi rhoi swyn anfarwol i'w
+gan.  Nid oes telyn yn yr un bywyd na chyffyrdda Ceiriog a rhai o'i
+thannau.  Tra aber yn rhedeg yn loew dros raian man, a thra bo gwrid
+mwyn yn hanner gyfaddef serch, ca'r galon ddynol fwynhad a nerth o
+ganeuon Ceiriog.
+
+"Alun Mabon" yw ei gampwaith.  Y mae miwsig hen alawon yn yr odlau;
+y mae bywyd y bugail yma yn ei bryder a'i fwynder.  Ynddo darlunia
+Ceiriog ei fywyd ei hun, a bywyd pob mynyddwr.
+
+"Ond bugeiliaid ereill sydd ar yr hen fynyddoedd hyn."  Nid teulu
+Ceiriog sydd yn byw ym Mhen y Bryn yn awr.  Ym mynwent Llanwnog, ger
+Caersws, ymysg y bryniau hanesiol mud, y rhoddwyd y prydydd i huno.
+Ar groes ei fedd y mae ysgrif syml, ac englyn o'i waith ei hun, -
+
+ER
+COF AM
+JOHN CEIRIOG HUGHES,
+A ANWYD MEDI 25,
+1832,
+A FU FARW EBRILL 23,
+1887.
+
+
+Carodd eiriau cerddorol,--carodd feirdd,
+      Carodd fyw 'n naturiol;
+   Carodd gerdd yn angerddol,
+   Dyma 'i fedd,--a dim lol.
+
+
+OWEN M. EDWARDS.
+Rhydychen,
+Mawrth 1, 1902.
+
+
+
+NANT Y MYNYDD.
+
+
+
+Nant y mynydd, groew, loew,
+   Yn ymdroelli tua'r pant;
+Rhwng y brwyu yn sisial ganu,
+   O na bawn i fel y nant.
+
+Grug y Mynydd yn eu blodau,
+   Edrych arnynt hiraeth ddug
+Am gael aros ar y bryniau
+   Yn yr awel efo'r grug.
+
+Adar man y mynydd uchel,
+   Godant yn yr awel iach;
+O'r naill drum i'r llall yn hedeg -
+   O na bawn fel deryn bach.
+
+Mab y Mynydd ydwyf innau,
+   Oddicartref yn gwneyd can,
+Ond mae'm calon yn y myuydd
+   Efo'r grug a'r adar man.
+
+
+
+MEDDYLIAU AM Y NEFOEDD.
+
+
+
+Y mae y tri phennill hyn mewn rhan yn wreiddiol, ac mewn rhan yn
+gyfieithiedig.
+
+Daw meddyliau am y nefoedd
+   Gydag awel wan y nawn,
+Gyda llanw'r mor fe ddeuant,
+   Gan lefaru 'n felus iawn;
+Pan fo 'r mellt fel ser yn syrthio,
+   Yn y storm gynhyrfus, gref -
+Pan fo 'r llong yn teimlo 'r creigiau,
+   Daw meddyliau am y nef.
+
+Daw meddyliau am y nefoedd,
+   I unigedd fforest goed,
+Ac i'r anial, lle nas tyfodd
+   Un glaswelltyn bach erioed.
+Ar fynyddau 'r ia tragwyddol,
+   Ac ar greigiau llymion, lle
+Bydd eryrod yn gorffwyso,
+   Daw meddyliau am y ne.
+
+Daw meddyliau am y nefoedd
+   I ynysig leia 'r aig,
+Lle mae 'r don yn gosod coron
+   Gwrel wen ar ben y graig;
+Trwy holl gyfandiroedd daear,
+   Glynnoedd dwfn, a bryniau ban,
+Pur feddyliau am y nefoedd
+   Ddont eu hunain i bob man.
+
+
+
+MAE JOHN YN MYND I LOEGER.
+
+
+
+Y mae hen don wladol o'r enw Gofid Gwynan, ac un led dlos ydyw ar y
+cyfan, ond nid i gyd felly.  Ysgrifennwyd y geiriau canlynol i'w
+canu arni, ond nid ydynt yn ymbriodi a'r alaw mor hapus ag y
+dymunwn.  Dymunwn ddyweyd am y gan ganlynol, mai ychydig iawn o
+ddychymyg sydd ynddi, ond fy mod yn dyweyd fy mhrofiad oreu gallwn.
+
+Mae John yn mynd i Loeger,
+   A bore fory 'r a;
+Mae gweddw fam y bachgen
+   Yn gwybod hynny 'n dda;
+Wrth bacio 'i ddillad gwladaidd,
+   A'u plygu ar y bwrdd,
+Y gist ymddengys iddi,
+   Fel arch ar fynd i ffwrdd.
+
+Mae ef yn hel ei lyfrau,
+   I'r gist sydd ar y llawr;
+Yn llon gan feddwl gweled
+   Gwychderau 'r trefydd mawr.
+Nis gwel e 'r deigryn distaw
+   Ar rudd y weddw drist;
+Na 'r Beibl bychan newydd
+   A roddwyd yn y gist.
+
+Yn fore, bore drannoeth,
+   Pan gysgai 'r holl rai bach;
+Wrth erchwyn y gwelyau
+   Mae John yn canu 'n iach.
+Carasai aros gartref,
+   Ond nid oedd dim i'w wneyd -
+Fe gawsai aros hefyd,
+   Pe b'asai 'n meiddio dweyd.
+
+I gwrdd y tren boreuol,
+   Cyn toriad dydd yr a, -
+"Ffarwel, fy mhlentyn anwyl,
+   O bydd yn fachgen da!
+Y nef a'th amddiffynno,
+   Fy machgen gwyn a gwiw;
+Paid byth anghofio 'th gartref,
+   Na 'th wlad, na 'th iaith, na' th Dduw."
+
+
+
+BUGAIL YR HAFOD.
+ALAW,--Hobed o Hilion.
+
+
+
+   Pan oeddwn i'n fugail yn Hafod y Rhyd,
+   A'r defaid yn dyfod i'r gwair a'r iraidd yd;
+   Tan goeden gysgodol mor ddedwydd 'own i,
+   Yn cysgu, yn cysgu, yn ymyl trwyn fy nghi;
+      Gwelaf a welaf, af fan y fynnaf,
+      Yno mae fy nghalon, efo hen gyfoedion
+Yn mwynhau y maesydd a'r dolydd ar hafddydd ar ei hyd.
+
+   Pan oeddwn i gartref, fy mhennaf fwynhad
+   Oedd naddu a naddu ar aelwyd glyd fy nhad;
+   Tra 'm chwaer efo 'i hosan a mam efo carth,
+   Yn nyddu, yn nyddu, ar garreg lan y barth,
+      Deued a ddeuo, anian dynn yno,
+      Hedaf yn fy afiaeth ar adenydd hiraeth
+I'r hen dy, glangynnes, dirodres, adewais yn fy ngwlad.
+
+   Mae'r wennol yn crwydro o'i hannedd ddilyth,
+   Ond dychwel wna'r wennol yn ol i'w hanwyl nyth;
+   A chrwydro wnawn ninnau ymhell ar ein hynt,
+   Gan gofio 'r hen gartref chwareuem ynddo gynt.
+      Pwyso mae adfyd, chwerwi mae bywyd,
+      Chwerwed ef a chwerwo, melus ydyw cofio
+Annedd wen dan heulwen yr awen a wena arnom byth.
+
+
+
+TI WYDDOST BETH DDYWED FY NGHALON.
+
+
+
+Achlysurwyd y penillion hyn gan eiriau ymadawol mam yr awdwr, pan
+oedd hi yn dychwelyd i Gymru, ar ol talu ymweliad iddo.
+
+Yn araf i safle 'r gerbydres gerllaw,
+   Y rhodiai fy mam gyda'i phlentyn;
+I waelod ei chalon disgynnodd y braw,
+   Pan welai y fan oedd raid cychwyn.
+Ymwelwodd ei gwefus--ei llygaid droi 'n syn,
+   Rhy floesg oedd i roddi cynghorion;
+Fe'i clywais er hynny yn sibrwd fel hyn, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+Canfyddodd fy llygad mewn dagrau 'n pruddhau,
+   Gwir ddelw o'i llygad ei hunan;
+Hyn ydoedd am ennyd fel yn ei boddhau,
+   Er nad fy nhristau oedd ei hamcan.
+Ond er fod cyfyngder yr ennyd yn gwneyd
+   Atalfa ar ffrwd o gysuron,
+Mudanrwydd rodd gennad i'w hanadl ddweyd, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+Nid son am gynllwynion y diafol, a'i fryd,
+   Er ennill ieuenctid i'w afael -
+Nid son am ffolineb, a siomiant y byd,
+   Yr ydoedd pan oedd yn fy ngadael;
+Dymunai 'n ddiameu bob lles ar fy nhaith,
+   Trwy fywyd i fyd yr ysbrydion;
+Ond hyn oedd yr oll a ddiangodd mewn iaith, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+I eiriau dirmygus, dieithrol nid wyf,
+   Mi wn beth yw llymder gwatwariaeth;
+Y munud diffygiwn dan loesion eu clwyf,
+   Yn nesaf dro'i oll, yn ddieffaith
+Do, clywais hyawdledd--er teimlo ei rym,
+   Mewn effaith ni lyn ei rybuddion;
+Ond hyn gan dynerwch fyth erys yn llym, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+Mae ysbryd yr oes megis chwyddiad y mor,
+   Yn chware a chreigiau peryglon;
+O'm amgylch mae dynion a wawdiant Dduw Ior,
+   Wyf finnau ddiferyn o'r eigion;
+Fy nghamrau brysurant i ddinistr y ffol,
+   Ond tra ar y dibyn echryslon
+Atelir fi yno gan lais o fy ol, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+Pe gwelwn yn llosgi ar ddalen y nef,
+   Y tanllyd lythrennau "NA PHECHA;"
+Pe rhuai taranau pob oes yn uu llef -
+   "Cyfreithiau dy Dduw na throsedda;"
+Pe mellten arafai nes aros yn fflam,
+   I'm hatal ar ffordd anuwiolion,
+Anrhaethol rymusach yw awgrym fy mam, -
+   "Ti wyddost beth ddywed fy nghalon."
+
+
+
+GWYN, GWYN YW MUR.
+
+
+
+Gwyn, gwyn yw mur y bwthyn ar y bryn,
+O'i bared tyf rhosynau coch a gwyn;
+Tu allan, hardd a pharadwysaidd yw -
+Tu fewn mae'r ferch, fy nghariad wen, yn byw.
+
+
+
+Y FENYW FACH A'R BEIBL MAWR.
+
+
+
+[Mae y gan hon yn un a gerir gennyf fi tra byddaf byw, am fy mod
+wedi digwydd ei chyfansoddi rhwng 9 a 10 o'r gloch, boreu Ebrill y
+3ydd, 1859.  Boreu trannoeth derbyniais lythyr ymylddu o Gymru, yn
+dwyn imi y newydd fod fy anwyl dad wedi cau ei lygaid ar y byd hwn,
+ar y dydd a'r awr grybwylledig.--J. C. H.]
+
+Disgynnai 'r gwlaw, a gwynt y nos
+   A ruai yn y llwyn;
+Pan oedd genethig dlawd, ddifam,
+   Yn dal ei chanwyll frwyn;
+Wrth wely ei chystuddiol dad,
+   A'i gliniau ar y llawr,
+Gan dynnu 'r wylo iddi' hun,
+   A darllen y Beibl mawr.
+
+Disgynnai 'r gwlaw a gwynt y nos
+   Gwynfanai am y dydd,
+A llosgi 'r oedd y ganwyll frwyn
+   Uwchben y welw rudd;
+A gwylio 'r oedd y fenyw fach
+   Ei thad o awr i awr,
+Gan dorri mewn gweddiau taer,
+   A darllen y Beibl mawr.
+
+Disgynnai 'r gwlaw, a gwynt y nos
+   Dramwyai drumiau 'r wlad,
+A chwsg a ddaeth i esmwythau
+   Ei chystuddiedig dad;
+Ond pa fath gwsg, nis gwyddai hi,
+   Nes dwedai 'r oleu wawr,
+Ei fod ef wedi mynd i'r nef,
+   Yn swn yr hen Feibl mawr.
+
+Disgynna 'r gwlaw, ac eto 'r gwynt
+   A rua yn y llwyn,
+Uwchben amddifad eneth dlawd,
+   Tra deil ei chanwyll frwyn;
+Ar ol ei thad, ar ol ei mham,
+   Ei chysur oll yn awr
+Yw plygu wrth eu gwely hwy,
+   A darllen y Beibl mawr.
+
+
+
+DYCHWELIAD Y CYMRO I'W WLAD EI HUN.
+
+
+
+O Hinsawdd i hinsawdd mi grwydrais yn hir,
+   O rewdir y Gogledd i Itali dlos:
+Am danat ti Walia, ar for ac ar dir,
+   Hiraethais y dydd a breuddwydiais y nos.
+Cyfeiriais fy nghamrau i'r ardal hoff hon,
+   Ar gopa Clawdd Offa gosodais fy nhraed;
+Daeth awel y mynydd fel gwin i fy mron,
+   A golwg ar Gymru gynhesodd fy ngwaed,
+   A golwg ar Gymru gynhesodd ngwaed.
+
+Ar dywod yr anial bu ol fy nau droed,
+   Mi deithiais yn oerfel a phoethder yr hin;
+O'r fro lle nas tyfodd glaswelltyn erioed,
+   I wledydd y mel a gwinllanoedd y gwin;
+Yng Nghymru parhaodd fy nghalon o hyd,
+   Anwylach a harddach oedd hen Walia wen;
+Mi groesais y mor i eithafoedd y byd:
+   Ond croesais yr Hafren i orffwys fy mhen,
+   Yng nghartref fy nhadau gorffwysaf fy mhen.
+
+
+
+ADDFWYN FIWSIG.
+
+
+
+Addfwyn Fiwsig, addfwyn Fiwsig,
+Gwenferch gwynfa ydwyt ti;
+Pan anedli, adfywiedig
+   Awel haf ddaw atom ni.
+      Gauaf du helbulon,
+         Droi yn ha;
+      Danat rhew y galon,
+         Toddi wna, toddi wna.
+Dafnau melus bro gogoniant,
+Yn dy lafar di ddisgynnant;
+Blodau Eden yn ddiri',
+Dyfant, wenant, beraroglant,
+Yn dy lais a'th wyddfod ti.
+Nefol ferch ysbrydoledig,
+Ti sy 'n puro 'r fron lygredig,
+Ti sy 'n llonni 'r cystuddiedig.
+Addfwyn Fiwsig, addfwyn Fiwsig
+   Gwenferch gwynfa ydwyt ti.
+
+
+
+Y CANIADAU.
+
+
+
+Nid oes gennyf fawr o bleser gydag ysgrifennu un math o farddoniaeth
+heblaw caneuon bychain o'r fath hyn.  Fy mhlant fy hun ydyw'r
+Caniadau.  Dymuniad fy nghalon a balchder fy mynwes ydyw eu dwyn i
+fyny yn blant da.  Wrth adael i rai ddawnsio mewn plentynrwydd, ac
+i'r lleill chwerthin ac ysmalio, caiff nifer o honynt gadw
+carwriaeth ac eraill ganu hen alawon eu brodir.  Caiff bechgyn
+weithio yn y graig, a bugeilio ar y mynydd, a phan fydd dolefiad
+corn y gad yn galw, fe'u cyfeiriaf i faes y frwydr i amddiffyn eu
+cartref, ac i farw'n ddewr tros Ryddid eu mamwlad.  Yn nesaf at ofni
+Duw ac anrhydeddu y brenin, cant garu eu gwlad a meddwl yn dda am eu
+hiaith a'u cenedl.
+
+
+
+BUGEILIO 'R GWENITH GWYN.
+ALAW,--Bugeilio 'r gwenith gwyn.
+
+
+
+Eisteddai merch ar gamfa'r cae,
+   A'i phen gan flodau 'n dryfrith,
+I gadw 'r adar bach ffwrdd
+   Rhag disgyn ar y gwenith.
+Rho'i ganiatad i'r deryn to,
+   A'r asgell fraith gael disgyn;
+Rhag ofn ei fod yn eos fach,
+   A dyna deimlad plentyn.
+
+Pan welot tithau eneth wan,
+   Yn gofyn am dy gymorth:
+Wrth gil y drws, a glywi di,
+   Mo ymbil chwaer am ymborth?
+Os wyt am fendith ar dy faes,
+   Gogwydda glust i'w gweddi;
+Yr oedd yr haul, a'r gwlith, a'r gwlaw,
+   Yn meddwl am roi iddi.
+
+Os wyt am fedi gwenith gwyn,
+   Gofala beth a heui;
+A wyt ti'n hau y dyddiau hyn
+   Yr hyn ddymunet fedi?
+Tra gwelot wlith a gwlaw y nen,
+   A'r heulwen yn haelionus;
+Wel dos i hau ar dir y tlawd,
+   A chofia'th frawd anghenus.
+
+
+
+MAE 'N GYMRO BYTH.
+ALAW,--O Gylch y Ford Gron.
+
+
+
+Mae'n Gymro byth pwy bynnag yw,
+   A gar ei wlad ddinam;
+Ac ni fu hwnnw 'n Gymro 'rioed,
+   A wado fro ei fam.
+Aed un i'r gad a'r llall i'r mor,
+   A'r llall i dorri mawn;
+A chario Cymru ar ei gefn
+   A wnaiff y Cymro iawn.
+
+Cydgan:  Does neb yn caru Cymru 'n llai,
+   Er iddo grwydro 'n ffol;
+Mae calon Cymro fel y trai
+   Yn siwr o ddod yn ol.
+
+Er mynd ymhell o Walia Wen,
+   A byw o honi 'n hir,
+Ac er i'r gwallt claerdduaf droi
+   Yn wyn mewn estron dir,
+Mae 'r cof am dad a mam yn mynd
+   I'r bwthyn yn y ddol,
+A chlychau mebyd yn y glust
+   Yn galw galw 'n ol.
+
+Enilled aur ac uchel glod,
+   Mewn gwlad o win a mel;
+Aed yn ei longau ar y mor,
+   Er maint o'r byd a wel;
+Wrth edrych ar fachludiad haul
+   A gwylio ser y nos,
+Bydd clychau arian yn y gwynt
+   Yn son am Gymru dlos.
+
+
+
+MI WELAF MEWN ADGOF.
+ALAW,--Difyrrwch Arglwyddes Owen.
+
+
+
+Mi welaf mewn adgof hen ysgol y Llan,
+A'r afon dryloew yn ymyl y fan:
+O'm blaen mae pob carreg yn rhedeg yn rhes,
+A'r coedydd gysgodent fy mhen rhag y gwres.
+Yng nghanol eu cangau mae telyn y gwynt,
+Yn eilio 'r hen alaw a ganwn i gynt;
+Rwy 'n teimlo fy nhalcen dan heulwen yr haf,
+A 'nghalon yng Ngwalia ple bynnag yr af.
+
+Rwy'n gweled y defaid a'r wyn ar y bryn,
+Rwy 'n gweled gwynebau sy 'ngwaelod y glyn;
+Rwy'n clywed rhaiadrau yn adsain o draw,
+Ar mawrwynt yn erlid y cenllysg ar gwlaw.
+O sued yr awel, a rhued y don,
+Beroriaeth adgofion yn lleddf ac yn llon,
+Boed cwpan dedwyddyd yn wag neu yn llawn,
+Yng Ngwalia mae 'r galon ple bynnag yr awn.
+
+
+
+DIM OND UNWAITH YN Y FLWYDDYN.
+
+
+
+Dim ond unwaith yn y flwyddyn,
+   Awn i fyny 'r cymoedd cain;
+Awn i ogli 'r peraidd borwellt
+   Llysiau 'r mel a blodau 'r drain.
+Dim ond unwaith yn y flwyddyn
+   Gwena 'r ddaear oll fel gardd;
+      Awn aan dro, tua bryniau 'n bro
+Dim ond unwaith yn y flwyddyn,
+   Pwy na chwery, pwy na chwardd?
+
+
+
+Y MARCH A'R GWDDW BRITH.
+ALAW,--Y Gadlys.
+
+
+
+Caradog eilw 'i ddeiliaid,
+   Ag udgorn ar ei fant;
+Fe ruthrodd y Siluriaid,
+   Cwympasant yn y pant.
+Enciliodd arwyr enwog,
+   Ond ar y march a'r gwddw brith
+   Fe ddaw 'r frenhines deg i'w plith
+I edrych am Garadog.
+
+Mae cynnwrf yn y ceunant,
+   Ar derfyn dydd y gad;
+A dynion dewr orweddant,
+   I farw tros eu gwlad.
+Yr afon foddodd fyddin,
+   Ond ar y march a'r gwddw brith,
+   Fe ddaw 'r frenhines deg i'w plith,
+I edrych am y brenin.
+
+Fe welodd y Rhufeiniaid
+   Y march a'r gwddw brith;
+Ond gwelodd y Brythoniaid
+   Frenhines yn eu plith.
+Mae 'r corn yn ail-udganu,
+   Brythoniaid yn eu holau dront,
+   Rhufeiniaid yn eu holau ffont,
+O flaen cleddyfau Cymru.
+
+
+
+Y FERCH O'R SCER.
+ALAW,--Y Ferch o'r Scer.
+
+
+
+Dywedir fod Merch y Scer yn ddarpar gwraig i'r telynor am rai
+blynyddau, ond gan iddo trwy ryw ddamwain golli ei olwg, fe
+berswadiwyd y llances gan ei pherthynasau a chan ei theimladau ei
+hun i roi pen ar y garwriaeth.  Gwnaed y don gwynfanus a phrydferth
+hon gan y telynor i arllwys allan ei siomedigaeth a'i ofid.
+
+'R wyf yn cysgu mewn dallineb
+   Ganol dydd a chanol nos;
+Gan freuddwydio gweled gwyneb
+   Lleuad wen a seren dlos.
+Tybio gweld fy mam fy hunan -
+   Gweld yr haul yn danbaid der;
+Gweld fy hun yn rhoddi cusan
+      I fy chwaer a Merch y Scer.
+
+Gwresog ydyw'r haul gwyneblon,
+   Oer, ond anwyl, ydyw 'r ser;
+Gwres oer felly yn fy nghalon
+   Bar adgofion Merch y Scer.
+Mae fy mam a'm chwaer yn dirion,
+   Yn rhoi popeth yn fy llaw;
+Merch y Scer sy 'n torri 'm calon,
+   Merch y Scer sy 'n cadw draw.
+
+Cariad sydd fel pren canghennog,
+   Pwy na chara Dduw a dyn?
+Cangen fechan orflodeuog
+   Ydyw cariad mab a mun.
+O! 'r wy'n diolch ar fy ngliniau,
+   Am y cariad pur di-ball;
+Cariad chwaer sy 'n cuddio beiau -
+   Cariad mam sy'n caru 'r dall.
+
+
+
+PA LE MAE 'R HEN GYMRY?
+ALAW,--Llwyn Onn.
+
+
+
+Bernid unwaith, nid yn unig gan Gymru hygoel, ond gan yr holl
+deyrnas, fod llwyth o Indiaid Cymreig yn preswylio parth o'r America
+ar gyffiniau yr afon Missouri, ac mai y Padoucas neu y Mandanas
+oeddynt.  Y mae yr hanes am JOHN EVANS o'r Waunfawr, yn Arfon, yn
+hynod effeithiol.  Cenhadwr ieuanc, llawn o ysbryd gwladgarol ac o
+sel grefyddol ydoedd ef.  Ymgymerodd a'r gorchwyl mawr o fyned i
+eithafoedd America, i chwilio am ddisgynyddion Madog, ac i bregethu
+yr efengyl iddynt.  Dilynodd John Evans yr afon Missouri am 1,600 o
+filldiroedd, ond tarawyd ef a'r dwymyn, a bu farw, ymhell o'i fro
+enedigol, ac mor bell ag erioed oddiwrth yr Indiaid Cymreig.  Y mae
+pedwar ugain mlynedd er hynny, ac y mae ein barn, gan mwyaf, wedi
+cyfnewid o barth i fodolaeth bresennol disgynyddion Madog ap Owen
+Gwynedd.  Gweler draethawd Thomas Stephens, Ysw., Merthyr Tydfil, ar
+y mater.  Y mae amcan mawreddus, ynni anturiaethus, taith
+aflwyddiannus, a diwedd torcalonnus y Cymro ieuanc hwn yn hynod
+darawiadol.
+
+Mae 'r haul wedi machlud, a'r lleuad yn codi,
+   A bachgen o Gymru yn flin gan ei daith;
+Yn crwydro mewn breuddwyd, ar lan y Missouri,
+   I chwilio am lwyth a lefarent ein hiaith.
+Ymdrochai y ser yn y tonnau tryloewon,
+   Ac yntau fel meudwy yn rhodio trwy i hun;
+"Pa le mae fy mrodyr?" gofynnai i'r afon
+"Pa le mae 'r hen Gymry, fy mhobol fy hun?"
+
+Fe ruai bwystfilod, a'r nos wnai dywyllu,
+   Tra 'r dwfr yn ei wyneb a'r coed yn ei gefn;
+Yng nghaban y coediwr fe syrthiodd i gysgu,
+   Ac yno breuddwydiodd ei freuddwyd drachefn.
+Fe welai Frythoniaid, Cymraeg wnaent lefaru,
+   Adroddent eu hanes, deallai bob un.
+Deffrodd yn y dwymyn, bu farw gan ofyn,
+"Pa le mae 'r hen Gymry, fy mhobol fy hun?"
+
+
+
+MAES CROGEN BORE TRANOETH.
+ALAW,--Y Fwyalchen.
+
+
+
+Ar y ffordd rhwng y Waun a Glynceiriog, y mae ty fferm mawr, o'r enw
+Crogen Iddon.  Bu brwydr dost yn yr ardal hon yn 1164, rhwng y
+Cymry, tan arweiniad Owen Gwynedd, a Harri II.  Y mae ol ei wersyll
+mewn amryw fannau ar yr Orsedd Wen, Bwrdd y Brenin--ac ar ran o'r
+mynydd perthynol i'r amaethdy y'm ganwyd ac y'm magwyd i.
+
+Y frwydr aeth trosodd o'r diwedd,
+   A baeddwyd y gelyn yn llwyr;
+A'r ser edrychasant ar Wynedd,
+   A'r bore ddilynodd yr hwyr.
+'R oedd yno ieuenctid yn gorwedd,
+   Am sefyll tros Wynedd yn bur -
+Yn fore daeth mamau a gwragedd,
+   I chwilio am feibion a gwyr.
+
+Fe ganai mwyalchen er hynny,
+   Mewn derwen ar lannerch y gad;
+Tra 'r coedydd a'r gwrychoedd yn lledu,
+   Eu breichiau tros filwyr ein gwlad.
+Gorweddai gwr ieuanc yn welw,
+   Fe drengodd bachgennyn gerllaw;
+Tra i dad wrth ei ochor yn farw,
+   A'i gleddyf yn fyw yn ei law.
+
+Gan frodyr, chwiorydd, a mamau,
+   Fe gasglwyd y meirwon ynghyd;
+Agorwyd y ffos ac fe 'i cauwyd,
+   Ond canai 'r Fwyalchen o hyd.
+Bu brwydyr Maes Crogen yn chwerw,
+   Gwyn fyd yr aderyn nas gwyr
+Am alar y byw am y meirw,
+   Y bore ddilynodd yr hwyr.
+
+
+
+TROS Y GARREG.
+ALAW,--Tros y Garreg.
+
+
+
+Pan y bydd llanciau a merched sir Feirionnydd mewn llefydd rhwng
+Bwlch Llandrillo a Chlawdd Offa, soniant yn fynych am fyned am dro i
+sir Feirionnydd, tros Garreg Ferwyn a thros y Bwlch.  Awgrymwyd y
+gan hon gan lodes oedd yn myned ag arian i helpu ei mam dalu y rhent
+am y ty bychan lle y ganwyd ac y bu farw ei thad.
+
+Fe ddaw wythnos yn yr haf,
+Gweled hen gyfeillion gaf;
+   Tros y mynydd
+   I Feirionnydd,
+Tros y Garreg acw 'r af.
+Ar y mynydd wele hi,
+Draw yn pwyntio ataf fi;
+Fyny 'r bryn o gam i gam,
+Gyda 'm troed fy nghalon lam;
+   Af ag anrheg
+   Tros y Garreg
+I fy unig anwyl fam.
+
+Fe gaf chware ar y ddol,
+Fe gaf eistedd ar y 'stol,
+   Wrth y pentan,
+   Diddan, diddan,
+Tros y Garreg af yn ol.
+Pan ddaw 'r wythnos yn yr haf,
+O fel codaf ac yr af,
+Fyny 'r bryn o gam i gam,
+Gyda 'm troed fy nghalon lam;
+   Af ag anrheg
+   Tros y Garreg
+I fy unig anwyl fam.
+
+
+
+BARDD YN EI AWEN.
+ALAW,--Bardd yn ei Awen.
+
+
+
+Mae llawer eraill o ddulliau yn bod ar y mesur hwn, ond nid wyf yn
+alluog, oddiwrth yr engreifftiau sydd gennyf, i roi barn nac opiniwn
+pa un o'r amryw fathau yw y mwyaf dewisol.  Y mae y don yn ddigon
+ystwyth ac ufudd, modd bynnag, i addasu ei hun at y cyfan.  Efallai
+
+
+Nad oes faws na dwys fesur
+O un baich i hen don bur,
+
+
+mwy nag i awen.
+
+Mae Bardd i ddod ryw ddydd,
+A brenin-fardd ein bryniau fydd,
+   Fe ddaw i Gymru lan;
+Ei wlad a glyw ei lef,
+A ni a phawb a'i hoffwn ef,
+   Pan gwyd pen gawr y gan;
+Fe aiff i ddwyfol fan,
+   Yn nghiliau dwfn hen galon dyn:
+Am Hedd fe gan o hyd,
+Fod angel Hedd yn hel ynghyd,
+   Enwadau 'r byd yn un.
+
+Fe ddaw y Bardd i'r byd,
+A'i gan i ben, O! gwyn eu byd
+   Y dorf a wel y dydd;
+Pwy wel y bore gwyn,
+Ac heulwen deg cyflawniad hyn,
+   Y fath gyfundeb fydd!
+Daw bardd i fysg ein plant,
+   I daro tant yn natur dyn;
+Am Hedd fe gan o hyd,
+Fod angel Hedd yn hel ynghyd
+   Enwadau 'r byd yn un.
+
+
+
+CODIAD YR HAUL.
+ALAW,--Codiad yr Haul.
+
+
+
+Mae yr alaw hon yn fwy addas feallai i'w chanu ar offeryn na chyda
+llais, oblegid ei bod mor gyflym, nes y mae synwyr, barddoniaeth
+geiriau, ac odlau yn cael llithro trostynt o'r bron heb eu cyffwrdd.
+Yr oedd Handel yn gydnabyddus iawn gyda'r hen donau Cymreig, ac fe
+ddefnyddiodd hon yn ei Acis and Galatea.  Yr oedd cyfaill o Sais un
+tro yn chware yr alaw o dan fy nghronglwyd, ac wedi myned unwaith
+neu ddwy tros y don, pan waeddodd allan tros ei ysgwydd, "Ai ton
+Gymreig y galwch chwi hon?  Ton o waith Handel yn don Gymreig!"  Yr
+oedd yn dda gennyf gael cyfleustra i esbonio iddo.
+
+   Gwel, gwel! wyneb y wawr,
+   Gwenu mae y bore-gwyn mawr:
+Ac wele'r Haul trwy gwmwl rhudd,
+Yn hollti ei daith gan dywallt Dydd!
+   I'w wydd adar a ddont,
+   Dreigiau 'r Nos o'i olwg a ffont.
+Pwy ddwed hardded ei rudd,
+Wyched yw gwynfreichiau Dydd!
+   Try y mor yn gochfor gwaed,
+   A'r ddaear dry o dan ei draed,
+   A'r ddaear dry o dan ei draed.
+
+   Haul, Haul! hyfryd yw Haul,
+   Gwyneb Hedd yw gwyneb yr Haul:
+I fyrdd y dysg fawredded yw
+Y gwynwedd dan gyneuodd Duw!
+   I'w daith' fyny y daw,
+   Llygaid dydd a'i gwelant ef draw;
+Egyr pob blaguryn byw,
+Ar ros a gwaun yn rhesi gwiw -
+   Gwel pob peth wyn haul y nen,
+   E' gwyd y byd pan gwyd ei ben,
+   E' gwyd y byd pan gwyd ei ben.
+
+
+
+LLONGAU MADOG.
+ALAW,--Difyrrwch y Brenin.
+
+
+
+Wele'n cychwyn dair ar ddeg,
+O longau bach ar fore teg;
+Wele Madog ddewr ei fron,
+Yn gapten ar y llynges hon.
+Mynd y mae i roi ei droed,
+Ar le na welodd dyn erioed:
+Antur enbyd ydyw hon,
+Ond Duw a'i dal o don i don.
+
+Ser y nos a haul y dydd,
+O gwmpas oll yn gwmpawd sydd;
+Codai corwynt yn y De,
+A chodai 'r tonnau hyd y ne;
+Aeth y llongau ar eu hynt,
+I grwydro 'r mor ym mraich y gwynt;
+Dodwyd hwy ar dramor draeth,
+I fyw a bod er gwell er gwaeth.
+
+Wele'n glanio dair ar ddeg,
+O longau bach ar fore teg:
+Llais y morwyr glywn yn glir,
+'R ol blwydd o daith yn bloeddio "Tir!"
+Canent newydd gan ynghyd,
+Ar newydd draeth y newydd fyd -
+Wele heddwch i bob dyn,
+A phawb yn frenin arno 'i hun.
+
+
+
+SERCH HUDOL.
+ALAW,--Serch Hudol.
+
+
+
+   Serch Hudol swyn,
+   Sy'n llanw 'r llwyn,
+Pan fo myrdd o adar mwyn,
+   Yn canu yn y coed.
+Mae anian oll yn canu 'nghyd,
+'D oes dim yn fyddar nac yn fud,
+Mae mwy o fiwsig yn y byd
+   Na thybiodd dyn erioed.
+   Corau 'r Wynfa wen,
+A ganant byth heb ddod i ben,
+Maer delyn aur gan deulu 'r nen,
+   Yng ngwyddfod Duw ei hun.
+Mae can yn hedeg ar ei hynt,
+Yn swn y mor a llais y gwynt,
+Bu ser y bore 'n canu gynt,
+   Paham na chana dyn?
+
+   Serch hudol yw,
+   Pob peth sy'n byw,
+Yn y nef a daear Duw;
+   O'r haul sy'n llosgi fry -
+I'r pryfyn tan yr hwn a roed,
+I rodio 'r clawdd a gwraidd y coed,
+I oleu ar y llwybyr troed
+   Sy'n arwain i dy dy.
+   Hardd yw llun a lliw,
+Pob peth a ddaeth o ddwylaw Duw,
+I ble 'r a llygad dyn nad yw,
+   Yng ngwydd y tlws a'r cain?
+Prydferthwch sydd yn llanw 'r nef,
+A phob creadur greodd Ef,
+O'r eryr ar ei aden gref,
+   I'r dryw sydd yn y drain.
+
+
+
+BREUDDWYD Y BARDD.
+
+
+
+Nis gwn am un engraifft o bennill ar y mesur hwn, ac nis gwn am neb
+sydd yn gallu yr hen alaw odidog heblaw y cyfaill Idris Vychan.  Y
+mae seibiant yn y don ar ddiwedd y chweched llinell, a'r llinell
+olaf yn llwythog o ofid a siomedigaeth.  Ymdrechais yn y geiriau
+gadw at gymeriad neilltuol y llinell olaf.  Mae hi fel moeseb
+oddiwrth, neu eglurhad ar, y chwe llinell flaenorol.
+
+ALAW,--Breuddwyd y Bardd.
+
+[Music not transcribed--DP]
+
+Eisteddai hen fardd yn ei gadair,
+   Yn wargrwm a'i wallt fel y gwlan;
+A'i feddwl a hedodd i'r amser
+   Y gwelid ei blant wrth y tan.
+Ei amrant a gauodd, ac yna breuddwydiodd
+   Yn weddw ac unig heb neb iw wahardd -
+Yng ngwynfyd ei galon breuddwydiodd y bardd.
+
+Fe welodd ei hun yn priodi,
+   Genethig anwylaf y wlad;
+Fe glywodd ei gyntaf anedig
+   Gan wenu 'n ei alw fe 'n "dad!"
+Ni welodd ef gladdu ei briod a'i deulu,
+   Na deilen wywedig yn disgyn i'r ardd -
+Na, breuddwyd ei febyd freuddwydiodd y bardd.
+
+Fe glywai hen glychau Llanarmon,
+   Yn fachgen fe deimlodd ei hun,
+Breuddwydiodd hen deimlad y galon,
+   Sef hiraeth am ddyfod yn ddyn.
+Ni chofiodd ef helynt y dyddiau'r aeth trwyddynt,
+   Ond tybiodd fod popeth yn hyfryd a hardd -
+Breuddwydion ei galon freuddwydiodd y bardd.
+
+Er na bu un linell mewn argraff
+   O waith y breuddwydiwr erioed;
+Fe wel ef ei waith yn gyfrolau,
+   A dynion yn rhodio fel coed,
+A bechgyn yn darllen cynyrchion ei awen,
+   Fe wel anfarwoldeb trwy gwsg, ac fe chwardd -
+Breuddwydion ei galon freuddwydiodd y bardd.
+
+
+
+CORN Y GAD.
+ALAW,--Rhyfelgan Ap Ivan Bennaeth.
+
+
+
+Ar y mynydd rhodiai bugail,
+Gwelai 'r gelyn ac yn uchel,
+Bloeddiodd allan--"Llongau Rhyfel!"
+Yna clywai gorn y gad.
+      Corn y gad!
+Dyna ganiad corn arswydion,
+Traidd ei ddolef trwy Blunlumon,
+Cawdor sydd yn galw 'i ddynion.
+Corn y rhyfel hollta 'r nefoedd,
+Tery arswyd trwy 'r mynyddoedd,
+Etyb creigiau pell y cymoedd
+         Gorn y gad.
+
+Fel mae Draig hen Gymru 'n deffro
+Tan y amynydd yn ei hogo',
+Cerrig ateb sydd yn bloeddio,
+Chwythu 'n uwch wna corn y gad;
+      Corn y gad!
+Meibion Berwyn ydynt barod,
+Llifant o'r mynyddoedd uchod,
+Duant y gwastadedd isod;
+Meirch i'r frwydyr gydgarlamant,
+Holl gleddyfau Cymru fflamiant,
+Mewn urdduniant, cydatebant
+         Gorn y gad!
+
+
+
+CORN Y GAD.
+
+
+
+Meddaf y pleser o ysgrifennu geiriau am y waith gyntaf i hen
+ryfelgan Gymreig o radd uchel; o leiaf nid wyf yn gwybod fod neb o'm
+blaen wedi cyfansoddi can ar yr alaw.  Ni bu y gerddoriaeth ychwaith
+yn argraffedig.  Fe ddichon fod y don wedi ei chyhoeddi, ac fe
+ddichon fod rhai o'm cyfeillion yn gwybod am eiriau hefyd llawer
+rhagorach na'm heiddo i.  Fe ddywedaf ar fyr eiriau pa fodd y daeth-
+um ar ei thraws.  Fel yr oedd Idris a minnau un noswaith yn hwmian
+hen donau i'n gilydd, fe ofynnodd ef braidd yn sydyn, "A glywsoch
+chwi Ivan ap Ivan Bennoeth erioed?"  Dywedais, os darfum ei chlywed,
+na chlywais hi ar yr enw hwnnw.  "O," ebai yntau, "hen don anwyl,
+nad oes ei gwell gan ein cenedl.  Mae tebygrwydd ynddi, fel yn amryw
+alawon eraill, i 'Difyrrwch Gwyr Harlech,' ac nid oes llawer lai o
+nerth a mawredd ynddi."  Digwyddodd fod ei lais yn well nag arferol,
+a'm ystafell innau yn fechan, ac allan a hi nes oedd y bwrdd yn
+crynnu, a phlant a phobl ar yr heol yn sefyll i wrando wrth y ty.
+Dywedai iddo ei chlywed, er yn blentyn, yn cael ei chware gan
+seindorf Dolgellau.
+
+
+
+DAFYDD Y GARREG WEN.
+
+
+
+Tyddyn yw y Garreg Wen, ger Porthmadog.  Yno yn y flwydd 1720 y
+ganwyd Dafydd, i'r hwn y priodolir cyfan-soddiaeth y don sydd ar ei
+enw.  Dywedir hefyd, ond ar ba sail nis gwyddom, mai efe ydyw awdwr
+Codiad yr Hedydd, Difyrrwch Gwyr Cricieth, ac alawon eraill.  Y mae
+y don yn un o'r rhai prydferthaf sydd gennym, ac yn nodedig o alarus
+a dwys.  Bu y cerddor gobeithiol hwn farw yn 1749, yn 29 oed, a
+chladdwyd ef ym mynwent Ynys Cynhaiarn, lle mae cofadail i'w
+goffadwriaeth, a llun ei delyn yn gerfiedig arni ynghyd a'r
+geiriau,--"BEDD DAVID OWEN, neu DAFYDD Y GARREG WEN."
+
+'R oedd Dyfydd yn marw, pan safem yn fud
+I wylio datodiad rhwng bywyd a byd;
+"Ffarwel i ti 'mhriod, fy Ngwen," ebai ef,
+"Fe ddaeth y gwahanu, cawn gwrdd yn y nef."
+
+Fe gododd ei ddwylaw, ac anadl ddaeth
+I chwyddo 'r tro olaf trwy 'i fynwes oer, gaeth;
+"Hyd yma 'r adduned, anwylyd, ond moes
+Im' gyffwrdd fy nhelyn yn niwedd fy oes."
+
+Estynwyd y delyn, yr hon yn ddioed
+Ollyngodd alawon na chlywsid erioed;
+'R oedd pob tant yn canu 'i ffarweliad ei hun,
+A Dafydd yn marw wrth gyffwrdd pob un.
+
+"O! cleddwch fi gartref yn hen Ynys Fon,
+Yn llwch y Derwyddon, a hon fyddo 'r don,
+Y dydd y'm gosodir fi 'n isel fy mhen," -
+A'i fysedd chwareuant yr "Hen Garreg Wen."
+
+'R oedd Dafydd yn marw, pan safem yn fud
+I wylio datodiad rhwng bywyd a byd;
+Yn swn yr hen delyn gogwyddodd ei ben,
+Ac angau rodd fywyd i'r "Hen Garreg Wen."
+
+
+
+TORIAD Y DYDD.
+ALAW,--Toriad y Dydd.
+
+
+
+Fe welid cant o honom
+   Yng ngoleu 'r lleuad brudd,
+Yn dringo fyny 'r Wyddfa fawr
+   I weled Toriad Dydd.
+Edrychem ar y nefoedd,
+   Wrth fynd o fryn i fryn;
+Edrychem ar y llynoedd dwr,
+   A phwysem ar ein ffyn.
+A gwelem y Saith Seren
+   Oedd yn y gogledd draw,
+Yn gwenu ar Saith Seren wen
+   Oedd yn y llyn gerllaw.
+Ond nid oedd amser sefyll,
+   Nid oedd ond hanner awr,
+Na byddai Toriad Dydd yn dod
+   Ar ben y Wyddfa fawr.
+
+O'r diwedd cyrhaeddasom
+   At ffynnon ger ei phen,
+Gan ddiolch am gael gwin y graig
+   Mor agos at y nen.
+Dringasom ris i fyny,
+   A threm fawreddus gaed, -
+Yr holl ddwyreiniol fyd yn goch,
+   Yn fflamio wrth ein traed;
+Ataliodd pawb ei anadl,
+   A phlethodd pawb ei law,
+Wrth weld y goelcerth goch yn dod,
+   A'r nos yn treiglo draw.
+Galwasom am y delyn,
+   Ac yng ngoleuni 'r wawr,
+Canasom don ar "Doriad Dydd"
+   Ar ben y Wyddfa fawr.
+
+
+
+YR ENETH DDALL.
+ALAW, Toriad y Dydd.
+
+
+
+Mae llawer un yn cofio
+   Yr eneth fechan ddall;
+Ni welodd neb un fach mor fwyn,
+   Mor brydferth, ac mor gall;
+Fe gerddodd am flynyddau
+   I ysgol Dewi Sant,
+Ar hyd y ffordd o gam i gam,
+   Yn nwylaw rhai o'r plant.
+'R oedd gofal pawb am dani,
+   A phawb yn hoffi 'r gwaith
+O helpu 'r eneth fach ymlaen,
+   Trwy holl drofeydd y daith;
+Siaradai 'r plant am gaeau,
+   A llwybrau ger y lli,
+Ac am y blodau tan eu traed,
+   Ond plentyn dall oedd hi.
+
+Fe glywai felus fiwsig
+   Yr adar yn y dail;
+Fe deimlai ar ei gwyneb bach
+   Belydrau serch yr haul;
+Aroglai flodau 'r ddaear;
+   Ond nis adwaenai 'r fun
+Mo wen yr haul, a mwy na 'r oll
+   Mo wen ei mam ei hun.
+Mae 'r plentyn wedi marw, -
+   Ar wely angau prudd
+Fe wenodd ar ei mam gan ddweyd,
+   "Mi welaf doriad dydd!"
+Ehedodd mewn goleuni
+   Oddiwrth ei phoen a'i phall,
+A gweled golygfeydd y nef
+   Y mae yr ENETH DDALL.
+
+
+
+CODIAD YR HEDYDD.
+ALAW,--Codiad yr Hedydd.
+
+
+
+Dywedir fod D. Owen wedi mynd i noson-lawen i Blas y Borth,
+Porthmadog, ac fe arosodd y telynor yn rhialtwch yr arwest, tan ddau
+neu dri o'r gloch yn y bore.  Fe ddaeth dydd ar warthaf Dafydd a'i
+delyn pan oedd y ddau ar y ffordd adref.  Eisteddodd y llanc ar
+garreg sydd i'w chanfod eto yn yr ardal, i sylwi ar ehedydd uweh ei
+ben yn taro cyweirnod ei galon ar doriad dydd.  Dyna'r fan a'r pryd
+y cyfansoddwyd y don Codiad yr Hedydd.
+
+Clywch, clywch foreuol glod,
+O fwyned yw 'r defnynnau 'n dod
+   O wynfa lan i lawr.
+Ai man ddefnynnau can
+Aneirif lu ryw dyrfa lan
+   Ddiangodd gyda 'r wawr?
+Mud yw 'r awel ar y waun,
+   Brig y grug yn esmwyth gryn;
+Gwrando mae yr aber gain,
+   Yn y brwyn ymguddia 'i hun.
+Mor nefol swynol ydyw 'r sain
+   Sy 'n dod i ddeffro dyn.
+
+Cwyd, cwyd ehedydd, cwyd,
+O le i le ar aden lwyd,
+   Yn uwch, yn uwch o hyd;
+Can, can dy ddernyn cu,
+A dos yn nes at lawen lu
+   Adawodd boen y byd, -
+Canu mae a'r byd a glyw,
+   Ei alaw lon o uchel le;
+Cyfyd hiraeth dynol ryw
+   Ar ei ol i froydd ne:
+Yn nes at Ddydd, yn nes at Dduw,
+   I fyny fel efe.
+
+
+
+AR HYD Y NOS
+ALAW,--Ar hyd y Nos.
+
+
+
+Holl amrantau 'r ser ddywedant,
+   Ar hyd y nos,
+Dyma 'r ffordd i fro gogoniant,
+   Ar hyd y nos.
+Goleu arall yw tywyllwch,
+I arddangos gwir brydferthwch
+Teulu 'r nefoedd mewn tawelwch,
+   Ar hyd y nos.
+O mor siriol gwena seren
+   Ar hyd y nos;
+I oleuo 'i chwaer-ddaearen
+   Ar hyd y nos.
+Nos yw henaint pan ddaw cystudd,
+Ond i harddu dyn a'i hwyrddydd,
+Rhown ein goleu gwan i'n gilydd
+   Ar hyd y nos.
+
+
+
+MORFA RHUDDLAN.
+ALAW,--Morfa Rhuddlan.
+
+
+
+Gwgodd y nefoedd ar achos y cyfion,
+   Trechodd Caethiwed fyddinoedd y Rhydd;
+Methodd gweddiau fel methodd breuddwydion,
+   Cleddyf y gelyn a gariodd y dydd;
+Cuddied y Morfa tan eira tragwyddol,
+   Rhewed yr eigion am byth tros y fan;
+Arglwydd trugarog, O! tyred i ganol
+   Achos y cyfiawn a chartref y gwan.
+
+Brenin y gelyn fydd pen ein gwladwriaeth,
+   Lleiddiad Caradog a gymer ei le;
+Cwymped y delyn ar gwympiad Caradog,
+   Syrthied i'r ddaear fel syrthiodd efe.
+Eto, edrychaf ar draeth y gyflafan,
+   Wadwyd mo Ryddid, a chablwyd mo 'r Ior;
+Gwell ydoedd marw ar Hen Forfa Rhuddlan,
+   Gwell ydoedd suddo i Ryddid y mor.
+
+
+
+'DOES DIM OND EISIEU DECHREU.
+ALAW,--Y Gadlys.
+
+
+
+'Does dim ond eisieu dechreu,
+Mae dechreu 'n hanner gwaith,
+I ddysgu pob gwybodau
+   A deall unrhyw iaith.
+Nac ofnwch anhawsderau,
+   'Does un gelfyddyd dan y rhod
+   Nad all y meddwl diwyd ddod,
+I'w deall wedi dechreu.
+"Fe hoffwn innau sengyd
+   Ar ben y Wyddfa draw,"
+Medd hen foneddwr gwanllyd
+   A phastwn yn ei law.
+Cychwynnodd yn y boreu,
+   Ac erbyn hanner dydd yr oedd
+   Ar ben y mynydd yn rhoi bloedd,
+"'Doedd dim ond eisieu dechreu."
+
+I fesur y planedau
+   Sy'n hongian er erioed;
+I ddarllen tudalennau
+   Y ddaear tan dy droed -
+Y bachgen efo 'i lyfrau
+   Ymlaen yr a, ymlaen yr a
+   I wneuthur drwg neu wneuthur da,
+'Does dim ond eisieu dechreu.
+Wel, deuparth gwaith ei ddechreu,
+   'Does un ddihareb well;
+Cychwynnwch yn y boreu,
+   Fe ellwch fynd ymhell.
+Edrychwch rhwng y bryniau
+   Ffynhonnau bach sy'n llifo 'i lawr,
+   Ond ant i'r mor yn genllif mawr,
+'Does dim ond eisieu dechreu.
+
+
+
+DIFYRRWCH GWYR HARLECH
+ALAW,--Difyrrwch Gwyr Harlech
+
+
+
+Wele goelcerth wen yn fflamio,
+   A thafodau tan yn bloeddio,
+Ar i'r dewrion ddod i daro
+   Unwaith eto 'n un;
+Gan fanllefau 'r tywysogion,
+Llais gelynion, trwst arfogion,
+A charlamiad y marchogion,
+   Craig ar graig a gryn.
+Cwympa llawer llywydd,
+Arfon byth ni orfudd;
+Cyrff y gelyn wrth y cant
+   Orffwysant yn y ffosydd;
+Yng ngoleuni 'r goeleerth acw,
+Tros wefusau Cymro 'n marw,
+Anibyniaeth sydd yn galw
+   Am ei dewraf dyn.
+
+Ni chaiff gelyn ladd ac ymlid
+Harlech!  Harlech; cwyd i'w herlid;
+Y mae Rhoddwr mawr ein Rhyddid,
+   Yn rhoi nerth i ni;
+Wele Gymru a'i byddinoedd
+Yn ymdywallt o'r mynyddoedd!
+Rhuthrant fel rhaiadrau dyfroedd
+   Llamant fel y lli.
+Llwyddiant i'n lluyddion,
+Rwystro bar yr estron,
+Gwybod yn ei galon gaiff
+   Fel bratha cleddyf Brython.
+Cledd yn erbyn cledd a chwery,
+Dur yn erbyn dur a dery,
+Wele faner Gwalia i fyny,
+   Rhyddid aiff a hi.
+
+
+
+TROT Y GASEG.
+ALAW--Trot y Gaseg.
+
+
+
+Rhaid imi basio heno
+   Ty geneth lana'r fro,
+Dymunwn alw yno,
+   Ond ni wnaiff hynny 'r tro.
+      Tyrd ti fy merlen hoew,
+      I fyny 'r dyffryn acw;
+      Da gwyddost am y ty
+      Y trig fy ngeneth gu -
+Dynesu mae yr afon,
+Cynesu mae fy nghalon,
+Wrth basio 'r Dolydd Gleision,
+      Ar gefn fy merlen ddu.
+
+Mae miwsig hen alawon,
+   Yn swn dy bedwar troed:
+Rwy 'n croesi tros yr afon
+   Mi welaf lwyn o goed.
+      Tra 'r afon ar y graian,
+      Yn hwian iddi' hunan,
+      Mae seren Gwener gu
+      Yn crynnu uwch y ty,
+A'm calon wirion innau
+Yn crynnu am y goreu.
+Wrth fynd ar loergan oleu
+      Ar gefn fy merlen ddu.
+
+Yn y coedwigoedd agos,
+   Fy merlen lo'wddu lefn,
+Y clywais lais yr eos
+   Wrth deithio ar dy gefn.
+      Pan oeddit ti yn trotian,
+      Yr oeddwn innau 'n dotian,
+      Wrth wrando 'r eos gu
+      Ac edrych ar y ty.
+Pan dderfydd y gostegion,
+Bydd Merch y Dolydd Gleision,
+Mewn cannaid ddillad gwynion,
+      Ar gefn fy merlen ddu.
+
+
+
+LLANCES Y DYFFRYN.
+ALAW,--Llances y Dyffryn.
+
+
+
+Llances y Dyffryn wnaeth bopeth yn iawn,
+Llanwodd lawenydd fy nghalon yn llawn;
+Glanach yw 'r defaid ar ochr y bryn,
+Gwynnach yw 'r alarch ar ddwfr y llyn:
+Clysach yw 'r blodau, a glasach yw 'r coed;
+Harddach, prydferthach y byd nag erioed.
+Gwnaed fi yn ddedwydd foreuddydd a nawn,
+Llances y Dyffryn wnaeth bopeth yn iawn.
+
+Llances y Dyffryn oleuodd y fro,
+Gloewach yw 'r afon a glanach yw 'r gro;
+Purach fy meddwl a hoewach fy nhroed,
+Hoenach yr awen na bu erioed.
+Hoffach yw 'r Dyffryn a llonnach pob lle,
+Mwynach yw 'r awel o'r dwyrain a'r de;
+Trom fu fy nghalon, ond 'rwan distawn,
+Llances y dyffryn wnaeth bopeth yn iawn.
+
+
+
+YN YNYS MON FE SAFAI GWR.
+ALAW--"Ymdaith y Mwnc."
+
+
+
+Yn Ynys Mon fe safai gwr
+Ym min y nos ar fin y traeth;
+Fe welai long draw ar y dwr,
+      A'i hannerch ar yr eigion wnaeth:-
+   Dos a gwel fy machgen gwiw,
+   Dos a sibrwd yn ei glyw
+         Yn iaith ddinam
+         Ei anwyl fam,
+   A dywed fod ei dad yn fyw.
+Ymwel gyda 'm plentyn, a dwed fod ei dad,
+   Yn edrych yn fynych dros wyneb y lli.
+O! chwydder dy hwyliau gan chwaon o'th wlad,
+   A thyner bo'r awel lle bynnag 'r ei di.
+         Dos tros y don,
+            Cei henffych well,
+         Dwed yno'n llon
+            Wrth fachgen sydd bell,
+Fod Gwalia flodeuog yn moli'r un Duw,
+Ac iaith ei gyndadau yn iach ac yn fyw.
+
+      Fod ywen ddu yn hardd uwchben
+         Y garreg las lle cwsg ei fam,
+      Ac fod ei dad a'i farf yn wen,
+         Yn grwm ei war, a byr ei gam;
+   Fod y pistyll eto 'n gry,
+   Fod yr afon fel y bu,
+            Ar wely glan
+            O raian man,
+   Yn sisial ton wrth ddrws y ty.
+Ymwel gyda 'm plentyn, a dwed fod ei dad,
+   Yn edrych yn fynych dros wyneb y lli.
+O! chwydder dy hwyliau gan chwaon o'th wlad,
+   A thyner bo'r awel lle bynnag 'r ei di.
+            Dos tros y don,
+               Cei henffych well,
+            Dwed yno 'n llon
+               Wrth fachgen sydd bell,
+Fod Gwalia flodeuog yn moli 'r un Duw,
+Ac iaith ei gyndadau yn iach ac yn fyw.
+
+         Fod ganddo chwaer ar ddelw 'i fam,
+            Sydd yn parhau i'w garu ef,
+         Sy 'n llawenhau wrth feddwl am
+            Gael eto gwrdd yn nef y nef.
+   Fod ei wlad heb weld ei hail
+   Am glysni teg a glesni dail;
+               A dal wrth ben
+               Ei Gymru wen
+   Mae awel nef a melyn haul.
+Ymwel gyda 'm plentyn, a dwed fod ei dad,
+   Yn edrych yn fynych dros wyneb y lli.
+O! chwydder dy hwyliau gan chwaon o'th wlad
+   A thyner bo 'r awel lle bynnag 'r ei di.
+               Dos tros y don,
+                  Cei henffych well,
+               Dwed yno 'n llon
+                  Wrth fachgen sydd bell,
+Fod Gwalia flodeuog yn moli 'r un Duw,
+Ac iaith ei gyndadau yn iach ac yn fyw.
+
+
+
+CADLEF MORGANNWG.
+
+
+
+O "Syr Rhys ap Tomos."
+
+Clywch, clywch, hen gadlef Morgannwg,
+Wele Rys a'i feirch yn y golwg,
+      I'w atal ymlaen
+      'Dyw mynydd ond maen
+            Adewir mewn llwch ar ei ol.
+Corn y gad ydyw miwsig yr awel,
+Heddyw gwledd gydag Arthur yw rhyfel,
+Yn galw ar fynydd a dol.
+Wel sefwch yn hyf gyda 'ch dreigiau,
+Ac edrychwch i lawr megis creigiau,
+   Gawrfloeddio mae Rhyddid i ganol y gad
+         I godi'r hen wlad yn ei hol.
+
+Mae breichiau myrdd yn caledu,
+A ffroenau y meirch yn lledu;
+      A berwi mae gwaed,
+      Gwyr meirch a gwyr traed,
+            I godi'r hen wlad yn ei hol.
+Fry, fry, cyhwfan mae 'r faner,
+Trywanu mae 'r cledd at ei hanner;
+Yn uwch eto 'n uwch gyda 'r dreigiau,
+Ac edrychwch i lawr megis creigiau,
+   Gawrfloeddio mae Rhyddid i ganol y gad,
+            I godi 'r hen wlad yn ei hol!
+
+
+
+MWYN YW MYNED TUA MON.
+ALAW,--Hufen Melyn.
+
+
+
+A ddowch chwi' rwyf--o ar yr
+af--on, A ddowch chwi' gan-u yn-o'n gor?
+
+I weld hy--naws--ed yd--yw
+nos-on, A mwyn-ed murmur tonau'r mor?
+
+A gawn ni fyn-ed ar y Fenai hen- o, I
+Yn--ys Mon-a rhwyf--wn gyda'r don:  O
+dowch i gan-u, dowch i nof--io, Dowch i rwyf-o
+gyda'r don:  Mae croes--o an-wyl in--i
+yn--o, O mwyn yw myn-ed tu--a Mon.
+
+Mae 'r bad yn nofio ar yr afon,
+   A nos o fwyniant ydyw hon;
+Mae 'r ser a'r lleuad yn dryloewon,
+   A'r cor yn canu ar y don.
+Wel ar y Fenai, ar y Fenai heno,
+   Y llawen ganwn, rhwyfwn gyda 'r don, -
+A dyma 'r canu, dyma 'r nofio,
+   Dyma 'r rhwyfo gyda 'r don;
+Mae aelwyd lawen inni yno,
+   O mwyn yw myned tua Mon.
+
+
+
+HUN GWENLLIAN.
+ALAW,--Hun Gwenllian.
+
+
+
+Hun Gwenllian, ferch y brenin,
+   Gwyn dy fyd ti tan y gwys;
+Cwsg Wenllian, dyner blentyn,
+   Yn y ddaear ddistaw ddwys.
+Cledd y Norman wnaeth gyflafan,
+   Nid oes gennyt fam yn awr;
+Hun Gwenllian, hun Gwenllian,
+   Cwsg ymhell o'r cystudd mawr.
+
+Hun Gwenllian, i'th fendithio
+   Duw 'th gymerodd yn ei gol;
+Mae th frawd hynaf wedi cwympo,
+   Ni ddaw 'r iengaf byth yn ol.
+Yn dy gartref trig y Norman,
+   Seren Cymru aeth i lawr;
+Hun Gwenllian, hun Gwenllian,
+   Cwsg ymhell o'r cystudd mawr.
+
+
+
+AR DDOL PENDEFIG.
+ALAW,--Y Gwenith Gwyn.
+
+
+
+Ar ddol pendefig, heidden wen
+   Ymgrymai' phen yn hawddgar;
+'R oedd cnwd o honynt ar y cae,
+   Fel tonnau hyd y ddaear;
+A cher y fan, ar fin rhyw lyn,
+   'R oedd gwenith gwyn yn gwenu;
+Un gwlith, un gwlaw, oedd ar y ddau,
+   Y cnydau prydferth hynny.
+
+Fe roddodd Duw mewn gwlaw a gwlith,
+   Ei fendith ar y maesydd;
+A dyn a godai gyda 'r wawr
+   I dorri lawr y cynnydd.
+Ond rhwng y ddeufaes trowynt ddaeth,
+   A rhuo wnaeth i'r nefoedd, -
+"Fod un yn mynd er bendith dyn,
+   A'r llall i ddamnio miloedd."
+
+
+
+A LAESWN NI DDWYLAW?
+ALAW,--Llwyn Onn.
+
+
+
+A Laeswn ni ddwylaw yng nganol y rhyfel,
+         Tra 'r gelyn yn erlid, a fynnwn ni hedd?
+      Tra llidiart y fynwent a'i sgrech ar ei hechel
+Wrth dderbyn y meddwon i stafell y bedd?
+      Mae'r blodau sy'n tyfu ar feddrod y meddwyn
+Yn gollwng eu dagrau tan gysgod yr yw;
+   A'r gwynt wrth fynd heibio, fel taran; yn gofyn
+"Pa un ai moesoldeb ai meddwdod gaiff fyw?"
+
+
+
+LLWYBR Y PERERIN.
+
+
+
+Mi dybiais fod ffordd y pererin i'r nef
+   Yn un lefn ac hardd-esmwyth trwy ddyffryn glas gain;
+Dangosaist Di 'r ffordd--ac un gul dywell oedd,
+   Garegog a blin trwy fieri a drain.
+Mae temlau a phlasau heb ofid na phoen,
+   Ond y maent tros gagendor o dir y rhai byw;
+Mae afonydd o hedd, ond pa le maent i'w cael, -
+   Yn y nef yno maent, fry yn nefoedd fy Nuw.
+
+
+
+BEDD LLYWELYN.
+ALAW,--Goslef Llywelyn.
+
+
+
+I Feddrod Llywelyn mae 'r tir wedi suddo,
+   Ac arno 'r gwlawogydd arosant yn llyn;
+Mae 'r lloer wrth ymgodi, a'r haul wrth fachludo,
+   Yn edrych gan wrido ar ysgwydd y bryn.
+   Fy Nghymru, fy Ngwlad, a wyddost ti hyn!
+      Pa le mae Gwladgarwch yn dangos ei gwedd?
+Mae dagrau y cwmwl yn gwybod am dano,
+      A deryn y mynydd yn nabod y bedd.
+
+Ar ddamwain mae 'r Cymro yn dyfod i weled,
+   Lle cwympodd yr olaf fu ddewr ar ei ran;
+Yr awel a gwyna a'r ddaear a ddywed,
+   Fod calon hen Walia yn curo 'n lled wan;
+   Dieithriaid a ddont i weled y fan
+      Y gorffwys Llywelyn wrth ochor ei gledd;
+Wel diolch am ddeigryn o'r nefoedd i waered,
+      Ac am y glaswelltyn yn ymyl y bedd.
+
+
+
+A DDWEDAIST TI FOD CYMRU 'N DLAWD.
+
+
+
+A Ddwedaist ti fod Cymru 'n dlawd,
+   Am fod ei llannau 'n llonydd,
+A thithau 'th hun yn cloddio, frawd,
+   Ym mryniau aur Meirionnydd?
+Mae mwy o gyfoeth tan dy droed,
+Na ddaeth i galon dyn erioed,
+Anwiredd mwy erioed ni wnawd -
+Na ddywed byth fod Cymru 'n dlawd.
+
+I ble y trown o fewn y tir,
+   Nas gwelir mwn ei meini
+Nad yw 'r meteloedd o'u gwelyau
+   Yn edrych am oleuni,
+Nad yw y pres a'r arian faen,
+Yn galw ar bob Cymro 'n mlaen,
+I roi ei ffydd a threio 'i ffawd
+Yn holl oludoedd "Cymru dlawd?"
+
+Estyna 'th fys pan glywot hyn,
+   Yn cael ei ddweyd am Gymru,
+At unrhyw graig, at unrhyw fryn,
+   Fo 'n edrych ar i fyny.
+Mae 'r nentydd oll wrth fynd i'r aig
+A cherrig ateb ym mhob craig,
+Yn dwedyd "Nac yw" gyda gwawd -
+Na ddywed byth fod Cymru 'n dlawd.
+
+
+
+PEIDIWCH BYTH A DWEDYD HYNNY.
+
+
+
+[Ysgrifennwyd y geiriau i Miss Edith Wynne, yr hon a'u canodd yn
+Eisteddfod Genhedlaethol Caernarfon, 1862.]
+
+D'wedwch fod fy ffroen yn uchel,
+   Fod fy malchder yn drahaus,
+Fod gwamalrwydd ar fy wyneb
+   A mursendod yn fy llais.
+Ond mae terfyn i anwiredd,
+   I greulondeb a sarhad.
+Peidiwch byth a dwedyd hynny,
+Imi golli m serch at Gymru,
+   Imi golli iaith fy ngwlad.
+
+II.
+
+O mor barod ydyw dynion
+   I drywanu at y byw;
+O mor gyndyn ydynt wedyn
+   I roi eli ar y briw.
+Dodwch garreg ar fy meddrod,
+   Fel y mynnoch bo 'r coffad;
+Dyna 'r pryd i dd'wedyd hynny,
+Imi golli 'm serch at Gymru,
+   Imi golli iaith fy ngwlad.
+
+
+
+DYDD TRWY 'R FFENESTR.
+ALAW,--Dydd Trwy 'r Ffenestr.
+
+
+
+Mae rhyddid i wylan y mor gael ymgodi,
+   Ac hedeg i'r mynydd uchelaf ei big;
+Mae rhyddid i dderyn ar greigiau 'r Eryri
+   Ehedeg i waered i weled y wig;
+O rhowch imi delyn, gadewch imi dalu
+   Croesawiad i Ryddid ar doriad y dydd;
+   Yfory gyda 'r wawr, byddwn ninnau 'n rhydd,
+      Byddwn yn rhydd!
+
+Yfory pan welir yr haul yn cyfodi,
+   Caf deimlo llawenydd na theimlais erioed;
+Ac fel yr aderyn yng ngwlad yr Eryri
+   Yn ysgafn fy nghalon, ac ysgafn fy nhroed;
+Pan welom oleuni yn gwynnu 'r ffenestri,
+   Rhown garol i Ryddid ar doriad y dydd;
+   Yfory gyda 'r wawr, byddwn ninnau 'n rhydd,
+      Byddwn yn rhydd!
+
+
+
+CERDDI CYMRU SYDD YN BYW.
+
+
+
+Cerddi Cymru sydd yn byw,
+Trwy 'r blynyddau yn ein clyw;
+Sibrwd ein halawon gynt,
+Mae cwynfanau trwm y gwynt;
+Dwyn yn ol lais mam a thad
+Mae hen donau pur ein gwlad.
+
+Pan sisialo dail y llwyn,
+Clywir chwi yn lleddf a mwyn;
+Dweyd mae 'r mor wrth ruo 'i gan
+Ddarnau cerddi Cymru lan;
+Ac mae clust y Cymro 'n gwneyd
+I'r gre'digaeth oll eu dweyd.
+
+
+
+I GADW 'R HEN WLAD MEWN ANRHYDEDD.
+
+
+
+I gadw 'r hen wlad mewn anrhydedd,
+   A'r cenin yn fyw a difeth;
+Mae rhai yn prydyddu 'n ddiddiwedd,
+   Ond dyma fy marn am y peth, -
+Mwy gwerthfawr nag awen y beirddion,
+   Neu'r dalent ddisgleiriaf a roed,
+Yw tafod y bachgen bach gwirion,
+   Na ddwedodd anwiredd erioed.
+
+Cydgan:  Rhown bopeth sydd hardd ac anfarwol,
+   Mewn miwsig, barddoniaeth, a cherdd,
+I'r geirwir, a'r gonest, a'r gwrol,
+   Sy'n cadw'r geninen yn werdd.
+
+Mi adwaen gribddeiliwr ariannog,
+   Sy'n deall bob tric i wneud pres;
+Ond anhawdd anichon cael ceiniog
+   O'i boced at ddim a fo les.
+Pan allan, os a yn ei gerbyd,
+   Pan gartref os tyn yn ei gloch;
+Mae 'n well i ni'r gonest a'r diwyd
+   Pe na bai yn werth dimeu goch.
+
+Ym mhell y bo 'r bobol sy'n grwgnach,
+   Yn erbyn caledrwydd y byd,
+Y rhenti a'r prisiau a'r fasnach,
+   Tra plethant eu dwylaw ynghyd.
+Nid felly y byddai 'r hen Gymry,
+   Ac os yw dy waed ti yn bur,
+'R wyt yn edrych yn wrol i fyny
+   Ac yn fachgen sy'n gweithio fel dur.
+
+
+
+MYFI  SY'N MAGU 'R BABAN.
+
+
+
+[Can mamaeth Gymreig wrth fagu Tywysog Seisnig cyntaf Cymru o
+"Cantata Tywysog Cymru."]
+
+Myfi sy 'n magu 'r baban,
+   Myfi sy 'n siglo 'r cryd,
+Myfi sy 'n hwian, hwian,
+   Ac yn hwian hwi o hyd.
+Bu 'n crio bore heddyw,
+   O hanner y nos tan dri;
+Ond fi sy 'n colli 'm cysgu,
+   Mae 'r gofal i gyd arnaf fi.
+
+Myfi sy 'n magu 'r plentyn,
+   Bob bore, prydnawn a hwyr;
+Y drafferth sydd ei ganlyn,
+   Fy hunan yn unig wyr.
+Nis gwyr ef air o Saesneg,
+   Nac un gair o'n hen hiaith ni, -
+I ddysgu 'r twysog bychan,
+   Mae 'r gofal i gyd arnaf fi.
+
+Ond os caf fi ei fagu,
+   I fyned yn llencyn iach;
+Caiff iaith brenhinoedd Cymru
+   Fod rhwng ei ddwy wefus fach.
+A phan ddaw ef yn frenin,
+   Os na wnaiff fy nghofio fi,
+O! cofied wlad y cenin,
+   Y wlad sydd mor anwyl i ini.
+
+
+
+TUA THEGID DEWCH.
+
+
+
+Chwi feirdd y trefydd mawr
+   Sy 'n byw ar fwg a llwch;
+Dowch gyda fi yn awr,
+   Dowch neidiwch i fy nghwch.
+Fyny 'r hen Ddyfrdwy nofiwn,
+   A ffarwel i'r mwg sydd ar ein hol,
+Rhwyfwn ymlaen, a chanwn
+   Dan y coed a'r pynt, o ddol i ddol.
+         Ger tref y Bala
+         Mae lle pysgota,
+            Ar loew loew lyn;
+      Awn ymlaen tua 'r dyfroedd hyn,
+         Moriwn yng nghanol Meirion;
+            Tynnwn rwyf gyda rhwyd yn hoew,
+         Ar groew loew lyn.
+
+Draw, draw yng nghanol gwlad,
+   Deg, deg fel Eden ardd;
+Ceir yno adfywhad
+   I'r cerddor ac i'r bardd.
+Bywyd sydd yn yr awel
+   Fel y del o'r coed, o'r allt, a'r rhiw,
+Bywyd y Cymry 'stalwm,
+   Ysbryd can a mawl sydd yno 'n byw.
+         Ger tref y Bala, &c.
+
+Chwi wyr y trefydd mawr,
+   Gwyn, gwyn eich gruddiau chwi,
+O dowch am hanner awr
+   Mewn cwch ar hyd y lli;
+Rhwyfwn i fyny 'r afon,
+   Gyda gwrid ac iechyd dychwel gewch;
+Mae mor rhwng bryniau Meirion,
+   Tua Thegid dewch, i Degid dewch!
+         Ger tref y Bala, &c.
+
+
+
+HEN GWRWG FY NGWLAD.
+
+
+
+Hen gwrwg fy ngwlad ar fy ysgwydd gymerwn,
+   Pan oeddwn yn hogyn rhwng Hafren ac Wy.
+Ac yno y gleisiad ysgwyddog dryferwn
+   Ar hyfryd hafddyddiaut nas gwelaf byth mwy.
+Pe rhwyfwn ganw ar y Ganges chwyddedig,
+   Neu donnau 'r Caveri, rhoi hynny foddhad;
+Ond glannau bro Gwalia ynt fwy cysegredig,
+   A gwell gan fy nghalon hen gwrwg fy ngwlad.
+
+Hen gwrwg fy ngwlad, 'rwyf fi gyda thi 'n nofio
+   Afonydd paradwys fy mebyd yn awr;
+Hen glychau a thonau o newydd wy 'n gofio,
+   A glywn ar y dyfroedd pan rwyfwn i lawr.
+Mi dreuliais flynyddau a'r llif yn fy erbyn,
+   I'm hatal rhag dyfod i gartref fy nhad;
+Ond pan ddof yn ol fe fydd cant yn fy nerbyn,
+   I roi i'm rwyf eto yng nghwrwg fy ngwlad.
+
+Hen gwrwg fy ngwlad, mi a'th rwyfais di ganwaith,
+   Hyd lynnoedd tryloewon tan goedydd a phynt;
+Cymeraist fi hefyd i fynwes wen lanwaith,
+   Yr hon a ddisglaeriodd trwy f' enaid i gynt.
+Trwy Venice fawreddog mi fum mewn gondola,
+   Esgynnais y Tafwys a'r Rhein yn fy mad;
+Ond pasio hen gastell Llywelyn llyw ola,
+   Sydd well gan fy nghalon yng nghwrwg fy ngwlad.
+
+
+
+POB RHYW SEREN.
+
+
+
+[Suo-gan y Monwyson o "Cantata Tywysog Cymru."]
+
+Pob rhyw seren fechan wenai,
+   Yn y nefoedd glir uwch ben;
+Rhwyfai cwch i fyny 'r Fenai,
+   Yng ngoleuni 'r lleuad wen.
+         Clywid canu--sucganu,
+            Yn neshau o Ynys Mon, -
+         Canu, canu, suoganu,
+            Melus orfoleddus don.
+
+Mewn awelon ac alawon,
+   At y Castell rhwyfai'r cor;
+Ar y tyrau suai 'r chwaon,
+   Wrth eu godrau suai 'r mor.
+         Canent, canent, suoganent,
+            Ar y Fenai loew, dlos;
+         Dan ystafell y Frenhines,
+            Suoganent yn y nos.
+
+"Fel mae 'r lloer yn hoffi sylwi
+   Ar ei delw yn y lli;
+Drych i Rinwedd weld ei glendid
+   Fyddo oes dy faban di."
+         Suoganu i'r Frenines,
+            Dan y ganlloer loew, dlos,
+         Felly canodd y Monwyson,
+            Ar yr afon yn y nos.
+
+
+
+CLADDEDIGAETH MORGAN HEN.
+
+
+
+Hen frenin hoff anwyl oedd Morgan Hen,
+   Fe 'i carwyd yng nghalon y bobloedd;
+Esgynnodd i'w orsedd yn ddengmlwydd oed,
+   A chadwodd hi gant o flynyddoedd.
+Ar ddydd ei gynhebrwng dilynwyd ei arch
+   Gan ddengmil o'i ddeiliaid tylodion;
+A theirmil o filwyr fu 'n ymladd o'i du,
+   Ac wythcant o'i ddisgynyddion,
+      Rhai wrth eu ffyn, a'u gwallt yn wyn,
+         Eraill ar fronnau yn dechreu byw;
+      Wyrion, gorwyrion, a phlant gorwyrion
+         Gladdasant y brenin yn Ystrad Yw.
+
+Ni welwyd un blewyn yn wyn ar ei ben,
+   Na rhych ar ei dalcen mawr llydan;
+'R oedd deuddeg o'i feibion yn edrych yn hyn
+   Na'r brenin oedrannus ei hunan.
+Yn nhorf ei gynhebrwng 'roedd bachgen bach mwyn,
+   Yn drist a phenisel yn twyso
+Y march heb ei farchog--y cyfrwy, a'r ffrwyn,
+   A'r cleddyf yn unig oedd yno.
+      Rhai wrth eu ffyn, a'u gwallt yn wyn, &c.
+
+Fe welodd ryfeloedd, bradwriaeth, a thrais,
+   A gwelodd Forgannwg yn gwaedu;
+Ond cadwodd ei goron, a'i orsedd yn ddewr,
+   A'i diroedd tan faner y Cymry.
+Enillodd a chollodd mewn brwydrau dirif,
+   Am hynny ni chollodd un deigryn;
+Ond ar gladdedigaeth ei filwyr, a'i blant,
+   Fe wylai, fe griai fel plentyn.
+      Rhai wrth eu ffyn, a'u gwallt yn wyn, &c.
+
+
+
+MYFANWY.
+[O "Myfanwy Fychan".]
+
+
+
+   "Myfanwy! 'rwy 'n gweled dy rudd
+      Mewn meillion, mewn briall, a rhos;
+   Yng ngoleu dihalog y dydd,
+      A llygaid serenog y nos;
+   Pan gyfyd claer Wener ei phen
+      Yn loew rhwng awyr a lli,
+   Fe 'i cerir gan ddaear a nen.
+I f' enaid, Myfanwy, goleuach, O tecach wyt ti,
+      Mil lanach, mil mwynach i mi.
+
+   "Fe ddwedir fod beirddion y byd
+      Yn symud, yn byw ac yn bod,
+   Rhwng daear y doeth a Gwlad Hud,
+      Ar obaith anrhydedd a chlod;
+   Pe bai anfarwoldeb yn awr
+      Yn cynnyg ei llawryf i mi,
+   Mi daflwn y lawryf i lawr -
+Ddymunwn i moni, fe 'i mathrwn os na chawn i di, -
+      Myfanwy, os na chawn i di.
+
+   "O! na bawn yn awel o wynt
+      Yn crwydro trwy ardd Dinas Bran,
+   I suo i'th glust ar fy hynt,
+      A throelli dy wallt ar wahan;
+   Mae 'r awel yn droiog a blin -
+      Un gynnes ac oer ydyw hi;
+   Ond hi sy 'n cusanu dy fin.
+O feinwen fy enaid, nid troiog fy serch atat ti,
+      Tragwyddol yw 'm serch atat ti.
+
+   "Mewn derwen agenwyd gan follt
+      Draig-fellten wen-lachar ac erch;
+   Gosodaf fy mraich yn yr hollt
+      A chuddiaf beithynen o serch.
+   Ni'm gwelir gan nebun, ond gan
+      Y wenlloer--gwyn fyd na baet hi,
+   Er mwyn iti ganfod y fan.
+Ond coelio mae 'm calon, fod ysbryd eill sibrwd a thi -
+      Eill ddwedyd y cwbl i ti.
+
+Petrusai Myfanwy pwy oedd a roisai'r beithynen yn gudd?
+A dwedai,--"rhyw ffolyn o fardd," ond teimlodd ei gwaed yn ei grudd;
+Disgynnodd ei llygaid drachefn ar "na bawn yn awel o wynt
+Yn crwydro trwy ardd Dinas Bran,"--o churodd ei chalon yn gynt.
+"Mi droellet fy ngwallt--O mi wnaet! wyt hynod garedig," medd hi,
+"A phe bawn yn suo i'th glust, mi ddwedwn mai gwallgof wyt ti;
+Mi hoffet gael cusan, mi wnaet! ond cymer di 'n araf fy ffrynd," -
+Hi geisiai ymgellwair fel hyn,--ond O! 'r oedd ei chalon yn mynd!
+'R oedd wedi breuddwydio dair gwaith, heb feddwl doi'r breuddwyd i
+ben,
+Fod un o g'lomenod ei thad, yn nythu yn agen y pren -
+Heb gymar yn agen y pren.
+
+
+
+GOFIDIAU SERCH.
+
+
+
+Wyt ti 'n cofio 'r lloer yn codi
+   Dros hen dderw mawr y llwyn,
+Pan ddywedaist yr aberthet
+   Nef a daear er fy mwyn?
+Wyt ti 'n cofio 'r dagrau gollaist
+   Wrth y ffynnon fechan draw?
+Wyt ti 'n cofio 'r hen wresogrwydd, -
+   Wyt ti 'n cofio gwasgu 'm llaw?
+
+"Hyd fy marw" oedd dy eiriau,
+   Y parhaet yn ffyddlon im';
+O fy ngeneth, O fy nghariad!
+   Nid yw poenau marw 'n ddim.
+Er wrth dorri 'th addunedau,
+   I ti dorri 'm calon i, -
+Magi anwyl, mae dy gariad
+   Eto 'n gariad pur i ti.
+
+Mae 'th lythyrau yn gwneyd i mi
+   Lwyr anghofio mi fy hun;
+Mae dy gudyn gwallt yn hongian,
+   Fel helygen tros dy lun.
+Llun dy wyneb, Magi anwyl,
+   O mae 'n twynnu fel yr haul,
+Nes 'r wy 'n teimlo gwae a gwynfyd
+   Nef ac uffern bob yn ail.
+
+O f' anwylyd! er mai CYFAILL
+   Yw yn awr fy enw 'i,
+Maddeu i mi am ddefnyddio
+   Yr HEN ENW arnat ti;
+CARIAD wyt ti, Magi anwyl,
+   Bur ddihalog fel erioed;
+Troi 'st dy wyneb, cefnaist arnaf,
+   Minnau garaf ol dy droed.
+
+
+
+WRTH WELD YR HAUL YN MACHLUD.
+
+
+
+Wrth weld yr haul yn machlud,
+   Mewn eurog donog dan;
+A mil o liwiau 'n dawnsio 'n deg,
+   Ar fyrdd o donnau man.
+'Rwy 'n teimlo dwyfol wyddfod -
+   Shecina Natur yw;
+Yn datgan ei ogoniant Ef
+   Yr Hollalluog Dduw.
+
+Wrth weld yr haul yn codi,
+   Yn loew lan ei bryd;
+Rwy 'n gweld y glaer Shecina fawr,
+   Yn amgylchynnu 'r byd.
+Os gormod gwedd yr heulwen
+   I lygad marwol ddyn;
+Fath ydyw ei ogoniant Ef
+   Y Crewr Mawr ei Hun!
+
+Ar godiad haul yng Nghymru,
+   Ces lawer boreu gwiw;
+Pan blygai 'm tad wrth ben y bwrdd,
+   I ddiolch am gael byw.
+Caem eistedd yn y cysgod,
+   Tra 'r haul yn croesi 'r nef;
+Mi gofiaf byth y weddi hwyr,
+   Ar ei fachludiad ef.
+
+
+
+Y FODRWY BRIODASOL.
+
+
+
+Cymer hi Annie, o cymer hi heno,
+   Mae'th fys gyda 'th galon yn crynnu gan fraw;
+Dy fodrwy di ydyw, ni waeth it heb grio
+   Os nad wyt yn meddwl am wrthod fy llaw.
+Cyn mynd at yr allor y foru gad imi,
+   A'th fys ei chysegru wrth fynd hyd y ddol -
+Wel dyna hi 'n gymhwys, da gwyddwn O Annie,
+   Na wnaet ti byth dynnu 'th addewid yn ol.
+
+Cymer hi Annie, 'does arni ddim cerfiad,
+   Na gemau cywreinion i'w gweled yn awr;
+Ond ceisiwn roi arni berl Rhinwedd, fy nghariad,
+   Mae engyl ar hwnnw yn edrych i lawr.
+Mae gennym ni gariad a leinw 'n holl fywyd,
+   Yn hwnnw 'r ymffurfia y maen o fawr werth;
+Yn hwnnw mae cyfoeth, bywoliaeth ac hawddfyd,
+   Yn hwnnw, fy nghariad, mae mawredd a nerth.
+
+Cymer hi Annie, a'r nefoedd ro inni
+   O fewn ein haur- fodrwy fan fechan i fyw,
+Yn bur ac yn ddedwydd--yn unig boed ynddi,
+   Heblaw ti a minnau, blant bychain a Duw.
+Mae 'r bydoedd yn grynion a'r haul a'u goreura,
+   Gan wneuthur pob planed a lleufer yn llon;
+Ond nid oes breswylfod rhwng daear a gwynfa,
+   Ddedwyddach, berffeithiach, a chrynach na hon.
+
+Cymer hi, Annie, yn arwydd cyfamod, -
+   Dwy enfys fach ydyw a'u deuben ynglyn;
+Y gyntaf yn amod mai fi fydd dy briod,
+   A'r ail un yn amod mai ti fydd fy mun.
+Mae'n gyfan, mae'n brydferth, heb gymorth y gemau,
+   Arwyddnod perffeithiach y ddaear ni fedd;
+Does dim eill ei thorri ond pladur lem angau,
+   Na dim eill ei rhydu ond lleithder y bedd.
+
+Cymer hi, cymer hi, ofer yw rhwystro,
+   Dyferwlaw 'r amrantau rhag tywallt i lawr;
+Mae 'n storm gyda minnau, gad imi tra dalio,
+   Roi 'm pen ar dy ysgwydd--rwy'n well Annie 'n awr.
+Mae'th ddeigryn fy nghariad, a'm deigryn bach innau,
+   Yn uno fel gwlithos neu fan arian-byw -
+Ond moes imi 'r fodrwy, ti cei hi 'n y boreu
+   Yng ngwyddfod yr allor, y Beibl, a Duw.
+
+
+
+O WEDDI DAER.
+[O "Jona."]
+
+
+
+O WEDDI DAER! gwyn fyd y fron
+   A fedro dy anadlu,
+Yng nghalon edifeirwch gwir
+   Y cuddiodd Duw dy allu;
+Yr isel lwch yw'th gartref di,
+   Ac mewn sachlian gwisgi,
+Gwyn fyd y llais crynedig gwan
+   Dywallto 'i hun 'i weddi.
+
+O WEDDI DAER! tramwyfa wyt
+   I lu o engyl deithio
+I lawr i'r dyfnder at y gwan,
+   I roi eu hedyn trosto, -
+I wlychu gwefus oer y llesg,
+   A gwin a'i calonoga;
+O ddyn! os tynni wg y nef,
+   Dos ar dy lin--GWEDDIA.
+
+
+
+Y BABAN DIWRNOD GED.
+
+
+
+'R oedd swn magnelau yn y graig,
+   A swn tabyrddau 'n curo,
+   A chlywid trwst ofnadwy traed
+      Y Ffrancod wedi glanio,
+   A'r waedd i'r frwydr chwyddai 'n uwch,
+      Gan alw 'r dewr i daro;
+         Terfysgwyd y glannau
+         Gan rym y taranau
+            A ruent ar lan y mor.
+
+I dai 'r tylodion rhuthrai gwyr,
+   Gan ladd y diamddiffyn,
+   A flamiai palas hardd gerllaw
+      Gan dan o longau 'r gelyn;
+   Fe ffoai mamau gyda'u plant,
+      A chodai 'r claf mewn dychryn;
+         Ond 'r oedd yno ddynes,
+         A babi 'n ei mynwes,
+            Rhy waelaidd a gwan i ffoi.
+
+Ei gwr erfyniai wrth ei phen, -
+   "O cwyd!  O cwyd! fy Eurfron!
+Mae 'r march a'r cerbyd wrth y drws,
+   Tyrd iddo ar dy union!
+Olwynwn ymaith fel y gwynt, -
+   Anwylyd, clyw 'r ergydion!
+      O Dduw, a ddaeth diwedd
+      Fy mab, fy etifedd?
+         Fy mhlentyn a anwyd ddoe!"
+
+Atebai 'r wraig yn llesg ei llais, -
+   "Fy mhriod, clyw fy ngweddi,
+O gad fi ar y gwely hwn,
+   Ond gad y baban imi;
+Dos at y rheng i gadw 'th wlad,
+   Fe gadwaf finnau 'r babi."
+      Y plentyn a hunai,
+      A'r tad a'i cusanai,
+         Ac yna fe ffodd i'r rheng.
+
+'Roedd swn cleddyfau yn neshau,
+   Gwawchiadau ac ysgrechian;
+A'r wraig weddiai 'n daer ar Dduw,
+   Gan edrych ar ei baban;
+Ac yna holltwyd drws y ty
+   Gan filwyr oddi allan.
+      A hithau mewn dychryn
+      A wasgodd ei phlentyn
+         Yn nes at ei chalon wan.
+
+Ar glicied drws ei 'stafell wag,
+   Hi welai fysedd llofrudd,
+Ac ar y foment rhuthrodd haid,
+   Yn swn rhegfeydd eu gilydd;
+A syllent fel gwylltfilod erch,
+   O amgylch ei gobennydd;
+      Ar wraig wan yn crynnu,
+      A ddaliodd i fyny
+         Ei babi bach diwrnod oed.
+
+Atebwyd gweddi 'r ffyddiog fam,
+   A hi a'i mab achubwyd;
+Mae hi yn awr ym mynwent werdd
+   Yr eglwys lle 'i priodwyd;
+Ac erbyn heddyw mae y mab
+   Yn hen weinidog penllwyd,
+      Yn estyn ei freichiau
+      I ddangos y Meichiau, -
+         Y baban y anwyd i ni.
+
+
+
+Y FAM IEUANC.
+
+
+
+Yr hon a fu farw ymhen ychydig wythnosau ar ol genedigaeth ei
+bachgen bychan cyntafanedig.
+
+
+"Cewch eto deimlo 'r heulwen
+   Yn gynnes ar eich grudd;
+Cewch eto deimlo 'r awel
+   Am lawer hafaidd ddydd;
+Peidiwch a son am farw,
+   Peidiwch a meddwl am
+I'ch plentyn fyw heb glywed
+   Na' nabod llais ei fam.
+
+"Peidiwch a son am farw,
+   Daw eto haul ar fryn;
+Ac iechyd ddaw i'ch codi
+   O'r hen gystuddiau hyn.
+Yn wan ei llais atebodd,
+   Peidiwch a son am fyw!
+'Rwy 'n rhoi fy machgen anwyl
+   I'ch gofal chwi a Duw."
+
+Gadawyd yr ystafell
+   Am ddim ond ennyd fach,
+A chlywid llais yn sibrwd, -
+   "Fy anwyl fachgen bach!
+Fy machgen, O! fy machgen!
+   O na b'ai 'th fam yn iach;
+Fy nghyntaf, olaf blentyn,
+   Fy anwyl fachgen bach!
+
+"Fy nghyfaill bychan NEWYDD
+   'R wyf fi yn mynd i'r nef;
+'R wy 'n myned at yr Iesu,
+   HEN gyfaill ydyw Ef!"
+Bu farw, ac hi wywodd
+   Fel blodyn ar y dail,
+Gan ddyweyd,--"Fy machgen anwyl!"
+   Ac "Iesu!" bob yn ail.
+
+
+
+CEISIAIS DRYSOR
+
+
+
+Ceisiais drysor yn y byd
+      Mi geisiais ac mi gefais un,
+      Oedd fwy o werth na 'r byd ei hun,
+Fy anwyl Ann, fy nhrysor drud
+
+Yn yr arch mae 'r oll yn awr,
+      Oddigerth y blodeuyn llon
+      Adawodd angau ar ei bron
+I wenu ar y storom fawr.
+
+Pan suddai 'm llong, tan rym y lli,
+      O'i hystlys daeth rhyw nerth i'm dwyn
+      Yn ol i'r lan.  Fy mhlentyn mwyn
+Bywydfad bychan oeddyt TI.
+
+Mi hoffwn innau fynd i lawr.
+      Ond er dy fwyn fy mhlentyn llon,
+      Mi geisiaf fyw o don i don
+Ar wyneb mor fy ngofid mawr
+
+
+
+Y FYNWENT YN Y COED.
+
+
+
+Yn araf y cerddasom,
+   I'r fynwent yn y coed;
+Ac yno y claddasom
+   Chwaer fechan bedair oed;
+Gan bedair o'i chyfeillion iach,
+   Mewn dillad gwynion claer,
+Yng ngwydd ei thad a'i brodyr bach,
+   I huno rhoed ein chwaer.
+
+Ar waelod bedd y fechan,
+   Cyn gollwng corff ein chwaer;
+Canfyddem arch wen newydd
+   Fel daeth o ddwylaw 'r saer.
+Ein hanwyl fam oedd yno 'n fud,
+   Heb fawr o feddwl am
+I'r plentyn OLAF yn y cryd
+   Ddod GYNTAF at ei fam.
+
+Pan gaffom ninnau 'n gollwng,
+   Mae gennym weddi daer, -
+O boed ein llwch yn deilwng
+   O lwch ein mam a'n chwaer.
+Fe awn yn fynych dros y cae
+   I'r fynwent yn y coed;
+Y fan mae mam, a'r fan y mae
+   Chwaer fechan bedair oed.
+
+
+
+CLADDASOM DI, ELEN.
+
+
+
+Claddasom di, Elen, ac wrth roi dy ben
+   I orwedd lle fory down ni,
+Dihangodd ochenaid i fyny i'r nen,
+   A deigryn i lawr atat ti.
+
+Claddasom di, Elen, a chanwyd dy fedd,
+   Pe hefyd bai bosibl ei gau;
+Mae llygad yn edrych o hyd ar dy wedd,
+   Ac ni fedr angau nacau.
+
+Cyflawnwyd dy freuddwyd, ond ni ddarfu 'r gro,
+   Ar gauad yr arch dy ddeffroi;
+Ond udgorn a gan, ac o'r dywell fro,
+   Yn wen a dihalog y doi.
+
+Ai "tywell" ddywedasom?  Nid tywyll i ti
+   Fu pyrth tragwyddoldeb a hedd,
+Dy lamp oedd wenoleu;--nid ti, ond nyni,
+   Sy 'n dwedyd mai du ydyw 'r bedd.
+
+I ninnau mae breuddwyd i ddyfod i ben, -
+   Canfyddem di mhell oddi draw
+Ar furiau Caersalem, a'th wisg yn glaer-wen,
+   Yn gwenu gan estyn dy law, -
+
+I'n derbyn yn ninas dragwyddol dy Dduw;
+   A thybiem ein bod wedi dod,
+I gyffwrdd a'th law, ond deffroisom yn fyw,
+   Ymhell oddiwrth gyrraedd y nod.
+
+Claddasom di, Elen, ond rhyngot a ni,
+   Nis erys gagendor yn hir;
+O fewn y bedd yna lle rhoisom dydi,
+   Claddasom ein hunain yn wir.
+
+Na, na, nis ffarweliwn, mae 'r Iesu yn fyw,
+   I'n dwyn ato 'i hun a thydi;
+Mae 'r ffordd yn agored o'r ddaear at Dduw,
+   A'r nef mewn addewid i ni.
+
+
+
+ANNIE LISLE.
+(Lledgyfieithiad.)
+
+
+
+Ar fin yr afon araf yn y goedwig gain,
+Fan mae 'r dwr yn gwneud arluniau gwiail melyn main,
+Fan mae 'r adar haf yn canu yn eu temlau dail,
+Yma 'r ydoedd am ryw adeg annedd Annie Lisle.
+
+Cydgan:  Doed gwanwyn, sued dyfroedd,
+   Gwened hyfryd haul
+Ar y dyffryn, ond nis deffry
+   Anwyl Annie Lisle.
+
+Mwyn, mwyn yw 'r awel beraidd, gana fel y del,
+Trwy ryw fyrdd o erddi gwyrddion, lifant laeth a mel,
+Ond ar wely wedi marw gorwedd Annie Lisle,
+Hi ni egyr ei du lygad, Angau 'n dyn a'i deil.
+
+Doed gwanwyn, sued dyfroedd,
+   Gwened hyfryd haul
+Ar y dyffryn, ond nis deffry
+   Anwyl Annie Lisle.
+
+"Cwyd fi, fy mam anwylaf, gad i'm weld y plant,
+Yn y brwyn a'r melyn helyg draw ar fin y nant;
+Hust! mi glywaf fiwsig nefol, miwsig Iesu 'r nef,
+Mam anwylaf, mi anelaf at ei fynwes Ef."
+
+Doed gwanwyn, sued dyfroedd,
+   Gwened hyfryd haul
+Ar y dyffryn, ond nis deffry
+   Anwyl Annie Lisle.
+
+
+
+Y DEFNYN CYNTAF O EIRA.
+
+
+
+Yr od, yr od! mae 'r eira 'n dod!
+Rhwng y simneiau dacw fe,
+Y defnyn cyntaf yn dod or ne;
+Yn chware fel aderyn gwyn,
+Trwy fwg a chaddug y melinau hyn.
+Mae 'n ofni disgyn, ac fel pe bae
+Yn ail-ymgodi, ond disgyn mae.
+Mae yn bwrw golwg tros y ddinas fawr,
+Ac yn mesur y ffordd wrth ddod i lawr;
+Gan edrych trwy 'r ffenestri ban,
+Fry gyda 'r awel o fan i fan.
+Mae 'n ymddyrchafu ac yn ymgrynhoi,
+Ac yn dal i ddisgyn, ac yn dal i droi -
+Ond gwel ei lengoedd!  Mil myrddiwn man
+O angylion gwynion y gauaf glan,
+Sy 'n dod ag amdo a chistfeddau ia,
+I gladdu meirwon flodau 'r ha.
+   Y nef sy 'n galw 'r blodyn hardd
+I fyw a gwenu o lwch yr ardd.
+A phan fydd farw, nis anghofia 'r nef
+Mo dyrfa wen ei angladd ef.
+
+
+
+CAVOUR.
+
+
+
+   I Fyny 'r mynydd dringai ef
+      Wrth ochor Garibaldi,
+   I weld yr haul yn dringo 'r nef -
+      Haul Rhyddid Itali.
+Ond cyn i'r haul ymddangos ar ben y mynydd mawr
+Fe gloddiwyd bedd i Cavour, yng ngoleu gwyn y wawr.
+
+
+
+Y MILWR NA DDYCHWEL.
+
+
+
+"Ni syrthiodd neb erioed i'r bedd,
+      Na welwyd rhywun prudd ei wedd,
+   Yn gollwng deigryn arno;
+Ond wrth i filwr fynd i lawr,
+Mae gwlad yn dod i'w arwyl fawr,
+   A chenedl oll yn wylo."
+
+A thithau, gyfaill, i dy fedd
+   Gollyngwyd ti,
+Yn filwr ieuanc teg ei wedd -
+   Yn ei filwrol fri.
+
+Pan wyliem dy febyd darllennem dy lygaid,
+A gwelem wrhydri cynhennid dy enaid,
+   A gwreichion dy ysbryd yn cynneu dy rudd;
+Pan droet orchestion dy gyfoed yn wegi,
+A phob anhawsderau o'th flaen yn cyd-doddi,
+   Coronwyd ti 'n arwr ym more dy ddydd.
+
+Mae cofio'th rinweddau fel milwr a Christion,
+Yn hafaidd belydru trwy brudd-der ein calon,
+   Yn taflu goleuni tros len dy goffhad.
+Fe'th ddysgwyd yn fore am Dduw dy rieni -
+Ond cyffiwyd y gliniau fu 'n plygu mewn gweddi,
+   Yn haiarn i elyn dy Dduw a dy wlad.
+
+Pan wyliem ormesiaeth a'i duon adenydd
+Fel nos yn ymledu tros wyneb y gwledydd,
+   E rwygwyd yr awyr gan udgorn y gad;
+Dyrchafwyd y grechwen,--"Cychwynnwn, cychwynnwn,
+Yn ysbryd ein tadau arfogwn, ymruthrwn,"
+   Nes galwyd i'r frwydr holl gedyrn y wlad.
+
+Arfau 'n tadyrddu a swn oedd yn dilyn,
+Aem ninnau i'r porthladd i'w gweled yn cychwyn,
+   Ond cadwem yn ymyl ein cyfaill ohyd.
+Pan welai 'r fath bryder, ac ofn yn ein calon,
+Gorchfygwyd ei lygad gan ddagrau tryloewon,
+   Ond ffarwel obeithion oleuodd ei bryd.
+
+Fel gwennol yn dilyn y llong tros yr eigion,
+Felly 'r dychymyg ddilynodd ein gwron,
+   Nes glaniwyd yn llawen heb arf o nacad -
+Gwersyllwyd am ennyd, ond ber fu'r orffwysfa,
+Nes sangwyd ar fryniau bythgofiol yi Alma,
+   Uwchben amchwareufa ddychrynllyd y gad.
+
+Edrych gyferbyn ar lengoedd y gelyn
+Fel dirif locustiaid yn gwneuthur y dyffryn
+   Mal affwys echryslon y fall -
+A mil o fagnelau yn agor eu gyddfau,
+I chwythu tymestloedd ac eirias gawodau,
+   I gladdu holl rengoedd y llall.
+
+         Ond megis ia llithrol
+         Yr Alpau tragwyddol,
+Tros greigiau anhygyrch yn ceisio 'r gwrthentyrch islaw:
+         Trwy danllyd ryferthwy
+         Gwneir rhuthur ofnadwy,
+Trwy 'r afon i'r llechwedd gerllaw.
+
+Mae rhai yn ymestyn at ystlys y gelyn,
+A'r lleill fel taranfollt yn hyrddio i'w erbyn,
+   I loches y fagnel a'r tan;
+Ond llamwyd i'r gloddfa, gorchfygwyd yn Alma,
+   A'r meirwon led-glywsant y gan.
+
+Pwy welais yn arwain hen gatrawd fy ngwlad,
+   Yn flaenaf, yn nesaf i'r gelyn?
+Pwy gwympodd ar fynydd llosgfalog y gad,
+   Gan godi o'i waed i oresgyn?
+
+Pwy oedd yr un hwnnw a ddaliodd fel twr,
+   Yr ufel raiadrau diri?
+Tydi, tydi gyfaill, tydi oedd y gwr,
+   A milwr fel hyn oeddyt ti.
+
+Mynyddoedd yr Alma ddatganant dy werth,
+   Dy ddewredd, a'th fedr milwrol;
+Ond draw yn Scutari datguddiwyd dy nerth,
+   Fel arwr ar faes Cristionogol.
+
+Ar wefus y milwr dolurus a gwan,
+   Y gwasget rawnsypiau tosturi;
+A llawer ochenaid daer ddwys ar ei ran,
+   Gyrhaeddodd y nef yn dy weddi.
+
+Esmwythaist y clwyfus a balm oddi fry,
+   Pan ballai daiarol feddygaeth;
+A glyn cysgod angau oleuwyd i lu
+   Pan ddaliet ti lamp Iachawdwriaeth.
+
+Er cymaint y caret dangnefedd dy wlad,
+   Ac aelwyd dy riaint yn drigfan;
+Rhy bur dy gydwybod i dderbyn mwynhad
+   A throi oddiwrth erchwyn y truan.
+
+Pan ddaw y fath adeg--pan na fydd y byd
+   Yn agor cyfrolau rhyfeloedd,
+Coffeir y gwir filwr, a'i enw o hyd,
+   Fydd beraidd am fil o flynyddoedd.
+
+Tra dyn ar y ddaear ac hefyd tra bo
+   Y nefoedd yn edrych ar rinwedd;
+Bydd glan y Mynorfor yn anwyl mewn co
+   Lle rhoddwyd gwir filwr i orwedd.
+
+Gorphwysa fy nghyfaill yn ngwychder dy fedd,
+   Ar filoedd disgynned dy ysbryd;
+Ond bwried rhyfeloedd i foroedd o hedd,
+   A dyn i heddychol ddedwyddyd.
+
+
+
+CARCHAROR NAPLES.
+
+
+
+Mewn carchar du oer y cadwynwyd fi,
+   Ond clywaf y bobloedd yn bloeddio--bloeddio!
+A bloeddio yn nes ac uwch mae y cri,
+Fod y dydd yn dod i fy nghollwng i;
+   A dyna fagnelau yn rhuo,--rhuo!
+Mae 'r dorf yn cyhoeddi Jubil-ddydd,
+Garibaldi sy 'n dyfod im' gollwng yn rhydd.
+
+Mi glywaf yn dod offerynau pres,
+   A mil o dabyrddau yn tyrddu,--tyrddu!
+Can rhyddid yw hi, a theimlaf ei gwres
+Fel y del yn mlaen, yn nes ac yn nes,
+   Nes mae fy hen garchar yn crynnu,--crynnu!
+Fe wel fy ngolygon oleu ddydd,
+Garibaldi sy 'n dyfod i'm gollwng yn rhydd.
+
+Ein heiyrn a dawdd dan gyffyrddiad ei fys,
+   Fy nghydgarcharorion, O! bloeddiwn--bloeddiwn,
+Mae 'r Eidal ein gwlad yn rbydd yn ddilys,
+Mae y sedd yn wag yn y gormes lys,
+   Caneuon Itali, O! canwn,--canwn!
+A diolch i'r nefoedd, daeth y dydd,
+Garibaldi gyrhaeddodd, mae 'r Eidal yn rbydd.
+
+
+
+GLOGWYN ANWYL.
+[O "Owain Wyn."]
+
+
+
+"Glogwyn anwyl, hoff gan i
+   Yw hamdden am fynudyn,
+Taflu carreg i fy nghi,
+   Neu eistedd ar dy gribyn:
+Gwylio'r afon glir islaw,
+   A gollwng fy myfyrion
+I'r terfysglyd drefydd draw,
+   Ym miwsig ei murmuron.
+
+Bywyd Bugail--bywyd yw
+   Nas gwyr y byd am dano,
+Heibio 'r bryniau wele 'r byw
+   Fel nant yn rhedeg heibio;
+Golud, enw, bydol fri,
+   Yw eilun-dduwiau dynion;
+Mwy na 'r oll i'm golwg i
+   Yw praidd y bryniau gwylltion.
+
+Praidd y mynydd--O! fy mhraidd!
+   Mae pleser wrth eich gwylio,
+Cyn i'r ser fachludo braidd,
+   A chyn i'r dwyrain ddyddio;
+Pan gusano'r haul y lli',
+   Y'm gyda chwi ein defaid;
+Fel ein calon, felly chwi
+   Ym mynwes eich bugeiliaid.
+
+Gyda phraidd y mynydd gwyllt,
+   Tynghedwyd ni a'n dyddiau;
+Llwybrau defaid, wyn a myllt,
+   Yw 'r llwybrau deithiwn ninnau;
+Weithiau tan y creigiau certh,
+   Yng nghanol y mynyddoedd,
+Dim i'w weld ond bryniau serth,
+   A thyner lesni'r nefoedd;
+
+Yna dringo pen y bryn,
+   Hyd risiau craig ddaneddog,
+Gweld y nant, y cwm, a'r glyn,
+   Y ddol, y gors, a'r fawnog;
+Edrych ar y ceunant du,
+   Fel bedd ar draws y bryniau;
+Bedd, yn wir, medd hanes, fu
+   I lawer un o'n tadau.
+
+Llawer craig fygythiol sydd
+   Yn gwgu ar ein bywyd;
+Ond mae arnynt ddwylaw cudd,
+   Ac nid oes maen yn syflyd;
+Clywir llais y dymhestl gref,
+   A chwiban y corwyntoedd,
+Rhua croch daranau 'r nef,
+   Ond huno wna 'r mynyddoedd.
+
+Fel yr hen fynyddoedd clyd
+   Y'm ninnau ym mysg dynion;
+Ysed tan ddinasoedd byd,
+   A chwymped seddau 'r mawrion,
+Llwybro gyda 'n defaid wnawn,
+   A thrin ein huchel diroedd;
+Hun o bur dawelwch gawn
+   Ym mynwes y mynyddoedd.
+
+
+
+FFARWEL ITI, GYMRU FAD.
+
+
+
+Ffarwel iti, Gymru fad,
+   Mynd yr ydym tros y tonnau,
+   Mynd gan adael ar ein holau
+Beddau mam a beddau tad;
+O ffarwel, ein hanwyl wlad.
+
+Tua 'r lan fe drodd y bad,
+   Tra cyfeillion ger yr afon
+   Godant eu cadachau gwynion;
+Rhaid dy adael, Gymru fad,
+O! ffarwel, ein hanwyl wlad.
+
+Ffarwel, ffarwel, Gymru fad,
+   Bydd yr heniaith a ddysgasom,
+   A'r alawon a ganasom
+Gyda ni mewn estron wlad;
+Ffarwel iti, Gymru fad.
+
+
+
+TROS UN O DRUMIAU BERWYN.
+[O "Owain Wyn."]
+
+
+
+Tros un o drumiau Berwyn.
+   Ryw noson ddistaw oer,
+Y teithiai gwr lluddedig
+   Wrth oleu can y lloer.
+Fry uwch ei ben yn crynnu
+   'Roedd llawer seren dlos,
+A chlywid yntau 'n canu
+   Fel hyn i glust y nos:-
+
+"Hen fynyddoedd fy mabandod,
+   Syllant eto ger fy mron;
+Wele fi yn ail gyfarfod
+   Gyda 'r ardal dawel hon;
+Cwm wrth ochr cwm yn gorwedd,
+   Nant a nant yn cwrdd ynghyd,
+A chlogwyni gwyllt aruthredd
+   Wyliant uwch eu pennau 'n fud.
+
+"Mewn pellenig gartrefleoedd
+   Wedi ofn a phryder hir,
+Hoff freuddwydion fy mlynyddoedd
+   Sylweddolwyd gan y gwir;
+Os ffarweliodd anobeithion
+   Ar fy ngenedigol wlad,
+Ni ffarweliais yn fy nahalon
+   Gydag anwyl dy fy nhad.
+
+Dacw 'm cartref is y goedwig,
+   Groesaw! hen arwyddion hedd;
+Dacw 'r fynwent gysegredig,
+   Wele 'r ywen--dyna 'r BEDD!"
+Darfyddodd can y teithiwr
+   Mewn teimlad llon a phrudd,
+A deigryn gloew, gloew,
+   Ollyngodd tros ei rudd.
+
+Aeth heibio dor ei gartref,
+   Os gofyn wnei paham,
+Awgrymed dy deimladau,
+   A chofia FEDD EI FAM!
+A threnlio 'r noson honno
+   Ar fedd ei fam wnaeth ef,
+Nes suddo 'r seren fore
+   I eigion gwyn y nef.
+
+
+
+DYCHWELIAD YR HEN FILWR.
+
+
+
+Pell, pell, yw telyn Cymru
+   O fy llaw;
+Do, dywedais gan alaru -
+   Byth ni ddaw,
+O'r dydd y cenais ffarwel
+A chwi wrth fynd i ryfel,
+O'm mewn bu 'r geiriau dirgel -
+   "Byth ni ddaw."
+A rhuai safn y fagnel,
+   "Byth ni ddaw."
+
+Ffarweliais pan yn fachgen
+   Gyda chwi,
+Yng nghanol dyddiau llawen
+   Rhannwyd ni;
+Ond nid yw 'r floedd fu 'n galw
+Tros ryddid, gwlad, ac enw,
+O fewn fy nglust yn farw,
+   Na, mae cri
+A llais yr amser hwnnw
+   Gyda mi.
+
+Ond nid yw 'r holl wynebau
+   Ger fy mron,
+Yr hardd rosynaidd ruddiau
+   Ieuanc llon.
+Bu pellder i'n gwahanu,
+Bu amser yn ein gwynnu, -
+Do, do, mae wedi claddu
+   Oll o'r bron;
+Ac atynt y'm yn nesu
+   Bawb a'i ffon.
+
+Wyt eto, delyn Cymru,
+   Yn fy llaw;
+Ond ieuanc nerth i'th ganu,
+   Byth ni ddaw.
+Ond clywaf swn dy dannau
+Yn murmur megis tonnau,
+Ar for yr hen amserau
+   Yn ddidaw;
+Yn torri ar hoff lannau -
+   Pell, pell, draw.
+
+I'th erbyn delyn heddwch,
+   Pechais i;
+Ond eto mewn tawelwch
+   Wele ni.
+Mae llaw a driniodd arfau,
+Mae llaw wasnaethodd angau
+Yn cyffwrdd gyda'th dannau
+   Anwyl di;
+Os aeth o gof dy chwarau,
+   Torrer hi.
+
+Na, na, er ei chaledu
+   Gan y cledd,
+Daw rhwng y bysedd hynny
+   Bennill hedd;
+Os gwelir dwfn ysgrifen
+Blynyddoedd ar fy nhalcen,
+Os ciliodd enw bachgen
+   O fy ngwedd -
+Rwy 'n teimlo eto 'n llawen,
+   Ger fy medd.
+
+Gwir sylweddoliad breuddwyd
+   Ger fy mron,
+Yw gweled eto 'r aelwyd
+   Anwyl hon.
+Ar faesydd rhuddion angau
+Trwy dewfwg y magnelau,
+Cyfeiriais fil o weithiau
+   Tros y don;
+At gysegredig furiau
+   Mebyd llon.
+
+Pell, pell, fu telyn Cymru
+   O fy llaw;
+Do, dywedais gan alaru, -
+   Byth ni ddaw.
+Ond wele ni, gyfeillion,
+Yn yfed gwin cysurlon
+O gwpan hen adgofion
+   Yn ddifraw, -
+A wele 'r tannau mwynion
+   Yn fy llaw.
+
+
+
+TRWY WLEDYDD DWYREINIOL.
+[O "Owain Wyn."]
+
+
+
+Gadewais fy mhraidd ar y mynydd,
+   A chefnais ar drumiau fy ngwlad,
+Breuddwydiais am fyd o lawenydd
+   Tu allan i furiau fy nhad;
+Yn ol i'r mynyddoedd dychwelais,
+   Ond dysgais, a'm dagrau yn lli,
+Os bywyd y milwr arweiniais,
+   Mai'r cymoedd yw'r cartref i mi.
+
+Trwy wledydd dwyreiniol tramwyais
+   Ond cofio gwyllt Walia oedd loes;
+O wagedd ieuenctyd yr yfais
+   Nes chwerwais felusder fy oes;
+Nid ofnaf lefaru fy nheimlad, -
+   Chwi wledydd goruchel eich bri,
+Yn mhell byddoch byth o fy llygad, -
+   Mynyddau 'r hen Ferwyn i mi.
+
+Mae gobaith cael eto cyn angau
+   Ailddringo llechweddau fy mro,
+I gasglu y praidd i'w corlannau
+   Hyd lwybrau cynefin i'm co;
+Uwch bedd anrhydeddus y milwr
+   Mae enfys arddunol o fri;
+Ond rhowch i mi farw 'n fynyddwr,
+   A beddrod y bugail i mi.
+
+
+
+Y GARREG WEN.
+
+
+
+Os pell yw telyn aur fy ngwlad
+   O'm dwylaw musgrell i;
+Os unig wyf o dy fy nhad,
+   Lle gynt chwareuid hi:
+Mae 'r IAITH er hynny gyda swyn,
+Fel ysbrydoliaeth yn fy nwyn,
+I ganu cerdd, os nad yn fwyn
+   I'r byd--mae'n fwyn i mi.
+
+Mae nant yn rhedeg ar ei hynt
+   I ardd fy nghartref i,
+Lle cododd un o'm teidiau gynt
+   Ddisgynfa iddi hi.
+Mae helyg melyn uwch y fan,
+Lle syrthia tros y dibyn ban,
+A choed afalau ar y lan,
+   Yn edrych ar y lli.
+
+O dan ddisgynfa'r dwr mae llyn,
+   A throsto bont o bren;
+A charreg fawr, fel marmor gwyn,
+   Gynhalia'r bont uwch ben.
+Fy mebyd dreuliais uwch y lli,
+Yn eistedd yno arni hi;
+A mwy na brenin oeddwn i,
+   Pan ar fy Ngharreg Wen.
+
+Pan ddeuai 'r Gwanwyn teg ei bryd
+   Ar ol tymhestlog hin,
+Ac adfywhau 'r llysieuog fyd
+   Yn ei gawodydd gwin;
+Yn afon fawr ai 'r gornant fach;
+Pysgotwn ar ei glennydd iach -
+A phin blygedig oedd fy mach
+   Yn grog wrth edau lin.
+
+Ni waeth pa ran o'r eang fyd
+   A grwydraf tra b'wyf byw,
+Wyf wrth y Garreg Wen o hyd,
+   A'r nant sydd yn fy nghlyw;
+A phan hysbyswyf estron ddyn,
+Mai ati' hedaf yn fy hun,
+Maddeua 'm ffoledd am mai un
+   O gofion mebyd yw.
+
+Ffurfafen bell yw mebyd oes,
+   Serenog fel y nen;
+Ac ymysg dynion neb nid oes,
+   Na hoffa godi ei ben
+I edrych draw i'r amser fu -
+A syllaf finnau gyda'r llu -
+Ac O! fy seren fore gu
+   Wyt ti, fy Ngharreg Wen.
+
+Os cyraedd ail fabandod wnaf,
+   Cyn gollwng arna'r llen;
+Os gauaf einioes byth a gaf,
+   A'i eira i wynnu 'm pen -
+Bydd angau imi 'n "frenin braw,"
+Nes caffwyf fynd i Walia draw,
+At dy fy nhad, i roi fy llaw
+   Ar ben y Garreg Wen.
+
+Byth, byth ni ddygir o fy ngho'
+   Gyfeillion mud yr ardd;
+Nis clywir trystfawr swn y gro
+   Ar gauad arch y bardd;
+A dagrau pur tros ruddiau 'r nen
+Fo 'r oll o'r dagrau uwch fy mhen -
+Os cyfaill fydd, gwnaed garnedd wen
+   O gerrig gwynion hardd.
+
+Colofnau wnaed i feibion bri,
+   Uchelfawr tua'r nen;
+Ond noder fy ninodedd i
+   Gan garnedd uwch fy mhen;
+'Rol gado gwlad y cystudd mawr,
+Os byw fy enw hanner awr,
+Na alwed neb fi ar y llawr
+   Ond Bardd y Garreg Wen.
+
+
+
+TUAG ADRE.
+
+
+
+O ddydd i ddydd mae melyn haul
+   Yn pasio yn ei gerbyd;
+O nos i nos mae 'r lleuad wen
+   Yn codi ac yn machlud?
+O awr i awr mae 'r ser yn troi
+   Ar draws yr eangderau; -
+Yn wir, mae holl greadigaeth Duw
+   Yn teithio tuag adre.
+
+Mae 'r ffrydlif fach, ar ben y bryn,
+   Yn rhedeg megys crwydryn;
+Ac afon fawr, y dolydd is,
+   Yn rhedeg yn y dyffryn;
+Mae 'r gwynt yn crwydro yn y nef,
+   A symud mae 'r cymylau; -
+Ac O! mae holl greadigaeth Duw
+   Yn teithio tuag adre.
+
+Mae gwynt Diwygiad ar ei daith,
+   A derw Cymru 'n gildio,
+Mae swn gorfoledd yn y dail, -
+   Mae swn canghenuau 'n cracio;
+O!  Anadl, tyrd o'r pedwar gwynt,
+   A chymer y byd mewn hymnau,
+Can a moliant iddo Ef,
+   I byrth tragwyddol gartre.
+
+
+
+BEIBL FY MAM.
+
+
+
+Y cyfan oll sydd genny 'n awr
+   Yn y cyfanfyd crwn
+Yw 'r fendigedig gyfrol hon,
+   Yw 'r Beibl anwyl hwn.
+Mae 'n dechreu gyda dalen deg
+   Ein pren teuluaidd ni:
+Fy mam wrth farw, megis mam
+   A roddodd hwn i mi.
+
+Rwy'n cofio 'n dda rai enwau hoff,
+   Ar ddechreu 'r gyfrol hon;
+Fy mrawd, fy chwaer, a'r baban bach
+   Fu farw wrth y fron.
+Rwy 'n cofio 'r hwyr darllennai 'nhad,
+   Am Grist ac angeu loes;
+Ac fel y codai 'r Beibl hwn
+   Wrth son am waed y groes.
+
+Mi dreuliais lawer awr erioed,
+   I feddwl am y fan;
+Rwy 'n gweld y teulu 'n fyw, er fod
+   Eu beddau yn y Llan.
+Rwy 'n gweld y plant ar derfyn dydd,
+   A'r bychan byr ei gam
+Yn myned ar ei ddeulin bach,
+   Wrth lin fy anwyl fam.
+
+Mae 'r byd yn wag, cofleidiaf di,
+   Fy Meibl anwyl iawn;
+Y fynwent a'th ddalennau di
+   Yw 'r unig bethau llawn.
+Esmwytha di fy ffordd i'r bedd
+   Trwy ddysgu 'r ffordd i fyw:
+Crynedig dwylaw fo 'n dy ddal
+   Fys anweledig Duw.
+
+
+
+ALUN MABON.
+BUGEILGAN DELYNEGOL.
+
+
+
+I.
+
+'R oedd Alun Mabon yn ei ddydd
+Yn fachgen cryf a hoew;
+Yn berchen grudd a thalcen hardd,
+   A llygad gloew, gloew.
+Er nad oedd goeth 'nol dull y byd,
+   Fe ellid dweyd er hynny
+Fod ganddo galon gynnes bur
+   Yn natur wedi tyfu.
+
+Ar fin y mynydd ganwyd ef,
+   Ac fel y blodyn bychan
+Oedd ar y grug wrth gefn ei dy,
+   Blagurodd yntau allan. -
+Fe gafodd hafddydd yn yr haul,
+   A gauaf yn y stormydd;
+Ac yna megis blodyn grug,
+   Fe wywodd ar y mynydd.
+
+II.
+
+Ar fin y mynydd ganwyd ef,
+Ac fel yr hedydd rhyngo a'r nef
+Fe ganodd lawer anthem gref,
+   Lle nad oedd carreg ateb.
+Ond dywed traddodiadol go,
+I'r llon a'r prudd o dro i dro
+Ddod ato yn ei fryniawg fro
+   Fel haul a storm i'w wyneb.
+
+Ar rai o fydrau Cymru lan,
+Rhyw gais at roi arluniau man
+O fywyd Alun ydyw 'r gan
+   Fugeiliol sydd yn canlyn;
+Ac mae bywgraffiad byw o'r dyn,
+Yn ei ganeuon ef ei hun,
+A'i "Arad Goch" yw 'r gyntaf un
+   Gaiff fyned efo 'r delyn.
+
+III.
+
+Os hoffech wybod sut
+   Mae dyn fel fi yn byw,
+Mi ddysgais gan fy nhad
+   Grefft gyntaf dynol ryw;
+Mi ddysgais wneyd y gors
+   Yn weirglodd ffrwythlon ir,
+I godi daear las
+   Ar wyneb anial dir.
+         'Rwy'n gorwedd efo'r hwyr,
+            Ac yn codi efo'r wawr,
+         I ddilyn yr og, ar ochr y Glog,
+            A chanlyn yr arad goch
+            Ar ben y mynydd mawr.
+
+Cyn boddio ar eich byd,
+   Pa grefftwyr bynnag foch,
+Chwi ddylech ddod am dro
+   Rhwng cyrn yr arad goch;
+A pheidiwch meddwl fod
+   Pob pleser a mwynhad
+Yn aros byth heb ddod
+   I fryniau ucha'r wlad.
+         'Rwyn gorwedd efo'r hwyr, &c.
+
+Yn ol eich clociau heirdd,
+   Bob bore codwch chwi:
+Y wawr neu wyneb haul
+   Yw 'r cloc a'n cyfyd ni;
+Y dyddiaduron sydd
+   Yn nodi 'r haf i chwi;
+Ond dail y coed yw 'r llyfr
+   Sy 'n dod a'r haf i ni.
+         'Rwyn gorwedd efo'r hwyr, &c.
+
+Nis gwn i fawr am fyw
+   Mewn rhwysg a gwychder byd;
+Ond diolch, gwn beth yw
+   Gogoniant bwthyn clyd;
+Ac eistedd hanner awr
+   Tan goeden ger fy nor,
+Pan aiff yr haul i lawr,
+   Mewn cwmwl tan i'r mor.
+         'Rwyn gorwedd efo 'r hwyr, &c.
+
+Cerddorion Ewrop ddont
+   I'ch mysg i roddi can:
+'R wyf innau 'n ymfoddhau
+   Ar lais y fronfraith lan;
+Wrth wrando 'r gwcw las,
+   A'r hedydd bychan fry,
+A gweled Robyn Goch
+   Yn gwrando 'r deryn du.
+         'Rwy'n gorwedd efo'r hwyr, &c.
+
+Ddinaswyr gwaelod gwlad,
+   A gwyr y celfau cain,
+Pe welech Fai yn dod,
+   A blodau ar y drain -
+Y rhosyn ar y gwrych,
+   A'r lili ar y llyn;
+Fe hoffech chwithau fyw
+   Mewn bwthyn ar y bryn.
+         'Rwy'n gorwedd efo'r hwyr, &c.
+
+Pan rydd yr Ionawr oer
+   Ei gaenen ar yr ardd,
+Y coed a dro'nt yn wyn
+   Tan flodau barrug hardd;
+Daw bargod dan y to
+   Fel rhes o berlau pur,
+A'r eira ddengys liw
+   Yr eiddew ar y mur.
+         'Rwy'n gorwedd efo'r hwyr, &c.
+
+Daw Ebrill yn ei dro,
+   A chydag ef fe ddaw
+Disymwth wenau haul,
+   A sydyn gawod wlaw;
+Fel cyfnewidiog ferch,
+   Neu ddyn o deimlad gwan,
+Galara 'r awyr las,
+   A gwena yn y fan.
+         'Rwy'n gorwedd efo 'r hwyr,
+            Ac yn codi efo 'r wawr,
+         I ddilyn yr og ar ochor y Glog
+            A chanlyn yr arad goch
+            Ar ben y mynydd mawr.
+
+IV.
+
+Dowch i'r mynydd yn y bore,
+   Chwi gewch weld y wawr-ddydd deg
+Yn ymwrido ar y bryniau,
+   Fel genethig dair-ar-ddeg.
+      Diffodd lampau 'r nos,
+      Goleu 'r ddaear dlos,
+         Rhodio tros y bryniau mawr,
+      Gosod cymyl claer
+      Mewn ymylon aur,
+         Dyna waith y wylaidd wawr.
+
+Dowch i'r mynydd gyda'r hwyrddydd,
+   Pan aiff haul i'w fachlud awr;
+Chwi gewch weled brenin Gwynddydd
+   Yn ei waed yn cwympo i lawr.
+      Duo 'n ddyfnach bydd
+      Mynwent laith y dydd,
+         A daw nifwl ar y mor,
+      Lleuad gwyd ei phen,
+      Hwyrddydd rodia 'r nen
+         I ail oleu lampau 'r Ior.
+
+V.
+
+Mi genais gerdd i'r Arad Goch,
+   A cherdd ar Ddowch i'r Mynydd:
+Ond beth be bawn i eto 'n dod
+   I ganu can anghelfydd
+Ar alaw anwyl "Blodau 'r Cwm,"
+   Mae pawb yn gwybod honno;
+A beth pe bawn yn dewis pwnc
+   Y gwyr pob dyn am dano?
+
+O! gwyn ei fyd yr hwn nis gwyr
+   Am ferch fu 'n flinder iddo;
+Ond wn i ddim yn sicr chwaith,
+   Ai gwyn ei fyd, ai peidio.
+Mae'n ddigon hawdd gan ambell un
+   Sydd wedi cael ei ginio,
+Areithio llawer wrth ryw blant
+   Y gallant aros hebddo.
+
+Fe guchia gwyneb llawer tad,
+   Pan glywant gan cariadau:
+Tra 'u plant eu hunain wrth eu traed
+   Yn chwerthin am eu pennau;
+Ni welais i 'run deryn bach
+   Yn hoff o fyw yn unig;
+Ac ni fu oen yn hoff o'i fam
+   Nad oedd yn hoff o oenig.
+
+Ac ni fu dyn yn hoff o ddyn
+   Na mam yn hoff o'i phlentyn,
+Nad ydoedd serch at ferch neu fab
+   Yn gyntaf wedi ennyn.
+Mae holl ddynoliaeth dyn yn gudd,
+   A'i enaid fel yn huno,
+Nes daw rhyw lygad fel yr haul
+   I wenu cariad arno.
+
+Aeddfedodd dyn erioed yn iawn
+   Ar gangen fawr dynoliaeth,
+Os bydd ei wedd heb wrido 'n goch,
+   Yng ngwydd ei anwyl eneth.
+Ond nid athromaeth dal i feirdd, -
+   Barddoniaeth ydyw 'r testyn:
+Am hynny tyred, Menna Rhen,
+   Fy awen a fy nhelyn.
+
+VI.
+
+Pan welais gyntaf Menna Rhen
+   Yn myned tua 'r mynydd,
+Yr oedd plentynrwydd tyner llon
+   Yn dirion ar ei dwyrudd;
+Ac efo 'i brawd y byddai beunydd,
+Yn adsain miwsig hyd y meusydd;
+'R oedd ganddi lais, a chanddi ddeall
+I ganu a charoli'n ddiwall,
+Ond nid oedd dim yn Menna Rhen -
+   Ddim mwy na rhywun arall.
+
+Mi welais eilwaith Menna Rhen
+   Yn myned tua 'r mynydd;
+A byth er hynny, coeliwch fi,
+   Bu 'n boenau imi beunydd.
+Yr oedd y don a genid ganddi
+Fel yn aros gyda myfi;
+Mi dreuliais ddyddiau mewn myfyrion,
+A nosweithiau mewn breuddwydion,
+Nes credais fod can Menna lan
+   Yn ngwaelod isa 'nghalon.
+
+Mi welais wedyn Menna Rhen
+   I'r mynydd hwnnw 'n myned,
+Ac mi ddilynais ol ei throed
+   Bob cam a fedrwn weled;
+Ond hi o'r diwedd oddiweddais,
+Ac O! mi deimlais, ac mi ddwedais
+Farddoniaeth dlysach mewn un munud
+Na dim a genais yn fy mywyd,
+Wrth roddi cangen fedwen ferth
+   Yn nwylaw fy anwylyd.
+
+VII.
+
+Tra 'n cysgu 'r nos ddilynol
+   Canfyddais trwy fy hun,
+Y gangen fedwen honno 'n bleth
+   Am wddf fy anwyl fun;
+Y dail a ddeuent arni,
+   Yn wyrdd a llawn bywhad;
+A gwelwn hi 'n blodeuo 'n hardd,
+   Ac yna 'n hadu had.
+Ond wrth fwynhau fy mreuddwyd
+   O freuddwyd heb ei ail!
+Canfyddwn locust melyn ddu
+   Ymysg y bedw ddail;
+Ymlusgodd ac ymrwyfodd
+   Nes cyffwrdd gwddf y ferch,
+Ac yna breuddwyd mwy nid oedd,
+   Ond hunllef hagr erch.
+
+Diolchais am gael deffro
+   Pan ddaeth yn doriad dydd;
+Ond cofiais ddechreu'r breuddwyd hwn
+   Yn fwy na 'i ddiwedd prudd. -
+Meddyliais am y blodau
+   Oedd ar y brigau cain,
+Yn fwy nag am y locust erch
+   Lochesid yn y rhain.
+Fy nghalon losgai ynnof
+   Wrth gofio llygad Men;
+Ac adeiladais lawer llys
+   A chastell yn y nen;
+Ond maluriasant ymaith,
+   Cyn dechreu mynd yn hen,
+Oherwydd cangen GOLLEN ddaeth
+   Oddiwrth fy Menna Rhen.
+
+VIII.
+ALAW,--Hob y Deri Dando.
+
+Mae gan bawb ei brofedigaeth,
+   Paid a siarad gwirion,
+Ond myfi gadd siomedigaeth
+   Paid a thorri 'th galon;
+Rhyfedd iawn os na wnaf farw,
+   Siwr, siwr iawn,
+Siomedigaeth chwerw arw;
+      Mwyn, mwyn, er ei mwyn,
+      A fyddai marw er ei mwyn.
+
+Rown i'n meddwl ei bod hi'n ddidwyll,
+   Paid a meddwl gwirion, -
+Peidiwch chwithau bod yn fyrbwyll;
+   Dyna fel mae dynion.
+Dynion sydd a'r synwyr cryfa,
+   Siwr, siwr iawn,
+Ond gwrthodwyd fi gan Menna;
+      Mwyn, mwyn, er ei mwyn,
+      A fyddai marw er ei mwyn.
+
+Rhoddais iddi gangen fedwen,
+   Beth ddywedodd Menna?
+Gyrrodd imi gangen gollen,
+   Wel, hi wnaeth yn eitha'.
+Ond parhaf o hyd i'w hoffi,
+   Siwr, siwr iawn,
+Pe b'ai 'n gyrru amdo imi;
+      Mwyn, mwyn, er ei mwyn,
+      A fyddai marw er ei mwyn.
+
+IX.
+
+'R oedd gennyf fi gyfaill pur anwyl a hoff,
+   Yn fy nghyfarfod bob amser a gwen;
+Ac wrtho mi ddwedais fy mod wedi rhoi
+   Fy neheulaw i Menna Rhen.
+Ond ef pan ddeallodd yr hyn oedd yn bod,
+   Siaradodd a'r llances ei hun -
+Efe oedd y locust ddisgynnodd ar ddail
+   Y fedwen a welais trwy f' hun.
+
+Mae llawer ffordd i lofruddio dyn
+   Yn y byd llofruddiog hwn;
+Os cwrddwch a lleidr yng ngwyll y nos,
+   Bydd angau ar ffroen ei wn;
+Fe gymer eich arian ar ol eich lladd,
+   I'w logell losgedig ei hun,
+Ac yna fe 'ch tafl i ffos y clawdd, -
+   Dyna ffordd LLEIDR i fwrdro dyn.
+
+Mae arall o falais yn dod gyda gwen,
+   I ro'i i ddyn ddiod yn hael,
+Mae yntau 'n cymeryd, ond bychan y gwyr
+   Mai cwpan o wenwyn mae 'n gael;
+Mae un yn ymdrengu, a'r llall yn boddhau
+   Rhyw deimlad sydd ynddo fe 'i hun -
+Fe ddygodd y gwenwyn ryw amcan 'i ben,
+   Dyna ffordd LLOFRUDD i fwrdro dyn.
+
+Mae arall yn byw ac yn bod gyda chwi,
+   Fel cyfaill diffuant bob pryd,
+Ac rywfodd i'ch mynwes yn gynnes yr a,
+   Nes cael eich cyfrinach i gyd. -
+Ac yna mae 'n myned i sibrwd ei serch
+   I galon un garech eich hun -
+Yn ennill y llances garasech erioed;
+   Dyna ffordd CYTHRAUL i fwrdro dyn.
+
+X.
+ALAW,--Y Melinydd.
+
+Ond chaiff y gangen fedwen
+   Ddim gwywo 'n goch ei lliw
+Nes af i siarad eto
+   Yng ngwyneb Menna wiw.
+      Fa la, &c.
+
+Mae gennyf dy fy hunan,
+   Heb ddegwm, rhent, na threth;
+A phan eisteddaf ynddo,
+   'Rwy'n frenin ar bob peth.
+      Fa la, &c.
+
+Mae gennyf barlwr bychan,
+   Ac aelwyd fechan lan;
+A'm tegell i fy hunan
+   Sy 'n canu wrth y tan.
+      Fa la, &c.
+
+Mae gennyf gant o ddefaid
+   Yn pori ar y bryn,
+A gallaf godi 'm cyfrwy
+   Ar gefn fy ngheffyl gwyn.
+      Fa la, &c.
+
+Mae gennyf ferlyn mynydd,
+   I fynd i weled Men;
+Nad all neb ond fy hunan
+   Roi rheffyn yn ei ben.
+      Fa la, &c.
+
+Mae 'r ardd, a'r cae, a'r ffriddoedd,
+   A'r ty yn eiddo im';
+Ond heb fy Menna anwyl
+   'Rwyf fel pe bawn heb ddim.
+      Fa la, &c.
+
+Fe 'i ceisiaf unwaith eto,
+   Ac os gwrthodir fi,
+Tros fil o weithiau wedyn
+   Am Fenna ceisiaf fi.
+      Fa la, &c.
+
+XI.
+
+Gwelais bren yn dechreu glasu
+   Ei ganghennau yn yr ardd
+Ac yn dwedyd wrth yr adar, -
+   "Wele daeth y Gwanwyn hardd."
+Daeth aderyn bychan heibio,
+   Ac fe safodd ar ei frig;
+Ac fe ganodd gyda deilen
+   Newydd irlas yn ei big.
+
+Daeth aderyn bychan arall
+   Ar las gangen yn y coed,
+Fe ysgydwodd blu ei aden
+   Ac fe ddawnsiodd ar ei droed;
+Canodd yntau, a dewisodd
+   Fan lle carai wneyd ei nyth,
+O! mae 'r Gwanwyn fel yn cadw
+   Natur hen yn ieuanc byth.
+
+Eis o dan fy nghoeden fedwen
+   Ac mi godais fry fy mhen,
+Ac mi welais ol y gyllell,
+   Lle torasid cangen Men.
+Gwnaeth adgofion i'm ofidio
+   Na buasai 'r gainc yn wyw;
+Ond canfyddais gangen ieuanc
+   Yn y toriad hwnnw 'n byw.
+
+O mae gobaith mewn gwrthodiad,
+   Meddwyf innau wrth fy hun;
+Er fy nhorri gallaf dyfu
+   Eto yn serchiadau 'r fun.
+Troes fy wyneb tuag adref,
+   Teflais lawer tremiad ffol
+Tros fy ysgwydd at y fedwen
+   Las adewais ar fy ol.
+
+XII.
+
+Wrth ddychwel tuag adref,
+   Mi glywais gwcw lon,
+Oedd newydd groesi 'r moroedd
+   I'r ynys fechan hon.
+
+A chwcw gynta'r tymor
+   A ganai yn y coed,
+'Run fath a'r gwcw gyntaf
+   A ganodd gynta' 'rioed.
+
+Mi drois yn ol i chwilio
+   Y glasgoed yn y llwyn,
+I edrych rhwng y brigau,
+   Ple 'r oedd y deryn mwyn.
+
+Mi gerddais nes dychwelais
+   O dan fy medw bren;
+Ac yno 'r oedd y gwcw,
+   Yn canu wrth fy mhen.
+
+O! diolch iti, gwcw,
+   Ein bod ni yma 'n cwrdd -
+Mi sychais i fy llygad,
+   A'r gwcw aeth i ffwrdd.
+
+XIII.
+
+Ar ol i'r gog fy ngadaw, efo 'r pren,
+Dechreuais ganu 'r alaw Mentra Gwen;
+   Cyfodi wnes yn union,
+   A theimlais fwy na digon
+O ganu ar fy nghalon, Mentra Men,
+Er gwaethaf fy ngelynion, Mentra Men.
+
+Os gyrraist imi gollen, Menna Wen,
+Fe yrraf eto fedwen Menna Wen,
+   Pe b'ai holl fedw Cymru
+   Tan farn yn gwywo 'fory,
+Mi ddaliwn innau i ganu, Mentra Men,
+Nes byddent yn aildyfu, Menna Wen.
+
+Os gwelaist ddail yn syrthio, ar y pren,
+A blodau 'r haf yn gwywo, Menna Wen.
+   Perogli wedi marw
+   Wna 'r dail sydd ar y bedw,
+Gan ddal y tywydd garw, Menna Wen,
+Pren cariad ydyw hwnnw, Menna Wen.
+
+XIV.
+ALAW,--Clychau Aberdyfi.
+
+Wrth feddwl am y gangen gyll
+   Ddanfonodd Menna imi;
+Draw 'n y pellder clywwn swn
+   Hen glychau Aberdyfi -
+      "Menna eto fydd dy fun,
+      Gad y pruddglwyf iddo 'i hun,
+      Cwyd dy galon, bydd yn ddyn,"
+         Meddai clychau Aberdyfi.
+   "Un-dau-tri-pedwar-pump-chwech
+      Cwyd dy galon, bydd yn ddyn,"
+         Meddai clychau Aberdyfi.
+
+Hawdd gan glychau ganu 'n llon,
+   Tra na bo dim i'w poeni:
+Hawdd yw cael gweniadau merch,
+   Ond mil mwy hawdd en colli.
+      "Menna eto fydd dy fun," &c.
+
+Pe bai etifedd i wr mawr
+   Yfory 'n cael ei eni;
+I ganu cainc dechreuech chwi,
+   Hen glychau Aberdyfi.
+      "Menna eto fydd dy fun," &c.
+
+Pe bai rhyw ddeuddyn yn y wlad,
+   Yfory 'n mynd i'w priodi,
+I ganu cainc dechreuech chwi,
+   Hen glychau Aberdyfi,
+      "Menna eto fydd dy fun," &c.
+
+Pe bawn i fory 'n mynd i'r bedd,
+   A'm calon wedi torri;
+I ganu cainc dechreuech chwi,
+   Hen glychau Aberdyfi.
+      "Menna eto fydd dy fun,
+      Gad y pruddglwyf iddo 'i hun,
+      Cwyd dy galon, bydd yn ddyn,"
+         Meddai clychau Aberdyfi.
+   "Un-dau-tri-pedwar-pump-chwech
+      Cwyd dy galon, bydd yn ddyn"
+      Meddai clychau Aberdyfi.
+
+XV.
+
+'R wyf wedi canu llawer
+   O gerddi Cymru lan,
+Ond dyma 'r darn prydferthaf
+   Sydd gennyf yn fy nghan;
+Ymhen rhyw flwyddyn wedyn,
+   At Menna Rhen daeth brys,
+Nes aeth yn Menna Mabon
+   A modrwy am ei bys.
+
+Yn mhen rhyw flwyddyn arall,
+   A dyma ddernyn cain;
+Pan oedd y gog yn canu
+   A'r blodau ar y drain,
+Yr wyn ar ben y mynydd
+   Yn chware naid a llam,
+Fe wenai Mabon bychan
+   Ar freichiau gwyn ei fam.
+
+XVI.
+
+Ar ysgwydd y gwan fe ddaeth pwys
+   Trafferthion a helbul y byd,
+Fy nheulu gynyddodd, a daeth
+   Gofynion am 'chwaneg o yd;
+Ychwaneg o fwyd i'r rhai bach,
+   Ychwaneg o lafur a thraul;
+Er hynny yn nghwmni fy Men,
+   Yr oedd imi gysur i'w gael.
+
+Un gweryl a gawsom erioed,
+   A chweryl dra chwerw oedd hon;
+Fe yrrwyd fy hunan a'm gwraig,
+   Ar ty'n bendramwnwgl bron. -
+Yr oedd hi 'n bur hoff o roi tro
+   I weled ei mam tros y bryn;
+Ac wrth imi ddwedyd gair croes,
+   Dechreuodd areithio fel hyn:-
+
+"Cymeryd fy hel a fy nhrin,
+   Fy maeddu heb ddarfod na phen:
+Cymeryd pob tafod a rhenc,
+   Fel pe bawn yn ddernyn o bren!
+Ai dioddef fel carreg a raid,
+   Heb deimlad--na llygad--na chlyw!
+O! na wnaf, os gwelwch chwi 'n dda,
+   Wnaf fi ddim er undyn byw!
+
+"A chymer di fi ar fy ngair,
+   Fe 'i cedwais erioed hyd yn hyn;
+Cyn cei di fy ngwddf tan dy droed,
+   Bydd dy ben yn eitha gwyn. -
+Cymeryd diflasdod a chas,
+   A galw fy modryb yn 'sgriw.' -
+O! na wnaf, os gwelwch chwi 'n dda,
+   Wnaf fi ddim er undyn byw!
+
+"Ni flasa i fynd allan o'r ty,
+   I weled fy chwaer na fy mam,
+Nad codi 'r gloch fawr byddi di,
+   Heb reswm, nag achos, na pham. -
+Wna i mono fo, Alun, er neb,
+   Mi gadwaf anrhydedd fy rhyw;
+O! na wnaf os gwelwch chwi 'n dda,
+   Wnaf fi ddim er undyn byw!
+
+"'Does gen' ti 'r un galon o'th fewn,
+   A phwyll yn dy goryn ni 'roed;
+A gwae fi o'r diwrnod a'r awr [yn crio.]
+   Y gwelais dy wyneb erioed!
+Mi af tros y bryn at fy nhad,
+   I'm hatal 'does undyn a wiw;
+Ac aros yn hwy efo 'th di -
+   Wnaf fi ddim--wnaf fi ddim!
+   Wnaf fi ddim er undyn byw!"
+
+Ac i ffwrdd yr aeth hi, ac i ffwidd y bu hi, ac i ffwrdd yr arosodd,
+am nas gwn i pa hyd.  Ond tra yr oedd hi efo 'i mam a'i theulu, a
+minnau yn fy helbul efo fy mhlant bach, mi genais gerdd i ysgafnhau
+fy nghalon, ac fel hyn y cenais, -
+
+XVII.
+
+Mae 'r lloer yn codi tros yr aig
+   Ac ogof Craig Eryri;
+Ond beth yw cartref heb fy ngwraig,
+   Ond ogof ddioleuni?
+Y mae pob munud megis awr,
+   Ac awr, O!  Menna, 'n flwyddyn.
+Pe bawn i heno 'n dderyn to,
+   Caet heno weled Alun.
+
+O na bai cadair Morgan Mud,
+   Neu un o'r hen freindlysau,
+Yn mynd a fi, fy ngeneth wen,
+   Tros ben y coed a'r caeau.
+Mi rown fy ngwefus wrth dy glust,
+   A gwnawn i ti freuddwydio;
+Nes codet trwy dy gwsg i ddod,
+   Yn ol at Alun eto.
+
+Ond i fy nghadair wellt yr af,
+   A cheisiaf huno, Menna;
+Ac mewn breuddwydion cyn bo hir
+   Mi ddeuaf innau yna.
+Yn awr 'rwy 'n cau fy amrant swrth
+   Wrth gychwyn i dy wyddfod;
+Breuddwydia dithau, felly hed,
+   A thyred i'm cyfarfod.
+
+XVIII.
+
+Mi dreuliais wythnos gyfan,
+   A Menna bach i ffwrdd;
+A'r ty yn llanast tryblith,
+   A'r llestri hyd y bwrdd.
+'R oedd gennyf was a hogyn
+   Yn cynhauafa mawn:
+Ac eisiau pobi bara
+   A daeth yn fuan iawn.
+
+'R oedd godro un o'r gwartheg
+   Yn gasach na phob peth,
+Oherwydd Menna 'n unig
+   Gai gydied yn ei theth.
+A throi yn hesp wnaeth pedair
+   O'r gwartheg mwyaf blith;
+A llaeth y lleill a surodd,
+   A'r byd a drodd o chwith.
+
+Ac am y gegin, druan,
+   'R oedd hi heb drefn na llun:
+Y plant ddechreuent grio,
+   A chriais innau f' hun.
+Mi flinais ar fy einioes,
+   Aeth bywyd imi 'n bwn:
+A gyrrais efo 'r hogyn
+   I Menna 'r llythyr hwn:-
+
+XIX.
+ALAW,--Bugail Aberdyfi.
+
+Mi geisiaf eto ganu can,
+I'th gael di 'n ol, fy ngeneth lan,
+I'r gadair siglo ger y tan,
+   Ar fynydd Aberdyfi;
+Paham, fy ngeneth hoff, paham,
+Gadewaist fi a'th blant dinam?
+Mae Arthur bach yn galw 'i fam,
+   A'i galon bron a thorri;
+Mae 'r ddau oen llawaeth yn y llwyn,
+A'r plant yn chware efo 'r wyn;
+O tyrd yn ol, fy ngeneth fwyn,
+   I fynydd Aberdyfi.
+
+Nosweithiau hirion mwliog du
+Sydd o fy mlaen, fy ngeneth gu:
+O! agor eto ddrws y ty,
+   Ar fynydd Aberdyfi.
+O! na chaet glywed gweddi dlos
+Dy Arthur bach cyn cysgu 'r nos,
+A'i ruddiau bychain fel y rhos,
+   Yn wylo am ei fami;
+Gormesaist lawer arnaf, Men,
+Gormesais innau--dyna ben:
+O tyrd yn ol, fy ngeneth wen,
+   I fynydd Aberdyfi.
+
+Fel hyn y ceisiaf ganu can
+I'th gael di 'n ol, fy ngeneth lan,
+I eistedd eto ger y tan,
+   Ar fynydd Aberdyfi;
+'Rwy 'n cofio'th lais yn canu 'n iach -
+Ond 'fedri di, na neb o'th ach,
+Ddiystyrru gweddi plentyn bach
+   Sydd eisieu gweld ei fami.
+Rhyw chware plant oedd d'weyd ffarwel,
+Cyd-faddeu wnawn, a dyna 'r fel,
+Tyrd tithau 'n ol, fy ngeneth ddel,
+   I fynydd Aberdyfi.
+
+XX.
+
+Fe ddaeth yr hogyn adref,
+   A rhoddodd sicrhad,
+Fod Menna 'n mynd 'i aros
+   Yn nhy ei mam a'i thad.
+Os oeddem wedi priodi,
+   Yn bendant dwedai hi
+Nad oedd dim modd cymodi
+   A dyn o'm tymer i.
+
+Fod i'r holl fechgyn fyned
+   I'w magu ganddi hi:
+Ac i'r genethod ddyfod
+   O dan fy ngofal i.
+'R oedd hi yn ymwahanu,
+   Ac felly 'n canu 'n iach;
+Ond hoffai roddi cusan
+   Ar wefus Enid fach.
+
+A thrannoeth hi ddychwelodd
+   I ddwyn y rhwyg i ben:
+Ond O! fe dorrodd dagrau
+   O eigion calon Men;
+Cymerodd Arthur afael
+   Am wddf ei fam a fi,
+Ac fel rhyw angel bychan,
+   Fe 'n hailgymododd ni.
+
+XXI.
+
+Wyddoch chwi beth, mae ffraeo
+   Yn ateb diben da;
+Pe na bai oerni 'r gauaf
+   Ni theimlem wres yr ha;
+Pe na bai ymrafaelio,
+   Ni byddai 'r byd ddim nes,
+Yn wir mae tipyn ffraeo
+   'N gwneyd llawer iawn o les.
+
+XXII.
+
+Awel groes ar fy oes godai 'n gryf wedyn,
+Daeth i mi adwyth mawr, clefyd, a thwymyn:
+Rhoddai mhlant ddwylaw'n mhleth, ogylch fy ngwely,
+Minnau 'n fud welwn fyd arall yn nesu.
+Is fy mhen, ias fy medd deimlais yn dyfod,
+A daeth ofn, afon ddofn, ddu i'm cyfarfod;
+Ond 'roedd grudd ar fy ngrudd, ar yr awr ddua,
+A rhoi gwin ar fy min ddarfu fy Menna.
+
+O! os bu ias y bedd, allan o'r briddell,
+Hi a fu ennyd fer yn fy hen babell;
+Yn fy nhraed teimlais waed, dyn wedi huno,
+Ond fe drodd angau draw wedi fy nharo.
+Fel y graig safai 'm gwraig anwyl yn eon,
+Ac i'r nef, gweddi gref yrrodd o'i chalon:
+Rhoi ei grudd ar fy ngrudd, ar yr awr ddua,
+A rhoi gwin ar fy min, ddarfu fy Menna.
+
+XXIII.
+
+      Ar ol fy hir gystudd,
+      'Rwy 'n cofio 'r boreuddydd
+Y'm cariwyd mewn cader dros riniog fy nor:
+      Ac ar fy ngwyn dalcen
+      Disgynnodd yr heulwen,
+Ac awel o'r mynydd ac awel o'r mor.
+      Ar ol imi nychu
+      Yn gaeth ar fy ngwely
+Am fisoedd o gystudd, o glefyd a phoen;
+      Fy nghalon lawenodd
+      Wrth weld ar y weirglodd
+Y gaseg a'r ebol, y ddafad a'r oen.
+
+      Trwy wenlas ffurfafen
+      Fe wenai yr heulwen,
+Ac mi a'i gwynebais, ac yfais y gwynt;
+      A'r adar a ddeuent
+      I'm hymyl, a chanent,
+Nes teimlais fy nghalon yn curo fel cynt.
+      Fy ngeneth ieuengaf
+      Ac Arthur ddaeth ataf,
+A gwenu mewn dagrau wnai Menna gerllaw;
+      A daeth fy nghi gwirion,
+      Gan ysgwyd ei gynffon,
+A neidiodd i fyny a llyfodd fy llaw.
+
+XXIV.
+
+   Ond O! mae llawer blynedd,
+   Er pan own gynt yn eistedd,
+O flaen fy nrws tan wenau 'r haul;
+   'Rol gadael gwely gwaeledd.
+   A llawer tywydd garw
+   Sydd er yr amser hwnnw,
+Mae 'm plant yn wragedd ac yn wyr,
+   A Menna wedi marw.
+
+   Claddasom fachgen bychan,
+   Ac yna faban gwiwlan,
+Ond chododd Menna byth mo'i phen
+   'Rol ini gladdu 'r baban.
+   'Rwy 'n cofio 'r Sul y Blodau
+   Yr aeth i weld eu beddau,
+Pan welais arwydd ar ei gwedd,
+   Mai mynd i'r bedd 'roedd hithau.
+
+   Penliniodd dan yr ywen,
+   A phlannodd aur-fanadlen,
+Mieri Mair, a chanri 'r coed,
+   A brig o droed y glomen.
+   Y blodau gwyllt a dyfent
+   Ar ddau fedd yn y fynwent;
+Ond gywo 'r oedd y rhosyn coch
+   Ar foch y fam a'i gwylient.
+
+   Ac er pan gladdwyd Menna,
+   Un fynwent yw 'r byd yma:
+Y fodrwy hon sydd ar fy mys
+   Yw 'r unig drysor fedda.
+   Y fodrwy hon a gadwaf,
+   Y fodrwy hon a garaf,
+A dyma destun olaf cerdd,
+   Gwreichionen awen, olaf.
+
+XXV.
+
+Mae Menna 'n y fynwent yn isel ei phen,
+A thi ydyw 'r fodrwy fu ar ei llaw wen:
+Ar law fy anwylyd rwy 'm cofio dy roi,
+Ac wrth imi gofio, mae ni calon yn troi -
+Fy llygaid dywyllant, a chau mae fy nghlyw,
+'Rwyf fel pe bawn farw, ac fel pe bawn fyw:
+Ond megis fy mhriod wrth adael y byd,
+Mae modrwy 'r adduned yn oer ac yn fud.
+
+Pan roddwyd ti gyntaf ar law Menna Rhen,
+'R oedd coedydd yn ddeiliog, a natur mewn gwen,
+Y clychau yn canu, a'r byd fel yn ffol, -
+Ond cnul oedd yn canu pan ges i di 'n ol.
+Mewn gwenwisg briodas y dodais i di,
+O wenwisg yr amdo dychwelaist i mi;
+O! fodrwy 'r adduned, nes gwywo 'r llaw hon,
+Fe'th gadwaf di 'n loew, fe'th gadwaf di'n gron.
+
+XXVI.
+
+Aros mae 'r mynyddau mawr,
+   Rhuo trostynt mae y gwynt;
+Clywir eto gyda 'r wawr,
+   Gan bugeiliaid megis cynt.
+Eto tyfa 'r llygad dydd,
+   Ogylch traed y graig a'r bryn;
+Ond bugeiliaid newydd sydd
+   Ar yr hen fynyddoedd hyn.
+
+Ar arferion Cymru gynt,
+   Newid ddaeth o rod i rod;
+Mae cenedlaeth wedi mynd,
+   A chenedlaeth wedi dod.
+Wedi oes dymestlog hir,
+   Alun Mabon mwy nid yw;
+Ond mae 'r heniaith yn y tir,
+   A'r alawon hen yn fyw.
+
+
+
+
+
+End of The Project Gutenberg Etext of Ceiriog, by John Ceiriog Hughes
+
