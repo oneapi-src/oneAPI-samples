@@ -3,7 +3,8 @@
 
 {% block head %}
 <head>
-        <script async src=""></script>
+        <script defer type="text/javascript" src="https://www.intel.com/content/dam/www/global/wap/performance-config.js" >
+        </script> 
 
         <link rel="stylesheet" type="text/css" href="_static/styles.css" />
         <meta charset="UTF-8">
@@ -48,8 +49,14 @@
     </head>     
 {% endblock %}
 <body>
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DT7D3YR0LH">
+    <script type="text/javascript">
+        var wapLocalCode = 'us-en'; // configured 27/06/2024
+        var wapSection = “oneapi-samples”; // configured 27/06/2024
+        // Load TMS
+        (function () {
+        var url = 'https://www.intel.com/content/dam/www/global/wap/tms-loader.js'; // WAP file URL
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.src = url;
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();
     </script> 
     <div class="flexbox">
         {% block content %}
