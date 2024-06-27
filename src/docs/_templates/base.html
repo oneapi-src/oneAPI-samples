@@ -30,15 +30,15 @@
             default-src 'self'; 
             child-src 'self'
             data: https://*.github.io; 
-            img-src 'self' 
+            img-src 'self' https://*.cookielaw.org https://*.onetrust.com;
             data: https://*.github.io https://github.com https://*.githubusercontent.com; 
-            script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.intel.com/content/dam/www/global/wap/ https://*.onetrust.com  https://*.cookielaw.org https://*.github.io;
-            style-src 'self' data: https://*.gstatic.com https://fonts.googleapis.com https://*.github.io https://*.jsdelivr.net https://*.bootstrapcdn.com https://*.cloudflare.com;
+            script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.intel.com https://*.onetrust.com  https://*.cookielaw.org https://*.github.io;
+            style-src 'self' data: https://*.onetrust.com https://*.cookielaw.org https://*.gstatic.com https://fonts.googleapis.com https://*.github.io https://*.jsdelivr.net https://*.bootstrapcdn.com https://*.cloudflare.com;
 
             font-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.bootstrapcdn.com https://*.cloudflare.com; 
             frame-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.bootstrapcdn.com; 
             object-src 'self';
-            connect-src 'self' https://*.github.io https://*.github.com https://*.githubusercontent.com https://*.jsdelivr.net https://www.intel.com/content/dam/www/global/wap/
+            connect-src 'self' https://*.github.io https://*.github.com https://*.githubusercontent.com https://*.jsdelivr.net https://*.intel.com
                 https://*.onetrust.com https://*.cookielaw.org https://*.bootstrapcdn.com https://*.cloudflare.com https://*.googleapis.com https://*.gstatic.com;
             worker-src 'self'" 
         />
