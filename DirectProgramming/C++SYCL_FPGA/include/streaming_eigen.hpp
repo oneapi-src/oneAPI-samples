@@ -1,5 +1,5 @@
-#ifndef __STREAMING_QRD_HPP__
-#define __STREAMING_QRD_HPP__
+#ifndef __STREAMING_EIGEN_HPP__
+#define __STREAMING_EIGEN_HPP__
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 
@@ -655,4 +655,4 @@ struct StreamingEigen {
 
 }  // namespace fpga_linalg
 
-#endif /* __STREAMING_QRD_HPP__ */
+#endif /* __STREAMING_EIGEN_HPP__ */
