@@ -12,7 +12,7 @@ void kernel_compute_vadd(sycl::queue &q, float *a, float *b, float *c, size_t n)
 }
 
 int main() {
-  const int N = 1200;
+  const int N = 1680;
 
   // Define 3 arrays
   float *a = static_cast<float *>(malloc(N * sizeof(float)));

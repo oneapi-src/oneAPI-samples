@@ -84,13 +84,14 @@ int main() {
     q[i].wait();
 
   // submit matrix multiply kernels to all devices
-  /*
+
   for (int i = 0; i < num_devices; i++)
     kernel_compute_mm(q[i], da[i], db[i], dc[i], N, B);
-  */
+  /*
   std::for_each(std::execution::par, id.begin(), id.end(), [&q, &da, &db, &dc](auto i){
     kernel_compute_mm(q[i], da[i], db[i], dc[i], N, B);
   });
+  */
 
   // wait for compute complete
   for (int i = 0; i < num_devices; i++)
