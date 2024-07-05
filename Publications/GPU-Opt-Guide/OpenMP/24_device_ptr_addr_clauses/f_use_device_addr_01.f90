@@ -16,7 +16,7 @@ program target_use_device_addr
 
   ! Allocate host data
   allocate(array_h(N1), array_d(1))
-  
+
   !$omp target data map (from:array_h(1:N1)) map(alloc:array_d(1:N1))
   !$omp target data use_device_addr(array_d)
   !$omp target has_device_addr(array_d)
