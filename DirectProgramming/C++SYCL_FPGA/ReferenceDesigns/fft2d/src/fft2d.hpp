@@ -122,7 +122,7 @@ std::array<ac_complex<T>, points> ReorderData(
   // the contents of the entire buffer is shifted by 1 element
 
 #pragma unroll
-  for (int k = 0; k < points; k++) {
+  for (int k = 0; k < points / 2; k++) {
     data[k * 2 + 1] = Delay(data[k * 2 + 1], depth,
                             shift_reg + (k * 2 + 1 - 1) / 2 * (depth + 1));
   }
@@ -469,6 +469,11 @@ struct FFT {
      */
 
     ac_complex<T> fft_delay_elements[kN + kPoints * (logn - 2)];
+
+#pragma unroll
+    for (unsigned i = 0; i < kN + kPoints * (logn - 2); i++) {
+      fft_delay_elements[i] = {0.0f, 0.0f};
+    }
 
     // needs to run "kN / kPoints - 1" additional iterations to drain the last
     // outputs
