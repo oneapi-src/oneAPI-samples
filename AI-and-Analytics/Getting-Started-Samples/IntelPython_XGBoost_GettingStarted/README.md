@@ -12,7 +12,7 @@ The `Intel® Python XGBoost* Getting Started` sample demonstrates how to set up 
 
 XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. Starting with 0.9 version of XGBoost, Intel has been up streaming optimizations through the `hist` histogram tree-building method. Starting with 1.3.3 version of XGBoost and beyond, Intel has also begun up streaming inference optimizations to XGBoost as well.
 
-In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of Intel® AI Tools. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. It also demonstrates how to use software products that can be found in the [Intel® AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of AI Tools. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. It also demonstrates how to use software products that can be found in the [AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 ## Prerequisites
 
@@ -26,15 +26,15 @@ In this code sample, you will learn how to use Intel optimizations for XGBoost p
 
 ## Key Implementation Details
 
-- This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
+- This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
 
-- XGBoost* is ready for use once you finish the Intel® AI Tools installation and have run the post installation script.
+- XGBoost* is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 ## Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-**1. Get Intel® AI Tools**
+**1. Get AI Tools**
 
 Required AI Tools: Intel® Optimization for XGBoost*
 <br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
