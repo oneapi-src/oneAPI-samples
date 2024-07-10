@@ -61,7 +61,7 @@ conda activate base
 
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_SKLearn_GettingStarted
 ```
 
 **5. Install dependencies**
