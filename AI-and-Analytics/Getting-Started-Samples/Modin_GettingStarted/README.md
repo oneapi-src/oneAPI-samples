@@ -1,4 +1,4 @@
-# Modin Get Started Sample
+# Modin* Get Started Sample
 
 The `Modin Getting Started` sample demonstrates how to use distributed Pandas using the Modin package. 
 
