@@ -20,7 +20,7 @@ In this sample, you will run a support vector classifier model from sklearn with
 | :---                     | :---
 | OS                       | Ubuntu* 20.04 (or newer)
 | Hardware                 | Intel Atom® processors <br> Intel® Core™ processor family  <br> Intel® Xeon® processor family  <br> Intel® Xeon® Scalable processor family
-| Software                 | Intel® AI Analytics Toolkit (AI Kit) <br> Intel® oneAPI Data Analytics Library (oneDAL) <br> Joblib  <br> NumPy <br> Matplotlib
+| Software                 | AI Tools <br> Intel® oneAPI Data Analytics Library (oneDAL) <br> Joblib  <br> NumPy <br> Matplotlib
 
 > **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
