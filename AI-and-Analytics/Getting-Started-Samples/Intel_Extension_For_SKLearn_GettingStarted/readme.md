@@ -1,6 +1,6 @@
 # Intel® Python Scikit-learn Extension Getting Started Sample
 
-The `Intel® Python Scikit-learn Extension Getting Started` sample demonstrates how to use a support vector machine classifier from Intel® Extension for Scikit-learn* for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel® Extension for Scikit-learn* speeds up scikit-learn applications. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), which comes with [Intel AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The `Intel® Python Scikit-learn Extension Getting Started` sample demonstrates how to use a support vector machine classifier from Intel® Extension for Scikit-learn* for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel® Extension for Scikit-learn* speeds up scikit-learn applications. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), which comes with [AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 
 | Area                     | Description
@@ -26,13 +26,13 @@ In this sample, you will run a support vector classifier model from sklearn with
 
 ## Key Implementation Details
 
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel® Extension for Scikit-learn* installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python*. Intel® Extension for Scikit-learn* is available as a part of Intel AI Tools.
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have Intel® Extension for Scikit-learn* installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python*. Intel® Extension for Scikit-learn* is available as a part of AI Tools.
 
 ## Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-**1. Get Intel AI Tools**
+**1. Get AI Tools**
 
 Required AI Tools: Intel® Extension for Scikit-learn*
 
