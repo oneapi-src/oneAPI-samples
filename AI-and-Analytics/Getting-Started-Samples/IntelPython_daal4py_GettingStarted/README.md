@@ -34,7 +34,8 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-**1. Get Intel® AI Tools**
+**1. Get AI Tools**
+
 
 Required AI Tools: daal4py.
 
