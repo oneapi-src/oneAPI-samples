@@ -26,9 +26,9 @@ In this sample, you will run a batch Linear Regression model with oneDAL daal4py
 
 ## Key Implementation Details
 
-- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the Intel AI Tools.
+- This get started sample code is implemented for CPUs using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python*.
 
-- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the Intel AI Tools installation and have run the post installation script.
+- The Intel® oneAPI Data Analytics Library (oneDAL) is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 ## Environment Setup
 
