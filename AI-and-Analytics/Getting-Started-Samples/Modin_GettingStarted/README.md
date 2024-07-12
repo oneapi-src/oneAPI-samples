@@ -88,7 +88,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 If the default path is used during the installation of AI Tools:
 ```
-$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+$HOME/intel/oneapi/intelpython/envs/<offline-conda-env-name>/bin/python -m ipykernel install --user --name=base
 ```
 If a non-default path is used:
 ```
