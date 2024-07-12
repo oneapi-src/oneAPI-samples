@@ -1,6 +1,6 @@
-# Intel® Python XGBoost* Getting Started Sample
+# Intel® Optimization for XGBoost* Getting Started Sample
 
-The `Intel® Python XGBoost* Getting Started` sample demonstrates how to set up and train an XGBoost model on datasets for prediction.
+The `Intel® Optimization for XGBoost* Getting Started` sample demonstrates how to set up and train an XGBoost model on datasets for prediction.
 
 | Area                     | Description
 | :---                     | :---
