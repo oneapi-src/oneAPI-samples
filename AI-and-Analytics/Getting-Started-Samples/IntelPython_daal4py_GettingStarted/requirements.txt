@@ -3,3 +3,4 @@ notebook
 pandas
 joblib
 ipykernel
+scikit-learn
