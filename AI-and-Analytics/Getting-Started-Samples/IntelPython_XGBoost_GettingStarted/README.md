@@ -26,7 +26,7 @@ In this code sample, you will learn how to use Intel optimizations for XGBoost p
 
 ## Key Implementation Details
 
-- This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [AI Tools](https://software.intel.com/en-us/oneapi/ai-kit).
+- This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have XGboost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python*.
 
 - XGBoost* is ready for use once you finish the AI Tools installation and have run the post installation script.
 
