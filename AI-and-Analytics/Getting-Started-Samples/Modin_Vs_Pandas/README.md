@@ -96,7 +96,7 @@ $HOME/intel/oneapi/intelpython/envs/modin/bin/python -m ipykernel install --user
 ```
 If a non-default path is used:
 ```
-<custom_path>/bin/python -m ipykernel install --user --name=<offline-conda-env-name>
+<custom_path>/bin/python -m ipykernel install --user --name=modin
 ```
 
 **2. Launch Jupyter Notebook** 
