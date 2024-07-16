@@ -56,7 +56,7 @@ source <custom_path>/bin/activate
 **3. (Offline Installer) Activate relevant Conda environment**
 <!-- specify relevant conda environment name in Offline Installer for this sample -->
 ```
-conda activate base
+conda activate modin
 ```
 
 **4. Clone the GitHub repository**
