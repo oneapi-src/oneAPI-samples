@@ -92,7 +92,7 @@ $HOME/intel/oneapi/intelpython/envs/modin/bin/python -m ipykernel install --user
 ```
 If a non-default path is used:
 ```
-<custom_path>/bin/python -m ipykernel install --user --name=base
+<custom_path>/bin/python -m ipykernel install --user --name=modin
 ```
 **2. Launch Jupyter Notebook** 
 <!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
