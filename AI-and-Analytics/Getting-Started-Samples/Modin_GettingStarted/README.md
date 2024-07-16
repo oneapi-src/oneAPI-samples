@@ -106,7 +106,7 @@ jupyter notebook --ip=0.0.0.0
 ```
 Modin_GettingStarted.ipynb
 ```
-**5. Change the kernel to `base`**
+**5. Change the kernel to `modin`**
   <!-- specify relevant kernel name(s), for example `pytorch` -->
 **6. Run every cell in the Notebook in sequence**
 
