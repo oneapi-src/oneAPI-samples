@@ -12,13 +12,13 @@
     "linux": [{
       "id": "intel amx bf16 int8 inference",
       "steps": [
-        "source /root/intel/oneapi/intelpython/bin/activate",
+        "source /intel/oneapi/intelpython/bin/activate",
         "conda activate pytorch",
         "python -m pip install -r requirements.txt",
-        "python -m ipykernel install --user --name=user_pytorch",
+        "python -m ipykernel install --user --name=pytorch",
         "python pytorch_inference_vnni.py",
         "python pytorch_inference_amx.py",
-        "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb"
+        "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_InferenceOptimizations_AMX_BF16_INT8.ipynb"
       ]
     }]
   },
