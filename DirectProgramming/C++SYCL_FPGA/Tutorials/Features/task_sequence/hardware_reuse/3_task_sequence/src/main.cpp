@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 // oneAPI headers
 #include <sycl/ext/intel/fpga_extensions.hpp>
