@@ -13,8 +13,8 @@
 	{
 		"env": ["source /opt/intel/oneapi/setvars.sh --force",
 				"conda activate tensorflow",
-				"conda install -n tensorflow python-flatbuffers -y",
-				"conda install -n tensorflow -c intel neural-compressor -y",
+				"conda install -n tensorflow -c conda-forge python-flatbuffers -y",
+				"conda install -n tensorflow -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
 				"conda install -n tensorflow -y",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow"
