@@ -1,11 +1,11 @@
 # `Intel® Python NumPy vs numba-dpex` Sample
 
-The `Intel® Python NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy, Numba, and Data-parallel Extension for Numba* (numba-dpex).
+The `Intel® Python NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy*, Numba*, and Data Parallel Extension for Numba* (numba-dpex).
 
 | Property                | Description
 | :---                    | :---
 | Category                | Code Optimization
-| What you will learn     | How to program using the Data-parallel Extension for Numba* (numba-dpex)
+| What you will learn     | How to program using the Data Parallel Extension for Numba* (numba-dpex)
 | Time to complete        | 5 minutes
 
 >**Note**: This sample is validated on Intel® Distribution for Python* Offline Installer and AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
@@ -20,7 +20,7 @@ In this sample, you will run a k-nearest neighbors algorithm using 3 different I
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
 | Hardware                | CPU
-| Software                | Intel® AI Analytics Toolkit (AI Kit)
+| Software                | Intel® Distribution for Python*
 
 ## Key Implementation Details
 
@@ -111,7 +111,7 @@ Numba_dpex accuracy 0.7222222222222222
 ## Related Samples
 
 * [Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
-
+* [`Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex` Sample](https://github.com/oneapi-src/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_numba-dpex_Genetic_Algorithm/README.md)
 ## License
 
 Code samples are licensed under the MIT license. See
