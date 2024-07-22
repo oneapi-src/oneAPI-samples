@@ -1,255 +1,194 @@
-#include "tp3_video.h"
+#include <iostream>
+
+#include <sycl/sycl.hpp>
+#include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/prototype/pipes_ext.hpp>
+
+#include "constexpr_math.hpp"
+#include "exception_handler.hpp"
 #include "unrolled_loop.hpp"
 
-using namespace std;
-using namespace sycl::ext::intel::experimental;
+using namespace sycl;
 
-SYCL_EXTERNAL unsigned int traitement_5x5(unsigned int entree[5][5]);
+// size of the line buffer that holds the image pixels.
+#define LB_SZ 1024
 
-// Forward declare the kernel and pipe names
-// (this prevents unwanted name mangling in the optimization report)
+// size of the filter window.
+#define WINDOW_SZ 5
 
-// Pipe properties
-using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
+// input image size.
+#define IMG_SZ 400
+
+using pixel_t = unsigned int;
+
+// Definition of input and output pipes.
+using PixelPipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::bits_per_symbol<8>,
     sycl::ext::intel::experimental::uses_valid<true>,
     sycl::ext::intel::experimental::ready_latency<0>,
     sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
 
-// Image streams
-class flux_in_id;
-using flux_in = pipe<
-    flux_in_id,     // An identifier for the pipe
-    unsigned int,   // The type of data in the pipe
-    0,              // The capacity of the pipe
-    PipePropertiesT // Customizable pipe properties
-    >;
+class ID_InStream;
+using InputPixelStream =
+    sycl::ext::intel::experimental::pipe<ID_InStream, pixel_t, 0,
+                                         PixelPipePropertiesT>;
 
-class flux_out_id;
-using flux_out = pipe<
-    flux_out_id,    // An identifier for the pipe
-    unsigned int,   // The type of data in the pipe
-    0,              // The capacity of the pipe
-    PipePropertiesT // Customizable pipe properties
-    >;
+class ID_OutStream;
+using OutputPixelStream =
+    sycl::ext::intel::experimental::pipe<ID_OutStream, pixel_t, 0,
+                                         PixelPipePropertiesT>;
 
-class flux_tempo_id;
-using flux_tempo = pipe<
-    flux_tempo_id,  // An identifier for the pipe
-    unsigned int,   // The type of data in the pipe
-    0,              // The capacity of the pipe
-    PipePropertiesT // Customizable pipe properties
-    >;
+class ID_BoxFilter;
+using ConduitArgT = decltype(sycl::ext::oneapi::experimental::properties{sycl::ext::intel::experimental::conduit});
 
-class second_trait;
+// We want to run a 5 by 5 box blur filter on the input images.
+pixel_t box_blur_5x5(const pixel_t window[WINDOW_SZ][WINDOW_SZ]) {
+  pixel_t result{0};
+  fpga_tools::UnrolledLoop<0, 5>([&](auto row)
+                                 { fpga_tools::UnrolledLoop<0, 5>([&](auto col)
+                                                                  { result += window[row][col]; }); });
+  result /= 25;
+  return result;
+}
 
-template <typename flux_tempo, typename flux_out>
-struct second_traitement
+template <typename PipeIn, typename PipeOut>
+struct BoxFilter
 {
+  sycl::ext::oneapi::experimental::annotated_arg<size_t, ConduitArgT> num_rows;
+  sycl::ext::oneapi::experimental::annotated_arg<size_t, ConduitArgT> num_cols;
 
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int, decltype(sycl::ext::oneapi::experimental::properties{
-               stable})>
-      taille_h;
-
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int, decltype(sycl::ext::oneapi::experimental::properties{
-               stable})>
-      taille_v;
-
-  auto get(sycl::ext::oneapi::experimental::properties_tag)
-  {
-    return sycl::ext::oneapi::experimental::properties{
-
-        streaming_interface<>};
+  auto get(sycl::ext::oneapi::experimental::properties_tag) {
+    return sycl::ext::oneapi::experimental::properties{sycl::ext::intel::experimental::streaming_interface<>};
   }
 
-  void operator()() const
-  {
+  void operator()() const {
     [[intel::fpga_register]]
-    unsigned int valeur_in,
-        valeur_out;
-
-    [[intel::initiation_interval(1)]]
-    for (int px = 0; px < (taille_h) * (taille_v); px++)
-    {
-      valeur_in = flux_tempo::read();
-      valeur_out = 255 - valeur_in;
-      flux_out::write(valeur_out);
-    }
-  }
-};
-
-class voisionage;
-template <typename flux_in, typename flux_tempo>
-struct travail_sur_voisinage
-{
-
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int, decltype(sycl::ext::oneapi::experimental::properties{
-               stable})>
-      taille_h;
-
-  sycl::ext::oneapi::experimental::annotated_arg<
-      int, decltype(sycl::ext::oneapi::experimental::properties{
-               stable})>
-      taille_v;
-
-  auto get(sycl::ext::oneapi::experimental::properties_tag)
-  {
-    return sycl::ext::oneapi::experimental::properties{
-
-        streaming_interface<>};
-  }
-
-  void operator()() const
-  {
-    // Compteurs ligne pixel
-
-    // Entree Sortie
-    [[intel::fpga_register]]
-    unsigned int pixel_a_traiter;
+    pixel_t pixel_in;
 
     [[intel::fpga_register]]
-    unsigned int pixel_a_envoyer;
-
-    //  [[intel::fpga_register]]
-    //  int taille_h = TAILLE_IM-1;
-    //  int taille_v = TAILLE_IM-1;
+    pixel_t pixel_out;
 
     [[intel::fpga_register]]
-    unsigned int pixel_apres_traitement;
+    pixel_t pixel_computed;
 
-    // Ligne a retard
+    // Implement line buffer on FPGA on-chip memory.
+#ifndef OPTIMIZED_EXAMPLE
     [[intel::fpga_memory("BLOCK_RAM")]]
-    unsigned int line_buffer[5][NB_COLONNE_MAX];
+    pixel_t line_buffer[WINDOW_SZ][LB_SZ];
+#else
+    constexpr size_t kNumBanks = fpga_tools::Pow2(fpga_tools::CeilLog2(WINDOW_SZ));
+    [[intel::fpga_memory("BLOCK_RAM")]]
+    pixel_t line_buffer[LB_SZ][kNumBanks];
+#endif
 
-    // Voisinnage
+    // Pixels to compute filter with.
     [[intel::fpga_register]]
-    unsigned int fenetre[5][5];
+    pixel_t window[WINDOW_SZ][WINDOW_SZ];
 
     [[intel::initiation_interval(1)]]
-    for (int num_lig = 0; (num_lig < NB_COLONNE_MAX) && num_lig < taille_v + 2; num_lig++)
-    {
-
+    for (int row = 0; (row < LB_SZ) && row < num_rows + 2; row++) {
       [[intel::initiation_interval(1)]]
-      //[[intel::speculated_iterations(0)]]
-      for (int num_col = 0; (num_col < NB_COLONNE_MAX) && (num_col < taille_h + 2); num_col++)
-      {
+      for (int col = 0; (col < LB_SZ) && (col < num_cols + 2); col++) {
 
-        if (num_lig < taille_v && num_col < taille_h)
-        {
-
-          pixel_a_traiter = flux_in::read();
-
-          // Gestion ligne a retard
+        if (row < num_rows && col < num_cols) {
+          pixel_in = PipeIn::read();
 
           fpga_tools::UnrolledLoop<0, 4>([&](auto l)
-                                         { line_buffer[l][num_col] = line_buffer[l + 1][num_col]; });
-          line_buffer[4][num_col] = pixel_a_traiter;
-
-          // Fin gestion ligne a retard
-
-          // Fenetre video glissante
+                                         { line_buffer[l][col] = line_buffer[l + 1][col]; });
+          line_buffer[4][col] = pixel_in;
 
           fpga_tools::UnrolledLoop<0, 5>([&](auto li)
                                          {
-              // #pragma unroll
-
-            fpga_tools::UnrolledLoop<0,4>([&](auto co)
-            {
-              fenetre[li][co] = fenetre[li][co + 1];
+            fpga_tools::UnrolledLoop<0, 4>([&](auto co) {
+              window[li][co] = window[li][co + 1];
             });
-            fenetre[li][4] = line_buffer[li][num_col]; });
-          // Fin Fenetre video glissante
+            window[li][4] = line_buffer[li][col]; });
         }
-        pixel_apres_traitement = traitement_5x5(fenetre);
+        pixel_computed = box_blur_5x5(window);
 
-        if ((num_lig >= 2) && (num_col >= 2))
-        {
-          pixel_a_envoyer = 0;
+        if ((row >= 2) && (col >= 2)) {
+          pixel_out = 0;
 
-          if (((num_lig >= 4) && (num_lig < taille_v) && (num_col >= 4) && (num_col < taille_h)))
-          {
-            pixel_a_envoyer = pixel_apres_traitement;
+          if (((row >= 4) && (row < num_rows) && (col >= 4) && (col < num_cols))) {
+            pixel_out = pixel_computed;
           }
-          flux_tempo::write(pixel_a_envoyer);
+          PipeOut::write(pixel_out);
         }
       }
     }
   }
 };
 
-int main()
-{
-  try
-  {
+void random_fill(pixel_t *image, size_t sz) {
+  for (size_t i = 0; i < sz; ++i) {
+    image[i] = static_cast<pixel_t>(rand() % 255);
+  }
+}
 
+void compute_reference_result(pixel_t *image, pixel_t *ref_result) {
+  
+}
+
+int main() {
+  try {
 #if FPGA_SIMULATOR
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
-    fstream fichier_out("sortie_sim.txt", ios::out);
+    
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-    fstream fichier_out("sortie_hw.txt", ios::out);
+    
 #else // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
-    fstream fichier_out("sortie.txt", ios::out);
+    
 #endif
     sycl::queue q(selector, fpga_tools::exception_handler,
                   sycl::property::queue::enable_profiling{});
 
-    fstream fichier_in("entree.txt", ios::in);
+    constexpr size_t num_cols = IMG_SZ;
+    constexpr size_t num_rows = IMG_SZ;
+    constexpr size_t num_pixels = num_rows * num_cols;
+  
+    pixel_t pixel;
+    pixel_t image[num_pixels];
+    pixel_t test_result[num_pixels];
+    pixel_t reference_result[num_pixels];
 
-    unsigned int pixel = 0;
-    int kernel_h = TAILLE_IM - 1;
-    int kernel_v = TAILLE_IM - 1;
+    random_fill(image, num_pixels);
 
-    cout << "Entrée" << endl;
-    cout << "Launch kernel " << endl;
-    q.single_task<voisionage>(travail_sur_voisinage<flux_in, flux_tempo>{kernel_h, kernel_v});
-    q.single_task<second_trait>(second_traitement<flux_tempo, flux_out>{kernel_h, kernel_v});
+    std::cout << "Launch kernel " << std::endl;
 
-    for (int l = 0; l < kernel_h; l++)
-    {
-      for (int c = 0; c < kernel_v; c++)
-      {
-        fichier_in >> pixel;
-        flux_in::write(q, pixel);
-      }
+    q.single_task<ID_BoxFilter>(BoxFilter<InputPixelStream, OutputPixelStream>{num_rows, num_cols});
+
+    for (size_t idx = 0; idx < num_pixels; ++idx) {
+      InputPixelStream::write(q, image[idx]);
     }
 
-    cout << "Sorties :" << endl;
-    for (int l = 0; l < kernel_h; l++)
-    {
-      for (int c = 0; c < kernel_v; c++)
-      {
-
-        pixel = flux_out::read(q);
-        fichier_out << pixel << " ";
-      }
-      fichier_out << endl;
+    for (size_t idx = 0; idx < num_pixels; ++idx) {
+      pixel = OutputPixelStream::read(q);
+      test_result[idx] = pixel;
     }
 
     q.wait();
-    cout << "Fin de traitement" << endl;
+
+    compute_reference_result(image, reference_result);
+
+    bool passed = true;
+    for (size_t idx = 0; idx < num_pixels; ++idx) {
+      if (test_result[idx] != reference_result[idx]) {
+        passed = false;
+        break;
+      }
+    }
+
+    if (passed) {
+      std::cout << "Verification PASSED.\n\n";
+    } else {
+      std::cout << "Verification FAILED.\n\n";
+    }
   }
-  catch (sycl::exception const &e)
-  {
+  catch (sycl::exception const &e) {
     std::cerr << "Caught a synchronous SYCL exception: " << e.what()
               << std::endl;
-
     std::terminate();
   }
-}
-
-unsigned int traitement_5x5(unsigned int entree[5][5])
-{
-
-  unsigned int sortie = 0;
-  fpga_tools::UnrolledLoop<0, 5>([&](auto lig)
-                                 { fpga_tools::UnrolledLoop<0, 5>([&](auto col)
-                                                                  { sortie = sortie + entree[lig][col]; }); });
-  sortie /= 25;
-
-  return sortie;
 }
