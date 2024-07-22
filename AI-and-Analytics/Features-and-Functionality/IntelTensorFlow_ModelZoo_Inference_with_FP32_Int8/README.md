@@ -86,7 +86,7 @@ Navigate to the Intel® AI Reference models source directory. By default, it is 
 #### Install Jupyter Notebook
 
 ```
-conda install jupyter nb_conda_kernels
+conda install -c conda-forge jupyter nb_conda_kernels
 ```
 
 #### Open Jupyter Notebook

@@ -111,7 +111,7 @@ This section explains how to train a model for language identification using the
 
 1. Install Jupyter Notebook.
    ```
-   conda install jupyter nb_conda_kernels
+   pip install notebook
    ```
 2. Launch Jupyter Notebook.
    ```
@@ -241,7 +241,7 @@ To run inference, you must have already run all of the training scripts, generat
 
 1. If you have not already done so, install Jupyter Notebook.
    ```
-   conda install jupyter nb_conda_kernels
+   pip install notebook
    ```
 2. Launch Jupyter Notebook.
    ```
