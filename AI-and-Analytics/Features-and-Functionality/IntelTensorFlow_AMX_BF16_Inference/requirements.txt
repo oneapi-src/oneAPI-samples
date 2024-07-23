@@ -1,6 +1,6 @@
 notebook
 Pillow
-tensorflow_hub
+tensorflow_hub==0.16
 requests
 py-cpuinfo
 
