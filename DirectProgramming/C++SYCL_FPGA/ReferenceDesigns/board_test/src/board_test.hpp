@@ -1,4 +1,5 @@
 #include <sycl/sycl.hpp>
+#include <cmath>
 #include <vector>
 
 #include "host_speed.hpp"
@@ -775,7 +776,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
                 << board_info_.quartus_fmax_ << " MHz \n\n";
       // Check that hardware frequency is within 2% of Quartus compiled
       // frequency, terminate test if its not
-      float PercentError = (fabs(board_info_.quartus_fmax_ - kernel_freq_) /
+      float PercentError = (std::fabs(board_info_.quartus_fmax_ - kernel_freq_) /
                             (board_info_.quartus_fmax_)) *
                            100;
       if (PercentError < 2)
