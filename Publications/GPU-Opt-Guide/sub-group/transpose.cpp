@@ -66,7 +66,7 @@ int main() {
             for (uint n = 0; n < BLOCK_SIZE; n++) {
               if (sgId == n) {
                 for (uint k = 0; k < BLOCK_SIZE; k++) {
-                  tcol[k] = sg.shuffle(bcol[n], k);
+                  tcol[k] = sycl::select_from_group(sg, bcol[n], k);
                 }
               }
             }
