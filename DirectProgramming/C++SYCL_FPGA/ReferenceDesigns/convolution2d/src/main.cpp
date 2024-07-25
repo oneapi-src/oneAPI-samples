@@ -63,17 +63,17 @@ void InitializeBuffer(conv2d::PixelRGB *buf, size_t size) {
   }
 }
 
-/// @brief Convert pixels read from a bmp image using the bmptools functions to
+/// @brief Convert pixels read from a bmp image using the bmp_tools functions to
 /// pixels that can be parsed by our 2D convolution IP.
-/// @param[in] bmp_buf pixels read by bmptools
+/// @param[in] bmp_img pixels read by bmptools
 /// @param[out] vvp_buf pixels to be consumed by 2D convolution IP
 /// @param[in] pixel_count (input) number of pixels in input image and output
 /// image
-void ConvertToVvpRgb(unsigned int *bmp_buf, conv2d::PixelRGB *vvp_buf,
+void ConvertToVvpRgb(bmp_tools::BitmapRGB bmp_img, conv2d::PixelRGB *vvp_buf,
                      size_t pixel_count) {
   std::cout << "INFO: convert to vvp type." << std::endl;
   for (size_t idx = 0; idx < pixel_count; idx++) {
-    uint32_t pixel_int = bmp_buf[idx];
+    uint32_t pixel_int = bmp_img(idx);
     bmp_tools::PixelRGB bmp_rgb(pixel_int);
 
     // convert from 8-bit to whatever the VVP IP expects
@@ -88,12 +88,15 @@ void ConvertToVvpRgb(unsigned int *bmp_buf, conv2d::PixelRGB *vvp_buf,
 
 /// @brief Convert pixels read from the 2D convolution IP to a format that can
 /// be read by the bmptools functions.
-/// @param[in] vvp_buf pixels produced by 2D convolution IP
-/// @param[out] bmp_buf pixels to send to bmptools
-/// @param[in] pixel_count number of pixels in input image and output image
-void ConvertToBmpRgb(conv2d::PixelRGB *vvp_buf, unsigned int *bmp_buf,
-                     size_t pixel_count) {
+/// @param[in] vvp_buf Pixels produced by 2D convolution IP
+/// @param[in] rows Number of rows in input image and output image
+/// @param[in] cols Number of columns in input image and output image
+/// @return bmp_buf Pixels to send to bmptools
+bmp_tools::BitmapRGB ConvertToBmpRgb(conv2d::PixelRGB *vvp_buf, size_t rows,
+                                     size_t cols) {
   std::cout << "INFO: convert to bmp type." << std::endl;
+  size_t pixel_count = rows * cols;
+  bmp_tools::BitmapRGB bmp_img(rows, cols);
   for (size_t idx = 0; idx < pixel_count; idx++) {
     conv2d::PixelRGB pixel_conv = vvp_buf[idx];
 
@@ -104,8 +107,10 @@ void ConvertToBmpRgb(conv2d::PixelRGB *vvp_buf, unsigned int *bmp_buf,
         (uint8_t)(pixel_conv.b >> (conv2d::kBitsPerChannel - 8)));  //
 
     uint32_t pixel_int = bmp_rgb.GetImgPixel();
-    bmp_buf[idx] = pixel_int;
+    bmp_img(idx) = pixel_int;
   }
+
+  return bmp_img;
 }
 
 /// @brief Verify image dimensions from a just-read image and compare with
@@ -318,27 +323,24 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 
   sycl::event e;
   bool all_passed = true;
-
   size_t rows = 0, cols = 0;
 
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
-    unsigned int *in_img = 0;
-    int rows_new, cols_new;
-
-    std::string canonical_input_bmp_path =  //
+    std::string input_bmp_path =  //
         input_bmp_filename_base + "_" + std::to_string(itr) + DEFAULT_EXTENSION;
-    std::string canonical_expected_bmp_path =  //
-        expected_bmp_filename_base + "_" + std::to_string(itr) +
-        DEFAULT_EXTENSION;
 
-    std::cout << "INFO: Load image " << canonical_input_bmp_path << std::endl;
-    if (!bmp_tools::ReadBmp(canonical_input_bmp_path, &in_img, rows_new,
-                            cols_new)) {
-      std::cerr << "ERROR: Could not read image from "
-                << canonical_input_bmp_path << std::endl;
+    std::cout << "INFO: Load image " << input_bmp_path << std::endl;
+    unsigned int error;
+    bmp_tools::BitmapRGB in_img = bmp_tools::ReadBmp(input_bmp_path, error);
+    if (bmp_tools::BmpError::OK != error) {
+      std::cerr << "ERROR: Could not read image from " << input_bmp_path
+                << std::endl;
       return false;
     }
+
+    size_t rows_new = in_img.GetRows();
+    size_t cols_new = in_img.GetRows();
 
     bool image_ok =
         UpdateAndCheckImageDimensions(rows, cols, rows_new, cols_new);
@@ -352,9 +354,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
     conv2d::PixelRGB *in_img_vvp = new conv2d::PixelRGB[rows * cols];
 
     ConvertToVvpRgb(in_img, in_img_vvp, rows * cols);
-
-    // don't need in_img anymore
-    free(in_img);
 
     vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(q, rows, cols,
                                                             in_img_vvp);
@@ -394,7 +393,6 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
                                            DEFAULT_EXTENSION;
 
     conv2d::PixelRGB *out_img_vvp = new conv2d::PixelRGB[rows * cols];
-    unsigned int *out_img = new unsigned int[rows * cols];
     InitializeBuffer(out_img_vvp, rows * cols);
 
     int parsed_frames = 0;
@@ -409,29 +407,25 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
       std::cerr << "ERROR: saw " << parsed_frames
                 << " parsed frames (expected 1)." << std::endl;
     }
+    bmp_tools::BitmapRGB out_img = ConvertToBmpRgb(out_img_vvp, rows, cols);
+    delete[] out_img_vvp;
 
-    if (out_img) {
-      ConvertToBmpRgb(out_img_vvp, out_img, rows * cols);
-      delete[] out_img_vvp;
+    unsigned int write_error;
+    bmp_tools::WriteBmp(absolute_output_bmp_path, out_img, write_error);
 
-      bmp_tools::WriteBmp(absolute_output_bmp_path, out_img, rows, cols);
+    if (bmp_tools::BmpError::OK == write_error) {
       std::cout << "Wrote convolved image " << absolute_output_bmp_path
-                << std::endl;
-    } else {
-      std::cerr << "ERROR: could not write output image: out_img=null."
                 << std::endl;
     }
 
-    std::string absolute_expected_bmp_path = expected_bmp_filename_base + "_" +
-                                             std::to_string(itr) +
-                                             DEFAULT_EXTENSION;
+    std::string expected_bmp_path = expected_bmp_filename_base + "_" +
+                                    std::to_string(itr) + DEFAULT_EXTENSION;
 
-    std::cout << "Compare with " << absolute_expected_bmp_path << ". "
-              << std::endl;
-    bool passed = bmp_tools::CompareFrames(out_img, rows, cols,
-                                           absolute_expected_bmp_path);
+    std::cout << "Compare with " << expected_bmp_path << ". " << std::endl;
+    unsigned int comparison_error = 0;
+    bool passed =
+        bmp_tools::CompareFrames(out_img, expected_bmp_path, comparison_error);
 
-    delete[] out_img;
     all_passed &= passed & sidebands_ok & (1 == parsed_frames);
     printf("frame %zu %s\n", itr,
            (passed && sidebands_ok) ? "passed" : "failed");
@@ -479,21 +473,22 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
             << std::endl;
 
   // load image
-  unsigned int *in_img = nullptr;
-  int rows_new, cols_new;
-
-  std::string canonical_input_bmp_path =  //
+  std::string input_bmp_path =  //
       input_bmp_filename + DEFAULT_EXTENSION;
-  std::string canonical_expected_bmp_path =  //
+  std::string expected_bmp_path =  //
       expected_bmp_filename + DEFAULT_EXTENSION;
 
-  std::cout << "Reading input image " << canonical_input_bmp_path << std::endl;
-  if (!bmp_tools::ReadBmp(canonical_input_bmp_path, &in_img, rows_new,
-                          cols_new)) {
-    std::cerr << "ERROR: Could not read image from " << canonical_input_bmp_path
+  std::cout << "INFO: Load image " << input_bmp_path << std::endl;
+  unsigned int error;
+  bmp_tools::BitmapRGB in_img = bmp_tools::ReadBmp(input_bmp_path, error);
+  if (bmp_tools::BmpError::OK != error) {
+    std::cerr << "ERROR: Could not read image from " << input_bmp_path
               << std::endl;
     return false;
   }
+
+  size_t rows_new = in_img.GetRows();
+  size_t cols_new = in_img.GetRows();
 
   size_t rows = 0;
   size_t cols = 0;
@@ -509,8 +504,6 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   // Enqueue a defective frame that ends after `end_pixel` pixels.
   conv2d::PixelRGB *in_img_vvp = new conv2d::PixelRGB[rows * cols];
   conv2d::PixelRGB *out_img_vvp = new conv2d::PixelRGB[rows * cols];
-  unsigned int *out_img = new unsigned int[rows * cols];
-
   ConvertToVvpRgb(in_img, in_img_vvp, rows * cols);
 
   vvp_stream_adapters::WriteFrameToPipe<InputImageStream>(
@@ -567,20 +560,19 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
     passed = false;
   }
 
-  if (out_img) {
-    ConvertToBmpRgb(out_img_vvp, out_img, rows * cols);
-    bmp_tools::WriteBmp(defect_output_bmp_path, out_img, rows, cols);
+  bmp_tools::BitmapRGB out_img = ConvertToBmpRgb(out_img_vvp, rows, cols);
+  unsigned int write_error;
+  bmp_tools::WriteBmp(defect_output_bmp_path, out_img, write_error);
+
+  if (bmp_tools::BmpError::OK == write_error) {
     std::cout << "Wrote convolved image " << defect_output_bmp_path
               << std::endl;
-  } else {
-    std::cerr << "ERROR: could not write output image: out_img=null."
-              << std::endl;
   }
-
   // This should succeed since the defective pixels were overwritten by the
   // subsequent good frame.
-  passed &= bmp_tools::CompareFrames(out_img, rows, cols,
-                                     canonical_expected_bmp_path);
+  unsigned int comparison_error = 0;
+  passed &=
+      bmp_tools::CompareFrames(out_img, expected_bmp_path, comparison_error);
 
   bool all_passed = passed & sidebands_ok;
   printf("frame 'defect' %s\n", (passed && sidebands_ok) ? "passed" : "failed");
@@ -590,7 +582,6 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   StopCSR::write(q, true);
   e.wait();
 
-  delete[] out_img;
   delete[] out_img_vvp;
   delete[] in_img_vvp;
 

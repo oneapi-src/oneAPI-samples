@@ -3,7 +3,8 @@
 
 // bmp_tools.h
 
-// This header file parses bitmap image files.
+// This header file parses bitmap image files. It uses C++ standard libraries,
+// and should only be used in host code.
 
 #ifndef BMP_TOOLS_H
 #define BMP_TOOLS_H
@@ -14,6 +15,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #ifndef FILENAME_BUF_SIZE
 #if defined(_WIN32) || defined(_WIN64)
@@ -23,13 +25,98 @@
 #endif
 #endif
 
-// HLS did not allow exception handling, but oneAPI does.
-
-// #ifndef ENABLE_EXCEPTION_HANDLING
-// #define ENABLE_EXCEPTION_HANDLING 0
-// #endif
-
 namespace bmp_tools {
+
+/// @brief Store an image that can be read from or written to a .bmp file. The
+/// individual pixel values may be changed at runtime, but the dimensions are
+/// fixed.
+class BitmapRGB {
+ public:
+  BitmapRGB(size_t rows, size_t cols);
+  unsigned int &operator()(size_t row, size_t col);
+  unsigned int operator()(size_t row, size_t col) const;
+
+  unsigned int &operator()(size_t idx);
+  unsigned int operator()(size_t idx) const;
+
+  /// Number of rows (image height)
+  size_t GetRows() { return mRows; }
+
+  /// Number of columns (image width)
+  size_t GetCols() { return mCols; }
+
+ private:
+  size_t mRows;
+  size_t mCols;
+  std::vector<unsigned int> mData;
+};
+
+BitmapRGB::BitmapRGB(size_t rows, size_t cols)
+    : mRows(rows), mCols(cols), mData(rows * cols) {}
+
+unsigned int &BitmapRGB::operator()(size_t row, size_t col) {
+  return mData[row * mCols + col];
+}
+
+unsigned int BitmapRGB::operator()(size_t row, size_t col) const {
+  return mData[row * mCols + col];
+}
+
+unsigned int &BitmapRGB::operator()(size_t idx) { return mData[idx]; }
+
+unsigned int BitmapRGB::operator()(size_t idx) const { return mData[idx]; }
+
+/// @brief This convenience struct lets you manipulate color channels within
+/// pixels used by bmp_tools functions.
+struct PixelRGB {
+  // blue is least significant
+  uint8_t b;
+  uint8_t g;
+  uint8_t r;
+  uint8_t reserved;
+
+  /// @brief Construct a `bmp_tools::PixelRGB` using an unsigned 32-bit pixel
+  /// used by `bmp_tools` functions.
+  /// @param img_pixel An unsigned 32-bit pixel used by `bmp_tools` functions
+  PixelRGB(uint32_t img_pixel) {
+    b = (img_pixel >> 0) & 0xff;
+    g = (img_pixel >> 8) & 0xff;
+    r = (img_pixel >> 16) & 0xff;
+  }
+
+  /// @brief Default constructor that initializes all color channels to `0`.
+  PixelRGB() { PixelRGB(0); }
+
+  /// @brief Construct a `bmp_tools::PixelRGB` using members
+  /// @param m_r Red color channel
+  /// @param m_g Green color channel
+  /// @param m_b Blue color channel
+  PixelRGB(uint8_t m_r, uint8_t m_g, uint8_t m_b)
+      : b(m_b), g(m_g), r(m_r), reserved(0) {}
+
+  /// @brief Transform a `bmp_tools::PixelRGB` into an unsigned 32-bit pixel
+  /// used by `bmp_tools` functions.
+  /// @return An unsigned 32-bit pixel used by `bmp_tools` functions.
+  uint32_t GetImgPixel() {
+    uint32_t img_pixel =
+        ((b & 0xff) << 0) + ((g & 0xff) << 8) + ((r & 0xff) << 16);
+    return img_pixel;
+  }
+
+  /// @brief Check that two pixels are similar to one another, that is, that
+  /// they differ by no more than `thresh`.
+  /// @param other The pixel to compare against
+  /// @param threshold Maximum amount by any two color channels may deviate
+  /// @return `true` if `this` and `other` differ by no more than `thresh`
+  bool CheckSimilarity(PixelRGB other, unsigned char threshold) {
+    bool similar = true;
+    if (abs(r - other.r) > threshold) similar = false;
+    if (abs(g - other.g) > threshold) similar = false;
+    if (abs(b - other.b) > threshold) similar = false;
+
+    return similar;
+  }
+};
 
 enum BmpHeaderField : uint16_t {
   BM = 0x4D42,  // "BM"
@@ -58,7 +145,7 @@ struct WindowsBitmapInfoHeader {
   int32_t img_width;
   int32_t img_height;
   uint16_t img_planes;  // must be 1
-  uint16_t img_bitdepth;
+  uint16_t img_bit_depth;
   uint32_t img_compression;
   uint32_t img_size;
   uint32_t img_resolution_horiz;
@@ -72,9 +159,20 @@ struct WindowsBitmapInfoHeader {
 static constexpr int BMP_HEADER_SIZE =
     sizeof(WindowsBitmapInfoHeader) + sizeof(BmpFileHeader);
 
-/// @brief Read a `.bmp` file pointed to by `filename` into memory. The image
-/// pixels will be stored as 32-bit unsigned integers. This function will
-/// allocate memory and store a pointer to that memory in `img_data`.
+enum BmpError {
+  OK = 0,
+  INVALID_FILE = 1 << 0,
+  UNSUPPORTED_HEADER = 1 << 1,
+  UNSUPPORTED_BIT_DEPTH = 1 << 2,
+  UNSUPPORTED_PLANES = 1 << 3,
+  UNSUPPORTED_NUM_COLORS = 1 << 4,
+  UNSUPPORTED_IMPORTANT_COLORS = 1 << 5,
+  INVALID_DIMENSIONS = 1 << 6,
+  FILE_IO_ERROR = 1 << 7
+};
+
+/// @brief Read a `.bmp` file pointed to by `filename` into memory. Each image
+/// pixel will be stored as a 32-bit unsigned integer.
 ///
 /// @paragraph For simplicity, we only support a certain type of BMP file,
 /// namely 24-bit Windows-style, with all important colors and a single color
@@ -82,104 +180,89 @@ static constexpr int BMP_HEADER_SIZE =
 ///
 /// @param[in] file_path File path to read from
 ///
-/// @param[out] img_data A pointer to an array of pixels that has been allocated
-/// by `ReadBmp`. The size of the allocated buffer will be equal to `height` *
-/// `width` * `sizeof(unsigned int)`. Declare `unsigned int *myData`, then pass
-/// `&myData` as an argument to this function.
+/// @param[out] error_code Error code. If everything is OK, this will match
+/// BmpError::OK. You can do bitwise comparisons with the members of the
+/// enum `BmpError` to determine which error(s) occurred.
 ///
-/// @param[out] height Number of rows in the image that was read
-///
-/// @param[out] width Number of columns in the image that was read
-///
-/// @return `true` if succeeded, `false` if failed.
-inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
-                     int &height, int &width) {
-  if (nullptr == img_data) {
-    std::cerr << "ERROR: img_data must not be null." << std::endl;
-    return false;
-  }
+/// @return A `BitmapRGB` containing the pixels of the image read in from
+/// `file_path`. In case an error occurs, return a bitmap of size 0.
+inline BitmapRGB ReadBmp(std::string &file_path, unsigned int &error_code) {
+  BitmapRGB bitmap_error(0, 0);
+  error_code = BmpError::OK;
+
   std::ifstream input_bmp;
-#if ENABLE_EXCEPTION_HANDLING
-  try {
-#endif
-    input_bmp.open(file_path, std::ios::in | std::ios::binary);
-    if (!input_bmp) {
-      std::cerr << "ERROR: input file " << file_path << " does not exist."
-                << std::endl;
-      return false;
-    }
-
-#if ENABLE_EXCEPTION_HANDLING
-  } catch (std::ios_base::failure &e) {
-    std::cerr << e.what() << '\n';
-    std::cerr << "ERROR: can't open file " << file_path << " for binary reading"
+  input_bmp.open(file_path, std::ios::in | std::ios::binary);
+  if (!input_bmp) {
+    error_code |= BmpError::INVALID_FILE;
+    std::cerr << "ERROR: input file " << file_path << " does not exist."
               << std::endl;
-    return false;
+    return bitmap_error;
   }
-#endif
-
-  bool failed = false;
 
   // load file header
   BmpFileHeader file_header;
   input_bmp.read(reinterpret_cast<char *>(&file_header), sizeof(BmpFileHeader));
 
   if (file_header.header_field != BmpHeaderField::BM) {
+    error_code |= BmpError::UNSUPPORTED_HEADER;
     std::cerr << "ERROR: only Windows-format bitmap header is supported. "
                  "Please convert to a Windows-style bitmap."
               << std::endl;
-    return false;
+    return bitmap_error;
   }
 
   WindowsBitmapInfoHeader dib_header;
   input_bmp.read(reinterpret_cast<char *>(&dib_header),
-                sizeof(WindowsBitmapInfoHeader));
+                 sizeof(WindowsBitmapInfoHeader));
 
-  width = dib_header.img_width;
-  height = dib_header.img_height;
+  int32_t width = dib_header.img_width;
+  int32_t height = dib_header.img_height;
 
   // sanity check that inputs are valid
-  if (dib_header.img_bitdepth != 24) {
+  if (dib_header.img_bit_depth != 24) {
+    error_code |= BmpError::UNSUPPORTED_BIT_DEPTH;
     std::cerr << "ERROR: Only 24-bit BMP is supported. Please ensure your BMP "
                  "uses 24-bit pixels (24)"
               << std::endl;
-    return false;
+    return bitmap_error;
   }
 
   if (dib_header.img_planes != 1) {
+    error_code |= BmpError::UNSUPPORTED_PLANES;
     std::cerr << "ERROR: Only 1-plane BMP is supported. Please ensure your BMP "
                  "uses a single color plane (1)."
               << std::endl;
-    return false;
+    return bitmap_error;
   }
 
   if (dib_header.img_colors != 0) {
+    error_code |= BmpError::UNSUPPORTED_NUM_COLORS;
     std::cerr << "ERROR: requires 2^n colors. Please ensure your BMP uses the "
                  "default number of colors (0)."
               << std::endl;
-    return false;
+    return bitmap_error;
   }
 
   if (dib_header.img_important_colors != 0) {
+    error_code |= BmpError::UNSUPPORTED_NUM_COLORS;
     std::cerr
         << "ERROR: all colors should be important. Please ensure your BMP uses "
            "the default number of important colors (0)."
         << std::endl;
-    return false;
+    return bitmap_error;
   }
 
+  int32_t total_pixels = width * height;
+  bool did_overflow = (total_pixels < width) || (total_pixels < height);
   // check that width*height is also valid
-  if ((height < 0 || width < 0) || (height * width < 0)) {
+  if ((height < 0) || (width < 0) || (total_pixels < 0) || did_overflow) {
+    error_code |= BmpError::INVALID_DIMENSIONS;
     std::cerr << "ERROR: got height " << height << ", width " << width
               << std::endl;
-    return false;
+    return bitmap_error;
   }
-  *img_data = (unsigned int *)malloc(width * height * sizeof(unsigned int));
 
-  if (!*img_data) {
-    std::cerr << "ERROR: Failed to allocate memory for img_data." << std::endl;
-    return false;
-  }
+  BitmapRGB bitmap_data(height, width);
 
   // scroll to image data
   auto read_bytes = sizeof(WindowsBitmapInfoHeader) + sizeof(BmpFileHeader);
@@ -190,7 +273,8 @@ inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
 
   // BMP: Each line must be a multiple of 4 bytes
   int padding = (4 - ((width * 3) & 3)) & 3;
-  int idx = 0;
+
+  bool failed = false;
 
   // Color order is BGR, read across bottom row, then repeat going up rows
   for (int i = 0; i < height; ++i) {
@@ -202,9 +286,7 @@ inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
 
       bool earlyEOF = state & std::ifstream::eofbit;
       unsigned char r = input_bmp.get();  // R
-      (*img_data)[idx] = (((unsigned int)r << 16) | ((unsigned int)g << 8) |
-                          ((unsigned int)b << 0));
-      idx++;
+      bitmap_data(i, j) = PixelRGB(r, g, b).GetImgPixel();
       if (earlyEOF) failed |= earlyEOF;
 
       state = input_bmp.rdstate();
@@ -225,31 +307,34 @@ inline bool ReadBmp(std::string &file_path, unsigned int **img_data,
   input_bmp.close();
 
   if (failed) {
+    error_code |= BmpError::FILE_IO_ERROR;
     std::cerr << "ERROR: File I/O error" << std::endl;
-    free(*img_data);
-    return false;
+    return bitmap_error;
   }
 
-  return true;
+  return bitmap_data;
 }
 
 /// @brief Store pixels in `img_data` array to a bitmap pointed to by `fileame`
 /// @paragraph For simplicity, we only support a certain type of BMP file,
 /// namely 24-bit Windows-style, with all important colors and a single color
 /// plane.
-/// @param[in] file_path Filepath to write to
-/// @param[in] img_data An array of pixels to write to a bmp file. The size of
-/// the array must be equal to `height` * `width`.
-/// @param[in] height Number of rows in the image
-/// @param[in] width Number of columns in the image
-/// @return `true` if the image was successfully written to the filesystem,
-/// `false` if not.
-inline bool WriteBmp(std::string &file_path, unsigned int *img_data, int height,
-                      int width) {
+/// @param[in] file_path Filepath to write to.
+/// @param[in] bitmap_rgb Data to write out to file.
+/// @param[out] error_code Error code. If everything is OK, this will match
+/// BmpError::OK. You can do bitwise comparisons with the members of the
+/// enum `BmpError` to determine which error(s) occurred.
+inline void WriteBmp(std::string &file_path, BitmapRGB bitmap_rgb,
+                     unsigned int &error_code) {
+  error_code = BmpError::OK;
+
+  size_t width = bitmap_rgb.GetCols();
+  size_t height = bitmap_rgb.GetRows();
   // sanity check that inputs are valid, check that width*height is also valid
   if ((height < 0 || width < 0) || (height * width > (1 << 30))) {
+    error_code |= BmpError::INVALID_DIMENSIONS;
     std::cerr << "ERROR: height " << height << ", width " << width << std::endl;
-    return false;
+    return;
   }
 
   unsigned int file_size = width * height * 3 + BMP_HEADER_SIZE;
@@ -257,7 +342,7 @@ inline bool WriteBmp(std::string &file_path, unsigned int *img_data, int height,
       0x42, 0x4d,  // BMP & DIB
 
       // size of file in bytes
-      (static_cast<unsigned char>(file_size & 0xff)),
+      (static_cast<unsigned char>((file_size >> 0) & 0xff)),
       (static_cast<unsigned char>((file_size >> 8) & 0xff)),
       (static_cast<unsigned char>((file_size >> 16) & 0xff)),
       (static_cast<unsigned char>((file_size >> 24) & 0xff)),
@@ -289,49 +374,40 @@ inline bool WriteBmp(std::string &file_path, unsigned int *img_data, int height,
   };
   // Open file for write
   std::ofstream output_bmp;
-#if ENABLE_EXCEPTION_HANDLING
-  try {
-#endif
-    output_bmp.open(file_path);
-    if (!output_bmp) {
-      std::cerr << "ERROR: output file " << file_path << " does not exist."
-                << std::endl;
-      return false;
-    }
-#if ENABLE_EXCEPTION_HANDLING
-  } catch (std::ios_base::failure &e) {
-    std::cerr << e.what() << '\n';
-    std::cerr << "ERROR: can't open file " << file_path << " for binary writing"
+  output_bmp.open(file_path);
+  if (!output_bmp) {
+    error_code |= BmpError::INVALID_FILE;
+    std::cerr << "ERROR: output file " << file_path << " does not exist."
               << std::endl;
-    return false;
+    return;
   }
-#endif
 
   // Write header
   output_bmp.write(reinterpret_cast<char *>(header), BMP_HEADER_SIZE);
   bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
   if (write_err) {
+    error_code |= BmpError::FILE_IO_ERROR;
     std::cerr << "ERROR: could not write header to " << file_path << std::endl;
-    return false;
+    return;
   }
 
   // Write data: Line size must be a multiple of 4 bytes
   int padding = (4 - ((width * 3) & 3)) & 3;
-  unsigned int idx = 0;
   for (int i = 0; i < height; ++i) {
     unsigned char p[3];
     for (int j = 0; j < width; ++j) {
       // written in B, G, R order
-      p[0] = (img_data[idx] >> 0) & 0xff;   // B
-      p[1] = (img_data[idx] >> 8) & 0xff;   // G
-      p[2] = (img_data[idx] >> 16) & 0xff;  // R
-      idx++;
+      p[0] = (bitmap_rgb(i, j) >> 0) & 0xff;   // B
+      p[1] = (bitmap_rgb(i, j) >> 8) & 0xff;   // G
+      p[2] = (bitmap_rgb(i, j) >> 16) & 0xff;  // R
 
       output_bmp.write(reinterpret_cast<char *>(p), 3);
       bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
       if (write_err) {
-        std::cerr << "ERROR: could not write data to " << file_path << std::endl;
-        return false;
+        write_err |= BmpError::FILE_IO_ERROR;
+        std::cerr << "ERROR: could not write data to " << file_path
+                  << std::endl;
+        return;
       }
     }
     // Pad to multiple of 4 bytes
@@ -340,115 +416,59 @@ inline bool WriteBmp(std::string &file_path, unsigned int *img_data, int height,
       output_bmp.write(reinterpret_cast<char *>(p), 3);
       bool write_err = (output_bmp.rdstate() != std::ofstream::goodbit);
       if (write_err) {
+        write_err |= BmpError::FILE_IO_ERROR;
         std::cerr << "ERROR: could not write padding to " << file_path
                   << std::endl;
-        return false;
+        return;
       }
     }
   }
   output_bmp.close();
-  return true;
+  return;
 }
 
-/// @brief This convenience struct lets you manipulate color channels within
-/// pixels used by bmp_tools functions.
-struct PixelRGB {
-  // blue is least significant
-  uint8_t b;
-  uint8_t g;
-  uint8_t r;
-  uint8_t reserved;
-
-  /// @brief Construct a `bmp_tools::PixelRGB` using an unsigned 32-bit pixel
-  /// used by `bmp_tools` functions.
-  /// @param img_pixel An unsigned 32-bit pixel used by `bmp_tools` functions
-  PixelRGB(uint32_t img_pixel) {
-    b = (img_pixel >> 0) & 0xff;
-    g = (img_pixel >> 8) & 0xff;
-    r = (img_pixel >> 16) & 0xff;
-  }
-
-  /// @brief Default constructor that initializes all color channels to `0`.
-  PixelRGB() { PixelRGB(0); }
-
-  /// @brief Construct a `bmp_tools::PixelRGB` using members
-  /// @param m_r Red color channel
-  /// @param m_g Green color channel
-  /// @param m_b Blue color channel
-  PixelRGB(uint8_t m_r, uint8_t m_g, uint8_t m_b)
-      : b(m_b), g(m_g), r(m_r), reserved(0) {}
-
-  /// @brief Transform a `bmp_tools::PixelRGB` into an unsigned 32-bit pixel used
-  /// by `bmp_tools` functions.
-  /// @return An unsigned 32-bit pixel used by `bmp_tools` functions.
-  uint32_t GetImgPixel() {
-    uint32_t img_pixel =
-        ((b & 0xff) << 0) + ((g & 0xff) << 8) + ((r & 0xff) << 16);
-    return img_pixel;
-  }
-
-  /// @brief Check that two pixels are similar to one another, that is, that
-  /// they differ by no more than `thresh`.
-  /// @param other The pixel to compare against
-  /// @param threshold Maximum amount by any two color channels may deviate
-  /// @return `true` if `this` and `other` differ by no more than `thresh`
-  bool CheckSimilarity(PixelRGB other, unsigned char threshold) {
-    bool similar = true;
-    if (abs(r - other.r) > threshold) similar = false;
-    if (abs(g - other.g) > threshold) similar = false;
-    if (abs(b - other.b) > threshold) similar = false;
-
-    return similar;
-  }
-};
-
-/// @brief Compare an array of pixels with a BMP file
-/// @param frame An array of unsigned integers representing pixels as understood
-/// by the bitmap processing functions in `bmp_tools.hpp`.
-/// @param rows Image height
-/// @param cols Image width
-/// @param expectedFilePath Path to a BMP file to compare `frame` against. The
-/// BMP file will be parsed using the functions in `bmp_tools.hpp`.
-/// @return `true` if `frame` matches the file pointed to by `expectedFilePath
- bool CompareFrames(unsigned int *frame, int rows, int cols,
-                   std::string &expectedFilePath, unsigned char threshold = 2) {
-  unsigned int *exp_img = nullptr;
-  int exp_rows, exp_cols;
+/// @brief Compare a `BitmapRGB` with a BMP file
+/// @param bitmap_rgb A bitmap image to compare.
+/// @param expectedFilePath Path to a BMP file to compare `bitmap_rgb` against.
+/// @return `true` if `bitmap_rgb` matches the file pointed to by
+/// `expectedFilePath`.
+bool CompareFrames(BitmapRGB bitmap_rgb, std::string &expectedFilePath,
+                   unsigned int error_code, unsigned char threshold = 2) {
   bool passed = false;
-  if (bmp_tools::ReadBmp(expectedFilePath, &exp_img, exp_rows, exp_cols)) {
+  error_code = BmpError::OK;
+  unsigned int read_error;
+  BitmapRGB bitmap_expected = bmp_tools::ReadBmp(expectedFilePath, read_error);
+  if (read_error == BmpError::OK) {
+    size_t rows = bitmap_rgb.GetRows();
+    size_t cols = bitmap_rgb.GetCols();
+    size_t exp_rows = bitmap_expected.GetRows();
+    size_t exp_cols = bitmap_expected.GetCols();
+
     // check dimensions
     bool dims_ok = (rows == exp_rows) && (cols == exp_cols);
     if (!dims_ok) {
+      error_code |= BmpError::INVALID_DIMENSIONS;
       std::cerr << "ERROR: output dimensions (" << cols << ", " << rows
                 << ") do not match expected dimensions (" << exp_cols << ", "
                 << exp_rows << ")." << std::endl;
+      return false;
     }
 
-    bool frame_ok = (nullptr != frame);
-    if (!frame_ok) {
-      std::cerr << "ERROR: frame pointer invalid." << std::endl;
-    }
-
-    bool exp_ok = (nullptr != exp_img);
-    if (!exp_ok) {
-      std::cerr << "ERROR: exp_img pointer invalid." << std::endl;
-    }
-    bool pointers_ok = exp_ok & frame_ok;
-
-    passed = dims_ok & pointers_ok;
+    passed = dims_ok;
     // compare image data
     if (passed) {
       for (int i = 0; i < (rows * cols); ++i) {
         // Allow for some error due to fpc and fp-relaxed
-        passed &= PixelRGB(frame[i]).CheckSimilarity(PixelRGB(exp_img[i]),
-                                                      threshold);
+        passed &= PixelRGB(bitmap_rgb(i))
+                      .CheckSimilarity(PixelRGB(bitmap_expected(i)), threshold);
       }
     }
   } else {
+    error_code |= BmpError::FILE_IO_ERROR;
     std::cerr << "ERROR: problem reading expected image " << expectedFilePath
               << std::endl;
+    return false;
   }
-  free(exp_img);
   return passed;
 }
 
