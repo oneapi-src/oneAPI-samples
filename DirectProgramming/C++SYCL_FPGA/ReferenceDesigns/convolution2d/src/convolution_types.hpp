@@ -70,4 +70,5 @@ using GreyScaleBeat =
 // signals and a payload of `RGBPixelBundle`.
 using RGBBeat =
     sycl::ext::intel::experimental::StreamingBeat<RGBPixelBundle, true, true>;
+
 }  // namespace conv2d

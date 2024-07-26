@@ -31,7 +31,7 @@ set(TARGET_NAME conv)
 # You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
 # specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "Agilex5")
+    set(FPGA_DEVICE "Agilex7")
     message(STATUS "FPGA_DEVICE was not specified.\
                     \nConfiguring the design to the default FPGA family target: ${FPGA_DEVICE}\
                     \nPlease refer to the README for information on target selection.")

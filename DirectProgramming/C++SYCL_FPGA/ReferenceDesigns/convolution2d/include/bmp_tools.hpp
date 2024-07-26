@@ -9,6 +9,8 @@
 #ifndef BMP_TOOLS_H
 #define BMP_TOOLS_H
 
+#include "matrix2d_host.hpp"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,41 +32,7 @@ namespace bmp_tools {
 /// @brief Store an image that can be read from or written to a .bmp file. The
 /// individual pixel values may be changed at runtime, but the dimensions are
 /// fixed.
-class BitmapRGB {
- public:
-  BitmapRGB(size_t rows, size_t cols);
-  unsigned int &operator()(size_t row, size_t col);
-  unsigned int operator()(size_t row, size_t col) const;
-
-  unsigned int &operator()(size_t idx);
-  unsigned int operator()(size_t idx) const;
-
-  /// Number of rows (image height)
-  size_t GetRows() { return mRows; }
-
-  /// Number of columns (image width)
-  size_t GetCols() { return mCols; }
-
- private:
-  size_t mRows;
-  size_t mCols;
-  std::vector<unsigned int> mData;
-};
-
-BitmapRGB::BitmapRGB(size_t rows, size_t cols)
-    : mRows(rows), mCols(cols), mData(rows * cols) {}
-
-unsigned int &BitmapRGB::operator()(size_t row, size_t col) {
-  return mData[row * mCols + col];
-}
-
-unsigned int BitmapRGB::operator()(size_t row, size_t col) const {
-  return mData[row * mCols + col];
-}
-
-unsigned int &BitmapRGB::operator()(size_t idx) { return mData[idx]; }
-
-unsigned int BitmapRGB::operator()(size_t idx) const { return mData[idx]; }
+using BitmapRGB = Matrix2d<unsigned int>;
 
 /// @brief This convenience struct lets you manipulate color channels within
 /// pixels used by bmp_tools functions.
@@ -244,7 +212,7 @@ inline BitmapRGB ReadBmp(std::string &file_path, unsigned int &error_code) {
   }
 
   if (dib_header.img_important_colors != 0) {
-    error_code |= BmpError::UNSUPPORTED_NUM_COLORS;
+    error_code |= BmpError::UNSUPPORTED_IMPORTANT_COLORS;
     std::cerr
         << "ERROR: all colors should be important. Please ensure your BMP uses "
            "the default number of important colors (0)."
@@ -315,7 +283,7 @@ inline BitmapRGB ReadBmp(std::string &file_path, unsigned int &error_code) {
   return bitmap_data;
 }
 
-/// @brief Store pixels in `img_data` array to a bitmap pointed to by `fileame`
+/// @brief Store pixels in `img_data` array to a bitmap pointed to by `filename`
 /// @paragraph For simplicity, we only support a certain type of BMP file,
 /// namely 24-bit Windows-style, with all important colors and a single color
 /// plane.
@@ -369,7 +337,7 @@ inline void WriteBmp(std::string &file_path, BitmapRGB bitmap_rgb,
       0x00, 0x00, 0x00, 0x00,  // image size - dummy 0 for BI_RGB
       0x13, 0x0b, 0x00, 0x00,  // horizontal ppm
       0x13, 0x0b, 0x00, 0x00,  // vertical ppm
-      0x00, 0x00, 0x00, 0x00,  // default 2^n colors in palatte
+      0x00, 0x00, 0x00, 0x00,  // default 2^n colors in palette
       0x00, 0x00, 0x00, 0x00   // every color is important
   };
   // Open file for write

@@ -40,8 +40,8 @@ namespace vvp_stream_adapters {
 /// video frame, by ending the stream of pixels prematurely.
 /// @return `true` after successfully writing the input image to a SYCL pipe.
 template <typename PixelPipe, typename PixelType>
-bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
-                      int end_pixel = -1) {
+bool WriteFrameToPipe(sycl::queue q, int rows, int cols,
+                      const PixelType *in_img, int end_pixel = -1) {
   if (end_pixel == -1) end_pixel = rows * cols;
 
   ///////////////////////////////////////
@@ -59,7 +59,7 @@ bool WriteFrameToPipe(sycl::queue q, int rows, int cols, PixelType *in_img,
 
   // sanity check
   static_assert(std::is_same<PixelTypeCalc, PixelType>::value,
-                "(Pipe Payload, output memory) mismatched");
+                "(Pipe Payload, input memory) mismatched");
   if (0 != (cols % kPixelsInParallel)) {
     std::cerr
         << "ERROR: WriteFrameToPipe(): kPixelsInParallel must be a factor "
