@@ -196,14 +196,15 @@ Compare the code in `tachyon.openmp.cpp` to `tachyon.serial.cpp`. `tachyon.openm
 3. Run optimized OpenMP version. 
 
    ```
-   ./tachyon.openmp_solution ../dat/balls.dat 
+   ./tachyon.openmp_optimized ../dat/balls.dat
    ```
    
    You will see the following output: 
 
    ```
    Scene contains 7386 bounded objects. 
-   tachyon.openmp_solution ../dat/balls.dat: 0.153 seconds    ```
+   tachyon.openmp_optimized ../dat/balls.dat: 0.153 seconds
+   ```
 
 4. Compare the render time between the basic OpenMP and optimized OpenMP versions. The optimized version shows an improvement in render time. 
 
