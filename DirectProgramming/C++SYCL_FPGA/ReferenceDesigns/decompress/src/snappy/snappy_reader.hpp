@@ -82,7 +82,7 @@ unsigned SnappyReader(unsigned in_count) {
       bool valid_read;
       auto pipe_data = InPipe::read(valid_read);
       if (valid_read) {
-        byte_stream.template Write(pipe_data);
+        byte_stream.template Write<>(pipe_data);
         data_read_in_preamble += literals_per_cycle;
       }
     }
@@ -180,7 +180,7 @@ unsigned SnappyReader(unsigned in_count) {
       bool valid_read;
       auto pipe_data = InPipe::read(valid_read);
       if (valid_read) {
-        byte_stream.template Write(pipe_data);
+        byte_stream.template Write<>(pipe_data);
         data_read += literals_per_cycle;
         all_data_read = all_data_read_next;
         all_data_read_next = data_read >= (in_count - literals_per_cycle);
