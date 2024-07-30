@@ -1,0 +1,68 @@
+{
+  "guid": "62EF3FF6-B286-4D44-8F85-9329AF3FC403",
+  "name": "Base: Vector Addition Samples",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra", "Toolkit/oneAPI Tools/Advisor"],
+  "description": "This sample shows different ways to express conditionals",
+  "toolchain": ["icpx"],
+  "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["make"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "default",
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-addition-examples",
+          "make clean"
+        ]
+      },
+      {
+        "id": "cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-addition-examples",
+          "make clean"
+        ]
+      },
+      {
+        "id": "gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-addition-examples",
+          "make clean"
+        ]
+      },
+      {
+        "id": "HOST",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-addition-examples",
+          "make clean"
+        ]
+      }
+  },
+  "expertise": "Getting Started"
+}
