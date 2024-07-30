@@ -63,6 +63,8 @@ if(NOT DEFINED DEVICE_FLAG)
                          -DDEVICE_FLAG=Agilex7.")
 endif()
 
+message("\tDEVICE_FLAG set to ${DEVICE_FLAG}")
+
 # Select between SNAPPY and GZIP decompression
 if(DEFINED SNAPPY AND DEFINED GZIP)
   message(FATAL_ERROR "Cannot compile for both SNAPPY and GZIP compression. You must define exactly one of -DSNAPPY=1 and -DGZIP=1")
