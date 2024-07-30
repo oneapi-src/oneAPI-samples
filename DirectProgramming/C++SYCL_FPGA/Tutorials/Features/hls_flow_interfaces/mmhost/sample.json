@@ -1,7 +1,7 @@
 {
   "guid": "CE509751-B84A-44D1-A391-2007937F3A7F",
   "name": "Avalon Memory-Mapped Host Interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS FLow: Interfaces"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS Flow: Interfaces"],
   "description": "An Intel® FPGA tutorial demonstrating how to annotate pointer arguments to customize Avalon memory-mapped host interfaces",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

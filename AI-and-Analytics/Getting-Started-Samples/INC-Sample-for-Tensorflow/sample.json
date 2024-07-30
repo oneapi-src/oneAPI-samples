@@ -11,7 +11,7 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --force",
+		"env": ["source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
 				"conda install -n tensorflow -c conda-forge python-flatbuffers -y",
 				"conda install -n tensorflow -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
