@@ -428,25 +428,20 @@ This design uses CMake to generate a build script for  `nmake`.
 Running on device: Intel(R) FPGA Emulation Device
 
 **********************************
-Check a sequence of good frames... 
+Check a sequence of good frames...
 **********************************
 
 INFO: Load image ../test_bitmaps/test_0.bmp
-INFO: convert to vvp type.
-INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
 INFO: Load image ../test_bitmaps/test_1.bmp
-INFO: convert to vvp type.
-INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
 INFO: Load image ../test_bitmaps/test_2.bmp
-INFO: convert to vvp type.
-INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
 INFO: Load image ../test_bitmaps/test_3.bmp
-INFO: convert to vvp type.
-INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
 INFO: Load image ../test_bitmaps/test_4.bmp
-INFO: convert to vvp type.
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel.
 INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
-INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with 2 pixels in parallel. 
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
+INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
+INFO: WriteDummyPixelsToPipe(): writing dummy pixels to pipe with 2 pixels in parallel. 
 INFO: WriteDummyPixelsToPipe(): wrote 64 dummy streaming beats.
 
 *********************
@@ -456,57 +451,56 @@ Launch Grey2RGB kernel
 
 *********************
 Reading out frame 0
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 33 dummy beats. Counters reset.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
-Wrote convolved image ./output_0.bmp
-Compare with ../test_bitmaps/expected_sobel_0.bmp. 
-frame 0 passed
+INFO: ReadFrameFromPipe(): read 64 lines. 
 
 *********************
 Reading out frame 1
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
-Wrote convolved image ./output_1.bmp
-Compare with ../test_bitmaps/expected_sobel_1.bmp. 
-frame 1 passed
+INFO: ReadFrameFromPipe(): read 64 lines. 
 
 *********************
 Reading out frame 2
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
-Wrote convolved image ./output_2.bmp
-Compare with ../test_bitmaps/expected_sobel_2.bmp. 
-frame 2 passed
+INFO: ReadFrameFromPipe(): read 64 lines. 
 
 *********************
 Reading out frame 3
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
-Wrote convolved image ./output_3.bmp
-Compare with ../test_bitmaps/expected_sobel_3.bmp. 
-frame 3 passed
+INFO: ReadFrameFromPipe(): read 64 lines. 
 
 *********************
 Reading out frame 4
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 0 dummy beats. Counters reset.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
+INFO: ReadFrameFromPipe(): read 64 lines. 
+INFO: KernelProcessSingleFrame(): Write 'true' to StopCSR...Kernel stopped.
+INFO: SystemProcessFrameSequence(): Finished checking a sequence of good frames.
+
+
+Wrote convolved image ./output_0.bmp
+Compare with ../test_bitmaps/expected_sobel_0.bmp.
+frame 0 passed
+Wrote convolved image ./output_1.bmp
+Compare with ../test_bitmaps/expected_sobel_1.bmp.
+frame 1 passed
+Wrote convolved image ./output_2.bmp
+Compare with ../test_bitmaps/expected_sobel_2.bmp.
+frame 2 passed
+Wrote convolved image ./output_3.bmp
+Compare with ../test_bitmaps/expected_sobel_3.bmp. 
+frame 3 passed
 Wrote convolved image ./output_4.bmp
-Compare with ../test_bitmaps/expected_sobel_4.bmp. 
+Compare with ../test_bitmaps/expected_sobel_4.bmp.
 frame 4 passed
 
 Kernel version = 1 (Expected 1)
@@ -516,15 +510,14 @@ Finished checking a sequence of good frames.
 
 
 ******************************************************
-Check a defective frame followed by a good frame... 
+Check a defective frame followed by a good frame...
 ******************************************************
 
-Reading input image ../test_bitmaps/test_0.bmp
-INFO: convert to vvp type.
-INFO: WriteFrameToPipe(): writing 2048 pixels to pipe with 2 pixels in parallel. 
+INFO: Load image ../test_bitmaps/test_0.bmp
+INFO: WriteFrameToPipe(): writing 2048 pixels to pipe with 2 pixels in parallel.
 INFO: WriteFrameToPipe(): writing 4096 pixels to pipe with 2 pixels in parallel. 
-INFO: WriteDummyPixelsToPipe(): storing dummy pixels to pipe with 2 pixels in parallel. 
-INFO: WriteDummyPixelsToPipe(): wrote 96 dummy streaming beats.
+INFO: WriteDummyPixelsToPipe(): writing dummy pixels to pipe with 2 pixels in parallel. 
+INFO: WriteDummyPixelsToPipe(): wrote 64 dummy streaming beats.
 
 *********************
 Launch RGB2Grey kernel
@@ -533,13 +526,13 @@ Launch Grey2RGB kernel
 
 ****************************
 Read out defective frame, and overwrite with good frame.
-INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel. 
+INFO: ReadFrameFromPipe(): reading data from pipe with 2 pixels in parallel.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
 INFO: ReadFrameFromPipe(): saw a block of 64 dummy beats. Counters reset.
 DEFECT: ReadFrameFromPipe(): [i = 2048] - expect sop=FALSE eop=FALSE. saw sop=TRUE eop=FALSE.
 INFO: ReadFrameFromPipe(): saw start of packet; reset counters.
-INFO: ReadFrameFromPipe(): wrote 64 lines. 
-INFO: convert to bmp type.
+INFO: ReadFrameFromPipe(): read 64 lines. 
+INFO: KernelProcessSingleFrame(): Write 'true' to StopCSR...Kernel stopped.
 Wrote convolved image ./output_defect.bmp
 frame 'defect' passed
 

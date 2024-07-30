@@ -19,10 +19,6 @@
 #include "image_buffer_adapters.hpp"
 #include "vvp_stream_adapters.hpp"
 
-#ifndef DEFAULT_EXTENSION
-#define DEFAULT_EXTENSION ".bmp"
-#endif
-
 #ifndef DEFAULT_INPUT
 #define DEFAULT_INPUT "../test_bitmaps/test"
 #endif
@@ -63,8 +59,8 @@ constexpr std::array<float, 9> identity_coeffs = {
 };
 
 /// @brief Trivial test that exercises Convolution2d on its own, using an
-/// extremely simple image. This is useful for debugging that data is flowing
-/// through the line buffer properly.
+/// extremely simple image. This is useful for debugging how data flows through
+/// the line buffer.
 /// @param q The SYCL queue to assign work to
 /// @param print_debug_info Print additional debug information when reading from
 /// pipe
@@ -79,27 +75,30 @@ bool TestTinyFrameOnStencil(sycl::queue q, bool print_debug_info) {
 
   constexpr int pixels_count = rows_small * cols_small;
 
-  conv2d::PixelType grey_pixels_in[] = {
+  vvp_gray::PixelGray grey_pixels[] = {
       101, 201, 301, 401, 501, 601, 701, 801,  //
       102, 202, 302, 402, 502, 602, 702, 802,  //
       103, 203, 303, 403, 503, 603, 703, 803};
 
-  conv2d::PixelType grey_pixels_out[pixels_count];
+  vvp_gray::ImageGrey frame_in(rows_small, cols_small);
+  for (int idx = 0; idx < pixels_count; idx++) {
+    frame_in(idx) = grey_pixels[idx];
+  }
+
   bool sidebands_ok;
   int parsed_frames;
 
-  KernelProcessSingleFrame(q, grey_pixels_in, grey_pixels_out, rows_small,
-                           cols_small, identity_coeffs, sidebands_ok,
-                           parsed_frames);
+  auto frame_out = single_kernel::KernelProcessSingleFrame(
+      q, frame_in, identity_coeffs, sidebands_ok, parsed_frames);
 
   bool pixels_match = true;
-  for (int i = 0; i < pixels_count; i++) {
-    constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-    constexpr float kNormalizationFactor = (1 << conv2d::kBitsPerChannel);
-    conv2d::PixelType grey_pixel_expected =
-        ((float)grey_pixels_in[i] / kNormalizationFactor) * kOutputOffset +
+  for (int itr = 0; itr < pixels_count; itr++) {
+    constexpr float kOutputOffset = ((1 << vvp_rgb::kBitsPerChannel) / 2);
+    constexpr float kNormalizationFactor = (1 << vvp_rgb::kBitsPerChannel);
+    vvp_gray::PixelGray grey_pixel_expected =
+        ((float)grey_pixels[itr] / kNormalizationFactor) * kOutputOffset +
         kOutputOffset;
-    pixels_match &= (grey_pixel_expected == grey_pixels_out[i]);
+    pixels_match &= (grey_pixel_expected == frame_out(itr));
   }
 
   return sidebands_ok & pixels_match & (parsed_frames == 1);
@@ -121,26 +120,29 @@ bool TestBypass(sycl::queue q, bool print_debug_info) {
 
   constexpr int pixels_count = rows_small * cols_small;
 
-  conv2d::PixelType grey_pixels_in[] = {
+  vvp_gray::PixelGray grey_pixels[] = {
       101, 201, 301, 401, 501, 601, 701, 801,  //
       102, 202, 302, 402, 502, 602, 702, 802,  //
       103, 203, 303, 403, 503, 603, 703, 803};
 
+  vvp_gray::ImageGrey frame_in(rows_small, cols_small);
+  for (int idx = 0; idx < pixels_count; idx++) {
+    frame_in(idx) = grey_pixels[idx];
+  }
+
   // Enable 'bypass' mode by writing to CSR.
   BypassCSR::write(q, true);
 
-  conv2d::PixelType grey_pixels_out[pixels_count];
   bool sidebands_ok;
   int parsed_frames;
 
-  KernelProcessSingleFrame(q, grey_pixels_in, grey_pixels_out, rows_small,
-                           cols_small, identity_coeffs, sidebands_ok,
-                           parsed_frames);
+  vvp_gray::ImageGrey frame_out = single_kernel::KernelProcessSingleFrame(
+      q, frame_in, identity_coeffs, sidebands_ok, parsed_frames);
 
   bool pixels_match = true;
   for (int i = 0; i < pixels_count; i++) {
-    conv2d::PixelType grey_pixel_expected = grey_pixels_in[i];
-    pixels_match &= (grey_pixel_expected == grey_pixels_out[i]);
+    vvp_gray::PixelGray grey_pixel_expected = grey_pixels[i];
+    pixels_match &= (grey_pixel_expected == frame_out(i));
   }
 
   return sidebands_ok & pixels_match & (parsed_frames == 1);
@@ -157,75 +159,87 @@ constexpr std::array<float, 9> sobel_coeffs = {
 /// @brief 'Happy Path' test that repeatedly passes a known good frame through
 /// the IP.
 /// @param[in] q SYCL queue
-/// @param[in] num_frames Number of times to pass the image frame through the IP
-/// @param[in] input_bmp_filename_base base filename to use for reading input
-/// frames
-/// @param[in] output_bmp_filename_base base filename to use for writing output
-/// files
-/// @param[in] expected_bmp_filename_base 'known good' file to compare IP output
+/// @param[in] input_bmp_filenames Bitmap files containing image frames to
+/// process
+/// @param[in] expected_bmp_filenames 'known good' files to compare output
 /// against
+/// @param[in] output_path Path where result bitmaps can be saved
 /// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
 /// functions to print debug information.
 /// @return `true` if all frames emitted by the IP match the `known good` file,
 /// `false` otherwise.
-bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
-                            std::string input_bmp_filename_base,
-                            std::string output_bmp_filename_base,
-                            std::string expected_bmp_filename_base,
-                            bool print_debug_messages) {
+/// @throw This function throws an `std::invalid_argument` exception if the
+/// sizes of `input_bmp_filenames` and expected_bmp_filenames` do not match.
+bool TestGoodFramesSequence(sycl::queue q,
+                            std::vector<std::string> input_bmp_filenames,
+                            std::vector<std::string> expected_bmp_filenames,
+                            std::string output_path,
+                            bool print_debug_messages = false) {
   std::cout << "\n**********************************\n"
             << "Check a sequence of good frames... "
             << "\n**********************************\n"
             << std::endl;
 
-  std::vector<bmp_tools::BitmapRGB> input_bitmaps;
+  if (input_bmp_filenames.size() != expected_bmp_filenames.size()) {
+    throw std::invalid_argument(
+        "input_bmp_filenames and expected_bmp_filenames must be the same "
+        "size!");
+  }
+
+  int num_frames = input_bmp_filenames.size();
+
+  std::vector<vvp_rgb::ImageRGB> input_frames;
   for (size_t itr = 0; itr < num_frames; itr++) {
     // load image
-    std::string input_bmp_path =  //
-        input_bmp_filename_base + "_" + std::to_string(itr) + DEFAULT_EXTENSION;
+    std::string input_bmp_path = input_bmp_filenames[itr];
 
     std::cout << "INFO: Load image " << input_bmp_path << std::endl;
     unsigned int error;
-    input_bitmaps.push_back(bmp_tools::ReadBmp(input_bmp_path, error));
+    bmp_tools::BitmapRGB input_bitmap =
+        bmp_tools::ReadBmp(input_bmp_path, error);
     if (bmp_tools::BmpError::OK != error) {
       std::cerr << "ERROR: Could not read image from " << input_bmp_path
                 << std::endl;
       return false;
     }
+
+    input_frames.push_back(ConvertToVvpRgb(input_bitmap));
   }
 
-  bool all_passed = false;
-  std::vector<bmp_tools::BitmapRGB> output_bitmaps =
-      SystemProcessFrameSequence(q, input_bitmaps, sobel_coeffs, all_passed);
+  std::vector<vvp_rgb::ImageRGB> output_frames =
+      kernel_system::SystemProcessFrameSequence(q, input_frames, sobel_coeffs);
 
-  for (size_t itr = 0; itr < output_bitmaps.size(); itr++) {
-    std::cout << "\n*********************\n"  //
-              << "Reading out frame " << itr  //
-              << std::endl;
+  bool all_passed = true;
 
-    std::string absolute_output_bmp_path = output_bmp_filename_base + "_" +
-                                           std::to_string(itr) +
-                                           DEFAULT_EXTENSION;
+  for (size_t itr = 0; itr < output_frames.size(); itr++) {
+    bmp_tools::BitmapRGB output_bmp = ConvertToBmpRgb(output_frames[itr]);
+
+    // generate a name to output to
+    std::string output_bmp_path = output_path + "output_" +
+                                  std::to_string(itr) + "." +
+                                  bmp_tools::kFileExtension;
     unsigned int write_error;
-    bmp_tools::WriteBmp(absolute_output_bmp_path, output_bitmaps[itr],
-                        write_error);
+    bmp_tools::WriteBmp(output_bmp_path, output_bmp, write_error);
 
     if (bmp_tools::BmpError::OK == write_error) {
-      std::cout << "Wrote convolved image " << absolute_output_bmp_path
-                << std::endl;
+      std::cout << "Wrote convolved image " << output_bmp_path << std::endl;
     }
 
-    std::string expected_bmp_path = expected_bmp_filename_base + "_" +
-                                    std::to_string(itr) + DEFAULT_EXTENSION;
+    std::string expected_bmp_path = expected_bmp_filenames[itr];
 
     std::cout << "Compare with " << expected_bmp_path << ". " << std::endl;
     unsigned int comparison_error = 0;
-    bool passed = bmp_tools::CompareFrames(output_bitmaps[itr],
-                                           expected_bmp_path, comparison_error);
+    bmp_tools::BitmapRGB output_frame_bmp = ConvertToBmpRgb(output_frames[itr]);
+    bool passed = bmp_tools::CompareFrames(output_frame_bmp, expected_bmp_path,
+                                           comparison_error);
 
-    printf("frame %zu %s\n", itr, (passed && all_passed) ? "passed" : "failed");
+    all_passed &= passed;
+
+    std::cout << "frame " << itr << " " << ((passed) ? "passed" : "failed")
+              << std::endl;
   }
 
+  // Read the kernel version from its Control/Status Register
   int detected_version = VersionCSR::read(q);
   std::cout << "\nKernel version = " << detected_version << " (Expected "
             << kKernelVersion << ")" << std::endl;
@@ -245,44 +259,41 @@ bool TestGoodFramesSequence(sycl::queue q, size_t num_frames,
 /// frame (which should emit a partial image) followed by a complete frame
 /// which should match the 'known good' file.
 /// @param[in] q SYCL queue
-/// @param[in] input_bmp_filename Buffer containing the image frame to process
-/// @param[in] output_bmp_filename_base File to output the processed frame to
-/// @param[in] expected_bmp_filename 'known good' file to compare IP output
-/// against
+/// @param[in] input_bmp_filename Full path to a bitmap file containing the
+/// image frame to process
+/// @param[in] expected_bmp_filename Full path to 'known good' bitmap file to
+/// compare output against
+/// @param[in] output_path Full path to a directory where processed frame can be
+/// output to
 /// @param[in] print_debug_messages Pass to the `vvp_stream_adapters`
 /// functions to print debug information.
 /// @return `true` if the second frame emitted by the IP matches the `known
 /// good` file, `false` otherwise.
 bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
-                        std::string output_bmp_filename_base,
                         std::string expected_bmp_filename,
+                        std::string output_path,
                         bool print_debug_messages = false) {
   std::cout << "\n******************************************************\n"
             << "Check a defective frame followed by a good frame... "
             << "\n******************************************************\n"
             << std::endl;
 
-  // load image
-  std::string input_bmp_path =  //
-      input_bmp_filename + DEFAULT_EXTENSION;
-  std::string expected_bmp_path =  //
-      expected_bmp_filename + DEFAULT_EXTENSION;
-
-  std::cout << "INFO: Load image " << input_bmp_path << std::endl;
+  std::cout << "INFO: Load image " << input_bmp_filename << std::endl;
   unsigned int error;
-  bmp_tools::BitmapRGB in_img = bmp_tools::ReadBmp(input_bmp_path, error);
+  bmp_tools::BitmapRGB in_img = bmp_tools::ReadBmp(input_bmp_filename, error);
   if (bmp_tools::BmpError::OK != error) {
-    std::cerr << "ERROR: Could not read image from " << input_bmp_path
+    std::cerr << "ERROR: Could not read image from " << input_bmp_filename
               << std::endl;
     return false;
   }
+  vvp_rgb::ImageRGB vvp_rgb = ConvertToVvpRgb(in_img);
 
   bool passed = true;
 
   bool sidebands_ok = 0;
   int num_parsed_frames = 0;
-  bmp_tools::BitmapRGB parsed_frame = SystemProcessFrameAndDefect(
-      q, in_img, sobel_coeffs, num_parsed_frames, sidebands_ok);
+  vvp_rgb::ImageRGB parsed_frame = kernel_system::SystemProcessFrameAndDefect(
+      q, vvp_rgb, sobel_coeffs, sidebands_ok, num_parsed_frames);
 
   // expect the defective frame + the good frame
   if (2 != num_parsed_frames) {
@@ -291,10 +302,12 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
     passed = false;
   }
 
+  bmp_tools::BitmapRGB output_bmp = ConvertToBmpRgb(parsed_frame);
+
   std::string defect_output_bmp_path =
-      output_bmp_filename_base + "_defect" + DEFAULT_EXTENSION;
+      output_path + "output_defect." + bmp_tools::kFileExtension;
   unsigned int write_error;
-  bmp_tools::WriteBmp(defect_output_bmp_path, parsed_frame, write_error);
+  bmp_tools::WriteBmp(defect_output_bmp_path, output_bmp, write_error);
 
   if (bmp_tools::BmpError::OK == write_error) {
     std::cout << "Wrote convolved image " << defect_output_bmp_path
@@ -303,11 +316,12 @@ bool TestDefectiveFrame(sycl::queue q, std::string input_bmp_filename,
   // This should succeed since the defective pixels were overwritten by the
   // subsequent good frame.
   unsigned int comparison_error = 0;
-  passed &= bmp_tools::CompareFrames(parsed_frame, expected_bmp_path,
+  passed &= bmp_tools::CompareFrames(output_bmp, expected_bmp_filename,
                                      comparison_error);
 
   bool all_passed = passed & sidebands_ok;
-  printf("frame 'defect' %s\n", (passed && sidebands_ok) ? "passed" : "failed");
+  std::cout << "frame 'defect' "
+            << ((passed && sidebands_ok) ? "passed" : "failed") << std::endl;
 
   return all_passed;
 }
@@ -339,9 +353,17 @@ int main(int argc, char **argv) {
               << std::endl;
 
     // image files
-    std::string input_bmp_filename = M_DEFAULT_INPUT;
-    std::string output_bmp_filename = M_DEFAULT_OUTPUT;
-    std::string expected_bmp_filename = M_DEFAULT_EXPECTED;
+    std::vector<std::string> input_bmp_filenames = {
+        "../test_bitmaps/test_0.bmp", "../test_bitmaps/test_1.bmp",
+        "../test_bitmaps/test_2.bmp", "../test_bitmaps/test_3.bmp",
+        "../test_bitmaps/test_4.bmp"};
+    std::string output_path = "./";
+    std::vector<std::string> expected_sobel_filenames = {
+        "../test_bitmaps/expected_sobel_0.bmp",
+        "../test_bitmaps/expected_sobel_1.bmp",
+        "../test_bitmaps/expected_sobel_2.bmp",
+        "../test_bitmaps/expected_sobel_3.bmp",
+        "../test_bitmaps/expected_sobel_4.bmp"};
 
     bool all_passed = true;
 
@@ -349,12 +371,11 @@ int main(int argc, char **argv) {
     all_passed &= TestTinyFrameOnStencil(q, false);
     all_passed &= TestBypass(q, false);
 #else
-    all_passed &= TestGoodFramesSequence(q, NUM_FRAMES, input_bmp_filename,
-                                         output_bmp_filename,
-                                         expected_bmp_filename, false);
+    all_passed &= TestGoodFramesSequence(
+        q, input_bmp_filenames, expected_sobel_filenames, output_path, false);
     all_passed &=
-        TestDefectiveFrame(q, input_bmp_filename + "_0", output_bmp_filename,
-                           expected_bmp_filename + "_0", false);
+        TestDefectiveFrame(q, input_bmp_filenames[0],
+                           expected_sobel_filenames[0], output_path, false);
 #endif
 
     std::cout << "\nOverall result:\t" << (all_passed ? "PASSED" : "FAILED")

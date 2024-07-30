@@ -7,50 +7,68 @@
 #include <stdint.h>
 
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <sycl/ext/intel/prototype/pipes_ext.hpp>
 #include <sycl/sycl.hpp>
 
-#include "convolution_types.hpp"
+#include "gray_pixels.hpp"
 #include "linebuffer2d.hpp"
+#include "pipe_matching.hpp"
 #include "unrolled_loop.hpp"
 
 // The kernel version may be polled by an Avalon memory-mapped host that manages
 // this IP. Update this when you make changes to kernel code.
 constexpr int kKernelVersion = 1;
 
+#ifndef WINDOW_SZ
+#warning "WINDOW_SZ undefined. Choosing WINDOW_SZ=3
+#define WINDOW_SZ 3
+#endif
+// kernel size to use for sliding window
+constexpr uint32_t kWindowSize = WINDOW_SZ;
+
+#ifndef MAX_COLS
+#warning "MAX_COLS undefined. Choosing MAX_COLS=4096
+#define MAX_COLS 4096
+#endif
+// kernel size to use for sliding window
+constexpr uint32_t kMaxCols = MAX_COLS;
+
 /////////////////////////////////////////////
 // Define input/output streaming interfaces
 /////////////////////////////////////////////
 
-class ID_InStr;
+// class ID_InStr;
 using InputImgStreamProperties =
     decltype(sycl::ext::oneapi::experimental::properties(
         sycl::ext::intel::experimental::bits_per_symbol<8>,
         sycl::ext::intel::experimental::uses_valid<true>,
         sycl::ext::intel::experimental::ready_latency<0>,
         sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
-using InputImageStream =
-    sycl::ext::intel::experimental::pipe<ID_InStr, conv2d::RGBBeat, 0,
-                                         InputImgStreamProperties>;
+// using InputImageStream =
+//     sycl::ext::intel::experimental::pipe<ID_InStr, vvp_rgb::RGBBeat, 0,
+//                                          InputImgStreamProperties>;
+//
+// class ID_InStrGrey;
+// using InputImageStreamGrey =
+//     sycl::ext::intel::experimental::pipe<ID_InStrGrey,
+//     vvp_gray::GrayScaleBeat, 0,
+//                                          InputImgStreamProperties>;
 
-class ID_InStrGrey;
-using InputImageStreamGrey =
-    sycl::ext::intel::experimental::pipe<ID_InStrGrey, conv2d::GreyScaleBeat, 0,
-                                         InputImgStreamProperties>;
-
-class ID_OutStr;
+// class ID_OutStr;
 using OutputImgStreamProperties =
     decltype(sycl::ext::oneapi::experimental::properties(
         sycl::ext::intel::experimental::bits_per_symbol<8>,
         sycl::ext::intel::experimental::uses_valid<true>,
         sycl::ext::intel::experimental::ready_latency<0>,
         sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
-using OutputImageStreamGrey =
-    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::GreyScaleBeat, 0,
-                                         OutputImgStreamProperties>;
+// using OutputImageStreamGrey =
+//     sycl::ext::intel::experimental::pipe<ID_OutStr, vvp_gray::GrayScaleBeat,
+//     0,
+//                                          OutputImgStreamProperties>;
 
-using OutputImageStream =
-    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::RGBBeat, 0,
-                                         OutputImgStreamProperties>;
+// using OutputImageStream =
+//     sycl::ext::intel::experimental::pipe<ID_OutStr, vvp_rgb::RGBBeat, 0,
+//                                          OutputImgStreamProperties>;
 
 /////////////////////////////////////////////
 // Define CSR locations that attach to pipes
@@ -76,14 +94,24 @@ using CsrOutProperties = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::uses_valid_on));
 
 class ID_StopCSR;
+
+/// @brief This pipe terminates in the Convolution2d kernel's CSR. Write here
+/// from host code to tell the Convolution2d kernel to stop executing.
 using StopCSR =
     sycl::ext::intel::experimental::pipe<ID_StopCSR, bool, 0, CsrInProperties>;
 
 class ID_BypassCSR;
+
+/// @brief This pipe terminates in the Convolution2d kernel's CSR. Write here
+/// from host code to tell the Convolution2d kernel to bypass the line buffer
+/// and pass input pixels directly to the output.
 using BypassCSR = sycl::ext::intel::experimental::pipe<ID_BypassCSR, bool, 0,
                                                        CsrInProperties>;
 
 class ID_VersionCSR;
+
+/// @brief This pipe terminates in the Convolution2d kernel's CSR. Read here
+/// from host code to query the version number of the Convolution2d kernel.
 using VersionCSR = sycl::ext::intel::experimental::pipe<ID_VersionCSR, int, 0,
                                                         CsrOutProperties>;
 
@@ -109,21 +137,21 @@ void SaturateWindowCoordinates(short w_row, short w_col, short row, short col,
 
   // logic to deal with image borders: border pixel duplication
   r_select = w_row;
-  int rDiff = w_row - (conv2d::kWindowSize / 2) + row;
+  int rDiff = w_row - (kWindowSize / 2) + row;
   if (rDiff < 0) {
-    r_select = (conv2d::kWindowSize / 2) - row;
+    r_select = (kWindowSize / 2) - row;
   }
   if (rDiff >= rows) {
-    r_select = (conv2d::kWindowSize / 2) + ((rows - 1) - row);
+    r_select = (kWindowSize / 2) + ((rows - 1) - row);
   }
 
   c_select = w_col;
-  int cDiff = w_col - (conv2d::kWindowSize / 2) + col;
+  int cDiff = w_col - (kWindowSize / 2) + col;
   if (cDiff < 0) {
-    c_select = (conv2d::kWindowSize / 2) - col;
+    c_select = (kWindowSize / 2) - col;
   }
   if (cDiff >= cols) {
-    c_select = (conv2d::kWindowSize / 2) + ((cols - 1) - col);
+    c_select = (kWindowSize / 2) + ((cols - 1) - col);
   }
 }
 
@@ -136,15 +164,14 @@ void SaturateWindowCoordinates(short w_row, short w_col, short row, short col,
 /// @param buffer Window of pixels from input image
 /// @param coefficients Array of coefficients to use for convolution
 /// @return pixel value to stream out
-conv2d::PixelType ConvolutionFunction(
-    short row, short col, short rows, short cols, conv2d::PixelType *buffer,
-    const std::array<float, conv2d::kWindowSize * conv2d::kWindowSize>
-        coefficients) {
+vvp_gray::PixelGray ConvolutionFunction(
+    short row, short col, short rows, short cols, vvp_gray::PixelGray *buffer,
+    const std::array<float, kWindowSize * kWindowSize> coefficients) {
   float sum = 0.0f;
 #pragma unroll
-  for (int w_row = 0; w_row < conv2d::kWindowSize; w_row++) {
+  for (int w_row = 0; w_row < kWindowSize; w_row++) {
 #pragma unroll
-    for (int w_col = 0; w_col < conv2d::kWindowSize; w_col++) {
+    for (int w_col = 0; w_col < kWindowSize; w_col++) {
       short c_select, r_select;
 
       // handle the case where the center of the window is at the image edge.
@@ -154,29 +181,28 @@ conv2d::PixelType ConvolutionFunction(
                                 row, col,      // NO-FORMAT: Alignment
                                 rows, cols,    // NO-FORMAT: Alignment
                                 r_select, c_select);
-      conv2d::PixelType pixel =
-          buffer[c_select + r_select * conv2d::kWindowSize];
+      vvp_gray::PixelGray pixel = buffer[c_select + r_select * kWindowSize];
 
-      constexpr float kNormalizationFactor = (1 << conv2d::kBitsPerChannel);
+      constexpr float kNormalizationFactor = (1 << vvp_gray::kBitsPerChannel);
 
       // converting `pixel` to a floating-point value uses lots of FPGA
       // resources. If your expected coefficients have a narrow range, it will
       // be worthwhile to convert these operations to fixed-point.
       float normalized_pixel = (float)pixel / kNormalizationFactor;
 
-      float normalized_coeff =
-          coefficients[w_col + w_row * conv2d::kWindowSize];
+      float normalized_coeff = coefficients[w_col + w_row * kWindowSize];
 
       sum += normalized_pixel * normalized_coeff;
     }
   }
 
   // map range [0, 1.0) to [0, 1<<kBitsPerChannel)
-  // conv2d::PixelType return_val = sum * (float)(1 << conv2d::kBitsPerChannel);
+  // vvp_gray::PixelGray return_val = sum * (float)(1 <<
+  // vvp_gray::kBitsPerChannel);
 
   // map range (-1.0, 1.0) to [0, 1<<kBitsPerChannel)
-  constexpr float kOutputOffset = ((1 << conv2d::kBitsPerChannel) / 2);
-  conv2d::PixelType return_val =
+  constexpr float kOutputOffset = ((1 << vvp_gray::kBitsPerChannel) / 2);
+  vvp_gray::PixelGray return_val =
       ((int16_t)kOutputOffset + (int16_t)(sum * (kOutputOffset)));
 
   return return_val;
@@ -188,7 +214,20 @@ conv2d::PixelType ConvolutionFunction(
 
 class ID_Convolution2d;
 
-template <typename PipeIn, typename PipeOut>
+/// @brief Perform a 2D convolution on an FPGA using a `LineBuffer2d`. You can
+/// interact with this kernel using the `StopCSR`, `BypassCSR`, and `VersionCSR`
+/// pipes. The pixel input and pixel output pipes are implemented as template
+/// parameters so that you can choose how to connect this kernel:
+///
+///  * Connect this kernel to host pipes to operate it in isolation
+///
+///  * Connect this kernel to other kernels via inter-kernel pipes to operate it
+/// as part of a system.
+/// @tparam PipeIn Pipe to read input data from. The payload of this pipe must
+/// be a `GrayScaleBeat` as defined in `gray_pixels.hpp`.
+/// @tparam PipeOut Pipe to write output data to. The payload of this pipe must
+/// be a `GrayScaleBeat` as defined in `gray_pixels.hpp`.
+template <vvp_gray::GrayScalePipe PipeIn, vvp_gray::GrayScalePipe PipeOut>
 struct Convolution2d {
   // these defaults are not propagated to the RTL
   int rows = 0;
@@ -199,7 +238,7 @@ struct Convolution2d {
   // confusion. Since kernel are a kernel argument, kernel can be specified at
   // runtime. The coefficients can only be updated by stopping the kernel and
   // re-starting it.
-  std::array<float, conv2d::kWindowSize * conv2d::kWindowSize> coeffs;
+  std::array<float, kWindowSize * kWindowSize> coeffs;
 
   void operator()() const {
     // Publish kernel version so that other IPs can poll it
@@ -208,9 +247,9 @@ struct Convolution2d {
     // This instance of the line buffer will store previously read pixels so
     // that they can be operated on in a local filter. The filter is invoked
     // below in the loop.
-    line_buffer_2d::LineBuffer2d<conv2d::PixelType, conv2d::PixelType,
-                                 conv2d::kWindowSize, conv2d::kMaxCols,
-                                 conv2d::kParallelPixels>
+    line_buffer_2d::LineBuffer2d<vvp_gray::PixelGray, vvp_gray::PixelGray,
+                                 kWindowSize, kMaxCols,
+                                 vvp_gray::kParallelPixels>
         myLineBuffer(rows, cols);
 
     bool keep_going = true;
@@ -221,7 +260,7 @@ struct Convolution2d {
       // do non-blocking reads so that the kernel can be interrupted at any
       // time.
       bool did_read_beat = false;
-      conv2d::GreyScaleBeat new_beat = PipeIn::read(did_read_beat);
+      vvp_gray::GrayScaleBeat new_beat = PipeIn::read(did_read_beat);
 
       // the bypass signal lets the user disable the line buffer processing.
       bool did_read_bypass = false;
@@ -237,7 +276,7 @@ struct Convolution2d {
       }
 
       if (did_read_beat) {
-        conv2d::GreyScaleBeat output_beat;
+        vvp_gray::GrayScaleBeat output_beat;
         if (bypass) {
           output_beat = new_beat;
         } else {
@@ -249,10 +288,10 @@ struct Convolution2d {
           // `coeffs` is passed to `ConvolutionFunction()`. The return value of
           // `Filter()` is the pixel data that we should propagate on to the
           // next link in the processing chain.
-          conv2d::GreyPixelBundle output_bundle =
+          vvp_gray::GrayPixelBundle output_bundle =
               myLineBuffer.Filter<ConvolutionFunction>(
                   new_beat.data, new_beat.sop, new_beat.eop, sop, eop, coeffs);
-          output_beat = conv2d::GreyScaleBeat(output_bundle, sop, eop, 0);
+          output_beat = vvp_gray::GrayScaleBeat(output_bundle, sop, eop, 0);
         }
         PipeOut::write(output_beat);
       }

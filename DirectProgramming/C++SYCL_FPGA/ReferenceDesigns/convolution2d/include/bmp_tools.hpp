@@ -9,8 +9,6 @@
 #ifndef BMP_TOOLS_H
 #define BMP_TOOLS_H
 
-#include "matrix2d_host.hpp"
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +16,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+
+#include "matrix2d_host.hpp"
 
 #ifndef FILENAME_BUF_SIZE
 #if defined(_WIN32) || defined(_WIN64)
@@ -28,6 +28,9 @@
 #endif
 
 namespace bmp_tools {
+
+// file extension to use when reading/writing bitmap files
+constexpr char kFileExtension[] = "bmp";
 
 /// @brief Store an image that can be read from or written to a .bmp file. The
 /// individual pixel values may be changed at runtime, but the dimensions are

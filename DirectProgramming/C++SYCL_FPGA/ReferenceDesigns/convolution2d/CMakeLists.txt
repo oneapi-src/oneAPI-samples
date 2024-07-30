@@ -61,12 +61,22 @@ if(NOT DEFINED TEST_CONV2D_ISOLATED)
     SET(TEST_CONV2D_ISOLATED 0)
 endif()
 
+# Use c++20 so that we can get concepts
+if(WIN32)
+    # add qactypes for Windows
+    set(STD "-Qstd=c++20")
+else()
+    # add qactypes for Linux
+    set(STD "-std=c++20")
+endif()
+
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS ${USER_FLAGS};-DPARALLEL_PIXELS=${PARALLEL_PIXELS}; 
                              -DPIXEL_BITS=${PIXEL_BITS}; 
                              -DWINDOW_SZ=${WINDOW_SZ}; 
                              -DMAX_COLS=${MAX_COLS}
-                             -DTEST_CONV2D_ISOLATED=${TEST_CONV2D_ISOLATED};)
+                             -DTEST_CONV2D_ISOLATED=${TEST_CONV2D_ISOLATED};
+                             ${STD};)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

@@ -15,12 +15,44 @@ class Matrix2d {
         mData(other.GetRows() * other.GetCols()) {
     std::copy(other.mData.begin(), other.mData.end(), mData.begin());
   }
+  /// @brief Access an element of the `Matrix2d`
+  /// @param row Matrix row
+  /// @param col Matrix column
+  /// @return Element of `Matrix2d`
   T &operator()(size_t row, size_t col) { return mData[row * mCols + col]; }
+
+  /// @brief Access an element of the `Matrix2d`
+  /// @param row Matrix row
+  /// @param col Matrix column
+  /// @return Element of `Matrix2d`
   T operator()(size_t row, size_t col) const {
     return mData[row * mCols + col];
   }
 
+  /// @brief Access an element of the `Matrix2d` in row-major sequence. This
+  /// means a 2x4 matrix would be accessed like this:
+  /// @paragraph Schematic
+  /// ```
+  /// /             \ <br/>
+  /// | 0, 1, 2, 3, | <br/>
+  /// | 4, 5, 6, 7, | <br/>
+  /// \             / <br/>
+  /// ```
+  /// @param idx Matrix element (row-major)
+  /// @return Element of `Matrix2d`
   T &operator()(size_t idx) { return mData[idx]; }
+
+  /// @brief Access an element of the `Matrix2d` in row-major sequence. This
+  /// means a 2x4 matrix would be accessed like this:
+  /// @paragraph Schematic
+  /// ```
+  /// /             \ <br/>
+  /// | 0, 1, 2, 3, | <br/>
+  /// | 4, 5, 6, 7, | <br/>
+  /// \             / <br/>
+  /// ```
+  /// @param idx Matrix element (row-major)
+  /// @return Element of `Matrix2d`
   T operator()(size_t idx) const { return mData[idx]; }
 
   /// Number of rows (image height)
@@ -29,8 +61,12 @@ class Matrix2d {
   /// Number of columns (image width)
   size_t GetCols() const { return mCols; }
 
+  /// @brief total number of elements in this Matrix2D
+  /// @return Element of `Matrix2d`
+  size_t Size() const { return mRows * mCols; }
+
  private:
-  size_t mRows;
-  size_t mCols;
+  const size_t mRows;
+  const size_t mCols;
   std::vector<T> mData;
 };
