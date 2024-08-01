@@ -1,7 +1,7 @@
 {
   "guid": "aeaca2ce-126e-452b-a6e3-2a3d5b1dbf55",
   "name": "Streaming Data Interfaces",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS Flow: Interfaces"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/HLS Flow: Interfaces"],
   "description": "An Intel® FPGA tutorial demonstrating how to use pipes to implement streaming interfaces on IP Components",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],

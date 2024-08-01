@@ -130,7 +130,7 @@
       allocate( c1(1:m1,1:n1) )
       allocate( a2(1:m2,1:k2) )
       allocate( b2(1:k2,1:n2) )
-      allocate( c2(1:m2,1:n2) )
+      allocate( c2(1:m2,1:n1) )
       call init_matrix (m1, k1, n1, a1, b1, c1)
       call init_matrix (m2, k2, n2, a2, b2, c2)
 

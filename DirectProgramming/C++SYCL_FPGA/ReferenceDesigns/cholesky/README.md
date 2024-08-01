@@ -63,7 +63,7 @@ https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html
 
 ### Performance
 
-Performance results are based on testing as of May 14, 2024.
+Performance results are based on testing as of August 30, 2023.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 

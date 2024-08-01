@@ -7,7 +7,7 @@
 // Copyright (C) 2020 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-#include <sycl/sycl.hpp>
+#include <CL/sycl.hpp>
 #include <algorithm>
 #include <cassert>
 #include <cfloat>
@@ -24,13 +24,6 @@ cl_ulong triad(size_t array_size) {
   cl_ulong min_time_ns1 = DBL_MAX;
 
   device dev = device(gpu_selector_v);
-
-  auto part_prop =
-        dev.get_info<sycl::info::device::partition_properties>();
-  if (part_prop.empty()) {
-    std::cout << "Device cannot be partitioned to subdevices\n";
-    exit(1);
-  }
 
   std::vector<device> subdev = {};
   subdev = dev.create_sub_devices<sycl::info::partition_property::
@@ -120,8 +113,8 @@ int main(int argc, char *argv[]) {
     array_size =  std::stoi(argv[1]);
   }
   else {
-    array_size = 128;
-    std::cout << "Use default array size 128" << std::endl;
+    std::cout << "Run as ./<progname> <arraysize in elements>\n";
+    return 1;
   }
   std::cout << "Running with stream size of " << array_size
     << " elements (" << (array_size * sizeof(double))/(double)1024/1024 << "MB)\n";
