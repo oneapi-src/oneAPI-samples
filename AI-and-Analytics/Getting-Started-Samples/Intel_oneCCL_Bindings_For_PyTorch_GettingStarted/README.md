@@ -133,7 +133,7 @@ jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
      oneCCL_Bindings_GettingStarted.ipynb
      ```
      
-**5. Change kernel to ```**pytorch**``` or ```**pytorch-gpu**```.**
+**5. Change kernel to ``pytorch`` or ``pytorch-gpu``.**
 
 **6. Run every cell in the Notebook in sequence.**
 
