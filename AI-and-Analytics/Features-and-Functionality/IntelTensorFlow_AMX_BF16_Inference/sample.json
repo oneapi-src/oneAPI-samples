@@ -19,7 +19,7 @@
               "pip install ipykernel jupyter",
               "python Intel_TensorFlow_AMX_BF16_Inference.py",
               "python -m ipykernel install --user --name=tensorflow",
-              "jupyter nbconvert --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
+              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
            ]
       }
        ]
