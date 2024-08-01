@@ -12,12 +12,13 @@
     "linux": [{
       "id": "intel amx bf16 training",
       "steps": [
-        "source /root/intel/oneapi/intelpython/bin/activate",
+        "source /intel/oneapi/intelpython/bin/activate",
         "conda activate tensorflow",
         "pip install -r requirements.txt",
+        "pip install jupyter ipykernel",
         "python Intel_TensorFlow_AMX_BF16_Training.py",
         "python -m ipykernel install --user --name=tensorflow",
-        "jupyter nbconvert --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelTensorFlow_AMX_BF16_Training.ipynb"
+        "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_AMX_BF16_Training.ipynb"
       ]
     }]
   },
