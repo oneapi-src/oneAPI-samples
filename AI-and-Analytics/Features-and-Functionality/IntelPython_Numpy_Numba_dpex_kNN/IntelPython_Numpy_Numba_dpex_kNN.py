@@ -336,6 +336,7 @@ X_test_dpt = dpnp.asarray(X_test.values, device="cpu")
 
 numba_dpex.call_kernel(
     knn_numba_dpex,
+    numba_dpex.Range(len(X_test.values)),
     X_train_dpt,
     y_train_dpt,
     X_test_dpt,
