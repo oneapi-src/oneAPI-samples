@@ -41,14 +41,14 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get AI Tools**
 
-Required AI Tools:  Intel® Extension for PyTorch* - (CPU) or (GPU) 
+Required AI Tools:  Intel® Extension for PyTorch* - (CPU or GPU) 
 
 If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
 **2. (Offline Installer) Activate the AI Tools bundle base environment**
-<!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
+
 If the default path is used during the installation of AI Tools:
 ```
 source $HOME/intel/oneapi/intelpython/bin/activate
@@ -58,7 +58,8 @@ If a non-default path is used:
 source <custom_path>/bin/activate
 ```
  
-**3. (Offline Installer) Activate relevant Conda environment**
+**3. (Offline Installer) Activate relevant Conda environment** 
+
 For CPU
 ```
 conda activate pytorch  
@@ -92,40 +93,49 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Docker](#docker)
 
-### AI Tools Offline Installer (Validated)  
+### AI Tools Offline Installer (Validated) 
+
 **1. Register Conda kernel to Jupyter Notebook kernel**
+
 For CPU
+
 If the default path is used during the installation of AI Tools:
 
 ```
 $HOME/intel/oneapi/intelpython/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch
 ```
+
 If a non-default path is used:
 ```
 <custom_path>/bin/python -m ipykernel install --user --name=pytorch
 ```
 
 For GPU
+
 If the default path is used during the installation of AI Tools:
 
 ```
-$HOME/intel/oneapi/intelpython/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch-gpu
+$HOME/intel/oneapi/intelpython/envs/pytorch-gpu/bin/python -m ipykernel install --user --name=pytorch-gpu
 ```
+
 If a non-default path is used:
 ```
 <custom_path>/bin/python -m ipykernel install --user --name=pytorch-gpu
 ```
-2. Launch Jupyter Notebook.
+**2. Launch Jupyter Notebook.**
 ```
 jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
 ```
-3. Follow the instructions to open the URL with the token in your browser.
-4. Select the Notebook.
+**3. Follow the instructions to open the URL with the token in your browser.**
+
+**4. Select the Notebook.**
      ```
      oneCCL_Bindings_GettingStarted.ipynb
      ```
-5. Change kernel to **pytorch** or **pytorch-gpu**.
-6. Run every cell in the Notebook in sequence.
+     
+**5. Change kernel to **pytorch** or **pytorch-gpu**.**
+
+**6. Run every cell in the Notebook in sequence.**
 
 ### Docker
 AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
