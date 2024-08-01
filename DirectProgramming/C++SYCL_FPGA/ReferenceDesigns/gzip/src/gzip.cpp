@@ -196,6 +196,7 @@ struct KernelInfo {
   buffer<unsigned, 1> *current_crc;
   buffer<char, 1> *pobuf;
   buffer<char, 1> *pibuf;
+  char *pobuf_decompress;
 
   uint32_t buffer_crc[kMinBufferSize];
   uint32_t refcrc;
@@ -318,6 +319,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
                                 : new buffer<char, 1>(input_alloc_size);
       kinfo[eng][i].pobuf =
           i >= 3 ? kinfo[eng][i - 3].pobuf : new buffer<char, 1>(outputSize);
+      kinfo[eng][i].pobuf_decompress = (char *)malloc(kinfo[eng][i].file_size);
     }
   }
 
@@ -525,6 +527,7 @@ int CompressFile(queue &q, std::string &input_file, std::vector<std::string> out
           free(kinfo[eng][i].poutput_buffer);
         }
       }
+      free(kinfo[eng][i].pobuf_decompress);
     }
     free(kinfo[eng]);
   }

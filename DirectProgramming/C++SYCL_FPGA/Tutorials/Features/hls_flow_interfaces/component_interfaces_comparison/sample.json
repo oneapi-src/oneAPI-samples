@@ -1,7 +1,7 @@
 {
     "guid": "7d8482f5-39f1-4cf1-aa2e-a1f72cfc47cb",
     "name": "Component Interfaces Comparison",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials", "Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS Flow: Interfaces"],
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Getting Started Tutorials"],
     "description": "Intel® FPGA tutorial introducing different invocation/data interfaces that can be used for IP components",
     "toolchain": ["icpx"],
     "os": ["linux", "windows"],

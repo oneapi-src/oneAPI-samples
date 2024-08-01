@@ -35,8 +35,6 @@
 
 #include <helper_cuda.h>
 
-#include <cmath>
-#include <complex>
 #include <algorithm>
 #include <time.h>
 #include <limits.h>
