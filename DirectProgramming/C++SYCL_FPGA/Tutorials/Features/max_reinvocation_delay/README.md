@@ -206,7 +206,7 @@ Now, the first iteration of the `i+1`th  invocation of the inner loop will launc
    max_reinvocation_delay.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

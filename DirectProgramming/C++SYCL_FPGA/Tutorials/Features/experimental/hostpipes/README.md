@@ -397,7 +397,7 @@ using D2HPipe = cl::sycl::ext::intel::experimental::pipe<
    hostpipes.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

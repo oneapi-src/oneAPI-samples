@@ -296,12 +296,7 @@ You can perform the QR decomposition of the set of matrices repeatedly. This ste
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   qrd.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

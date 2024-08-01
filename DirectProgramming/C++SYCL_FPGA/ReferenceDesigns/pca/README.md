@@ -466,12 +466,7 @@ Additionally, the `cmake` build system can be configured using the following par
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   pca.fpga.exe <path to data/abalone.csv>
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

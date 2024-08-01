@@ -251,6 +251,8 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
+> **Note**: Hardware runs are not supported on Windows.
+
 ### Example of Output
 
 ```bash
