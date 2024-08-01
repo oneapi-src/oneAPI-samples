@@ -97,7 +97,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 **1. Register Conda kernel to Jupyter Notebook kernel**
 
-For CPU
+**For CPU**
 
 If the default path is used during the installation of AI Tools:
 
@@ -110,7 +110,7 @@ If a non-default path is used:
 <custom_path>/bin/python -m ipykernel install --user --name=pytorch
 ```
 
-For GPU
+**For GPU**
 
 If the default path is used during the installation of AI Tools:
 
@@ -133,7 +133,7 @@ jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
      oneCCL_Bindings_GettingStarted.ipynb
      ```
      
-**5. Change kernel to **pytorch** or **pytorch-gpu**.**
+**5. Change kernel to ```**pytorch**``` or ```**pytorch-gpu**```.**
 
 **6. Run every cell in the Notebook in sequence.**
 
