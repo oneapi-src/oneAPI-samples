@@ -41,7 +41,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 **1. Get AI Tools**
 
-Required AI Tools: < ><!-- List specific AI Tools that needs to be installed before running this sample --> 
+Required AI Tools:  Intel® Extension for PyTorch* - (CPU) or (GPU) 
 
 If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
@@ -59,22 +59,24 @@ source <custom_path>/bin/activate
 ```
  
 **3. (Offline Installer) Activate relevant Conda environment**
-<!-- specify relevant conda environment name in Offline Installer for this sample -->
+For CPU
 ```
-conda activate <offline-conda-env-name>  
+conda activate pytorch  
 ``` 
-
+For GPU
+```
+conda activate pytorch-gpu
+```
+ 
 **4. Clone the GitHub repository**
-<!-- for oneapi-samples: git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/<samples-folder>/<individual-sample-folder> -->
-<!-- for migrated samples - provide git clone command for individual repo and cd to sample dir --> 
+
 ``` 
-git clone <link-to-the-repo>.git
-cd <path-to-sample-dir>
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_oneCCL_Bindings_For_PyTorch_GettingStarted
 ```
 
 **5. Install dependencies**
-<!-- It is required to have requirement.txt file in sample dir. It should list additional libraries, such as matplotlib, ipykernel etc. -->
+
 >**Note**: Before running the following commands, make sure your Conda/Python environment with AI Tools installed is activated
 
 ```
@@ -91,13 +93,27 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 * [Docker](#docker)
 
 ### AI Tools Offline Installer (Validated)  
-1. If you have not already done so, activate the AI Tools bundle base environment. If you used the default location to install AI Tools, open a terminal and type the following
+**1. Register Conda kernel to Jupyter Notebook kernel**
+For CPU
+If the default path is used during the installation of AI Tools:
+
 ```
-source $HOME/intel/oneapi/intelpython/bin/activate
+$HOME/intel/oneapi/intelpython/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch
 ```
-If you used a separate location, open a terminal and type the following
+If a non-default path is used:
 ```
-source <custom_path>/bin/activate
+<custom_path>/bin/python -m ipykernel install --user --name=pytorch
+```
+
+For GPU
+If the default path is used during the installation of AI Tools:
+
+```
+$HOME/intel/oneapi/intelpython/envs/pytorch/bin/python -m ipykernel install --user --name=pytorch-gpu
+```
+If a non-default path is used:
+```
+<custom_path>/bin/python -m ipykernel install --user --name=pytorch-gpu
 ```
 2. Launch Jupyter Notebook.
 ```
@@ -108,7 +124,7 @@ jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
      ```
      oneCCL_Bindings_GettingStarted.ipynb
      ```
-5. Change kernel to **PyTorch** or **PyTorch-GPU**.
+5. Change kernel to **pytorch** or **pytorch-gpu**.
 6. Run every cell in the Notebook in sequence.
 
 ### Docker
