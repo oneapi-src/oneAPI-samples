@@ -237,6 +237,7 @@ import numba_dpex
 
 @numba_dpex.kernel
 def knn_numba_dpex(
+    item: numba_dpex.kernel_api.Item,
     train,
     train_labels,
     test,
@@ -245,8 +246,8 @@ def knn_numba_dpex(
     votes_to_classes_lst,
 ):
     dtype = train.dtype
-    i = numba_dpex.get_global_id(0)
-    queue_neighbors = numba_dpex.private.array(shape=(3, 2), dtype=dtype)
+    i = item.get_id(0)
+    queue_neighbors = numba_dpex.kernel_api.PrivateArray(shape=(3, 2), dtype=dtype)
 
     for j in range(k):
         x1 = train[j, 0]
@@ -333,8 +334,15 @@ X_train_dpt = dpnp.asarray(X_train.values, device="cpu")
 y_train_dpt = dpnp.asarray(y_train.values, device="cpu")
 X_test_dpt = dpnp.asarray(X_test.values, device="cpu")
 
-knn_numba_dpex[numba_dpex.Range(len(X_test.values))](
-    X_train_dpt, y_train_dpt, X_test_dpt, 3, predictions, votes_to_classes_lst
+numba_dpex.call_kernel(
+    knn_numba_dpex,
+    numba_dpex.Range(len(X_test.values)),
+    X_train_dpt,
+    y_train_dpt,
+    X_test_dpt,
+    3,
+    predictions,
+    votes_to_classes_lst,
 )
 
 
