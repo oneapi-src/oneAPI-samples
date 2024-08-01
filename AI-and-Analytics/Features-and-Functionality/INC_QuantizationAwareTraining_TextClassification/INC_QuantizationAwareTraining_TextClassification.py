@@ -49,7 +49,7 @@ save_dir = "quantized_model"
 
 from datasets import load_dataset
 
-dataset = load_dataset("emotion", name="split")
+dataset = load_dataset("emotion", name="split", trust_remote_code=True)
 dataset['train'][:10]
 
 
