@@ -1,14 +1,14 @@
-# `Intel® Python NumPy vs numba-dpex` Sample
+# `Intel® Python: NumPy vs numba-dpex` Sample
 
-The `Intel® Python NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy, Numba, and Data-parallel Extension for Numba* (numba-dpex).
+The `Intel® Python: NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy*, Numba*, and Data Parallel Extension for Numba* (numba-dpex).
 
-| Area                    | Description
+| Property                | Description
 | :---                    | :---
-| What you will learn     | How to program using the Data-parallel Extension for Numba* (numba-dpex)
-| Time to complete        | 5 minutes
 | Category                | Code Optimization
+| What you will learn     | How to program using the Data Parallel Extension for Numba* (numba-dpex)
+| Time to complete        | 5 minutes
 
->**Note**: The libraries used in this sample are available in Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/en-us/oneapi/ai-kit).
+>**Note**: This sample is validated on Intel® Distribution for Python* Offline Installer and AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Purpose
 
@@ -20,109 +20,82 @@ In this sample, you will run a k-nearest neighbors algorithm using 3 different I
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
 | Hardware                | CPU
-| Software                | Intel® AI Analytics Toolkit (AI Kit)
-
-### For Local Development Environments
-
-You will need to download and install the following toolkits, tools, and components to use the sample.
-
-- **Intel® AI Analytics Toolkit (AI Kit)**
-
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
-
-- **Jupyter Notebook**
-
-  Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
-### For Intel® DevCloud
-
-The necessary tools and components are already installed in the environment. You do not need to install additional components. See [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/) for information.
+| Software                | Intel® Distribution for Python*
 
 ## Key Implementation Details
 
 This sample code is implemented for the CPU using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
 
->**Note**: Read *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
+The sample tutorial contains one Jupyter Notebook and one Python script. You can use either.
 
-## Run the `Intel® Python NumPy vs numba-dpex` Sample
+## Environment Setup
+You will need to download and install the following toolkits to use the sample.
+<!-- Use numbered steps instead of subheadings -->
 
-### On Linux*
+**1. Get Intel® Distribution for Python***
 
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script in the root of your oneAPI installation.
->
-> Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
-> - For private installations: ` . ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
->
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+If you have not already, install Intel® Distribution for Python* via [Installer](https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html?operatingsystem=linux&linux-install-type=offline).
 
-#### Activate Conda
+**2. Activate the Intel® Distribution for Python\* base environment**
+<!-- this step is from AI Tools GSG, please don't modify unless GSG is updated -->
+If the default path is used during the installation of Intel® Distribution for Python*:
+```
+source $HOME/intelpython3/bin/activate
+```
+If a non-default path is used:
+```
+source <custom_path>/bin/activate
+```
 
-1. Activate the Conda environment.
-   ```
-   conda activate base
-   ```
-   By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+**3. Clone the GitHub repository**
+<!-- for oneapi-samples: git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/<samples-folder>/<individual-sample-folder> -->
+<!-- for migrated samples - provide git clone command for individual repo and cd to sample dir --> 
+``` 
+git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_Numpy_Numba_dpex_kNN
+```
 
-   You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
+**4. Install dependencies**
+<!-- It is required to have requirement.txt file in sample dir. It should list additional libraries, such as matplotlib, ipykernel etc. -->
+>**Note**: Before running the following commands, make sure your Conda environment is activated
 
-   ```
-   conda create --name usr_base --clone base
-   conda activate usr_base
-   ```
+```
+pip install ipykernel
+pip install notebook
+``` 
+For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
-#### Run the Python Script
+## Run the Sample
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_Numpy_Numba_dpex_kNN#environment-setup) is completed.
 
-1. Change to the sample directory.
-2. Run the script.
-   ```
-   python IntelPython_Numpy_Numba_dpex_kNN.py
-   ```
+### Intel® Distribution for Python* Offline Installer (Validated)
 
-#### Run the Jupyter Notebook (Optional)
+**1. Register Conda kernel to Jupyter Notebook kernel**
 
-1. Launch Jupyter Notebook.
-   ```
-   jupyter notebook --ip=0.0.0.0
-   ```
-2. Follow the instructions to open the URL with the token in your browser.
-3. Locate and select the Notebook.
-   ```
-   IntelPython_Numpy_Numba_dpex_kNN.ipynb
-   ```
-4. Run every cell in the Notebook in sequence.
+If the default path is used during the installation of Intel® Distribution for Python*:
+```
+$HOME/intelpython3/bin/python -m ipykernel install --user --name=base
+```
+If a non-default path is used:
+```
+<custom_path>/bin/python -m ipykernel install --user --name=base
+```
+**2. Launch Jupyter Notebook** 
+<!-- add other flags to jupyter notebook command if needed, such as port 8888 or allow-root -->
+```
+jupyter notebook --ip=0.0.0.0
+```
+**3. Follow the instructions to open the URL with the token in your browser**
 
-#### Troubleshooting
-
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
-### Build and Run the Sample on Intel® DevCloud (Optional)
-
->**Note**: For more information on using Intel® DevCloud, see the Intel® oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started/) page.
-
-1. Open a terminal on a Linux* system.
-2. Log in to the Intel® DevCloud.
-   ```
-   ssh devcloud
-   ```
-3. If the sample is not already available, download the samples from GitHub.
-   ```
-   git clone https://github.com/oneapi-src/oneAPI-samples.git
-   ```
-4. Change to the sample directory.
-5. Launch Jupyter Notebook.
-6. Locate and select the Notebook.
-   ```
-   IntelPython_Numpy_Numba_dpex_kNN.ipynb
-   ```
-7. Run every cell in the Notebook in sequence.
-8. Review the output.
-9. Disconnect from Intel® DevCloud.
-	```
-	exit
-	```
+**4. Select the Notebook**
+<!-- add sample file name -->
+```
+IntelPython_Numpy_Numba_dpex_kNN.ipynb
+```
+**5. Change the kernel to `base`**
+  <!-- specify relevant kernel name(s), for example `pytorch` -->
+**6. Run every cell in the Notebook in sequence**
 
 ## Example Output
 
@@ -136,9 +109,17 @@ Numba_dpex accuracy 0.7222222222222222
 [CODE_SAMPLE_COMPLETED_SUCCESFULLY]
 ```
 
+## Related Samples
+
+* [Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
+* [`Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex` Sample](https://github.com/oneapi-src/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_numba-dpex_Genetic_Algorithm/README.md)
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
 for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
