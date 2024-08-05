@@ -70,45 +70,79 @@ Edit the line in `src/multiply.hpp` to select the version of the multiply functi
 `#define MULTIPLY multiply1`.
 
 
-### On a Linux* System
-	To build the SYCL version:
-	cd <sample dir>
-	cmake .
-	make
-
-    Clean the program
+### On Linux*
+1. Change to the sample directory.
+2. Build the program.
+   ```
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
+3. Run the program:
+   ```
+   ./matrix_multiply
+   ```
+4. Clean the program using:
+   ```
     make clean
+   ```
 
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-``make VERBOSE=1``
+If an error occurs, you can get more details by running `make` with `VERBOSE=1`:
+```
+make VERBOSE=1
+```
 For more comprehensive troubleshooting, use the Diagnostics Utility for
 Intel® oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
-### On a Windows* System Using Visual Studio 2017 or newer
-   * Open Visual Studio 2017
-   * Select Menu "File > Open > Project/Solution", find "matrix_multiply" folder and select "matrix_multiply.sln"
-   * Select Menu "Project > Build" to build the selected configuration
-   * Select Menu "Debug > Start Without Debugging" to run the program
 
-### on Windows - command line - Build the program using MSBuild
-    DPCPP Configurations:
-    Release - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
-    Debug - MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
+### On Windows*
+**Using Visual Studio***
 
+Build the program using **Visual Studio 2017** or newer.
+1. Change to the sample directory.
+2. Right-click on the solution file and open the solution in the IDE.
+2. Right-click on the project in **Solution Explorer** and select **Rebuild**.
 
+**Using MSBuild**
+
+1. Open "x64 Native Tools Command Prompt for VS2017" or "x64 Native Tools Command Prompt for VS2019" or whatever is appropriate for your Visual Studio* version.
+
+2. Change to the sample directory.
+
+3. Run the following command:
+   ```
+   MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
+   ```
+
+   or
+
+   ```
+   MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
+   ```
+4. Navigate to the Release/Debug folder (example: x64/Release)
+5. Run the program:
+   ```
+   matrix_multiply.exe
+   ```
 
 ### Example of Output
 ```
-./matrix.dpcpp
-
+Address of buf1 = 0000020CBE24B040
+Offset of buf1 = 0000020CBE24B180
+Address of buf2 = 0000020CBEA5E040
+Offset of buf2 = 0000020CBEA5E1C0
+Address of buf3 = 0000020CBF26C040
+Offset of buf3 = 0000020CBF26C100
+Address of buf4 = 0000020CBFA71040
+Offset of buf4 = 0000020CBFA71140
 Using multiply kernel: multiply1
 
-Running on Intel(R) Gen9
+Running on Intel(R) Iris(R) Xe Graphics
 
-Elapsed Time: 0.539631s
+Elapsed Time: 0.978114s
 ```
 
 ## Running an Intel® Advisor analysis
