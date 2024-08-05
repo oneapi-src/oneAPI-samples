@@ -82,27 +82,52 @@ dependencies and permissions errors.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
 
-### On a Windows* System Using Visual Studio 2017 or newer
-   * Open Visual Studio 2017 or later
-     * Select Menu "File > Open > Project/Solution", find "matrix_multiply" folder and select "matrix_multiply.sln"
-     * Select Menu "Project > Build" to build the selected configuration
-     * Select Menu "Debug > Start Without Debugging" to run the program
+### On a Windows* System Using Visual Studio* Version 2019 or Newer
 
-### on Windows - command line - Build the program using MSBuild
-- DPCPP Configurations:
-  - Release - `MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"`
-  - Debug - `MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"`
+#### Command Line using MSBuild
+
+1. DPCPP Configurations:
+  - Release 
+  ```
+    MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
+  ```
+  - Debug
+  ```
+    MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Debug"
+  ```
+2. Navigate to the Configuration folder (example: x64 folder)
+
+3. Run the program: 
+```
+  matrix_multiply.exe
+```
+
+#### Visual Studio IDE
+
+1. Open Visual Studio 2019 or later
+
+2. Select Menu "File > Open > Project/Solution", find "matrix_multiply" folder and select "matrix_multiply.sln"
+
+3. Select Menu "Build > Build Solution" to build the selected configuration
+
+4. After Build, select Menu "Debug > Start Without Debugging" to run the program
 
 
 ## Example of Output
 ```
-./matrix.dpcpp
-
+Address of buf1 = 00000252964F2040
+Offset of buf1 = 00000252964F2180
+Address of buf2 = 0000025296D09040
+Offset of buf2 = 0000025296D091C0
+Address of buf3 = 000002529751B040
+Offset of buf3 = 000002529751B100
+Address of buf4 = 0000025297D20040
+Offset of buf4 = 0000025297D20140
 Using multiply kernel: multiply1
 
-Running on Intel(R) Gen9
+Running on Intel(R) Iris(R) Xe Graphics
 
-Elapsed Time: 0.539631s
+Elapsed Time: 0.42209s
 ```
 
 ## Running an Intel&reg; VTune&trade; Profiler analysis
