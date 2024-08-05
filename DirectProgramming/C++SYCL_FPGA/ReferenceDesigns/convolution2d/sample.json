@@ -1,0 +1,71 @@
+{
+  "guid": "3F0589DA-1CAD-46FA-9AE8-5C5797EA3C82",
+  "name": "Streaming Video - 2D Convolution",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
+  "description": "Reference design demonstrating a 2D convolution IP component that can be exported to Intel® Quartus® Prime",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "README.md",
+      "ReferenceDesigns/convolution2d",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make fpga_emu",
+          "./conv.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/convolution2d",
+          "nmake fpga_emu",
+          "conv.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/convolution2d",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Reference Designs and End to End"
+}

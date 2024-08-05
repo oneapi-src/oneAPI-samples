@@ -1,0 +1,25 @@
+{
+  "guid": "FCC565D0-95E4-4ED2-9426-9FD6D85F7C39",	
+  "name": "guided_OceanFFT_SYCLMigration",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Spectral Methods"],
+  "description": "This sample shows the demonstrates the use of SYCL queues for Ocean height field on GPU devices.",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+	"linux": [{
+		"steps": [
+			"mkdir build",
+      		        "cd build",
+           		"cmake ..",
+			"cmake -D INTEL_MAX_GPU=1 ..",
+           		"make",
+			"make run_sm"
+		 ]
+	}]
+   },
+  "expertise": "Concepts and Functionality"
+}

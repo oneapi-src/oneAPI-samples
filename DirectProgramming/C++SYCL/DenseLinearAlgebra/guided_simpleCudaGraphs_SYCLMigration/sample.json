@@ -1,0 +1,26 @@
+{
+    "guid": "225B484F-632E-4B4C-9D4C-C88158EAA2CB",
+    "name": "Simple Cuda Graphs Sample",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
+    "description": "Migration of simpleCudaGraphs from CUDA to SYCL, demonstrates usage of Taskflow programming model and SYCL Graph extension in place of CUDA Graph APIs",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run_op1",
+                          "make run_op2"
+                   ]
+          }]
+  
+    },
+    "expertise": "Concept and Functionality"
+  }

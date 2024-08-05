@@ -16,7 +16,7 @@
 #include <numeric>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl/rng/device.hpp"
 
 using namespace oneapi;
@@ -47,7 +47,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
             [=](sycl::item<1> item) {
                 size_t id_global = item.get_id(0);
                 sycl::vec<float, vec_size> r;
-                sycl::ext::oneapi::atomic_ref<size_t, sycl::memory_order::relaxed,
+                sycl::atomic_ref<size_t, sycl::memory_order::relaxed,
                                     sycl::memory_scope::device,
                                     sycl::access::address_space::global_space> atomic_counter { count_acc[0] };
                 size_t count = 0;

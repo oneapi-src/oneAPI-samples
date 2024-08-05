@@ -1,0 +1,62 @@
+program matrix_multiply
+   use omp_lib
+   implicit none
+   integer :: i, j, k, myid, m, n
+   real, allocatable, dimension(:,:) :: a, b, c, c_serial
+
+   n = 2600
+
+!$omp parallel
+   myid = OMP_GET_THREAD_NUM()
+   if (myid .eq. 0) then
+      print *, 'matrix size ', n
+      print *, 'Number of procs is ', OMP_GET_NUM_THREADS()
+   endif
+!$omp end parallel
+
+   allocate(a(n,n), b(n,n), c(n,n), c_serial(n,n))
+
+! Initialize matrices
+   do j=1,n
+     do i=1,n
+       a(i,j) = i + j - 1
+       b(i,j) = i - j + 1
+     enddo
+   enddo
+   c = 0.0
+   c_serial = 0.0
+
+!$omp parallel do shared(a, b, c, n), private(i, j, k)
+! parallel compute matrix multiplication.
+   do j=1,n
+     do i=1,n
+       do k=1,n
+         c(i,j) = c(i,j) + a(i,k) * b(k,j)
+       enddo
+     enddo
+   enddo
+!$omp end parallel do
+
+! serial compute matrix multiplication
+   do j=1,n
+     do i=1,n
+       do k=1,n
+         c_serial(i,j) = c_serial(i,j) + a(i,k) * b(k,j)
+       enddo
+     enddo
+   enddo
+
+! verify result
+   do j=1,n
+     do i=1,n
+       if (c_serial(i,j) .ne. c(i,j)) then
+         print *,'FAILED'
+         exit
+       endif
+     enddo
+   enddo
+
+   print *,'PASSED'
+
+end program matrix_multiply
+

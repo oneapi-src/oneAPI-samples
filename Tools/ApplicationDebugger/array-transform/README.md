@@ -6,12 +6,9 @@ through this sample *after* you familiarize yourself with the basics of
 SYCL programming, and *before* you start using the debugger.
 
 
-| Optimized for       | Description
+| Area                | Description
 |---------------------|--------------
-| OS                  | Linux* Ubuntu* 18.04 to 20.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
-| Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
-| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
-| What you will learn | Essential debugger features for effective debugging on CPU, GPU, and FPGA emulator
+| What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator
 | Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
 
 This sample accompanies 
@@ -27,14 +24,32 @@ scheduler-locking and SIMD lane views.  The sample is intended
 for exercising the debugger, not for performance benchmarking.
 
 The debugger supports debugging kernels that run on the CPU, GPU, or
-accelerator devices.  For convenience, the `array-transform`
-code sample provides the ability to select the target device by passing the
-program `cpu`, `gpu`, or `accelerator` as the command-line argument.
+accelerator devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
+to select device.  The default device is Level Zero GPU device, if available.
+For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
 The selected device is displayed in the output.  Concrete instructions
 about how to run the program and example outputs are given further
 below.  For complete setup and usage instructions, see [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
+## Prerequisites
+
+| Optimized for                                    | Description
+|--------------------------------------------------|--------------
+| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10, 11
+| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series
+| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler
+
+> **Note** although the sample can be run on all supported by Intel® oneAPI
+> Base Toolkit platforms, the GPU debugger can debug only kernels offloaded
+> onto devices specified at “Hardware to debug offloaded kernels on GPUs”
+> while running with the L0 backend.  When the GPU device is different from
+> the listed above, e.g., an integrated graphics device, breakpoints inside
+> the kernel won't be hit.  In such case, try to switch the offload to a CPU
+> device by using ONEAPI_DEVICE_SELECTOR environment variable.
+
+We recommend to first make sure that the program you intend to debug is running
+correctly on CPU and only after that switch the offload to GPU.
 
 ## Key Implementation Details
 
@@ -67,10 +82,10 @@ To learn more about the extensions, see the
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
 > - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
@@ -89,7 +104,6 @@ The include folder is located at
 `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development
 system.
 
-
 ### Running Samples In DevCloud
 
 If running a sample in the Intel DevCloud, remember that you must
@@ -98,14 +112,12 @@ batch or interactive mode.  For the array transform sample, a node
 with GPU and an interactive shell is recommended.
 
 ```
-$ qsub -I -l nodes=1:gpu:ppn=2
+qsub -I -l nodes=1:gpu:ppn=2
 ```
 
 For more information, see the Intel® oneAPI
 Base Toolkit Get Started Guide
 (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
-
-
 
 ### Auto-Attach
 
@@ -115,14 +127,13 @@ offloaded to the GPU can be debugged conveniently.  Auto-attach is
 by default enabled.  To turn this feature off, if desired (e.g., if
 interested in debugging CPU or FPGA-emu only), do:
 ```
-$ export INTELGT_AUTO_ATTACH_DISABLE=1
+export INTELGT_AUTO_ATTACH_DISABLE=1
 ```
 
 To turn the feature back on:
 ```
-$ unset INTELGT_AUTO_ATTACH_DISABLE
+unset INTELGT_AUTO_ATTACH_DISABLE
 ```
-
 
 ### On a Linux* System
 
@@ -130,57 +141,52 @@ Perform the following steps:
 
 1.  Build the program using the following `cmake` commands.
     ```
-    $ cd array-transform
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make
+    cd array-transform
+    mkdir build
+    cd build
+    cmake ..
+    make
     ```
     > Note: The cmake configuration enforces the `Debug` build type.
 
 2.  Run the program:
     ```
-    $ ./array-transform <device>
+    ./array-transform
     ```
-    > Note: `<device>` is the type of the device type to offload the kernel.
-    > Use `cpu`, `gpu`, or `accelerator` to select the CPU, GPU, or the
-    > FPGA emulator device, respectively.  E.g.:
+    > Note: to specify a device type to offload the kernel, use
+    > the `ONEAPI_DEVICE_SELECTOR` environment variable.
+    > E.g.  to restrict the offload only to CPU devices use:
     ```
-    $ ./array-transform cpu
+    ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform
     ```
 
 3.  Start a debugging session:
     ```
-    $ gdb-oneapi --args array-transform <device>
+    gdb-oneapi array-transform
     ```
 
 4.  Clean the program using:
     ```
-    $ make clean
+    make clean
     ```
 
 By default, CMake configures the build for Just-in-Time (JIT)
 compilation of the kernel.  However, it also offers an option for
 *Ahead-of-Time* (AoT) compilation.  To compile the kernel
-ahead-of-time for a specific device, set the `DPCPP_COMPILE_TARGET`
+ahead-of-time for a specific device, set the `SYCL_COMPILE_TARGET`
 option to the desired device during configuration.  For CPU, use the
 `cpu` value; for FPGA-emu, use the `fpga-emu` value.  Other values are
 assumed to be for GPU and are passed directly to the GPU AoT
 compiler.
 
-> *Hint:* Run `ocloc compile --help` to see available GPU device options.
-
-For example, to do AoT compilation for a `kbl` GPU device:
+For example, to do AoT compilation for a specific GPU device ID:
 
 ```
-$ cmake .. -DDPCPP_COMPILE_TARGET=kbl
+cmake .. -DSYCL_COMPILE_TARGET=<device id>
 ```
+where the `<device id>` specifies the target device, e.g., "xe".
 
-or for the Gen12 family:
-
-```
-$ cmake .. -DDPCPP_COMPILE_TARGET=gen12LP
-```
+> *Hint:* Run `ocloc compile --help` to see all available GPU device options.
 
 > **Note**: AoT compilation is particularly helpful in larger
 > applications where compiling with debug information takes
@@ -198,7 +204,7 @@ Intel® oneAPI Toolkits, which provides system checks to find missing
 dependencies and permissions errors.
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
+### On a Windows* System Using Visual Studio* Version 2019 or Newer
 
 #### Command line using MSBuild
 
@@ -207,18 +213,18 @@ dependencies and permissions errors.
 
 #### Visual Studio IDE
 
-1. Right-click on the solution files and open via either Visual Studio 2017
-   or in 2019.
+1. Right-click on the solution files and open via either Visual Studio 2019
+   or in 2022.
 
 2. Select Menu "Build > Build Solution" to build the selected configuration.
 
 3. Select Menu "Debug > Start Debugging" to run the program.
 
-4. The solution file is configured to pass `cpu` as the argument to the
-   program.  To select a different device, go to the project's "Configuration
-   Properties > Debugging" and set the "Command Arguments" field.
-   Use `gpu` or `accelerator` to target the GPU or the FPGA emulator device,
-   respectively.
+4. The solution file is configured to set `ONEAPI_DEVICE_SELECTOR=*:cpu`
+   for Local Windows Debugging.  That setting causes the program to offload
+   on a CPU device.  To select a different device, go to the project's
+   "Configuration Properties > Debugging" and edit the "Environment" field.
+   Modify the value of `ONEAPI_DEVICE_SELECTOR` as you need.
 
 For detailed instructions about starting and using the debugger,
 please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
@@ -227,55 +233,49 @@ please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](
 ### Example Outputs
 
 ```
-$ gdb-oneapi -q --args ./array-transform cpu
+ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
 [SYCL] Using device: [Intel(R) Core(TM) i9-7900X processor] from [Intel(R) OpenCL]
 [Switching to Thread 0x7fffe3bfe700 (LWP 925)]
 
-Thread 16 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
-(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
-(cl::sycl::item<1, true>) const (this=0x7fffe3bfcfa8, index=...) at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 4 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0x7fffc85582c8, index=sycl::_V1::id<1> = {...}) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
 ```
-$ gdb-oneapi -q --args ./array-transform accelerator
+ONEAPI_DEVICE_SELECTOR=*:fpga gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 [Switching to Thread 0x7fffe1ffb700 (LWP 2387)]
 
-Thread 9 "array-transform" hit Breakpoint 1, main::$_1::operator()<cl::sycl::handler>
-(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()<cl::sycl::item<1, true> >
-(cl::sycl::item<1, true>) const (this=0x7fffe1ff9fa8, index=...) at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 6 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0x7fffc08cef48, index=sycl::_V1::id<1> = {...}) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
 ```
-$ gdb-oneapi -q --args ./array-transform gpu
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
-(gdb) break 56
-Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 56.
+(gdb) break 54
+Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
 (gdb) run
 ...<snip>...
-[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
+intelgt: gdbserver-ze started for process 18496.
 ...<snip>...
-[Switching to Thread 1073741824 lane 0]
+[SYCL] Using device: [Intel(R) Data Center GPU Flex Series 140 [0x56c1]] from [Intel(R) Level-Zero]
+[Switching to Thread 1.153 lane 0]
 
-Thread 2.2 hit Breakpoint 1,  with SIMD lanes [0-7], main::$_1::operator()
-<cl::sycl::handler>(cl::sycl::handler&) const::{lambda(auto:1)#1}::operator()
-<cl::sycl::item<1, true> >(cl::sycl::item<1, true>) const (this=0x2f690c0, index=...)
-at array-transform.cpp:56
-56              int element = in[index];  // breakpoint-here
+Thread 2.153 hit Breakpoint 1, with SIMD lanes [0-7], main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(sycl::_V1::id<1>)#1}::operator()(sycl::_V1::id<1>) const (this=0xffffd556ab1898d0, index=...) at array-transform.cpp:54
+54              int element = in[index];  // breakpoint-here
 (gdb)
 ```
 
@@ -348,6 +348,9 @@ at array-transform.cpp:56
   the program counter.  `x /8wd &count` shows eight words in decimal
   format located at the address of `count`.
 
+`info devices`
+: List available GPU devices.
+
 `set nonstop on/off`
 : Enable/disable the nonstop mode.  This command may **not** be used
   after the program has started.
@@ -359,6 +362,14 @@ at array-transform.cpp:56
 : Save the JIT'ed objfile that contains address `addr` into the file
   `filename`.  Useful for extracting the kernel when running on
   the CPU device.
+
+`info sharedlibrary`
+: List the loaded shared libraries.  While debugging the kernel offloaded
+  to GPU, use this command to find out the memory range of the kernel binary.
+
+`dump binary memory <filename> <start_addr> <end_addr>`
+: Dump the memory range from `start_addr` to `end_addr` into the file
+ `filename`.
 
 `cond [-force] <N> <exp>`
 : Define the expression `exp` as the condition for breakpoint `N`.

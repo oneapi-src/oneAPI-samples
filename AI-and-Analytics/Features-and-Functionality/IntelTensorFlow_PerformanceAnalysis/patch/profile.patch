@@ -1,0 +1,26 @@
+--- pretrained_word_embeddings.py	2023-03-18 05:25:00.115795211 +0800
++++ pretrained_word_embeddings_new.py	2023-03-18 05:30:50.295782459 +0800
+@@ -280,7 +280,8 @@
+ model.compile(
+     loss="sparse_categorical_crossentropy", optimizer="rmsprop", metrics=["acc"]
+ )
+-model.fit(x_train, y_train, batch_size=128, epochs=20, validation_data=(x_val, y_val))
++tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logdir-train", profile_batch=(10,20))
++model.fit(x_train, y_train, batch_size=128, epochs=2, validation_data=(x_val, y_val), callbacks=[tensorboard_callback])
+ 
+ """
+ ## Export an end-to-end model
+@@ -297,8 +298,13 @@
+ preds = model(x)
+ end_to_end_model = keras.Model(string_input, preds)
+ 
++options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3,
++                                                       python_tracer_level = 1,
++                                                       device_tracer_level = 1)
++tf.profiler.experimental.start('./logdir-inf', options = options)
+ probabilities = end_to_end_model.predict(
+     [["this message is about computer graphics and 3D modeling"]]
+ )
++tf.profiler.experimental.stop()
+ 
+ class_names[np.argmax(probabilities[0])]

@@ -81,7 +81,7 @@ def create_model(w, c, classes):
     model.add(Dense(classes))
     model.add(Activation('softmax'))
 
-    opt = Adam(lr=0.001)
+    opt = Adam(learning_rate=0.001)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 

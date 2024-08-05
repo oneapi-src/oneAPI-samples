@@ -1,0 +1,100 @@
+---
+MainSourceFile:  '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/dpct_output/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.dp.hpp'
+Replacements:
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1634
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1802
+    Length:          18
+    ReplacementText: 'sycl::mul24((unsigned int)(a), (unsigned int)(b))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Offset:          1867
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
+    Digest:          95398843ac58eeeeb2dff34595645e1e
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/rkris11/work/git/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

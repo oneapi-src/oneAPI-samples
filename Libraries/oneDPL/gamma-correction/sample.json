@@ -23,11 +23,12 @@
     "windows": [
       {
         "steps": [
-          "MSBuild gamma-correction.sln /t:Rebuild /p:Configuration=\"Release\"",
+          "MSBuild gamma-correction.sln /t:Rebuild /p:Configuration=Release",
           "cd x64\\Release",
           "gamma-correction.exe"
         ]
       }
     ]
-  }
+  },
+  "expertise": "Concepts and Functionality"
 }

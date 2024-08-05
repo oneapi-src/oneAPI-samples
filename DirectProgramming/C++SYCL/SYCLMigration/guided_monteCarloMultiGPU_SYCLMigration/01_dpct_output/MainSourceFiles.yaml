@@ -1,0 +1,1472 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          1729
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          1806
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2080
+    Length:          0
+    ReplacementText: "\n#include <chrono>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2697
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2744
+    Length:          39
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(i)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2786
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1005:20: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2837
+    Length:          5
+    ReplacementText: 'get_major_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2855
+    Length:          5
+    ReplacementText: 'get_minor_version()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          2895
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3107
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3152
+    Length:          46
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(GPUIndex)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          3232
+    Length:          19
+    ReplacementText: 'get_max_compute_units()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4088
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1093:21: The \"plan->device\" device may be not the one intended for use. Adjust the selected device if needed.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4106
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4133
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4139
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4184
+    Length:          50
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(plan->device)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4475
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4617
+    Length:          24
+    ReplacementText: 'dpct::get_in_order_queue().wait()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4736
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4879
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4904
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4942
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4960
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          4983
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5020
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5034
+    Length:          0
+    ReplacementText: "\n  std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5073
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:22: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5093
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5122
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5145
+    Length:          31
+    ReplacementText: 'DPCT_CHECK_ERROR((streams[i]) = dpct::get_current_device().create_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5199
+    Length:          29
+    ReplacementText: 'DPCT_CHECK_ERROR(events[i] = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5504
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:23: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5524
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5553
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5561
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5608
+    Length:          52
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(plan[i].device)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5825
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:24: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5845
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5874
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          5897
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6045
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:25: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6065
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6094
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6165
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1012:26: Detected kernel execution time measurement pattern and generated an initial code for time measurements in SYCL. You can change the way time is measured depending on your goals.\n    */\n    /*\n    DPCT1024:27: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6169
+    Length:          0
+    ReplacementText: "events_ct1_i = std::chrono::steady_clock::now(); \n    "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6185
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(*events[i] = streams[i]->ext_oneapi_submit_barrier())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6268
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:28: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6288
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6317
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6324
+    Length:          31
+    ReplacementText: 'events[i]->wait_and_throw()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6448
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:29: The \"plan[i].device\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6468
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6497
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6554
+    Length:          29
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().destroy_queue(streams[i]))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          6606
+    Length:          27
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(events[i]))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          8619
+    Length:          26
+    ReplacementText: 'DPCT_CHECK_ERROR(GPU_N = dpct::dev_mgr::instance().device_count())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11474
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11534
+    Length:          60
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(optionSolver[i].device)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          11669
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12713
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12773
+    Length:          60
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(optionSolver[i].device)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          12908
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14552
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:30: The \"i\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14572
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Offset:          14588
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1563
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1619
+    Length:          0
+    ReplacementText: "\n#include <dpct/rng_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          1621
+    Length:          20
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          3933
+    Length:          17
+    ReplacementText: 'dpct::rng::host_rng_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          3975
+    Length:          58
+    ReplacementText: 'DPCT_CHECK_ERROR(gen = dpct::rng::create_host_rng(dpct::rng::random_engine_type::mcg59, dpct::cpu_device().default_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4033
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4091
+    Length:          45
+    ReplacementText: 'DPCT_CHECK_ERROR(gen->set_seed(seed)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4136
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4277
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(gen->generate_gaussian(samples, pathN, 0.0, 1.0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4328
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4701
+    Length:          27
+    ReplacementText: 'DPCT_CHECK_ERROR(gen.reset()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Offset:          4728
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1741
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1780
+    Length:          32
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1813
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1872
+    Length:          0
+    ReplacementText: "\n#include <dpct/rng_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          1873
+    Length:          27
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2186
+    Length:          35
+    ReplacementText: '#include "MonteCarlo_reduction.dp.hpp"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2221
+    Length:          0
+    ReplacementText: "\n#include <cmath>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2505
+    Length:          0
+    ReplacementText: ' dpct_type_164939'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2809
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          2965
+    Length:          28
+    ReplacementText: 'sycl::native::exp(MuByT + VBySqrtT * r)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3050
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3214
+    Length:          25
+    ReplacementText: 'sycl::exp(MuByT + VBySqrtT * r)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3685
+    Length:          0
+    ReplacementText: "/*\nDPCT1110:3: The total declared local variable size in device function MonteCarloOneBlockPerOption exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3692
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3737
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1032:31: A different random number generator is used. You may need to adjust the code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3741
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3892
+    Length:          0
+    ReplacementText: ",\n    const sycl::nd_item<3> &item_ct1, real *s_SumCall, real *s_Sum2Call"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3932
+    Length:          16
+    ReplacementText: 'sycl::group<3>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3955
+    Length:          23
+    ReplacementText: 'item_ct1.get_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          3982
+    Length:          25
+    ReplacementText: 'sycl::sub_group'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4017
+    Length:          28
+    ReplacementText: 'item_ct1.get_sub_group()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4080
+    Length:          33
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4116
+    Length:          34
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4196
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4210
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4223
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4297
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1032:32: A different random number generator is used. You may need to adjust the code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4299
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4365
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4422
+    Length:          9
+    ReplacementText: 'item_ct1.get_group_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4836
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          4871
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5009
+    Length:          26
+    ReplacementText: 'localState.generate<oneapi::mkl::rng::device::gaussian<float>, 1>()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5385
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1065:4: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5389
+    Length:          13
+    ReplacementText: 'item_ct1.barrier()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5539
+    Length:          0
+    ReplacementText: ', item_ct1'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5549
+    Length:          0
+    ReplacementText: "/*\nDPCT1032:33: A different random number generator is used. You may need to adjust the code.\n*/\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5556
+    Length:          11
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5587
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5623
+    Length:          0
+    ReplacementText: ",\n                           const sycl::nd_item<3> &item_ct1"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5671
+    Length:          11
+    ReplacementText: 'item_ct1.get_local_id(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5685
+    Length:          10
+    ReplacementText: 'item_ct1.get_group(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5698
+    Length:          10
+    ReplacementText: 'item_ct1.get_local_range(2)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5818
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1105:34: The mcg59 random number generator is used. The subsequence argument \"item_ct1.get_local_id(2)\" is ignored. You need to verify the migration.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          5820
+    Length:          93
+    ReplacementText: 'rngState[tid] = dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>(item_ct1.get_group(2) + item_ct1.get_group_range(2) * device_id, 0)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6196
+    Length:          105
+    ReplacementText: 'DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(sizeof(__TOptionData) * (plan->optionCount), dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6322
+    Length:          105
+    ReplacementText: 'DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(sizeof(__TOptionValue) * (plan->optionCount), dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6448
+    Length:          113
+    ReplacementText: 'DPCT_CHECK_ERROR(plan->h_OptionData = (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount), dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6619
+    Length:          113
+    ReplacementText: 'DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>((plan->optionCount), dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6810
+    Length:          115
+    ReplacementText: 'DPCT_CHECK_ERROR(plan->rngStates = sycl::malloc_device<dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>>(plan->gridSize * THREAD_N, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6946
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memset'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          6977
+    Length:          0
+    ReplacementText: "                             /*\n                             DPCT1032:36: A different random number generator is used. You may need to adjust the code.\n                             */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7041
+    Length:          11
+    ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7054
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7140
+    Length:          75
+    ReplacementText: "dpct::get_in_order_queue().submit(\n    [&](sycl::handler &cgh) {\n      dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>> * plan_rngStates_ct0 = plan->rngStates;\n      int plan_device_ct1 = plan->device;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) * sycl::range<3>(1, 1, THREAD_N), sycl::range<3>(1, 1, THREAD_N)), \n        [=](sycl::nd_item<3> item_ct1) {\n          rngSetupStates(plan_rngStates_ct0, plan_device_ct1, item_ct1);\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          7215
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8111
+    Length:          25
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(plan->rngStates, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8136
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8157
+    Length:          31
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(plan->h_CallValue, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8188
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8209
+    Length:          32
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(plan->h_OptionData, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8241
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8262
+    Length:          27
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(plan->d_CallValue, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8289
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8310
+    Length:          28
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(plan->d_OptionData, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8338
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          8414
+    Length:          12
+    ReplacementText: 'dpct::queue_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9181
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9306
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9364
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9373
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9379
+    Length:          208
+    ReplacementText: "stream->submit(\n    [&](sycl::handler &cgh) {\n      /*\n      DPCT1101:37: 'SUM_N' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<real, 1> s_SumCall_acc_ct1(sycl::range<1>(256/*SUM_N*/), cgh);\n      /*\n      DPCT1101:38: 'SUM_N' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n      */\n      sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(sycl::range<1>(256/*SUM_N*/), cgh);\n\n      dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>> * plan_rngStates_ct0 = plan->rngStates;\n      const __TOptionData * plan_d_OptionData_ct1 = (__TOptionData *)(plan->d_OptionData);\n      __TOptionValue * plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);\n      int plan_pathN_ct3 = plan->pathN;\n      int plan_optionCount_ct4 = plan->optionCount;\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) * sycl::range<3>(1, 1, THREAD_N), sycl::range<3>(1, 1, THREAD_N)), \n        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n          MonteCarloOneBlockPerOption(plan_rngStates_ct0, plan_d_OptionData_ct1, plan_d_CallValue_ct2, plan_pathN_ct3, plan_optionCount_ct4, item_ct1, s_SumCall_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), s_Sum2Call_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: true
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9587
+    Length:          1
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9680
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(stream->memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9804
+    Length:          58
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9862
+    Length:          8
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Offset:          9871
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarloMultiGPU.cpp'
+    Digest:          9b6751ce6ca8975f456d2a766b2b31e9
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_gold.cpp'
+    Digest:          159520f3d2870e5dd7ce9e3a94b71419
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_kernel.cu'
+    Digest:          a980a50dca71a0a0651d3dc4f5a45f22
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

@@ -1,0 +1,27 @@
+{
+  "guid": "DC76A250-50AE-4A52-9292-43A680BC20CA",
+  "name": "Guided Matrix Multiplication Illegal SLM Size",
+  "categories": ["Toolkit/oneAPI Tools/Application Debugger"],
+  "description": "The Guided Matrix Multiplication Illegal SLM Size sample demonstrates a guided approach to debugging incorrect usage when reserving more memory for a work-group than there is space, also called Shared Local Memory (SLM). It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.",
+  "toolchain": ["icpx"],
+  "dependencies": ["debugger"],
+  "languages": [{
+    "cpp": {}
+  }],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["cmake"],
+  "ciTests": {
+  "linux": [{
+    "id": "slm-size",
+    "steps": [
+      "mkdir build",
+      "cd build",
+      "cmake ..",
+      "make"
+      ]
+    }]
+  },
+  "expertise": "Tutorial"
+}
+

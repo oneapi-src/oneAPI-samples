@@ -7,5 +7,6 @@
   "os": [ "linux", "windows" ],
   "builder": [ "ide", "make" ],
   "targetDevice": [ "CPU" ],
-  "ciTests": { "linux": [], "windows": [] }
+  "ciTests": { "linux": [], "windows": [] },
+  "expertise": "Concepts and Functionality"
 }

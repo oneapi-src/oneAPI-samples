@@ -1,0 +1,159 @@
+{
+  "guid": "D84B84D9-E7B6-4B1B-90D7-BAA030C9737B",
+  "name": "Hardware Reuse",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/task_sequence"],
+  "description": "An Intel® FPGA tutorial that demonstrates how to reuse hardware in your FPGA designs by using loops and task sequences.",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/task_sequence/hardware_reuse",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_naive",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=NAIVE",
+          "make fpga_emu",
+          "./hw_reuse_naive.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_naive",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=NAIVE",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_loop",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=LOOP",
+          "make fpga_emu",
+          "./hw_reuse_loop.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_loop",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=LOOP",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_task_sequence",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
+          "make fpga_emu",
+          "./hw_reuse_tseq.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_task_sequence",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_naive",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=NAIVE",
+          "nmake fpga_emu",
+          "hw_reuse_naive.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_naive",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=NAIVE",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_loop",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=LOOP",
+          "nmake fpga_emu",
+          "hw_reuse_loop.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_loop",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=LOOP",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_task_sequence",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/hardware_reuse -DTYPE=TASK_SEQUENCE",
+          "nmake fpga_emu",
+          "hw_reuse_tseq.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_task_sequence",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/experimental/hardware_reuse -DTYPE=TASK_SEQUENCE",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

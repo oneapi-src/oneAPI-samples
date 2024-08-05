@@ -1,0 +1,31 @@
+{
+  "name": "tachyon",
+  "description": "Simple ray tracer demonstrating the use of Intel&reg; oneTBB and OpenMP along with optimizations based on Intel VTune&trade; Profiler results.",
+  "categories": ["Toolkit/oneAPI Tools/VTune Profiler"],
+  "toolchain": ["dpcpp"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb", "vtune"],
+  "targetDevice": ["CPU"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "altindex": true,
+  "guid": "8C866569-DCEC-43D1-85EB-E725FBF18591",
+  "ciTests": {
+         "linux": [{
+                "steps": [
+                        "cd linux",
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make"
+                 ]
+        }],
+        "windows": [{
+                "steps": [
+                        "cd windows",
+                        "MSBuild tachyon_sample.sln /t:Rebuild /p:Configuration=Release"
+                ]
+        }]
+  },
+  "expertise": "Getting Started"
+}

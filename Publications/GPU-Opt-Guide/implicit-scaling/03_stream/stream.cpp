@@ -7,6 +7,7 @@
 // Code for STREAM:
 #include <iostream>
 #include <omp.h>
+#include <cstdint>
 
 // compile via:
 // icpx -O2 -fiopenmp -fopenmp-targets=spir64 ./stream.cpp
@@ -14,11 +15,11 @@
 int main()
 {
     constexpr int64_t N = 256 * 1e6;
-    constexpr int64_t bytes = N * sizeof(int);
+    constexpr int64_t bytes = N * sizeof(int64_t);
 
-    int *a = static_cast<int *>(malloc(bytes));
-    int *b = static_cast<int *>(malloc(bytes));
-    int *c = static_cast<int *>(malloc(bytes));
+    int64_t *a = static_cast<int64_t *>(malloc(bytes));
+    int64_t *b = static_cast<int64_t *>(malloc(bytes));
+    int64_t *c = static_cast<int64_t *>(malloc(bytes));
 
     #pragma omp target enter data map(alloc:a[0:N])
     #pragma omp target enter data map(alloc:b[0:N])
@@ -40,8 +41,7 @@ int main()
         if (irep == 10)
             time = omp_get_wtime();
 
-        #pragma omp target teams distribute parallel for \
-            simd simdlen(32) thread_limit(256)
+        #pragma omp target teams distribute parallel for simd
         for (int i = 0; i < N; ++i)
         {
             c[i] = a[i] + b[i];
@@ -61,7 +61,7 @@ int main()
         }
     }
 
-    const int64_t streamed_bytes = 3 * N * sizeof(int);
+    const int64_t streamed_bytes = 3 * N * sizeof(int64_t);
 
     std::cout << "bandwidth = " << (streamed_bytes / time) * 1E-9
         << " GB/s" << std::endl;

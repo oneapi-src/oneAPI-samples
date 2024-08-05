@@ -1,12 +1,12 @@
 #include <iostream>
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 // Hand-coded SYCL maxloc reduction operator.
 
 template <typename T, typename I>
 struct pair {
-    bool operator > (const pair& o) const {
-        return val >= o.val || (val == o.val && idx >= o.idx);
+    bool operator < (const pair& o) const {
+        return val <= o.val || (val == o.val && idx <= o.idx);
     }
     T val;
     I idx;

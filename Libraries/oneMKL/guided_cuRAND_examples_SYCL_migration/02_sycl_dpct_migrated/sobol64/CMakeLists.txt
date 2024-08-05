@@ -1,0 +1,14 @@
+add_executable(sobol64_lognormal sobol64_lognormal.cpp)
+add_executable(sobol64_normal sobol64_normal.cpp)
+add_executable(sobol64_poisson sobol64_poisson.cpp)
+add_executable(sobol64_uniform sobol64_uniform.cpp)
+
+target_link_libraries(sobol64_lognormal OpenCL sycl)
+target_link_libraries(sobol64_normal OpenCL sycl)
+target_link_libraries(sobol64_poisson OpenCL sycl)
+target_link_libraries(sobol64_uniform OpenCL sycl)
+
+add_custom_target(run_sobol64_lognormal sobol64_lognormal)
+add_custom_target(run_sobol64_normal sobol64_normal)
+add_custom_target(run_sobol64_poisson sobol64_poisson)
+add_custom_target(run_sobol64_uniform sobol64_uniform)

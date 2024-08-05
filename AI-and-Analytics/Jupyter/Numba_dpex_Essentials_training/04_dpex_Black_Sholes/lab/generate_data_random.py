@@ -44,8 +44,6 @@ def gen_rand_data(nopt, dtype=np.float64):
     return (
         rnd.uniform(S0L, S0H, nopt).astype(dtype),
         rnd.uniform(XL, XH, nopt).astype(dtype),
-        #np.linspace(S0L, S0H, nopt).astype(dtype),
-        #np.linspace(XL, XH, nopt).astype(dtype),
         rnd.uniform(TL, TH, nopt).astype(dtype),
     )
 

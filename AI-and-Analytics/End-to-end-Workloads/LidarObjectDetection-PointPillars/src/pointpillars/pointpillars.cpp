@@ -24,6 +24,8 @@
 #include <thread>
 #include "devicemanager/devicemanager.hpp"
 
+#include <sycl/backend/opencl.hpp>
+
 namespace pointpillars {
 PointPillars::PointPillars(const float score_threshold, const float nms_threshold, const PointPillarsConfig &config)
     : config_(config),
@@ -134,45 +136,50 @@ void PointPillars::InitComponents() {
 void PointPillars::SetupPfeNetwork() {
   std::size_t num_threads = 1;
   std::string device = "CPU";
-  if (devicemanager::GetCurrentDevice().is_cpu()) {
-    // get number of threads supported by the current CPU
-    num_threads = std::thread::hardware_concurrency();
-  }
 
-  // if the chosen exceution device is GPU, also use this for OpenVINO
+  // If the chosen execution device is GPU, also use this for OpenVINO
   if (devicemanager::GetCurrentDevice().is_gpu()) {
     device = "GPU";
   }
 
-  // Setup InferenceEngine and load the network file
-  InferenceEngine::Core inference_engine;
-  auto network = inference_engine.ReadNetwork(pfe_model_file_ + ".onnx");
+  // Enable model caching and read the model
+  ov::Core core;
+  core.set_property(ov::cache_dir("pointpillars_cache"));
+  auto model = core.read_model(pfe_model_file_);
 
-  // Setup device configuration
-  if (device == "CPU") {
-    inference_engine.SetConfig({{CONFIG_KEY(CPU_THREADS_NUM), std::to_string(num_threads)}}, device);
-  }
-
-  // Setup network input configuration
-  // The PillarFeatureExtraction (PFE) network has multiple inputs, which all use FP32 precision
-  for (auto &item : network.getInputsInfo()) {
-    item.second->setPrecision(InferenceEngine::Precision::FP32);
-    if (item.first == "num_points_per_pillar") {
-      item.second->setLayout(InferenceEngine::Layout::NC);
-    } else {
-      item.second->setLayout(InferenceEngine::Layout::NCHW);
+  // Configure input pre-processing
+  ov::preprocess::PrePostProcessor ppp(model);
+  for (auto input : model->inputs()) {
+    auto& input_info = ppp.input(input.get_any_name());
+    ov::Layout layout = "NCHW";
+    if (input.get_any_name() == "num_points_per_pillar") {
+      layout = "NC";
     }
+    input_info.tensor()
+            .set_element_type(ov::element::f32)
+            .set_layout(layout);
+    input_info.model().set_layout(layout);
+  }
+  model = ppp.build();
+
+  // Setup device configuration and load the network onto the execution device
+  if (device == "CPU") {
+    pfe_exe_network_ = core.compile_model(model, device,
+                                          ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY));
+  } else {
+    assert(device == "GPU");
+
+    auto queue = sycl::get_native<sycl::backend::opencl>(devicemanager::GetCurrentQueue());
+    auto remote_context = ov::intel_gpu::ocl::ClContext(core, queue);
+    pfe_exe_network_ = core.compile_model(model, remote_context,
+                                          ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY));
   }
 
-  // Setup network output configuration
-  // The PillarFeatureExtraction (PFE) network has one output, which uses FP32 precision
-  for (auto &item : network.getOutputsInfo()) {
-    item.second->setPrecision(InferenceEngine::Precision::FP32);
-    item.second->setLayout(InferenceEngine::Layout::NCHW);
-  }
-
-  // Finally load the network onto the execution device
-  pfe_exe_network_ = inference_engine.LoadNetwork(network, device);
+  // Create the inference request
+  const auto if_req_t1 = std::chrono::high_resolution_clock::now();
+  pfe_infer_request_ = pfe_exe_network_.create_infer_request();
+  const auto if_req_t2 = std::chrono::high_resolution_clock::now();
+  std::cout << "    PFE InferRequest create " << std::chrono::duration_cast<std::chrono::milliseconds>(if_req_t2 - if_req_t1).count() << "ms\n";
 
   // create map of network inputs to memory objects
   pfe_input_map_.insert({"pillar_x", dev_pillar_x_});
@@ -184,67 +191,105 @@ void PointPillars::SetupPfeNetwork() {
   pfe_input_map_.insert({"y_sub_shaped", dev_y_coors_for_sub_shaped_});
   pfe_input_map_.insert({"mask", dev_pillar_feature_mask_});
 
-  // Create InferenceEngine InfeRequest for PFE
-  pfe_infer_request_ptr_ =  pfe_exe_network_.CreateInferRequestPtr();
+  if (devicemanager::GetCurrentDevice().is_cpu()) {
+    for (auto &input : pfe_exe_network_.inputs()) {
+      auto input_tensor = ov::Tensor(input.get_element_type(), input.get_shape(),
+                                     pfe_input_map_[input.get_any_name()]);
+      pfe_input_tensor_map_.insert({input.get_any_name(), input_tensor});
+    }
+    auto output = pfe_exe_network_.output();
+    pfe_output_tensor_ = ov::Tensor(output.get_element_type(), output.get_shape(), pfe_output_);
+  }
+  else {
+    auto remote_context = pfe_exe_network_.get_context()
+        .as<ov::intel_gpu::ocl::ClContext>();
+
+    for (auto &input : pfe_exe_network_.inputs()) {
+      ov::RemoteTensor input_tensor =
+          remote_context.create_tensor(input.get_element_type(), input.get_shape(),
+                                    pfe_input_map_[input.get_any_name()]);
+      pfe_input_tensor_map_.insert({input.get_any_name(), input_tensor});
+    }
+    auto output = pfe_exe_network_.output();
+    pfe_output_tensor_ = remote_context.create_tensor(
+        output.get_element_type(), output.get_shape(), pfe_output_);
+  }
 }
 
 void PointPillars::SetupRpnNetwork(bool resize_input) {
   std::size_t num_threads = 1;
   std::string device = "CPU";
-  if (devicemanager::GetCurrentDevice().is_cpu()) {
-    // get number of threads supported by the current CPU
-    num_threads = std::thread::hardware_concurrency();
-  }
 
   // if the chosen exceution device is GPU, also use this for OpenVINO
   if (devicemanager::GetCurrentDevice().is_gpu()) {
     device = "GPU";
   }
 
-  // Setup InferenceEngine and load the network file
-  InferenceEngine::Core inference_engine;
-  auto network = inference_engine.ReadNetwork(rpn_model_file_ + ".onnx");
+  // Enable model caching and read the model
+  ov::Core core;
+  core.set_property(ov::cache_dir("pointpillars_cache"));
+  auto model = core.read_model(rpn_model_file_);
 
-  // Setup device configuration
-  if (device == "CPU") {
-    inference_engine.SetConfig({{CONFIG_KEY(CPU_THREADS_NUM), std::to_string(num_threads)}}, device);
-  }
+  // Configure input pre-processing
+  ov::preprocess::PrePostProcessor ppp(model);
+  auto& input = ppp.input();
+  input.tensor()
+          .set_element_type(ov::element::f32)
+          .set_layout("NCHW");
+  input.model().set_layout("NCHW");
 
-  // Setup network input configuration
-  // The RegionProposalNetwork (RPN) network has one input, which uses FP32 precision
-  for (auto &item : network.getInputsInfo()) {
-    item.second->setPrecision(InferenceEngine::Precision::FP32);
-    item.second->setLayout(InferenceEngine::Layout::NCHW);
-  }
-
-  // A resizing of the RPN input is possible and required depening on the pillar and LiDAR configuration
   if (resize_input) {
-    auto input_shapes = network.getInputShapes();
-    std::string input_name;
-    InferenceEngine::SizeVector input_shape;
-    std::tie(input_name, input_shape) = *input_shapes.begin();  // only one input
-    input_shape[0] = 1;                                         // set batch size to the first input dimension
-    input_shape[1] = config_.pillar_features;                   // set batch size to the first input dimension
-    input_shape[2] = config_.grid_y_size;                       // changes input height to the image one
-    input_shape[3] = config_.grid_x_size;                       // changes input width to the image one
+    model->reshape({1, config_.pillar_features, config_.grid_y_size, config_.grid_x_size});
+  }
+  model = ppp.build();
 
-    input_shapes[input_name] = input_shape;
-    network.reshape(input_shapes);
+  // Setup device configuration and load the network onto the execution device
+  if (device == "CPU") {
+    rpn_exe_network_ = core.compile_model(model, device,
+                                          ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY));
+  } else {
+    assert(device == "GPU");
+
+    auto queue = sycl::get_native<sycl::backend::opencl>(devicemanager::GetCurrentQueue());
+    auto remote_context = ov::intel_gpu::ocl::ClContext(core, queue);
+    rpn_exe_network_ = core.compile_model(model, remote_context,
+                                          ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY));
   }
 
-  // Setup network output configuration
-  // The PillarFeatureExtraction (PFE) network has multiple outputs, which all use FP32 precision
-  for (auto &item : network.getOutputsInfo()) {
-    item.second->setPrecision(InferenceEngine::Precision::FP32);
-    item.second->setLayout(InferenceEngine::Layout::NCHW);
+  // Create the inference request
+  const auto if_req_t1 = std::chrono::high_resolution_clock::now();
+  rpn_infer_request_ = rpn_exe_network_.create_infer_request();
+  const auto if_req_t2 = std::chrono::high_resolution_clock::now();
+  std::cout << "    RPN InferRequest create " << std::chrono::duration_cast<std::chrono::milliseconds>(if_req_t2 - if_req_t1).count() << "ms\n";
+
+  if (devicemanager::GetCurrentDevice().is_cpu()) {
+    auto input_info = rpn_exe_network_.input();
+    scattered_feature_tensor_ =
+        ov::Tensor(input_info.get_element_type(), input_info.get_shape(), dev_scattered_feature_);
+
+    int i = 0;
+    float* outputs[] = {rpn_1_output_, rpn_2_output_, rpn_3_output_};
+    for (auto& output : rpn_exe_network_.outputs()) {
+      rpn_output_tensors_[i] =
+          ov::Tensor(output.get_element_type(), output.get_shape(), outputs[i]);
+      i++;
+    }
   }
+  else {
+    auto remote_context = rpn_exe_network_.get_context()
+        .as<ov::intel_gpu::ocl::ClContext>();
 
-  // Finally load the network onto the execution device
-  rpn_exe_network_ = inference_engine.LoadNetwork(network, device);
+    auto input_info = rpn_exe_network_.input();
+    scattered_feature_tensor_ =
+        remote_context.create_tensor(input_info.get_element_type(), input_info.get_shape(), dev_scattered_feature_);
 
-  // Create InferenceEngine InferRequest for RPN
-  rpn_infer_request_ptr_ = rpn_exe_network_.CreateInferRequestPtr();
-
+    int i = 0;
+    float* outputs[] = {rpn_1_output_, rpn_2_output_, rpn_3_output_};
+    for (auto& output : rpn_exe_network_.outputs()) {
+      rpn_output_tensors_[i] = remote_context.create_tensor(output.get_element_type(), output.get_shape(), outputs[i]);
+      i++;
+    }
+  }
 }
 
 void PointPillars::DeviceMemoryMalloc() {
@@ -272,7 +317,7 @@ void PointPillars::DeviceMemoryMalloc() {
   dev_anchor_mask_ = sycl::malloc_device<int>(num_anchor_, queue);
 
   // for scatter kernel
-  dev_scattered_feature_ = sycl::malloc_shared<float>(num_features_ * grid_y_size_ * grid_x_size_, queue);
+  dev_scattered_feature_ = sycl::malloc_device<float>(num_features_ * grid_y_size_ * grid_x_size_, queue);
 
   // for filter
   dev_filtered_box_ = sycl::malloc_device<float>(num_anchor_ * num_output_box_feature_, queue);
@@ -305,6 +350,12 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
     queue.memset(dev_pillar_y_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_z_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_i_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
+    queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
+    queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
+    queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
+    queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
+    queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+
     queue.memset(dev_x_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_y_coors_for_sub_shaped_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
     queue.memset(dev_pillar_feature_mask_, 0, max_num_pillars_ * max_num_points_per_pillar_ * sizeof(float));
@@ -312,7 +363,9 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
     // wait until all memory operations were completed
     queue.wait();
   } else {
-    auto dev_pillar_x_auto = dev_pillar_x_;
+    // For GPU, the queue.memset waste time, using GPU kernel to assign the value use less.
+    auto e = queue.submit([&](auto &h){
+      auto dev_pillar_x_auto = dev_pillar_x_;
       auto dev_pillar_y_auto = dev_pillar_y_;
       auto dev_pillar_z_auto = dev_pillar_z_;
       auto dev_pillar_i_auto = dev_pillar_i_;
@@ -323,7 +376,6 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
       auto x = max_num_pillars_;
       auto y = max_num_points_per_pillar_;
 
-    queue.submit([&](auto &h){
       h.parallel_for(sycl::range<1>(y*x),[=](auto index) {
         dev_pillar_x_auto[index] = 0;
         dev_pillar_y_auto[index] = 0;
@@ -333,15 +385,16 @@ void PointPillars::PreProcessing(const float *in_points_array, const int in_num_
         dev_y_coors_for_sub_shaped_auto[index] = 0;
         dev_pillar_feature_mask_auto[index] = 0;
       });
-    }).wait();
+    });
+    e.wait();
+    queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+    queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
+    queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
+    queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
+    queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
+    queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
+    queue.wait();
   }
-  queue.memset(dev_sparse_pillar_map_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
-  queue.memset(dev_x_coors_, 0, max_num_pillars_ * sizeof(int));
-  queue.memset(dev_y_coors_, 0, max_num_pillars_ * sizeof(int));
-  queue.memset(dev_num_points_per_pillar_, 0, max_num_pillars_ * sizeof(float));
-  queue.memset(dev_anchor_mask_, 0, num_anchor_ * sizeof(int));
-  queue.memset(dev_cumsum_workspace_, 0, grid_y_size_ * grid_x_size_ * sizeof(int));
-  queue.wait();
 
   // Run the PreProcessing operations and generate the input feature map
   preprocess_points_ptr_->DoPreProcess(dev_points, in_num_points, dev_x_coors_, dev_y_coors_,
@@ -383,55 +436,49 @@ void PointPillars::Detect(const float *in_points_array, const int in_num_points,
   // Next, the inference can be excuted
   // At last, the results have to be copied back to the SYCL device
   std::cout << "   PFE Inference";
-  // Fill input tensor with data
-  for (auto &item : pfe_exe_network_.GetInputsInfo()) {
-    // Make PFE input data be accessible by OpenVINO
-    InferenceEngine::Blob::Ptr input_blob = pfe_infer_request_ptr_->GetBlob(item.first);
-    InferenceEngine::SizeVector dims = input_blob->getTensorDesc().getDims();
-    auto data =
-        input_blob->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>();
 
-    if (devicemanager::GetCurrentDevice().is_gpu()) {
-      // copying data directly with SYCL to the input_blob buffer does not work for discrete accelerators
-      // copy the data first to the host, and then to the input_blob buffer
-      float *temp_buffer_;
-      temp_buffer_ = new float[input_blob->size()];
-      queue.memcpy(temp_buffer_, pfe_input_map_[item.first], input_blob->size() * sizeof(float)).wait();
-      memcpy(data, temp_buffer_, input_blob->size() * sizeof(float));
-    } else {
-      queue.memcpy(data, pfe_input_map_[item.first], input_blob->size() * sizeof(float)).wait();
-    }
+  // Fill input tensor with data
+  for (auto &input : pfe_exe_network_.inputs()) {
+    // Make PFE input data be accessible by OpenVINO
+    // TODO: test inefficiency in GPU & CPU
+    pfe_infer_request_.set_tensor(input.get_any_name(), pfe_input_tensor_map_[input.get_any_name()]);
   }
+  auto pfe_output_name = pfe_exe_network_.output().get_any_name();
+  pfe_infer_request_.set_tensor(pfe_output_name, pfe_output_tensor_);
 
   // Launch the inference
-  pfe_infer_request_ptr_->StartAsync();
+  pfe_infer_request_.start_async();
+
+  cl_command_queue q = sycl::get_native<sycl::backend::opencl>(devicemanager::GetCurrentQueue());
+  //clEnqueueBarrierWithWaitList(q, 0, nullptr, nullptr);
 
   // Wait for the inference to finish
-  auto inference_result_status = pfe_infer_request_ptr_->Wait(InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
-  if (InferenceEngine::OK != inference_result_status) {
-    throw std::runtime_error("PFE Inference failed");
-  }
+  pfe_infer_request_.wait();
   const auto t3 = std::chrono::high_resolution_clock::now();
   std::cout << " - " << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << "ms\n";
 
-  // get PFE inference ouput
-  auto output_name = pfe_exe_network_.GetOutputsInfo().begin()->first;
-  auto output_blob = pfe_infer_request_ptr_->GetBlob(output_name)->buffer().as<float *>();
+  // get PFE inference output
+//  auto output_name = pfe_exe_network_.output().get_any_name();
+//  auto output_tensor = pfe_infer_request_.get_tensor(pfe_output_name);
+//  auto output_blob = output_tensor.data<const float>();
 
   // 4th step: Perform scatter operation, i.e. convert from pillar features to top view image-like features
   std::cout << "   Scattering";
-  queue.memcpy(pfe_output_, output_blob, pfe_output_size_ * sizeof(float));
-  if(!devicemanager::GetCurrentDevice().is_gpu()) {
+//  queue.memcpy(pfe_output_, output_blob, pfe_output_size_ * sizeof(float));
+
+  if (!devicemanager::GetCurrentDevice().is_gpu()) {
     queue.memset(dev_scattered_feature_, 0, rpn_input_size_ * sizeof(float));
     queue.wait();
   } else {
-    queue.submit([&](auto &h){
+    // For GPU, the queue.memset waste time, using GPU kernel to assign the value use less.
+    auto e = queue.submit([&](auto &h){
       auto x = rpn_input_size_;
       auto dev_scattered_feature_auto = dev_scattered_feature_;
-      h.parallel_for(sycl::range<1>(x),[=](auto index) {
-        dev_scattered_feature_auto[index] = 0;
+      h.parallel_for(sycl::range<1>(x),[=](sycl::id<1> id) {
+        dev_scattered_feature_auto[id] = 0;
       });
-    }).wait();
+    });
+    e.wait();
   }
   scatter_ptr_->DoScatter(host_pillar_count_[0], dev_x_coors_, dev_y_coors_, pfe_output_, dev_scattered_feature_);
 
@@ -440,49 +487,22 @@ void PointPillars::Detect(const float *in_points_array, const int in_num_points,
 
   std::cout << "   RPN Inference";
   // 5th step is to execute the RegionProposal (RPN) network
-  // The required input data has to transfered from the SYCL device to be accessible by OpenVINO
+  // Therefore, first an inference request using OpenVINO has to be created
+  // Then, the required input data has to transfered from the SYCL device to be accessible by OpenVINO
   // Next, the inference can be excuted
   // At last, the results have to be copied back to the SYCL device
-  auto input_blob = rpn_infer_request_ptr_->GetBlob(rpn_exe_network_.GetInputsInfo().begin()->first);
   // Fill input tensor with data
-  auto data =
-      input_blob->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>();
-  if (devicemanager::GetCurrentDevice().is_gpu()) {
-    // copying data directly with SYCL to the input_blob buffer does not work for discrete accelerators
-    // copy the data first to the host, and then to the input_blob buffer
-    float *temp_buffer_;
-    temp_buffer_ = new float[input_blob->size()];
-    queue.memcpy(temp_buffer_, dev_scattered_feature_, input_blob->size() * sizeof(float)).wait();
-    memcpy(data, temp_buffer_, input_blob->size() * sizeof(float));
-  } else {
-    queue.memcpy(data, dev_scattered_feature_, input_blob->size() * sizeof(float)).wait();
+  auto input = rpn_infer_request_.get_compiled_model().input();
+  rpn_infer_request_.set_input_tensor(input.get_index(),
+                                      scattered_feature_tensor_);
+  int output_index = 0;
+  for (auto &output : rpn_exe_network_.outputs()) {
+    rpn_infer_request_.set_tensor(output.get_any_name(), rpn_output_tensors_[output_index++]);
   }
 
   // Start the inference and wait for the results
-  rpn_infer_request_ptr_->StartAsync();
-  inference_result_status = rpn_infer_request_ptr_->Wait(InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
-  if (InferenceEngine::OK != inference_result_status) {
-    throw std::runtime_error("RPN Inference failed");
-  }
-
-  // copy inference data to SYCL device
-  std::vector<InferenceEngine::Blob::Ptr> output_blobs;
-  for (auto &output : rpn_exe_network_.GetOutputsInfo()) {
-    output_blobs.push_back(rpn_infer_request_ptr_->GetBlob(output.first));
-  }
-
-  queue.memcpy(
-      rpn_1_output_,
-      output_blobs[0]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-      rpn_box_output_size_ * sizeof(float));
-  queue.memcpy(
-      rpn_2_output_,
-      output_blobs[1]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-      rpn_cls_output_size_ * sizeof(float));
-  queue.memcpy(
-      rpn_3_output_,
-      output_blobs[2]->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::FP32>::value_type *>(),
-      rpn_dir_output_size_ * sizeof(float));
+  rpn_infer_request_.start_async();
+  rpn_infer_request_.wait();
 
   queue.memset(dev_filter_count_, 0, sizeof(int));
   queue.wait();

@@ -1,0 +1,24 @@
+{
+  "guid": "35CA1763-E3E0-48A0-A2BF-AF0E52873B0C",
+  "name": "alignedTypes",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+  "description": "This sample demonstrates the access speed gap of aligned & misaligned types",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 ]
+        }]
+
+  },
+  "expertise": "Code Optimization"
+}

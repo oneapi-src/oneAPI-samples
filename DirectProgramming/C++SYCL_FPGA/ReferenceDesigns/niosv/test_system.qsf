@@ -1,0 +1,18 @@
+set_global_assignment -name TOP_LEVEL_ENTITY test_system
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 23.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "14:34:53  MAY 19, 2023"
+set_global_assignment -name LAST_QUARTUS_VERSION "24.1.0 Pro Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
+set_global_assignment -name DEVICE 10AS016C3U19E2LG
+set_global_assignment -name FAMILY "Arria 10"
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 2
+set_global_assignment -name IP_FILE ip/pd_system/pd_system_clock_in.ip
+set_global_assignment -name IP_FILE ip/pd_system/pd_system_reset_in.ip
+set_global_assignment -name QSYS_FILE pd_system.qsys
+set_global_assignment -name IP_FILE ip/pd_system/uart.ip
+set_global_assignment -name IP_FILE ip/pd_system/code_data_ram.ip
+set_global_assignment -name IP_FILE ip/pd_system/nios.ip
+set_global_assignment -name BOARD default
+set_global_assignment -name IP_FILE ip/pd_system/simple_dma_accelerator.ip

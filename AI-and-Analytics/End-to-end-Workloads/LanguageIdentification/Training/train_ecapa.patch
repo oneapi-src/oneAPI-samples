@@ -1,0 +1,71 @@
+--- train_ecapa.yaml.orig	2023-02-09 17:17:34.849537612 +0000
++++ train_ecapa.yaml	2023-02-09 17:19:42.936542193 +0000
+@@ -4,19 +4,19 @@
+ # ################################
+ 
+ # Basic parameters
+-seed: 1988
++seed: 1987
+ __set_seed: !apply:torch.manual_seed [!ref <seed>]
+ output_folder: !ref results/epaca/<seed>
+ save_folder: !ref <output_folder>/save
+ train_log: !ref <output_folder>/train_log.txt
+-data_folder: !PLACEHOLDER
++data_folder: ./
+ rir_folder: !ref <data_folder>
+ # skip_prep: False
+ 
+-shards_url: /data/voxlingua107_shards
++shards_url: /data/commonVoice_shards
+ train_meta: !ref <shards_url>/train/meta.json
+ val_meta: !ref <shards_url>/dev/meta.json
+-train_shards: !ref <shards_url>/train/shard-{000000..000507}.tar
++train_shards: !ref <shards_url>/train/shard-{000000..000000}.tar
+ val_shards: !ref <shards_url>/dev/shard-000000.tar
+ 
+ # Set to directory on a large disk if you are training on Webdataset shards hosted on the web
+@@ -25,7 +25,7 @@
+ ckpt_interval_minutes: 5
+ 
+ # Training parameters
+-number_of_epochs: 40
++number_of_epochs: 10
+ lr: 0.001
+ lr_final: 0.0001
+ sample_rate: 16000
+@@ -38,11 +38,11 @@
+ deltas: False
+ 
+ # Number of languages
+-out_n_neurons: 107
++out_n_neurons: 2
+ 
+ train_dataloader_options:
+-    num_workers: 4
+-    batch_size: 128
++    num_workers: 1
++    batch_size: 64
+ 
+ val_dataloader_options:
+     num_workers: 1
+@@ -138,3 +138,20 @@
+         classifier: !ref <classifier>
+         normalizer: !ref <mean_var_norm>
+         counter: !ref <epoch_counter>
++
++# Below most relevant for inference using self-trained model:
++
++pretrained_path: lang_id_commonvoice_model
++
++label_encoder: !new:speechbrain.dataio.encoder.CategoricalEncoder
++
++pretrainer: !new:speechbrain.utils.parameter_transfer.Pretrainer
++    loadables:
++        embedding_model: !ref <embedding_model>
++        classifier: !ref <classifier>
++        label_encoder: !ref <label_encoder>
++    paths:
++        embedding_model: !ref <pretrained_path>/embedding_model.ckpt
++        classifier: !ref <pretrained_path>/classifier.ckpt
++        label_encoder: !ref <pretrained_path>/label_encoder.txt
++

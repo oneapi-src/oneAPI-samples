@@ -15,7 +15,9 @@
 #define DEVKIND 0
 #endif
 
-template <int num_subdevices> struct mptr { float *p[num_subdevices]; };
+template <int num_subdevices> struct mptr {
+  float *p[num_subdevices];
+};
 
 int main(int argc, char **argv) {
   constexpr int SIZE = 8e6;
@@ -32,11 +34,11 @@ int main(int argc, char **argv) {
 
   for (int sdev = 0; sdev < num_subdevices; ++sdev) {
     device_ptr_a.p[sdev] =
-        static_cast<float *> malloc(TOTAL_SIZE * sizeof(float));
+        static_cast<float *>(malloc(TOTAL_SIZE * sizeof(float)));
     device_ptr_b.p[sdev] =
-        static_cast<float *> malloc(TOTAL_SIZE * sizeof(float));
+        static_cast<float *>(malloc(TOTAL_SIZE * sizeof(float)));
     device_ptr_c.p[sdev] =
-        static_cast<float *> malloc(TOTAL_SIZE * sizeof(float));
+        static_cast<float *>(malloc(TOTAL_SIZE * sizeof(float)));
 
 #pragma omp target enter data map(alloc                                        \
                                   : device_ptr_a.p[sdev] [0:TOTAL_SIZE])       \

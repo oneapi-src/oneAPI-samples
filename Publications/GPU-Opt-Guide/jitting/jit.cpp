@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+// Snippet begin
 #include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
@@ -60,14 +61,13 @@ void InitializeArray(IntArray &a) {
 }
 
 int main() {
-  sycl::default_selector d_selector;
-
   IntArray a, b, sum;
 
   InitializeArray(a);
   InitializeArray(b);
 
-  sycl::queue q(d_selector, sycl::property::queue::enable_profiling{});
+  sycl::queue q(sycl::default_selector_v,
+                sycl::property::queue::enable_profiling{});
 
   std::cout << "Running on device: "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
@@ -97,3 +97,4 @@ int main() {
             << (end - start).count() << " nano-secs\n";
   return 0;
 }
+// Snippet end

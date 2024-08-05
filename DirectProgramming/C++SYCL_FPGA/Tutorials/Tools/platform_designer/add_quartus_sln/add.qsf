@@ -1,0 +1,28 @@
+set_global_assignment -name TOP_LEVEL_ENTITY add
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 22.2.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "04:43:52  MAY 26, 2023"
+set_global_assignment -name LAST_QUARTUS_VERSION "22.2.0 Pro Edition"
+set_global_assignment -name SYSTEMVERILOG_FILE add.sv
+set_global_assignment -name SDC_FILE add.sdc
+set_global_assignment -name SDC_FILE jtag.sdc
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
+set_global_assignment -name DEVICE 10AS066N3F40E2SG
+set_global_assignment -name FAMILY "Arria 10"
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 2
+set_global_assignment -name EDA_SIMULATION_TOOL "Questa Intel FPGA (Verilog)"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name IP_FILE ip/add_kernel_wrapper/add_kernel_wrapper_clock_in.ip
+set_global_assignment -name IP_FILE ip/add_kernel_wrapper/add_kernel_wrapper_reset_in.ip
+set_global_assignment -name QSYS_FILE add_kernel_wrapper.qsys
+set_global_assignment -name IP_FILE ip/add_kernel_wrapper/add_kernel_wrapper_add_report_di_0.ip
+set_global_assignment -name IP_FILE ip/add_kernel_wrapper/add_kernel_wrapper_master_0.ip
+set_location_assignment PIN_AV21 -to reset_button_n
+set_location_assignment PIN_AM10 -to i_clk
+set_location_assignment PIN_AR23 -to fpga_led
+set_instance_assignment -name IO_STANDARD "1.8 V" -to reset_button_n -entity add
+set_instance_assignment -name IO_STANDARD LVDS -to i_clk -entity add
+set_location_assignment PIN_AL10 -to "i_clk(n)"
+set_instance_assignment -name IO_STANDARD "1.8 V" -to fpga_led -entity add

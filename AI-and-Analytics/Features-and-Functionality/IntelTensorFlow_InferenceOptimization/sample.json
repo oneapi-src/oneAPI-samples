@@ -1,6 +1,6 @@
 {
 	"guid": "9d32f194-8667-41d3-865d-d43e9983c471",
-	"name": "Optimize TensorFlow pre-trained model for inference",
+	"name": "Intel® Optimization for TensorFlow* pre-trained model for inference",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
 	"description": "This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also analyze the model pb files before and after the inference optimizations.",
 	"builder": ["cli"],
@@ -13,10 +13,14 @@
 		"linux": [{
 			"id": "tensorflow_inference_optimization",
 			"steps": [
-				"source activate tensorflow",
-				"/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
-				"python scripts/ci_test.py"
+				"source /intel/oneapi/intelpython/bin/activate",
+				"conda activate tensorflow",
+				"pip install tensorflow==2.15.0.post1",
+				"pip install ipykernel jupyter",
+				"python -m ipykernel install --user --name=tensorflow",
+				"jupyter nbconvert --to notebook --execute tutorial_optimize_TensorFlow_pretrained_model.ipynb"
 			]
 		}]
-	}
+	},
+    "expertise": "Code Optimization"
 }

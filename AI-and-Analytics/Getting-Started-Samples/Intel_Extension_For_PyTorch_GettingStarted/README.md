@@ -1,134 +1,187 @@
-﻿# `Intel Extension For PyTorch Hello World` Sample
-Intel® Extension for PyTorch\* extends PyTorch with optimizations for extra performance boost on Intel hardware. Most of the optimizations will be included in stock PyTorch releases eventually, and the intention of the extension is to deliver up-to-date features and optimizations for PyTorch on Intel hardware, examples include AVX-512 Vector Neural Network Instructions (AVX512 VNNI) and Intel® Advanced Matrix Extensions (Intel® AMX).
+# `Intel® Extension for PyTorch (IPEX) Getting Started` Sample
 
-| Optimized for                       | Description
-|:---                               |:---
-| OS                                | Linux\* Ubuntu\* 18.04
-| Hardware                          | Intel® Xeon® Scalable Processor family
-| Software                          | Intel® AI Analytics Toolkit (AI Kit)
-| What you will learn               | How to get started with Intel® Optimization for PyTorch
-| Time to complete                  | 15 minutes
+Intel® Extension for PyTorch (IPEX) extends PyTorch* with optimizations for extra performance boost on Intel hardware. 
+
+| Property             | Description
+|:---                  |:---
+| Category             | Get Start Sample
+| What you will learn  | How to start using Intel® Extension for PyTorch (IPEX)
+| Time to complete     | 15 minutes
 
 ## Purpose
-This sample code shows how to get started with Intel Optimization for PyTorch. It implements an example neural network with one convolution layer, one normalization layer and one ReLU layer. Developers can quickly build and train a PyTorch\* neural network using a simple python code. Also, by controlling the build-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and their performance during PyTorch\* model training and inference with Intel® Extension for PyTorch\*.
 
-Intel® Extension for PyTorch\* is available as part of Intel® AI Analytics Toolkit. For more information on the optimizations as well as performance data, see [this blog](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
+This sample code demonstrates how to begin using the Intel® Extension for PyTorch (IPEX). 
 
-More examples can be found at [Examples](https://intel.github.io/intel-extension-for-pytorch/tutorials/examples.html)
+The sample implements an example neural network with one convolution layer, one normalization layer, and one ReLU layer.
 
-## Key implementation details
-This Hello World sample code is implemented for CPU using the Python language.
+You can quickly build and train a PyTorch* neural network using the simple Python code. Also, by controlling the built-in environment variable, the sample attempts to show how Intel® DNNL Primitives are called explicitly and shows the performance during PyTorch* model training and inference with Intel® Extension for PyTorch (IPEX).
 
-Please **export the environment variable `DNNL_VERBOSE=1`** to display the deep learning primitives trace during execution.
+The Jupyter notebook in this sample also guides users how to change PyTorch* codes to run on Intel® Data Center GPU family and how to validate the GPU or CPU usages for PyTorch* workloads on Intel CPU or GPU.
 
-### Notes
- - The test dataset is inherited from `torch.utils.data.Dataset`.
- - The model is inherited from `torch.nn.Module`.
+>**Note**: Intel® Extension for PyTorch (IPEX) can be installed via the Intel® AI Tools Offline Installer or via the Intel AI Tools Selector. For more information on the optimizations as well as performance data, see [*Intel and Facebook* collaborate to boost PyTorch* CPU performance*](http://software.intel.com/en-us/articles/intel-and-facebook-collaborate-to-boost-pytorch-cpu-performance).
 
-## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
-
-## How to Build and Run
-
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
 >
-> Linux Sudo: . /opt/intel/oneapi/setvars.sh
->
-> Linux User: . ~/intel/oneapi/setvars.sh
->
-> Windows: C:\Program Files(x86)\Intel\oneAPI\setvars.bat
->
->For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
-
-1. Activate the conda environment:
-
-    ```
-    conda activate pytorch
-    ```
-
-2. Activate conda environment Without Root Access (Optional)
-
-By default, the Intel AI Analytics toolkit is installed in the inteloneapi
-folder, which requires root privileges to manage it. If you would like to
-bypass using root access to manage your conda environment, then you can clone
-your desired conda environment using the following command:
-
-    ```
-    conda create --name user_pytorch --clone pytorch
-    ```
-
-    Then activate your conda environment with the following command:
-
-    ```
-    conda activate user_pytorch
-    ```
-
-3. Navigate to the directory with the sample:
-    ```
-    cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
-    ```
-
-4. Run the Python script
-    To run the program on Linux\*, Windows\* and MacOS\*, type the following command in the terminal with Python installed:
-
-    ```
-    python Intel_Extension_For_PyTorch_Hello_World.py
-    ```
-
-    You will see the DNNL verbose trace after exporting the `DNNL_VERBOSE`:
-
-    ```
-    export DNNL_VERBOSE=1
-    ```
-
-    Please find more information about the mkldnn log [here](https://oneapi-src.github.io/oneDNN/dev_guide_verbose.html).
+>Find more examples in the [*Examples*](https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/examples.html) topic of the [*Intel® Extension for PyTorch (IPEX) Documentation*](https://intel.github.io/intel-extension-for-pytorch).
 
 
-### Example of Output
+## Prerequisites
+
+| Optimized for        | Description
+|:---                  |:---
+| OS                   | Ubuntu* 22.04
+| Hardware             | Intel® Xeon® scalable processor family <br> Intel® Data Center GPUs
+| Software             | Intel® Extension for PyTorch (IPEX)
+
+> **Note**: AI and Analytics samples are validated on AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
+
+## Key Implementation Details
+
+The sample uses pretrained model provided by Intel and published as part of [Intel AI Reference Models](https://github.com/IntelAI/models). The example also illustrates how to utilize TensorFlow* and Intel® Math Kernel Library (Intel® MKL) runtime settings to maximize CPU performance on ResNet50 workload.
+
+
+- The Jupyter Notebook, `ResNet50_Inference.ipynb`, is implemented for both CPU and GPU using Intel® Extension for PyTorch (IPEX).
+- The `Intel_Extension_For_PyTorch_Hello_World.py` script is implemented for CPU using the Python language.
+- You must export the environment variable `DNNL_VERBOSE=1` to display the deep learning primitives trace during execution.
+
+> **Note**: The test dataset is inherited from `torch.utils.data.Dataset`, and the model is inherited from `torch.nn.Module`.
+
+## Environment Setup
+You will need to download and install the following toolkits, tools, and components to use the sample.
+
+
+**1. Get Intel® AI Tools**
+
+Required AI Tools:  Intel® Extension for PyTorch* - GPU
+
+If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+
+>**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+
+**2. (Offline Installer) Activate the AI Tools bundle base environment**
+
+If the default path is used during the installation of AI Tools:
+```
+source $HOME/intel/oneapi/intelpython/bin/activate
+```
+If a non-default path is used:
+```
+source <custom_path>/bin/activate
+```
+ 
+**3. (Offline Installer) Activate relevant Conda environment**
+
+```
+conda activate pytorch-gpu 
+``` 
+
+**4. Clone the GitHub repository**
+
+``` 
+git git clone https://github.com/oneapi-src/oneAPI-samples.git
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted/
+```
+
+**5. Install dependencies**
+
+>**Note**: Before running the following commands, make sure your Conda/Python environment with AI Tools installed is activated
+
+```
+pip install -r requirements.txt
+pip install notebook
+``` 
+For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+
+
+## Run the Sample
+>**Note**: Before running the sample, make sure [Environment Setup](#environment-setup) is completed.
+
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+* [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
+* [Conda/PIP](#condapip) 
+* [Docker](#docker)
+
+### AI Tools Offline Installer (Validated)  
+
+**1. Register Conda kernel to Jupyter Notebook kernel**
+
+If the default path is used during the installation of AI Tools:
+```
+$HOME/intel/oneapi/intelpython/envs/pytorch-gpu/bin/python -m ipykernel install --user --name=pytorch-gpu
+```
+If a non-default path is used:
+```
+<custom_path>/bin/python -m ipykernel install --user --name=pytorch-gpu
+```
+**2. Launch Jupyter Notebook** 
+
+```
+jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
+```
+**3. Follow the instructions to open the URL with the token in your browser**
+
+**4. Select the Notebook**
+
+```
+ResNet50_Inference.ipynb
+```
+
+**5. Change the kernel to `pytorch-gpu`**
+
+**6. Run every cell in the Notebook in sequence**
+
+### Conda/PIP
+> **Note**: Before running the instructions below, make sure your Conda/Python environment with AI Tools installed is activated
+
+**1. Register Conda/Python kernel to Jupyter Notebook kernel** 
+
+For Conda:
+```
+<CONDA_PATH_TO_ENV>/bin/python -m ipykernel install --user --name=pytorch-gpu
+```
+To know <CONDA_PATH_TO_ENV>, run `conda env list` and find your Conda environment path.
+
+For PIP:
+```
+python -m ipykernel install --user --name=pytorch-gpu
+```
+
+**2. Launch Jupyter Notebook**
+
+```
+jupyter notebook --ip=0.0.0.0 --port 8888 --allow-root
+```
+
+**3. Follow the instructions to open the URL with the token in your browser**
+
+**4. Select the Notebook**
+
+```
+ResNet50_Inference.ipynb
+```
+
+**5. Change the kernel to `pytorch-gpu`**
+
+**6. Run every cell in the Notebook in sequence**
+
+
+### Docker
+AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
+
+
+## Example Output
+
 With successful execution, it will print out `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` in the terminal.
 
-### Running The Sample In DevCloud (Optional)
 
-Please refer to [using samples in DevCloud](https://github.com/intel-ai-tce/oneAPI-samples/blob/devcloud/AI-and-Analytics/README.md#using-samples-in-intel-oneapi-devcloud) for general usage instructions.
 
-### Submit The Sample in Batch Mode
+## License
 
-1. Navigate to the directory with the TensorFlow sample:
-```
-cd ~/oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Intel_Extension_For_PyTorch_GettingStarted
-```
-2. Submit this "Intel_Extension_For_PyTorch_GettingStarted" workload on the selected node with the run script.
-```
-./q ./run.sh
-```
-> the run.sh contains all the instructions needed to run this "Intel_Extension_For_PyTorch_Hello_World" workload
+Code samples are licensed under the MIT license. See
+[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+for details.
 
-### Build and run additional samples
-Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.
+Third party program Licenses can be found here:
+[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
-### Troubleshooting
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://software.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
+*Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
 
-### Using Visual Studio Code\* (Optional)
-
-You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
-and browse and download samples.
-
-The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
- - Open a Terminal in VS Code (**Terminal>New Terminal**).
- - Run the sample in the VS Code terminal using the instructions below.
- - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
-
-To learn more about the extensions, see
-[Using Visual Studio Code with Intel® oneAPI Toolkits](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
-After learning how to use the extensions for Intel oneAPI Toolkits, return to this readme for instructions on how to build and run a sample.

@@ -1,0 +1,15 @@
+--- text_classification_with_transformer2.py
++++ text_classification_with_transformer.py
+@@ -43,6 +43,12 @@
+ tf.config.threading.set_inter_op_parallelism_threads(inter_thread)
+ 
+ 
++"""
++## Bfloat16 mixed precision learning 
++"""
++
++tf.config.optimizer.set_experimental_options({'auto_mixed_precision_onednn_bfloat16':True})
++
+ """
+ ## Implement a Transformer block as a layer
+ """

@@ -21,11 +21,12 @@
 	}],
 	"windows": [{
 		"steps": [
-                        "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=\"Release\"",
-		       "cd x64/Release",
+                        "MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration=Release",
+		        "cd x64\\Release",
             		"matrix_multiply.exe"
 		]
 	}]
-}
+},
+"expertise": "Getting Started"
 }
 

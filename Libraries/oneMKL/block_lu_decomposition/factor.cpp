@@ -28,7 +28,7 @@
 #include <iostream>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 using namespace oneapi;
@@ -72,7 +72,7 @@ int main(){
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 
-    if (device.is_gpu() && device.get_platform().get_backend() != sycl::backend::level_zero) {
+    if (device.is_gpu() && device.get_platform().get_backend() != sycl::backend::ext_oneapi_level_zero) {
         std::cerr << "This sample requires Level Zero when running on GPUs." << std::endl;
         std::cerr << "Please check your system configuration." << std::endl;
         return 0;

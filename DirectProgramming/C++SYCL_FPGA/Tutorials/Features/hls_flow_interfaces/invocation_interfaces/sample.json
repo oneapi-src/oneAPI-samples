@@ -1,0 +1,292 @@
+{
+  "guid": "69415BED-D452-449A-8F5A-DB01ACCE38DC",
+  "name": "Invocation Interfaces",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/HLS Flow: Interfaces"],
+  "description": "An Intel® FPGA tutorial that demonstrates the differences between a streaming invocation interface and a register-mapped invocation interface on an IP component",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/hls_flow_interfaces/invocation_interfaces",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_reg_map_functor",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=REG_MAP_FUNCTOR",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_functor",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_FUNCTOR",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_rm_stall",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_RM_STALL",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_reg_map_lambda",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=REG_MAP_LAMBDA",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_lambda",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_LAMBDA",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_pipelined",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_PIPELINED",
+          "make fpga_emu",
+          "./vector_add.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_reg_map_functor",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=REG_MAP_FUNCTOR",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_stream_functor",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_FUNCTOR",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_stream_rm_stall",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_RM_STALL",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_reg_map_lambda",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=REG_MAP_LAMBDA",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_stream_lambda",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_LAMBDA",
+          "make report"
+        ]
+      },
+      {
+        "id": "report_stream_pipelined",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STREAM_PIPELINED",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+
+      {
+        "id": "fpga_emu_reg_map_functor",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=REG_MAP_FUNCTOR",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_functor",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_FUNCTOR",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_rm_stall",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_RM_STALL",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_reg_map_lambda",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=REG_MAP_LAMBDA",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_lambda",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_LAMBDA",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "fpga_emu_stream_pipelined",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_PIPELINED",
+          "nmake fpga_emu",
+          "./vector_add.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_reg_map_functor",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=REG_MAP_FUNCTOR",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_stream_functor",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_FUNCTOR",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_stream_rm_stall",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_RM_STALL",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_reg_map_lambda",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=REG_MAP_LAMBDA",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_stream_lambda",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_LAMBDA",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "report_stream_pipelined",
+        "steps": [
+          "icpx --version",
+          "cd ../../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/hls_flow_interfaces/invocation_interfaces -DPART=STREAM_PIPELINED",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

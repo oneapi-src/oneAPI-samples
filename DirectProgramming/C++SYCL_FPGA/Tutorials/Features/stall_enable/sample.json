@@ -1,0 +1,115 @@
+{
+  "guid": "1D1E56E0-9ED1-4948-B7D7-169E54B8283F",
+  "name": "Stall Enable",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial demonstrating the use_stall_enable_clusters attribute",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/stall_enable",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_stall_enable",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STALL_ENABLE",
+          "make fpga_emu",
+          "./stall_enable.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_stall_enable",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STALL_ENABLE",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_stall_free",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STALL_FREE",
+          "make fpga_emu",
+          "./stall_enable.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_stall_free",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=STALL_FREE",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_stall_enable",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_ENABLE",
+          "nmake fpga_emu",
+          "stall_enable.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_stall_enable",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_ENABLE",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_stall_free",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_FREE",
+          "nmake fpga_emu",
+          "stall_enable.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_stall_free",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/stall_enable -DPART=STALL_FREE",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

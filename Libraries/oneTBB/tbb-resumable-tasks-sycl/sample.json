@@ -20,11 +20,12 @@
       }],
       "windows": [{
           "steps": [
-              "MSBuild tbb-resumable-tasks-sycl.sln /t:Rebuild /p:Configuration=\"debug\"",
-              "cd x64/Debug",
+              "MSBuild tbb-resumable-tasks-sycl.sln /t:Rebuild /p:Configuration=Release",
+              "cd x64\\Release",
               "tbb-resumable-tasks-sycl.exe"
           ]
       }]
-  }
+  },
+  "expertise": "Code Optimization"
 }
 

@@ -1,0 +1,3 @@
+# SYCL HLS Flow Interfaces
+
+This collection of code samples demonstrates how to effectively customize interfaces of FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler. Intel recommends that you begin by studying the [Component Interfaces Comparison](component_interfaces_comparison/) sample and its sub-samples to learn about the basics of how you can customize interfaces for FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler. Once you have familiarized yourself with the basic principles, you can study the other samples here to learn more advanced techniques and common stumbling blocks to watch out for.

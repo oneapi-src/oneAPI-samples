@@ -1,0 +1,71 @@
+{
+  "guid": "496CBF47-FB9B-41CF-9786-4CAB0F43AEEE",
+  "name": "Board Test",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Reference Designs"],
+  "description": "An Intel® FPGA test to check board interfaces and some of the oneAPI shim/BSP metrics like memory bandwidth, kernel clock frequency and kernel latency",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "builder": ["ide", "cmake"],
+  "targetDevice": ["FPGA"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../..",
+    "include": [
+      "README.md",
+      "ReferenceDesigns/board_test",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DFPGA_DEVICE=Agilex7",
+          "make fpga_emu",
+          "./board_test.fpga_emu"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DFPGA_DEVICE=Agilex7",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test -DFPGA_DEVICE=Agilex7",
+          "nmake fpga_emu",
+          "board_test.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report",
+        "steps": [
+          "icpx --version",
+          "cd ../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../ReferenceDesigns/board_test -DFPGA_DEVICE=Agilex7",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Reference Designs and End to End"
+}

@@ -1,0 +1,26 @@
+{
+  "guid": "d199b348-94f4-4660-9631-3978ad1b7647",
+  "name": "OSPRAY Intro Jupyter Learning Path",
+  "categories": ["Toolkit/oneAPI Libraries/OSPRay"],
+  "description": "OSPRAY ospTutorial tutorial Jupyter notebook of Intel Developer Cloud Learning Path targeting CPU and GPU",
+  "builder": ["cli"],
+  "languages": [{"cpp":{}}],
+  "dependencies": ["tbb","ospray","openvkl","embree","rkcommon","oidn"],
+  "os":["linux"],
+  "targetDevice": ["CPU", "GPU"],
+  "gpuRequired": ["pvc"],
+  "ciTests": {
+        "linux": [
+                {
+                "id": "OSPRAY_Intro_Jupyter_Learning_Path_Linux",
+                "steps": [
+                    "sh ./build_tutorial.sh",
+                    "sh ./run_tutorial_CPU.sh",
+                    "sh ./run_tutorial_GPU.sh",
+                    "sh ./build_denoise.sh",
+                    "sh ./run_denoise.sh"
+                 ]
+                 }
+        ]
+  }
+}

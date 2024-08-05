@@ -1,17 +1,15 @@
-
 # Copyright (C) 2017-2018 Intel Corporation
 #
 # SPDX-License-Identifier: MIT
 
-import dpctl
 import base_pair_wise_gpu
-import numpy as np
-import numba_dppy
+import numba_dpex as nbdx
+import dpnp as np
 
 
-@numba_dppy.kernel
+@nbdx.kernel
 def pairwise_python(X1, X2, D):
-    i = numba_dppy.get_global_id(0)
+    i = nbdx.get_global_id(0)
 
     N = X2.shape[0]
     O = X1.shape[1]
@@ -24,9 +22,7 @@ def pairwise_python(X1, X2, D):
 
 
 def pw_distance(X1, X2, D):
-    with dpctl.device_context(base_pair_wise_gpu.get_device_selector(is_gpu=True)):
-        # pairwise_python[X1.shape[0],numba_dppy.DEFAULT_LOCAL_SIZE](X1, X2, D)
-        pairwise_python[X1.shape[0], 128](X1, X2, D)
+    pairwise_python[nbdx.Range(X1.shape[0])](X1, X2, D) 
 
 
 base_pair_wise_gpu.run("Pairwise Distance Kernel", pw_distance)

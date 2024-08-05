@@ -1,0 +1,6 @@
+transformers 
+evaluate 
+accelerate 
+datasets 
+neural-compressor 
+optimum[neural-compressor]

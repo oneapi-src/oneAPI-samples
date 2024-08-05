@@ -6,8 +6,17 @@
 #include <CL/sycl.hpp>
 #include <iostream>
 
+template <typename T>
+auto get_multi_ptr(T *raw_ptr) {
+  auto multi_ptr =
+    sycl::address_space_cast<
+      sycl::access::address_space::global_space,
+      sycl::access::decorated::yes>(raw_ptr);
+  return multi_ptr;
+}
+
 int main() {
-  sycl::queue q{sycl::gpu_selector{},
+  sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>()
             << std::endl;
@@ -22,49 +31,37 @@ int main() {
     h.parallel_for(
         sycl::nd_range(sycl::range{N / 16}, sycl::range{32}),
         [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
-          sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+          auto sg = it.get_sub_group();
           sycl::vec<int, 4> x;
 
           int base = (it.get_group(0) * 32 +
                       sg.get_group_id()[0] * sg.get_local_range()[0]) *
                      16;
 
-          x = sg.load<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data2[base + 0])));
-          sg.store<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data[base + 0])),
-              x);
-          x = sg.load<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data2[base + 64])));
-          sg.store<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data[base + 64])),
-              x);
-          x = sg.load<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data2[base + 128])));
-          sg.store<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data[base + 128])),
-              x);
-          x = sg.load<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data2[base + 192])));
-          sg.store<4>(
-              (sycl::
-                   multi_ptr<int, sycl::access::address_space::global_space>)(&(
-                  data[base + 192])),
-              x);
+	  auto load_ptr0 = get_multi_ptr(&(data2[base + 0*64]));
+          x = sg.load<4>(load_ptr0);
+
+	  auto store_ptr0 = get_multi_ptr(&(data[base + 0*64]));
+          sg.store<4>(store_ptr0, x);
+
+	  auto load_ptr1 = get_multi_ptr(&(data2[base + 1*64]));
+          x = sg.load<4>(load_ptr1);
+
+	  auto store_ptr1 = get_multi_ptr(&(data[base + 1*64]));
+          sg.store<4>(store_ptr1, x);
+
+	  auto load_ptr2 = get_multi_ptr(&(data2[base + 2*64]));
+          x = sg.load<4>(load_ptr2);
+
+	  auto store_ptr2 = get_multi_ptr(&(data[base + 2*64]));
+          sg.store<4>(store_ptr2, x);
+
+	  auto load_ptr3 = get_multi_ptr(&(data2[base + 3*64]));
+          x = sg.load<4>(load_ptr3);
+
+	  auto store_ptr3 = get_multi_ptr(&(data[base + 3*64]));
+          sg.store<4>(store_ptr3, x);
+
         });
   });
   // Snippet end

@@ -10,15 +10,37 @@ for the debugger.
 
 This sample contains two versions of the same program: `jacobi-bugged` and
 `jacobi-fixed`. The latter works correctly, but in the former several bugs are
-injected. You can try to find and fix them using the debugger.
+injected. You can try to find and fix them using the debugger.  The debug steps
+follow a common strategy that attempts to resolve bugs first on the CPU, 
+then focus on possibly more difficult GPU-oriented bugs.
 
-| Optimized for       | Description
+| Area                | Description
 |:---                 |:---
-| OS                  | Linux* Ubuntu* 18.04 to 20.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10
-| Hardware            | Kaby Lake with GEN9 (on GPU) or newer (on CPU)
-| Software            | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn | Find existing bugs in a program using the debugger
 | Time to complete    | 1 hour for CPU or FPGA emulator; 2 hours for GPU
+
+## Prerequisites
+
+| Optimized for                                    | Description
+|:---                                              |:---
+| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15
+| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series
+| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler
+
+> **Note** although the sample can be run on all supported by Intel® oneAPI
+> Base Toolkit platforms, the GPU debugger can debug only kernels offloaded
+> onto devices specified at “Hardware to debug offloaded kernels on GPUs”
+> while running with the L0 backend.  When the GPU device is different from
+> the listed above, e.g., an integrated graphics device, breakpoints inside
+> the kernel won't be hit.  In such case, try to switch the offload to a CPU
+> device by using ONEAPI_DEVICE_SELECTOR environment variable.
+
+We recommend to first make sure that the program you intend to debug is running
+correctly on CPU and only after that switch the offload to GPU.
+
+> *Note**: although the sample can be built and run on Windows* 10 and 11 too,
+> we focus on demonstrating how the GDB* interface can be used
+> to examine the program on Linux* OS.
 
 ## Purpose
 
@@ -51,116 +73,43 @@ The sample is intended for exercising the debugger, not for performance
 benchmarking.
 
 The debugger supports debugging kernels that run on the CPU, GPU, or accelerator
-devices. For convenience, the `jacobi` code sample provides the ability to
-select the target device by using a command-line argument of `cpu`, `gpu`, or
-`accelerator`.
+devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
+to select device.  The default device is Level Zero GPU device, if available.
+For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
 
-For an overview of the Jacobi method, please refer to the Wikipedia article on the [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method).
+For an overview of the Jacobi method, please refer to the Wikipedia article 
+on the [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method).
 
-For an overview of the debugger, please refer to [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html).
-
-## Recommended commands
-
-For checking variables values you can use: `print`, `printf`, `display`, `info locals`.
-
-To define specific actions when a BP is hit, use `commands`, e.g.
-
-```
-(gdb) commands 1
-Type commands for breakpoint(s) 1, one per line.
-End with a line saying just "end".
->silent
->print var1
->continue
->end
-```
-
-sets actions for breakpoint 1. At each hit of the breakpoint, the variable `var1`
-will be printed and then the debugger will continue until the next breakpoint hit.
-Here we start the command list with `silent` -- it helps to suppress GDB output
-about hitting the BP.
-
-On GPU all threads execute SIMD. To apply the command to every SIMD lane
-that hit the BP, add `/a` modifier. In the following we print local variable `gid`
-for every SIMD lane that hits the breakpoint at line 130:
-
-```
-(gdb) break 130
-Breakpoint 1 at 0x4125ac: file jacobi-bugged.cpp, line 130.
-(gdb) commands /a
-Type commands for breakpoint(s) 1, one per line.
-Commands will be applied to all hit SIMD lanes.
-End with a line saying just "end".
->print gid
->end
-(gdb) running
-<... GDB output omitted...>
-[Switching to Thread 1.1073741824 lane 0]
-
-Thread 2.1 hit Breakpoint 1, with SIMD lanes [0-7], prepare_for_next_iteration(...arguments omitted...) at jacobi-bugged.cpp:130
-130         acc_l1_norm_x_k1 += abs(acc_x_k1[gid]); // Bug 2 challenge: breakpoint here.
-$1 = cl::sycl::id<1> = {8}
-$2 = cl::sycl::id<1> = {9}
-$3 = cl::sycl::id<1> = {10}
-$4 = cl::sycl::id<1> = {11}
-$5 = cl::sycl::id<1> = {12}
-$6 = cl::sycl::id<1> = {13}
-$7 = cl::sycl::id<1> = {14}
-$8 = cl::sycl::id<1> = {15}
-```
-
-You can apply a command to specified threads and SIMD lanes with `thread apply`.
-The following command prints `gid` for each active SIMD lane of the current thread:
-
-```
-(gdb) thread apply :* -q print gid
-$9 = cl::sycl::id<1> = {8}
-$10 = cl::sycl::id<1> = {9}
-$11 = cl::sycl::id<1> = {10}
-$12 = cl::sycl::id<1> = {11}
-$13 = cl::sycl::id<1> = {12}
-$14 = cl::sycl::id<1> = {13}
-$15 = cl::sycl::id<1> = {14}
-$16 = cl::sycl::id<1> = {15}
-```
-
-`-q` flag suppresses the additional output such as for which thread and lane
-the command was executed.
-
-You can set a convenience variable and then modify it:
-
-```
-(gdb) set $temp=1
-(gdb) print $temp
-$1 = 1
-(gdb) print ++$temp
-$2 = 2
-```
-
-If you want to step through the program, use: `step`, `next`. Ensure that
-scheduler locking is set to `step` or `on` (otherwise, you will be switched
-to a different thread while stepping):
-
-```
-(gdb) set scheduler-locking step
-```
+For an overview of the debugger, please refer to 
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html).
 
 ## Key Implementation Details
 
 Jacobi method is an iterative solver for a system of linear equations. The system
 must be strictly diagonally dominant to ensure that the method converges
 to the solution. In our case, the matrix is hardcoded into the kernel from
-`main_computation` function.
+`compute_x_k1`.
 
 All computations happen inside a while-loop. There are two exit criteria
-from the loop. First, if the relative error falls below the desired tolerance
-we consider it as a success and the algorithm converged. Second, if we exceed
-the maximum number of iterations we consider it as a fail, the algorithm
-did not converge.
+from the loop:
+* *success* if the relative error falls below the desired tolerance,
+  the algorithm converged.
+* *fail* if we exceed the maximum number of iterations, the algorithm
+  did not converge.
 
-Each iteration has two parts: `main_computation` and `prepare_for_next_iteration`.
+There are 3 files in the solution.
 
-### Main computation
+| File          | Description
+|:---           |:---
+| jacobi.cpp    | Contains the `main` function, no bugs: <br> * initialize the problem <br> * setup SYCL boiler plate <br> call the `iterate` function <br> validate the result
+| bugged.cpp    | Contains bugged versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-bugged` program.
+| fixed.cpp     | Contains fixed versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-fixed` program.
+
+The iteration loop is located at `iterate` function.
+Each iteration has two parts: `compute_x_k1` and `prepare_for_next_iteration`.
+All intended bugs are located in the `bugged.cpp` file.
+
+### Update x_k1 vector (`compute_x_k1`)
 
 Here we compute the resulting vector of this iteration `x^{k+1}`.
 
@@ -194,7 +143,7 @@ L1 norm of a vector is the sum of absolute values of its elements.
 
 To compute L1 norms of `||x_k - x_k1||_1` and `||x_k1||_1` we use
 sum reduction algorithm. This happens in `prepare_for_next_iteration`.
-The computation of the final relative error happens in `main`:
+The computation of the final relative error happens in `iterate`:
 we divide the absolute error `abs_error` by the L1 norm of x_k1 (`l1_norm_x_k1`).
 
 ### Prepare for the next iteration
@@ -204,53 +153,31 @@ to compute L1 norms of `x_k - x_k1` and `x_k1` respectively.
 
 Second, we update `x_k` with the new value from `x_k1`.
 
-## Building and Running the `jacobi` Project
-> **Note**: If you have not already done so, set up your CLI
-> environment by sourcing  the `setvars` script located in
-> the root of your oneAPI installation.
+## Set Environment Variables
+
+When working with the command-line interface (CLI), you should configure 
+the oneAPI toolkits using environment variables. Set up your CLI environment 
+by sourcing the `setvars` script every time you open a new terminal window. 
+This practice ensures that your compiler, libraries, and tools are ready
+for development.
+
+> **Note**: The `setvars` script is located in the root of your
+> oneAPI installation.
 >
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
-> - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
->
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
-### Setup
+## Build the `jacobi-bugged` and `jacobi-fixed` programs
 
 Preliminary setup steps are needed for the debugger to function.
-Please see the setup instructions in the Get Started Guide based on
-your OS: 
-- [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
-- [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
+Please see the setup instructions in the Get Started Guide
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 
-
-### Include Files
-
-The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on
-your development system.
-
-
-### Running Samples In Intel&reg; DevCloud
-
-If running a sample in the Intel&reg; DevCloud, remember that you must specify the
-compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-We recommend running the `jacobi` sample on a node with GPU. In order to have an
-interactive debugging session, we recommend using the interactive mode. To get
-the setting, after connecting to the login node, type the following command:
-
-```
-$ qsub -I -l nodes=1:gpu:ppn=2
-```
-Within the interactive session on the GPU node, build and run the sample.
-For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
-(https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
-
-### Using Visual Studio Code*  (Optional)
+### Using Visual Studio Code* (VS Code) (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
@@ -264,103 +191,199 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On a Linux* System
+### Using Intel&reg; DevCloud
 
-Perform the following steps:
+If running a sample in the Intel&reg; DevCloud, remember that you must specify the
+compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
 
-1.  Build the project using the following `cmake` commands.
+We recommend running the `jacobi` sample on a node with GPU. In order to have an
+interactive debugging session, we recommend using the interactive mode. To get
+the setting, after connecting to the login node, type the following command:
+
+```
+qsub -I -l nodes=1:gpu:ppn=2
+```
+
+Within the interactive session on the GPU node, build and run the sample.
+For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
+(https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
+
+### Build on a Linux* System
+
+Build the project using the following `cmake` commands.
 
     ```
-    $ cd jacobi
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make
+    cd jacobi
+    mkdir build
+    cd build
+    cmake ..
+    make
     ```
 
-    This builds both `jacobi-bugged` and `jacoby-fixed` versions of the program.
+    This builds both `jacobi-bugged` and `jacobi-fixed` versions of the program.
     > Note: The cmake configuration enforces the `Debug` build type.
 
-2.  Run the buggy program:
+### Setup the Debugger
+
+Preliminary setup steps are needed for the debugger to function.
+Please see the setup instructions in the Get Started Guide 
+[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
+
+### Run the buggy program
 
     ```
-    $ ./jacobi-bugged <device>
+    ./jacobi-bugged
+    ```
+    > Note: to specify a device type to offload the kernel, use
+    > the `ONEAPI_DEVICE_SELECTOR` environment variable.
+    > E.g.  to restrict the offload only to CPU devices use:
+    ```
+    ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
     ```
 
-    > Note: `<device>` is the type of the device to offload the kernel.
-    > Use `cpu`, `gpu`, or `accelerator` to select the CPU, GPU, or the
-    > FPGA emulator device, respectively.  E.g.:
+3.  Start a debugging session on a CPU device:
 
     ```
-    $ ./jacobi-bugged cpu
+    ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi jacobi-bugged
     ```
 
-3.  Start a debugging session:
+4.  Clean the program (optional):
 
     ```
-    $ gdb-oneapi --args jacobi-bugged <device>
-    ```
-
-4.  Clean the program using:
-
-    ```
-    $ make clean
+    make clean
     ```
 
 
-For instructions about starting and using the debugger, please see 
-[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/).
+For instructions about starting and using the debugger on Linux* OS Host,
+please see
+- [Tutorial: Debug a SYCL* Application on a CPU](https://www.intel.com/content/www/us/en/develop/documentation/debugging-dpcpp-linux/top/debug-a-sycl-application-on-a-cpu.html)
+- [Tutorial: Debug a SYCL* Application on a GPU](https://www.intel.com/content/www/us/en/develop/documentation/debugging-dpcpp-linux/top/debug-a-sycl-application-on-a-gpu.html)
 
-### On a Windows* System Using Visual Studio* Version 2017 or Newer
+## Guided Debugging
 
-#### Command line using MSBuild
+The below instructions provide step by step instructions for locating and
+resolving the three bugs in the `jacobi` sample, as well as basic usage of
+the debbuger. 
 
-* `set CL_CONFIG_USE_NATIVE_DEBUGGER=1`
-* `MSBuild lacobi.sln /t:Rebuild /p:Configuration="debug"`
+### Recommended Commands
 
-#### Visual Studio IDE
+For checking variables values you can use: `print`, `printf`, `display`,
+`info locals`.
 
-1. Right-click on the solution files and open via either Visual Studio 2017 or
-   in 2019.
+#### `commands` command
 
-2. Select Menu "Build > Build Solution" to build the selected configuration.
-
-3. Select Menu "Debug > Start Debugging" to run the program, the default startup
-   project is `jacobi-bugged`.
-
-4. The solution file is configured to pass `cpu` as the argument to the program
-   while using "Local Windows Debugger", and `gpu` while using "Remote Windows
-   Debugger". To select a different device, go to the project's "Configuration
-   Properties > Debugging" and set the "Command Arguments" field. Use `gpu` or
-   `accelerator` to target the GPU or the FPGA emulator device, respectively.
-
-For detailed instructions about starting and using the debugger, please see 
-[Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/).
-
-### Example Outputs
-
-The selected device is displayed in the output.
-
-#### No device specified
-
-If no device is specified both programs `jacobi-bugged` and `jacobi-fixed` return an error:
+To define specific actions when a BP is hit, use `commands <breakpoint number>`,
+e.g.
 
 ```
-$ ./jacobi-bugged
-Usage: ./jacobi-bugged <host|cpu|gpu|accelerator>
+(gdb) commands 1
+Type commands for breakpoint(s) 1, one per line.
+End with a line saying just "end".
+>silent
+>print var1
+>continue
+>end
 ```
 
+The above sets actions for breakpoint 1. At each hit of the breakpoint,
+the variable `var1` will be printed and then the debugger will continue until
+the next breakpoint hit.  Here we start the command list with `silent` -- it
+helps to suppress GDB output about hitting the BP.
+
+On GPU all threads execute SIMD. To apply the command to every SIMD lane
+that hit the BP, add the `/a` modifier. In the following we print the local
+variable `gid` for every SIMD lane that hits the breakpoint at `x_k1_kernel`:
+
 ```
-$ ./jacobi-fixed
-Usage: ./jacobi-fixed <host|cpu|gpu|accelerator>
+(gdb) break compute_x_k1_kernel
+Breakpoint 1 at 0x4048e8: file bugged.cpp, line 18.
+(gdb) commands /a
+Type commands for breakpoint(s) 1, one per line.
+Commands will be applied to all hit SIMD lanes.
+End with a line saying just "end".
+>print index
+>end
+(gdb) running
+<... GDB output omitted...>
+
+[Switching to Thread 1.153 lane 0]
+
+Thread 2.153 hit Breakpoint 1, with SIMD lanes [0-7], compute_x_k1_kernel (index=sycl::_V1::id<1> = {...}, b=0xffffb557aa530000, x_k=0xffffb557aa530200, x_k1=0xffffb557aa530400) at bugged.cpp:18
+18        int i = index[0];
+$1 = sycl::_V1::id<1> = {56}
+$2 = sycl::_V1::id<1> = {57}
+$3 = sycl::_V1::id<1> = {58}
+$4 = sycl::_V1::id<1> = {59}
+$5 = sycl::_V1::id<1> = {60}
+$6 = sycl::_V1::id<1> = {61}
+$7 = sycl::_V1::id<1> = {62}
+$8 = sycl::_V1::id<1> = {63}
 ```
 
-#### CPU
+#### `thread apply`
+
+You can apply a command to specified threads and SIMD lanes with `thread apply`.
+The following command prints `index` for each active SIMD lane of the current
+thread:
+
+```
+(gdb) thread apply :* -q print index
+$9 = sycl::_V1::id<1> = {56}
+$10 = sycl::_V1::id<1> = {57}
+$11 = sycl::_V1::id<1> = {58}
+$12 = sycl::_V1::id<1> = {59}
+$13 = sycl::_V1::id<1> = {60}
+$14 = sycl::_V1::id<1> = {61}
+$15 = sycl::_V1::id<1> = {62}
+$16 = sycl::_V1::id<1> = {63}
+```
+
+The `-q` flag suppresses the additional output such as for which thread and lane
+the command was executed.
+
+#### User-defined Convenience Variables
+
+You can define a convenience variable and use it for computations from
+the debugger.
+
+In the following we define a variable `$temp` and set its initial value to `1`.
+Then we increment its value.
+```
+(gdb) set $temp=1
+(gdb) print $temp
+$1 = 1
+(gdb) print ++$temp
+$2 = 2
+```
+
+#### Stepping through the program
+
+If you want to step through the program, use: `step`, `next`. Ensure that
+scheduler locking is set to `step` or `on` (otherwise, you will be switched
+to a different thread while stepping):
+
+```
+(gdb) set scheduler-locking step
+```
+
+### Debugging `jacobi-bugged`
+
+Again, to try to isolate our bugs, we'll focus first on the CPU.  This is 
+a common strategy.  You can specify the device for offloading the kernels
+using `ONEAPI_DEVICE_SELECTOR` variable, for example: 
+
+```
+ONEAPI_DEVICE_SELECTOR=*:cpu ./myApplication`. 
+```
+
+The above limits the kernel offloading only to CPU devices.
+
+#### 1. Run the application on CPU
 
 When run, the original `jacobi-bugged` program shows the first bug:
 
 ```
-$ ./jacobi-bugged cpu
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -372,10 +395,12 @@ fail; Bug 1. Fix this on CPU: components of x_k are not close to 1.0.
 Hint: figure out which elements are farthest from 1.0.
 ```
 
+### 2. Locate the second CPU bug
+
 Once the first bug is fixed, the second bug becomes visible:
 
 ```
-$ ./jacobi-bugged cpu
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -398,10 +423,11 @@ Challenge: in the debugger you can simmulate the computation of a reduced
 ```
 
 Once this bug is fixed, while offloading to CPU you receive the correct result:
-which are the same as in `jacobi-fixed` for the offload to CPU device:
+which are the same as in `jacobi-fixed` for the offload to CPU device. Since we're 
+only running on the CPU, we don't see the GPU bug:
 
 ```
-$ ./jacobi-fixed cpu
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-fixed
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -411,15 +437,19 @@ success; all elements of the resulting vector are close to 1.0.
 success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 after 51 iterations.
 ```
 
-#### GPU
+#### 3. Run debug on the GPU
 
 Start debugging GPU only after first two bugs are fixed on CPU.
+To debug on Intel GPU device, the device must be Level Zero.  The Level
+Zero GPU device, if available, is the default choice when no
+`ONEAPI_DEVICE_SELECTOR` is specified.  It corresponds to
+`ONEAPI_DEVICE_SELECTOR=level_zero:gpu`.
 
 Bug 3 is immediately hit while offloading to GPU:
 
 ```
-$ ./jacobi-bugged gpu
-[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-bugged
+[SYCL] Using device: [Intel(R) Graphics [0x56c1]] from [Intel(R) Level-Zero]
 
 fail; Bug 3. Fix it on GPU. The relative error has invalid value after iteration 0.
 Hint 1: inspect reduced error values. With the challenge scenario
@@ -427,7 +457,9 @@ Hint 1: inspect reduced error values. With the challenge scenario
     the correct values inside kernel on GPU. Take into account
     SIMD lanes: on GPU each thread processes several work items
     at once, so you need to modify your commands and update
-    the convenience variable for each SIMD lane.
+    the convenience variable for each SIMD lane, e.g. using
+    `thread apply :*`.
+
 Hint 2: why don't we get the correct values at the host part of
     the application?
 ```
@@ -436,8 +468,8 @@ Once all three bugs are fixed, the output of the program should be the same
 as for `jacobi-fixed` with the offload to GPU device:
 
 ```
-$ ./jacobi-fixed gpu
-[SYCL] Using device: [Intel(R) Iris(R) Plus Graphics 650 [0x5927]] from [Intel(R) Level-Zero]
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-fixed
+[SYCL] Using device: [Intel(R) Graphics [0x56c1]] from [Intel(R) Level-Zero]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
 Iteration 40, relative error = 0.0010374
@@ -446,12 +478,12 @@ success; all elements of the resulting vector are close to 1.0.
 success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 after 51 iterations.
 ```
 
-#### FPGA Emulation:
+#### Debugging on FPGA Emulation:
 
 While offloading to FPGA emulation device, only first two bugs appear (similar to CPU):
 
 ```
-$ ./jacobi-bugged accelerator
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -466,7 +498,7 @@ Hint: figure out which elements are farthest from 1.0.
 And after fixing the first bug:
 
 ```
-$ ./jacobi-bugged accelerator
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -492,7 +524,7 @@ After both bugs are fixed, the output of `jacobi-bugged` should become the same 
 `jacobi-fixed`:
 
 ```
-$ ./jacobi-fixed accelerator
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-fixed
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -586,7 +618,6 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
   optional `-force` flag to force the condition to be defined even when `exp` is
   invalid for the current locations of the breakpoint. Useful for defining
   conditions involving JIT-produced artificial variables.
-  E.g.: `cond -force 1 __ocl_dbg_gid0 == 19`.
 
 ---
 

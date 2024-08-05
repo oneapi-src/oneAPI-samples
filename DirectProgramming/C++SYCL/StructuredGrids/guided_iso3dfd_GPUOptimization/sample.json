@@ -1,0 +1,36 @@
+{
+    "guid": "5241A04C-874F-4627-BABD-31C849CC4C55",
+    "name": "Guided iso3dfd GPU optimization",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Structured Grids"],
+    "description": "Step-by-step GPU optimization guide with Intel Advisor and ISO3DFD sample",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux", "windows" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+      "linux": [{
+              "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run_all"
+                   ]
+          }],
+          "windows": [{
+                  "steps": [
+                          "MSBuild guided_iso3dfd.sln /t:Rebuild /p:Configuration=Release",
+                          "cd x64\\Release",
+                          "1_CPU_only.exe 256 256 256 10",
+                          "2_GPU_basic.exe 256 256 256 10",
+                          "3_GPU_linear.exe 256 256 256 10",
+                          "4_GPU_private_memory_I.exe 256 256 256 10",
+                          "4_GPU_private_memory_K.exe 256 256 256 10",
+                          "5_GPU_optimized.exe 256 256 256 10 64 8 8"
+                  ]
+          }]
+  
+    },
+    "expertise": "Code Optimization"
+  }

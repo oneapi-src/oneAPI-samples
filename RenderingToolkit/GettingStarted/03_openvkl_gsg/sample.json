@@ -4,20 +4,28 @@
   "categories": ["Toolkit/oneAPI Libraries/Open VKL"],
   "description": "This introductory hello rendering toolkit sample program demonstrates how to sample into volumes with Intel Open VKL",
   "builder": ["cli"],
-  "languages": [{"c":{}}],
+  "languages": [{"cpp":{}}],
   "dependencies": ["tbb","openvkl","embree","rkcommon"],
   "os":["linux", "windows", "darwin"],
-  "targetDevice": ["CPU"],
+  "targetDevice": ["CPU","GPU"],
+  "gpuRequired": ["dg2","ats-m","pvc"], 
   "ciTests": {
         "linux": [
                 {
                 "id": "Intel_OpenVKL_vklTutorial_lin",
                 "steps": [
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "./vklTutorial"
+                    "./vklTutorialCPU",
+		    "cd ../../gpu",
+		    "mkdir build",
+		    "cd build",
+		    "cmake -DCMAKE_CXX_COMPILER=icpx ..",
+		    "cmake --build .",
+		    "./vklTutorialGPU"
                  ]
                  }
         ],
@@ -25,12 +33,20 @@
                 {
                 "id": "Intel_OpenVKL_vklTutorial_win",
                 "steps":[
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
                     "cmake ..",
                     "cmake --build . --config Release",
                     "cd Release",
-                    ".\\vklTutorial.exe"
+                    ".\\vklTutorialCPU.exe",
+		    "cd ..\\..\\..",
+		    "cd gpu",
+		    "mkdir build",
+		    "cd build",
+		    "cmake -G\"NMake Makefiles\" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=icx-cl ..",
+		    "cmake --build .",
+		    ".\\vklTutorialGPU.exe"
                 ]
 
                 }
@@ -39,11 +55,12 @@
                 {
                 "id": "Intel_OpenVKL_vklTutorial_mac",
                 "steps": [
+                    "cd cpu",
                     "mkdir build",
                     "cd build",
                     "cmake ..",
                     "cmake --build . ",
-                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/tbb/latest/lib:${ONEAPI_ROOT}/embree/latest/lib && ./vklTutorial"
+                    "export DYLD_LIBRARY_PATH=${ONEAPI_ROOT}/openvkl/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/lib:${ONEAPI_ROOT}/rkcommon/latest/etc/rkcommon/tbb/lib:${ONEAPI_ROOT}/ispc/latest/lib:${ONEAPI_ROOT}/embree/latest/lib && ./vklTutorialCPU"
                  ]
                  }
         ]

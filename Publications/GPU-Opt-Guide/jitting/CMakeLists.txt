@@ -1,3 +1,7 @@
 add_example(jit)
 add_example(spec-const1)
 add_example(spec-const2)
+add_example(spec-const3)
+add_example(stream-triad-modified-constant)
+add_example(stream-triad-modified-runtime-var)
+add_example(stream-triad-modified-spec-const)

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<html><style>
+        .metric-name {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        }
+
+        .metric-value {
+        margin-left: 1em;
+        color: #336;
+        }
+
+        .metric-value-with-issue {
+        margin-left: 1em;
+        color: #C33;
+        }
+
+        li {
+        list-style-type: none;
+        }
+
+        ul {
+        margin-left: 1.5em;
+        padding-left: 0em;
+        }
+
+        body {
+        margin: 0;
+        paddind: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #336;
+        }
+
+        pre {
+        white-space:pre-wrap;
+        max-width: 40em;
+        color: #633;
+        }
+
+        .issue {
+        border-left: 3px solid #C33;
+        padding: 0.3em 0.3em 0.3em 1em;
+        }
+
+        table {
+        margin: 0 1.5em;
+        }
+
+        th, td {
+        text-align: left;
+        }
+
+        td {
+        color: #333;
+        }
+
+        th {
+        border-bottom: 2px solid #336;
+        font-weight: 600;
+        }
+
+        .table-value {
+        margin-right: 1.5em;
+        }
+
+        .brand {
+        background-color: #0071c5;
+        padding: 0.5em 1.5em;
+        width: 100%;
+        color: white;
+        font-weight: 600;
+        }
+
+        .recommendation-placeholder {
+        background-color: #eaecee;
+        padding: 1em;
+        }
+
+        .recommendation-placeholder p {
+        font-weight: 600;
+        margin: 0;
+        }
+
+        .recommendation {
+        border-left: 3px solid #bbb;
+        padding: 0.3em 0.3em 0.3em 1em;
+        margin: 0 0 0 1.5em;
+        }
+
+        .recommendation-metric {
+        font-weight: 600;
+        min-width: 14em;
+        display: inline-block;
+        margin: 0 0 0 1.5em;
+        }
+
+      </style><body><div class="brand">Intel<sup>&reg;</sup> VTune<sup>&trade;</sup> Profiler 2024.0.0</div><div class="recommendation-placeholder"><p>Recommendations:</p><span class="recommendation-metric">GPU Time, % of Elapsed time: 75.2%</span><pre class="recommendation">GPU utilization is low. Switch to the for in-depth analysis of host activity. Poor GPU utilization can prevent the application from offloading effectively.</pre><span class="recommendation-metric">XVE Array Stalled/Idle: 52.4% of Elapsed time with GPU busy</span><pre class="recommendation">GPU metrics detect some kernel issues. Use GPU Compute/Media Hotspots (preview) to understand how well your application runs on the specified hardware.</pre></div><ul><li><span class="metric-name">Elapsed Time:
+        </span><span class="metric-value">36.890s</span><ul><li><span class="metric-name">GPU Time, % of Elapsed time:
+        </span><span class="metric-value-with-issue">75.2%<div class="issues"><pre class="issue">GPU utilization is low. Consider offloading more work to the GPU to increase overall application performance.</pre></div></span><ul><li><span class="metric-name">GPU Time, % of Elapsed time:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">GPU Adapter</span></th><th><span class="table-value">GPU Engine</span></th><th><span class="table-value">GPU Time</span></th><th><span class="table-value">GPU Time, % of Elapsed time(%)</span></th></tr><tr><td><span class="table-value">GPU 1</span></td><td><span class="table-value">Render and GPGPU</span></td><td><span class="table-value">27.734s</span></td><td><span class="table-value">75.2%</span></td></tr></table></li></ul><ul><li><span class="metric-name">Top Hotspots when GPU was idle:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Function</span></th><th><span class="table-value">Module</span></th><th><span class="table-value">CPU Time</span></th></tr><tr><td><span class="table-value">asm_exc_page_fault</span></td><td><span class="table-value">vmlinux</span></td><td><span class="table-value">2.920s</span></td></tr><tr><td><span class="table-value">[Skipped stack frame(s)]</span></td><td><span class="table-value">[Unknown]</span></td><td><span class="table-value">1.644s</span></td></tr><tr><td><span class="table-value">operator new</span></td><td><span class="table-value">libc++abi.so</span></td><td><span class="table-value">1.484s</span></td></tr><tr><td><span class="table-value">func@0x13f9b0</span></td><td><span class="table-value">libze_intel_gpu.so.1.3.27191.42</span></td><td><span class="table-value">1.434s</span></td></tr><tr><td><span class="table-value">memcmp</span></td><td><span class="table-value">libc-dynamic.so</span></td><td><span class="table-value">1.420s</span></td></tr><tr><td><span class="table-value">[Others]</span></td><td><span class="table-value">N/A</span></td><td><span class="table-value">15.764s</span></td></tr></table></li></ul></li></ul></li></ul><ul><li><span class="metric-name">Hottest Host Tasks:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Host Task</span></th><th><span class="table-value">Task Time</span></th><th><span class="table-value">% of Elapsed Time(%)</span></th><th><span class="table-value">Task Count</span></th></tr><tr><td><span class="table-value">zeEventHostSynchronize</span></td><td><span class="table-value">21.643s</span></td><td><span class="table-value">58.7%</span></td><td><span class="table-value">14</span></td></tr><tr><td><span class="table-value">zeCommandListAppendMemoryCopy</span></td><td><span class="table-value">6.066s</span></td><td><span class="table-value">16.4%</span></td><td><span class="table-value">1</span></td></tr><tr><td><span class="table-value">zeModuleCreate</span></td><td><span class="table-value">0.259s</span></td><td><span class="table-value">0.7%</span></td><td><span class="table-value">1</span></td></tr><tr><td><span class="table-value">zeCommandListAppendMemoryCopyRegion</span></td><td><span class="table-value">0.071s</span></td><td><span class="table-value">0.2%</span></td><td><span class="table-value">5</span></td></tr><tr><td><span class="table-value">zeCommandListCreateImmediate</span></td><td><span class="table-value">0.001s</span></td><td><span class="table-value">0.0%</span></td><td><span class="table-value">3</span></td></tr><tr><td><span class="table-value">[Others]</span></td><td><span class="table-value">0.001s</span></td><td><span class="table-value">0.0%</span></td><td><span class="table-value">105</span></td></tr></table></li></ul><ul><li><span class="metric-name">Hottest GPU Computing Tasks:
+        </span><span class="metric-value"/><table><tr><th><span class="table-value">Computing Task</span></th><th><span class="table-value">Total Time</span></th><th><span class="table-value">Execution Time</span></th><th><span class="table-value">% of Total Time(%)</span></th><th><span class="table-value">SIMD Width</span></th></tr><tr><td><span class="table-value">iso3dfd(sycl::_V1::queue&amp;, float*, float*, float*, float*, unsigned long, unsigned long, unsigned long, unsigned long)::{lambda(sycl::_V1::handler&amp;)#1}::operator()(sycl::_V1::handler&amp;) const::{lambda(sycl::_V1::id&lt;(int)3&gt;)#1}</span></td><td><span class="table-value">27.791s</span></td><td><span class="table-value">14.766s</span></td><td><span class="table-value">53.1%</span></td><td><span class="table-value">32</span></td></tr></table></li></ul><ul><li><span class="metric-name">Collection and Platform Info:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Application Command Line:
+        </span><span class="metric-value">./build/src/2_GPU_basic "1024" "1024" "1024" "100" </span></li></ul><ul><li><span class="metric-name">Operating System:
+        </span><span class="metric-value">5.15.0-100-generic DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.4 LTS"</span></li></ul><ul><li><span class="metric-name">Computer Name:
+        </span><span class="metric-value">idc-beta-batch-pvc-node-06</span></li></ul><ul><li><span class="metric-name">Result Size:
+        </span><span class="metric-value">320.1 MB </span></li></ul><ul><li><span class="metric-name">Collection start time:
+        </span><span class="metric-value">23:42:59 14/03/2024 UTC</span></li></ul><ul><li><span class="metric-name">Collection stop time:
+        </span><span class="metric-value">23:43:35 14/03/2024 UTC</span></li></ul><ul><li><span class="metric-name">Collector Type:
+        </span><span class="metric-value">Event-based sampling driver,Driverless Perf system-wide sampling,User-mode sampling and tracing</span></li></ul><ul><li><span class="metric-name">CPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">Name:
+        </span><span class="metric-value">Intel(R) Xeon(R) Processor code named Sapphirerapids</span></li></ul><ul><li><span class="metric-name">Frequency:
+        </span><span class="metric-value">2.000 GHz</span></li></ul><ul><li><span class="metric-name">Logical CPU Count:
+        </span><span class="metric-value">224</span></li></ul><ul><li><span class="metric-name">LLC size:
+        </span><span class="metric-value">110.1 MB </span></li></ul></li></ul><ul><li><span class="metric-name">GPU:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">GPU 0: 0:41:0.0 : Display controller: Intel Corporation Device 0x0bda:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">BDF:
+        </span><span class="metric-value">0:41:0:0</span></li></ul><ul><li><span class="metric-name">XVE Count:
+        </span><span class="metric-value">448</span></li></ul><ul><li><span class="metric-name">Max XVE Thread Count:
+        </span><span class="metric-value">8</span></li></ul><ul><li><span class="metric-name">Max Core Frequency:
+        </span><span class="metric-value">1.550 GHz</span></li></ul></li></ul><ul><li><span class="metric-name">GPU 1: 0:58:0.0 : Display controller: Intel Corporation Device 0x0bda:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">BDF:
+        </span><span class="metric-value">0:58:0:0</span></li></ul><ul><li><span class="metric-name">XVE Count:
+        </span><span class="metric-value">448</span></li></ul><ul><li><span class="metric-name">Max XVE Thread Count:
+        </span><span class="metric-value">8</span></li></ul><ul><li><span class="metric-name">Max Core Frequency:
+        </span><span class="metric-value">1.550 GHz</span></li></ul></li></ul><ul><li><span class="metric-name">GPU 2: 0:154:0.0 : Display controller: Intel Corporation Device 0x0bda:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">BDF:
+        </span><span class="metric-value">0:154:0:0</span></li></ul><ul><li><span class="metric-name">XVE Count:
+        </span><span class="metric-value">448</span></li></ul><ul><li><span class="metric-name">Max XVE Thread Count:
+        </span><span class="metric-value">8</span></li></ul><ul><li><span class="metric-name">Max Core Frequency:
+        </span><span class="metric-value">1.550 GHz</span></li></ul></li></ul><ul><li><span class="metric-name">GPU 3: 0:202:0.0 : Display controller: Intel Corporation Device 0x0bda:
+        </span><span class="metric-value"/><ul><li><span class="metric-name">BDF:
+        </span><span class="metric-value">0:202:0:0</span></li></ul><ul><li><span class="metric-name">XVE Count:
+        </span><span class="metric-value">448</span></li></ul><ul><li><span class="metric-name">Max XVE Thread Count:
+        </span><span class="metric-value">8</span></li></ul><ul><li><span class="metric-name">Max Core Frequency:
+        </span><span class="metric-value">1.550 GHz</span></li></ul></li></ul></li></ul></li></ul></body></html>
+

@@ -1,0 +1,26 @@
+{
+  "guid": "03029020-5FD4-46ED-8A55-EB73541F3E76",
+  "name": "simpleCUBLAS_LU",
+  "categories": ["Toolkit/oneAPI /Libraries/oneMKL"],
+  "description": "This sample implements LU decomposition factors a matrix as the product of an upper triangular matrix and lower triangular matrix.",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+			"cmake -D INTEL_MAX_GPU=1 ..",
+                        "make",
+                        "make run_sm"
+                 ]
+        }]
+
+  },
+  "expertise": "Concepts and Functionality"
+}

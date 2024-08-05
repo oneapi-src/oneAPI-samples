@@ -1,0 +1,27 @@
+{
+  "guid": "20ED32F3-671E-4710-A857-2821DB56CC22",
+  "name": "Intel® Python NumPy vs Numba_dpex",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
+  "description": "This sample shows how to achieve the same accuracy of the k-NN model classification while using numpy, numba and numba_dpex.",
+  "builder": ["cli"],
+  "languages": [{"python":{}}],
+  "dependencies": ["intelpython"],
+  "os":["linux"],
+  "targetDevice": ["CPU"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": [
+        "source /intel/oneapi/intelpython/bin/activate",
+        "conda activate base", 
+        "pip install pandas"
+      ],
+  		"id": "idp_numpy_numba_dpex_gs_py",
+  		"steps": [
+         "python IntelPython_Numpy_Numba_dpex_kNN.py" 
+  		 ]
+  	}
+    ]
+},
+"expertise": "Code Optimization"
+}

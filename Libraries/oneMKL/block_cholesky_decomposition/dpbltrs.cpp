@@ -13,7 +13,7 @@
 ************************************************************************/
 #include <cstdint>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
 
 using namespace oneapi;
@@ -21,7 +21,7 @@ using namespace oneapi;
 /************************************************************************
 * Definition:
 * ===========
-*   int64_t dpbltrs(cl::sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf)
+*   int64_t dpbltrs(sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf)
 *
 * Purpose:
 * ========
@@ -89,7 +89,7 @@ using namespace oneapi;
 *     < 0:        if INFO = -i, the i-th argument had an illegal value
 * =====================================================================
 */
-int64_t dpbltrs(cl::sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf) {
+int64_t dpbltrs(sycl::queue queue, int64_t n, int64_t nrhs, int64_t nb, double* d, int64_t ldd, double* b, int64_t ldb, double* f, int64_t ldf) {
 
     auto D = [=](int64_t i, int64_t j) -> double& { return d[i + j*ldd]; };
     auto B = [=](int64_t i, int64_t j) -> double& { return b[i + j*ldb]; };

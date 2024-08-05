@@ -1,0 +1,32 @@
+{
+  "guid": "464272FA-FA09-4C24-AE8A-2CC079EE29B9",
+  "name": "MPI Communications Using GPU Buffers",
+  "categories": ["Toolkit/oneAPI Libraries/MPI"],
+  "description": "Sample to demonstrate basic MPI communications using GPU buffers.",
+  "toolchain": [ "icpx" ],
+  "dependencies": [ "compiler|icpx","mpi" ],
+  "languages": [ { "cpp": { "properties": { "projectOptions": [ { "projectType": "makefile" } ] } } } ],
+  "targetDevice": [ "GPU" ],
+  "gpuRequired": ["pvc"],
+  "os": [ "linux" ],
+  "builder": [ "make" ],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "jacobian_omp",
+        "env": [
+            "export I_MPI_OFFLOAD=2",
+            "export LIBOMPTARGET_PLUGIN=level0",
+            "export ONEAPI_DEVICE_SELECTOR=level_zero:*"
+        ],
+        "steps": [
+          "make clean",
+          "make",
+          "mpirun -n 2 ./src/mpi_send_gpu_omp",
+          "mpirun -n 2 ./src/mpi_send_gpu_sycl"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

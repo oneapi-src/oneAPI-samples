@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_sepia_sycl", "sepia-filter.vcxproj", "{8B6BB247-2F98-4F4E-8477-968855857E5D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2_sepia_policies", "sepia-policies.vcxproj", "{320F8748-F9FD-4F0A-85BC-0167E0D1C539}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B6BB247-2F98-4F4E-8477-968855857E5D}.Debug|x64.ActiveCfg = Debug|x64
+		{8B6BB247-2F98-4F4E-8477-968855857E5D}.Debug|x64.Build.0 = Debug|x64
+		{8B6BB247-2F98-4F4E-8477-968855857E5D}.Release|x64.ActiveCfg = Release|x64
+		{8B6BB247-2F98-4F4E-8477-968855857E5D}.Release|x64.Build.0 = Release|x64
+		{320F8748-F9FD-4F0A-85BC-0167E0D1C539}.Debug|x64.ActiveCfg = Debug|x64
+		{320F8748-F9FD-4F0A-85BC-0167E0D1C539}.Debug|x64.Build.0 = Debug|x64
+		{320F8748-F9FD-4F0A-85BC-0167E0D1C539}.Release|x64.ActiveCfg = Release|x64
+		{320F8748-F9FD-4F0A-85BC-0167E0D1C539}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E8D806C-E037-4829-9AD2-BAB1BBEC07DA}
+	EndGlobalSection
+EndGlobal

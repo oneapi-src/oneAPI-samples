@@ -1,0 +1,24 @@
+{
+    "guid": "7bd9f396-8880-4539-8301-71084626b7db",
+    "name": "Guided iso3dfd GPU optimization",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Structured Grids"],
+    "description": "Step-by-step GPU optimization guide with Intel Advisor and ISO3DFD sample",
+    "toolchain": [ "dpcpp" ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["gen9", "pvc"],    
+    "languages": [ { "cpp": {} } ],
+    "os": [ "linux" ],
+    "builder": [ "ide", "cmake" ],
+    "ciTests": {
+      "linux": [{
+              "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "make",
+                          "make run_all"
+                   ]
+          }]            
+    },
+    "expertise": "Code Optimization"
+  }

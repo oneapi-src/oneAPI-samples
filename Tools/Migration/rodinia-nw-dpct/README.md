@@ -66,7 +66,7 @@ to a SYCL-compliant project.
 > - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
-> - `C:\Program Files(x86)\Intel\oneAPI\setvars.bat`
+> - `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
 > - For Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
@@ -87,6 +87,12 @@ $ intercept-build make
 
 2. Use the Intel® DPC++ Compatibility Tool and compilation database to migrate
    the CUDA code. The new project will be created in the `migration` directory.
+   The dpct `--in-root` option is used to set the root location of the program
+   sources that are to be migrated. Only files and folders located within the
+   --in-root directory will be considered for migration by the tool. Files located
+   outside the`--in-root` directory are considered system files and will not be
+   migrated, even if they are included by a source file located within the
+   `--in-root`directory.
 
 ```sh
 $ dpct -p compile_commands.json --in-root=. --out-root=migration

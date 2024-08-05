@@ -1,0 +1,26 @@
+{
+  "guid": "60A68888-6099-414E-999B-EDC7310A01EA",
+  "name": "TensorFlow Transformer with Advanced Matrix Extensions bfloat16 Mixed Precision Learning",
+  "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
+  "description": "This sample code demonstrates optimizing a TensorFlow model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on Sapphire Rapids",
+  "builder": ["cli"],
+  "languages": [{ "python": {} }],
+  "os": ["linux"],
+  "targetDevice": ["CPU"],
+  "cpuInstructionSets": ["AVX512", "AMX"],
+  "ciTests": {
+  	"linux": [
+    {
+  		"env": [],
+  		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
+  		"steps": [
+      "source /root/intel/oneapi/intelpython/bin/activate",
+			"conda activate tensorflow",
+			"conda install -y jupyter",
+			"jupyter nbconvert --execute --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
+  		]
+  	}
+    ]
+},
+"expertise": "Getting Started"
+}

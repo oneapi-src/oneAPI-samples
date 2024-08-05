@@ -22,13 +22,13 @@
     !
     ! Allocate arrays in device memory
 
-    !$omp allocate allocator(omp_target_device_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_device_mem_alloc): A)
     allocate(A(length))
 
-    !$omp allocate allocator(omp_target_device_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_device_mem_alloc): B)
     allocate(B(length))
 
-    !$omp allocate allocator(omp_target_device_mem_alloc)
+    !$omp allocators allocate(allocator(omp_target_device_mem_alloc): C)
     allocate(C(length))
 
     !

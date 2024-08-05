@@ -20,7 +20,7 @@ We then merge sublists two at a time to produce a sorted list. This sample could
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | macOS* Catalina or newer
+| OS                     | Ubuntu* 18.04
 | Hardware               | Skylake with GEN9 or newer
 | Software               | Intel® oneAPI DPC++ Compiler
 
@@ -47,7 +47,7 @@ Performance number tabulation.
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or Linux*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -63,7 +63,7 @@ The basic steps to build and run a sample using VS Code include:
 To learn more about the extensions and how to configure the oneAPI environment, see the 
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
-### On macOS*
+### On Linux*
 
 1. Build the program
    ```
@@ -89,7 +89,7 @@ There are two configurable options defined in the source code. Both parameters a
 - `constexpr int task_threshold` - This determines the minimum size of the list passed to the OpenMP merge sort function required to call itself and not the scalar version recursively. Its purpose is to reduce the threading overhead as it gets less efficient on smaller list sizes. Setting this value too small can reduce the OpenMP implementation's performance as it has more threading overhead for smaller workloads.
 - `constexpr int n` - This determines the size of the list used to test the merge sort functions. Setting it larger will result in longer runtime and is useful for analyzing the algorithm's runtime growth rate.
 
-### On macOS
+### On Linux
 
 1. Run the program.
    ```

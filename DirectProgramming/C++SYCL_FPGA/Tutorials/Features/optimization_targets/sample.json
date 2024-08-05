@@ -1,0 +1,159 @@
+{
+  "guid": "22F00FD4-D485-449F-8612-EDF2C276B1B5",
+  "name": "Optimization Targets",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features"],
+  "description": "An Intel® FPGA tutorial demonstrating setting optimization targets",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["ide", "cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/optimization_targets",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_no_control",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NO_CONTROL",
+          "make fpga_emu",
+          "./optimization_targets.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_no_control",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NO_CONTROL",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_minimum_latency",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=MINIMUM_LATENCY",
+          "make fpga_emu",
+          "./optimization_targets.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_minimum_latency",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=MINIMUM_LATENCY",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_manual_revert",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=MANUAL_REVERT",
+          "make fpga_emu",
+          "./optimization_targets.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_manual_revert",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=MANUAL_REVERT",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_no_control",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=NO_CONTROL",
+          "nmake fpga_emu",
+          "optimization_targets.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_no_control",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=NO_CONTROL",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_minimum_latency",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=MINIMUM_LATENCY",
+          "nmake fpga_emu",
+          "optimization_targets.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_minimum_latency",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=MINIMUM_LATENCY",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_manual_revert",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=MANUAL_REVERT",
+          "nmake fpga_emu",
+          "./optimization_targets.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_manual_revert",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake .. -G \"NMake Makefiles\" ../Tutorials/Features/optimization_targets -DPART=MANUAL_REVERT",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

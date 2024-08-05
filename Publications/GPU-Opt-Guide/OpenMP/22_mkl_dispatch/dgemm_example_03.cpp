@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
+// Snippet begin
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -167,3 +168,4 @@ int main()
 
     return 0;
 }
+// Snippet end

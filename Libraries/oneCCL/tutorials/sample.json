@@ -11,11 +11,13 @@
  "targetDevice": ["CPU", "GPU"],
  "ciTests": {
 	"linux": [{
-		"env": ["source /opt/intel/oneapi/setvars.sh --ccl-configuration=cpu_gpu_dpcpp --force" ],
 		"id": "ccl gsg",
 		"steps": [
-			"runipy oneCCL_Getting_Started.ipynb"
+			"mkdir build",
+			"cd build",
+			"cmake ..",
+			"make"
 		 ]
 	}]
- }
+  }
 }

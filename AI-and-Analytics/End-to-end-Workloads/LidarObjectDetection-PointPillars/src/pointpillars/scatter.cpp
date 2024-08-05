@@ -16,7 +16,7 @@
  */
 
 #include "pointpillars/scatter.hpp"
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <algorithm>
 #include "devicemanager/devicemanager.hpp"
 

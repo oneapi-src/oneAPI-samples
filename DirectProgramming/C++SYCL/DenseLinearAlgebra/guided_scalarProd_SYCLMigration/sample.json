@@ -1,0 +1,25 @@
+{
+    "guid": "20458699-AC45-4748-8A4A-4FA62CA5D3FE",	
+    "name": "ScalarProd Sample",
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
+    "description": "This sample calculates scalar products of a given set of input vector pairs on CPU and GPU devices.",
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
+    "ciTests": {
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm"
+           ]
+      }]
+     },
+    "expertise": "Concepts and Functionality"
+  }
