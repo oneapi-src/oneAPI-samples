@@ -190,7 +190,7 @@ def run_benchmark(model_details, args, find_graph_def):
         throughput = 1.0 / avg_time * args.batch_size
         print('Batch size = %d' % args.batch_size)
         print("Latency: {:.3f} ms".format(latency))
-        print("Throughput: {:.2f} fps".format(throughput))
+        print("Throughput: {:.2f} images per sec".format(throughput))
 
         # Logging to a file
         log_file = open("log.txt", "a")
