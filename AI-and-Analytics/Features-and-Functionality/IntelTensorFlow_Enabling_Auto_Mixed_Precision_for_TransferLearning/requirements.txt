@@ -2,3 +2,5 @@ notebook
 Pillow
 tensorflow_hub
 requests
+py-cpuinfo
+neural_compressor
