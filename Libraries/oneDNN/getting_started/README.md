@@ -87,7 +87,7 @@ and threading runtimes:
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_gomp  
 mkdir build  
 cd build  
-CC=GCC CXX=g++ cmake ..  
+CC=gcc CXX=g++ cmake ..  
 make  
 ```
 * Intel® C++ Compiler and Intel OpenMP runtime
@@ -95,7 +95,7 @@ make
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_iomp  
 mkdir build  
 cd build  
-CC=icc CXX=icpc cmake ..  
+CC=icx CXX=icpx cmake ..  
 make  
 ```
 * Intel® C++ Compiler and TBB runtime
@@ -103,7 +103,7 @@ make
 source ${INTEL_ONEAPI_INSTALL_FOLDER}/setvars.sh --dnnl-configuration=cpu_tbb  
 mkdir build  
 cd build  
-CC=icc CXX=icpc cmake ..  
+CC=icx CXX=icpx cmake ..  
 make  
 ```
 ### On a Windows* System
