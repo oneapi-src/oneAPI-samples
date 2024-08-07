@@ -11,11 +11,10 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /opt/intel/oneapi/setvars.sh --force",
+		"env": ["source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
-				"conda install -n tensorflow python-flatbuffers -y",
-				"conda install -n tensorflow -c intel neural-compressor -y",
-				"conda install -n tensorflow -y",
+				"conda install -c conda-forge python-flatbuffers -y",
+				"conda install -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow"
         ],

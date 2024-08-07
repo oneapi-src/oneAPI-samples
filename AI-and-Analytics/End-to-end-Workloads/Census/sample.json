@@ -14,14 +14,11 @@
         "env": [],
         "id": "Intel_Modin_E2E_py",
         "steps": [
-          "set -e # Terminate the script on first error",
-          "source /root/intel/oneapi/intelpython/bin/activate",
-          "conda create -n modin-hdk python=3.9 -y",
-          "conda activate modin-hdk",
+          "source /intel/oneapi/intelpython/bin/activate",
           "conda install modin-hdk -c conda-forge -y",
-          "pip install scikit-learn scikit-learn-intelex matplotlib jupyter ipykernel",
-          "python -m ipykernel install --name modin-hdk",
-          "jupyter nbconvert --to notebook --execute census_modin.ipynb"
+          "pip install scikit-learn scikit-learn-intelex matplotlib",
+          "pip install jupyter",
+          "jupyter nbconvert --to notebook census_modin.ipynb"
         ]
       }
     ]

@@ -257,6 +257,48 @@ The compiler may be able to perform additional optimizations if it can optimize 
    ```
 2. Run the program, and record the execution time.
 
+### On Windows*
+#### Step 1. Establish a Performance Baseline
+1. Open an Intel oneAPI command window.
+2. Change to the sample directory.
+3. Compile the sources with the following command.
+   ```
+   ifx /real-size:64 -O1 src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+4. Run generated `MatVector.exe`.
+   ```
+   MatVector.exe
+   ```
+5. Record the execution time reported in the output. This is the baseline against which subsequent improvements will be measured.
+
+#### Step 2. Generate a Vectorization Report
+1. Compile the sources with following command.
+   ```
+   ifx /real-size:64 -O2 /Qopt-report=1 src\matvec.f90 src\driver.f90 -o MatVectors
+   ```
+2. Run generated `MatVector.exe` again.
+3. Record the new execution time.
+4. Recompile your project with the **/Qopt-report=2** option.
+   ```
+   ifx /real-size:64 -O2 /Qopt-report=2 src\matvec.f90 src\driver.f90 -o MatVectors
+   ```
+5. Run `MatVector.exe` and record the new execution time.
+
+#### Step 3. Improve Performance by Aligning Data
+1. Recompile the program after adding the ALIGNED macro to ensure consistently aligned data.
+   ```
+   ifx /real-size:64 /Qopt-report=2 -D ALIGNED src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+2. Run `MatVector.exe` again, and record the new execution time.
+
+#### Step 4. Improve Performance with Interprocedural Optimization
+1. Recompile the program using the `/Qipo` option to enable interprocedural optimization.
+   ```
+   ifx /real-size:64 /Qopt-report=2 -D ALIGNED /Qipo src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+2. Run the program, and record the execution time.
+
+
 ### Additional Exercises
 
 The previous examples made use of double-precision arrays. You could build same examples with single precision arrays by changing the command-line option **-real-size 64** to **-real-size 32**. The non-vectorized versions of the loop execute only slightly faster than the double-precision version; however, the vectorized versions are substantially faster. This is because a packed SIMD instruction operating on a 32-byte vector register operates on eight single-precision data elements at once instead of four double-precision data elements.
