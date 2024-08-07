@@ -4,4 +4,4 @@ intel-extension-for-transformers==1.4.1
 neural_speed==1.0
 peft==0.10.0
 sentencepiece
-transformers==4.35.2
+transformers==4.38.0
