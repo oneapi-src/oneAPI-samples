@@ -13,16 +13,12 @@
 		"linux": [{
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
-				"apt-get install -y numactl",
 				"conda activate pytorch",
-				"pip install -r requirements.txt",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=pytorch"	
+				"pip install -r requirements.txt"
             ],
 			"id": "itrex_quantize_transformer_models",
 			"steps": [
-				"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_transformer_models_with_itrex.ipynb",
-				"numactl -m 0 -C all python quantize_transformer_models_with_itrex.py --model_name \"Intel/neural-chat-7b-v3-1\" --quantize \"int8\" --max_new_tokens 50"
+				"python quantize_transformer_models_with_itrex.py --model_name \"Intel/neural-chat-7b-v3-1\" --quantize \"int4\" --max_new_tokens 50"
 			]
 		}]
 	},
