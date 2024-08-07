@@ -18,7 +18,7 @@
 # ## Genetic algorithms
 # 
 # Let's start with the question **What is a genetic algorithm?**. It is an algorithm, search heuristic inspired by the process of natural selection. It is usually applied to various optimization problems, NP-hard problems for which finding a solution by standard methods is very time and resource consuming. This algorithm makes it possible to obtain a satisfying high quality result based on biology-inspired operations, such as:
-#  
+#  
 # * selection - is the process of selecting parents who mate and recombine to create offspring for the next generation. Parent selection is very crucial to the convergence rate of the GA as good parents drive individuals to better and fitter solutions.
 # * crossover - is a process similar to biological crossover. In this, more than one parent is selected and one or more offspring are produced using the genetic material of the parents.
 # * mutation - small random tweak in the chromosome, to get a new solution. It is used to maintain and introduce diversity in the genetic population and is usually applied with a low probability. 
@@ -260,16 +260,17 @@ for i in range(pop_size):
 # 
 # The only par that differs form the standard implementation is the evaluation function.
 # 
-# The most important part is to specify the global index of the computation. This is the current index of the computed chromosomes. This serves as a loop function across all chromosomes.
+# The most important part is to specify the index of the computation. This is the current index of the computed chromosomes. This serves as a loop function across all chromosomes.
 
 # In[ ]:
 
 
 import numba_dpex
+from numba_dpex import kernel_api
 
 @numba_dpex.kernel
-def eval_genomes_sycl_kernel(chromosomes, fitnesses, chrom_length):
-  pos = numba_dpex.get_global_id(0)
+def eval_genomes_sycl_kernel(item: kernel_api.Item, chromosomes, fitnesses, chrom_length):
+  pos = item.get_id(0)
   num_loops = 3000
   for i in range(num_loops):
     fitnesses[pos] += chromosomes[pos*chrom_length + 1]
@@ -300,7 +301,8 @@ for i in range(num_generations):
   chromosomes_flat_dpctl = dpnp.asarray(chromosomes_flat, device="gpu")
   fitnesses_dpctl = dpnp.asarray(fitnesses, device="gpu")
 
-  eval_genomes_sycl_kernel[numba_dpex.Range(pop_size)](chromosomes_flat_dpctl, fitnesses_dpctl, chrom_size)
+  exec_range = kernel_api.Range(pop_size)
+  numba_dpex.call_kernel(eval_genomes_sycl_kernel, exec_range, chromosomes_flat_dpctl, fitnesses_dpctl, chrom_size)
   fitnesses = dpnp.asnumpy(fitnesses_dpctl)
   chromosomes = next_generation(chromosomes, fitnesses)
   fitnesses = np.zeros(pop_size, dtype=np.float32)
@@ -398,14 +400,14 @@ for i in range(pop_size):
 # 
 # The evaluate created generation we are calculating the full distance of the given path (chromosome). In this example, the lower the fitness value is, the better the chromosome. That's different from the general GA that we implemented.
 # 
-# As in this example we are also using numba-dpex, we are using a global index like before.
+# As in this example we are also using numba-dpex, we are using an index like before.
 
 # In[ ]:
 
 
 @numba_dpex.kernel
-def eval_genomes_plain_TSP_SYCL(chromosomes, fitnesses, distances, pop_length):
-  pos = numba_dpex.get_global_id(0)
+def eval_genomes_plain_TSP_SYCL(item: kernel_api.Item, chromosomes, fitnesses, distances, pop_length):
+  pos = item.get_id(1)
   for j in range(pop_length-1):
     fitnesses[pos] += distances[int(chromosomes[pos, j]), int(chromosomes[pos, j+1])]
 
@@ -526,7 +528,8 @@ for i in range(num_generations):
   chromosomes_flat_dpctl = dpnp.asarray(chromosomes, device="gpu")
   fitnesses_dpctl = dpnp.asarray(fitnesses.copy(), device="gpu")
 
-  eval_genomes_plain_TSP_SYCL[numba_dpex.Range(pop_size)](chromosomes_flat_dpctl, fitnesses_dpctl, distances_dpctl, pop_size)
+  exec_range = kernel_api.Range(pop_size)
+  numba_dpex.call_kernel(eval_genomes_plain_TSP_SYCL, exec_range, chromosomes_flat_dpctl, fitnesses_dpctl, distances_dpctl, pop_size)
   fitnesses = dpnp.asnumpy(fitnesses_dpctl)
   chromosomes = next_generation_TSP(chromosomes, fitnesses)
   fitnesses = np.zeros(pop_size, dtype=np.float32)
@@ -553,4 +556,3 @@ print("Worst path: ", sorted_pairs[-1][0], " distance: ", sorted_pairs[-1][1])
 
 
 print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
-
