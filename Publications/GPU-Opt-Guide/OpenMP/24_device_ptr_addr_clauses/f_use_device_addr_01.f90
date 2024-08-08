@@ -15,11 +15,11 @@ program target_use_device_addr
   integer :: i,err
 
   ! Allocate host data
-  allocate(array_h(N1))
+  allocate(array_h(N1), array_d(1))
 
   !$omp target data map (from:array_h(1:N1)) map(alloc:array_d(1:N1))
   !$omp target data use_device_addr(array_d)
-  !$omp target
+  !$omp target has_device_addr(array_d)
       do i=1, N1
         array_d(i) = aval
         array_h(i) = array_d(i)

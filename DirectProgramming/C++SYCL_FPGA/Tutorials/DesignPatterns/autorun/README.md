@@ -38,7 +38,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware           | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -124,7 +124,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
       ```
       make report
       ```
-      The report resides at `autorun_report.prj/reports/report.html`.
+      The report resides at `autorun.report.prj/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device).
       ```
@@ -176,7 +176,7 @@ Typically, these kernels are meant to run forever, and data is streamed to and f
       ```
       nmake report
       ```
-      The report resides at `autorun_report.prj.a/reports/report.html`.
+      The report resides at `autorun.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device).
       ```

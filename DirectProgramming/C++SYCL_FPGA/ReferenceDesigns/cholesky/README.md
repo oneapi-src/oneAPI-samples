@@ -57,16 +57,19 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+>
+> :warning: This code sample may fail to compile with the Intel® oneAPI DPC++/C++ Compiler 2024.2 due to a known bug which will be fixed in a patch. Information about the patch will be available on
+https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html
 
 ### Performance
 
-Performance results are based on testing as of August 30, 2023.
+Performance results are based on testing as of May 14, 2024.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 378k matrices/s for real matrices of size 32x32
+| Intel® FPGA SmartNIC N6001-PL                     | 338k matrices/s for real matrices of size 32x32
 
 ## Key Implementation Details
 
@@ -185,7 +188,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, and `
       ```
       make report
       ```
-      The report resides at `cholesky_report.prj/reports/report.html`.
+      The report resides at `cholesky.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
        ```
@@ -294,11 +297,11 @@ You can apply the Cholesky decomposition to a number of matrices, as shown below
 ## Example Output
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Generating 8 random real matrices of size 32x32 
 Computing the Cholesky decomposition of 8 matrices 819200 times
-   Total duration:   17.3307 s
-Throughput: 378.15k matrices/s
+   Total duration:   19.366 s
+Throughput: 338.407k matrices/s
 Verifying results...
 
 PASSED

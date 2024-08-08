@@ -125,7 +125,7 @@ int main() {
   // validate results
   for (size_t i = 0; i < kInputSize; i++) {
     GreyType golden = Compute(r[i], g[i], b[i]);
-    if (std::fabs(out[i] - golden) > 1e-4) {
+    if (sycl::fabs(out[i] - golden) > 1e-4) {
       std::cout << "Result mismatch:\n"
                 << "out[" << i << "] = " << out[i] << "; golden = " << golden
                 << '\n';

@@ -62,6 +62,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+>
+> :warning: This code sample may fail to compile with the Intel® oneAPI DPC++/C++ Compiler 2024.2 due to a known bug which will be fixed in a patch. Information about the patch will be available on
+https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html
 
 ## Key Implementation Details
 
@@ -96,7 +99,6 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 |`SteeringVectorGenerator.hpp`   | SteeringVectorGenerator kernel, generates steering vectors based on data from the host
 |`StreamingQRD.hpp`          | StreamingQRD kernel, performs Q-R Decomposition on a matrix
 |`Transpose.hpp`             | Transpose kernel, reorders data for the StreamingQRD kernel
-|`Tuple.hpp`                 | A templated tuple that defines the NTuple class which is used for pipe interfaces
 |`udp_loopback_test.cpp`     | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
 |`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes (for example not in Intel® DevCloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
 |`UnrolledLoop.hpp`          | A templated-based loop unroller that unrolls loops in the compiler front end
@@ -164,7 +166,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
       ```
       make report
       ```
-      The report resides at `mvdr_beamforming_report.prj/reports/report.html`.
+      The report resides at `mvdr_beamforming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -347,7 +349,7 @@ Matrices:         1024
 Input Directory:  '../data'
 Output Directory: '.'
 
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Reading training data from '../data/A_real.txt and ../data/A_imag.txt
 Reading input data from ../data/X_real.txt and ../data/X_imag.txt
 Launched MVDR kernels
@@ -358,7 +360,7 @@ Training matrix rows          : 48
 Data rows per training matrix : 48
 Steering vectors              : 25
 Streaming pipe width          : 4
-Throughput: 357351 matrices/second
+Throughput: 324173 matrices/second
 Checking output data against ../data/small_expected_out_real.txt and ../data/small_expected_out_imag.txt
 Output data check succeeded
 PASSED

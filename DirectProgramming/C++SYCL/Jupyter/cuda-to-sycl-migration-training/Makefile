@@ -15,6 +15,12 @@ all:
 
 	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 05_SYCL_Migration_OceanFFT/sycl_migrated/Common -I 05_SYCL_Migration_OCeanFFT/sycl_migrated/data -I 05_SYCL_Migration_OceanFFT/sycl_migrated/include 05_SYCL_Migration_OceanFFT/sycl_migrated/Samples/4_CUDA_Libraries/oceanFFT/*.cpp -qmkl -o bin/app7 -w && cp -rf 05_SYCL_Migration_OceanFFT/sycl_migrated/data/* bin/
 
+	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option1/Common -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option1/include 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option1/Samples/3_CUDA_Features/simpleCudaGraphs/*.cpp -pthread -o bin/app8 -w
+
+	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/Common -I 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/include 06_SYCL_Migration_SimpleCUDAGraphs/sycl_migrated_option2/Samples/3_CUDA_Features/simpleCudaGraphs/*.cpp -pthread -o bin/app9 -w
+
+	icpx -fsycl -fsycl-targets=intel_gpu_pvc -I 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/Common -I 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/include 07_SYCL_Migration_MonteCarloMultiGPU/sycl_migrated/Samples/5_Domain_Specific/MonteCarloMultiGPU/*.cpp -pthread -qmkl -o bin/app10 -w
+	
 run:
 	bin/app1
 	bin/app2
@@ -23,6 +29,9 @@ run:
 	bin/app5
 	bin/app6
 	bin/app7 qatest
+	bin/app8
+	bin/app9
+	bin/app10
 
 clean:
 	rm -rf bin

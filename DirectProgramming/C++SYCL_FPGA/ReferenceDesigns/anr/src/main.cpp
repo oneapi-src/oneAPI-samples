@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   std::cout << "Running on device: "
-            << device.get_info<info::device::name>().c_str() 
+            << device.get_info<sycl::info::device::name>().c_str() 
             << std::endl;
 
 

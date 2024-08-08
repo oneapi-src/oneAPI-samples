@@ -143,8 +143,8 @@ double SubmitExplicitKernel(sycl::queue &q, std::vector<T> &in,
 #if defined(IS_BSP)
       // Explicitly create device pointers to inform the compiler that these
       // pointers point to device memory
-      sycl::device_ptr<T> in_ptr_d(in_ptr);
-      sycl::device_ptr<T> out_ptr_d(out_ptr);
+      sycl::ext::intel::device_ptr<T> in_ptr_d(in_ptr);
+      sycl::ext::intel::device_ptr<T> out_ptr_d(out_ptr);
 #endif
 
       for (size_t i = 0; i < size; i++) {

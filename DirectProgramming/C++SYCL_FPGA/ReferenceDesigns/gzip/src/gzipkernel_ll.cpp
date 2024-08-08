@@ -783,14 +783,18 @@ template <int engineID, int BatchSize>
 event SubmitCRC(queue &q, size_t block_size, uint32_t *result_crc,
                 std::vector<event> &depend_on) {
   event e = q.submit([&](handler &h) {
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kCRCIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kCRCIndex]);
+    //}
 
     h.single_task<CRC<engineID>>([=]() [[intel::kernel_args_restrict]] {
       auto accessor_isz = block_size;
 
-      host_ptr<uint32_t> accresult_crc(result_crc);
+      sycl::ext::intel::host_ptr<uint32_t> accresult_crc(result_crc);
 
       // See comments at top of file, regarding batching.
       [[intel::disable_loop_pipelining]]
@@ -2073,9 +2077,13 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
   event e = q.submit([&](handler &h) {
     auto accessor_isz = block_size;
 
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kLZReductionIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kLZReductionIndex]);
+    //}
 
     h.single_task<LZReduction<engineID>>([=]() [[intel::kernel_args_restrict]] {
       // Unpack the ptrs parameter pack and grab all of the pointers, annotating
@@ -2086,9 +2094,9 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
       // SubmitGzipTasksHelper(); everything to the left of '...' is expanded
       // for each value in ptrs.
 
-      host_ptr<char> host_pibuf[BatchSize];
+      sycl::ext::intel::host_ptr<char> host_pibuf[BatchSize];
       Unroller<0, BatchSize>::step(
-          [&](auto i) { host_pibuf[i] = host_ptr<char>(get<i>(ptrs...)); });
+          [&](auto i) { host_pibuf[i] = sycl::ext::intel::host_ptr<char>(get<i>(ptrs...)); });
 
       // See comments at top of file, regarding batching
       [[intel::disable_loop_pipelining]] for (int iter = 0;
@@ -2096,7 +2104,7 @@ event SubmitLZReduction(queue &q, size_t block_size, bool last_block,
         const int iter_masked =
             iter % BatchSize;  // Hint to the compiler that the access to
                                // host_pibuf is bounded.
-        host_ptr<char> acc_pibuf =
+        sycl::ext::intel::host_ptr<char> acc_pibuf =
             host_pibuf[iter_masked];  // Grab new host pointer on each iteration
                                       // of the batch loop
 
@@ -2445,28 +2453,32 @@ event SubmitStaticHuffman(queue &q, size_t block_size,
                           std::vector<event> &depend_on,
                           PtrTypes... ptrs) {
   event e = q.submit([&](handler &h) {
-    if (!depend_on.empty()) {
-      h.depends_on(depend_on[kStaticHuffmanIndex]);
-    }
+    // Temporarily remove event dependences to work around a bug in 2024.2
+    // This is safe on FPGA because invocations of the same kernel are 
+    // serialized for non-pipelined kernels
+    // Note: this is not portable
+    //if (!depend_on.empty()) {
+    //  h.depends_on(depend_on[kStaticHuffmanIndex]);
+    //}
 
     h.single_task<StaticHuffman<engineID>>([=]() [[intel::kernel_args_restrict]] {
 
       // See comments in SubmitLZReduction, where the same parameter unpacking
       // is done.
-      host_ptr<char> host_pobuf[BatchSize];
+      sycl::ext::intel::host_ptr<char> host_pobuf[BatchSize];
       Unroller<0, BatchSize>::step(
-          [&](auto i) { host_pobuf[i] = host_ptr<char>(get<i>(ptrs...)); });
+          [&](auto i) { host_pobuf[i] = sycl::ext::intel::host_ptr<char>(get<i>(ptrs...)); });
 
       auto accessor_isz = block_size;
 
-      host_ptr<GzipOutInfo> acc_gzip_out(gzip_out_buf);
+      sycl::ext::intel::host_ptr<GzipOutInfo> acc_gzip_out(gzip_out_buf);
 
       auto acc_eof = last_block ? 1 : 0;
 
       // See comments at top of file regarding batching.
       [[intel::disable_loop_pipelining]]
       for (int iter=0; iter < BatchSize; iter++) {
-        host_ptr<char> accessor_output = host_pobuf[iter % BatchSize];
+        sycl::ext::intel::host_ptr<char> accessor_output = host_pobuf[iter % BatchSize];
 
         unsigned int leftover[kVec] = {0};
         Unroller<0, kVec>::step([&](int i) { leftover[i] = 0; });

@@ -361,7 +361,7 @@
 					<v:ud v:nameU="DarkerColor" v:prompt="" v:val="VT5(#339933)"/>
 				</v:userDefs>
 				<title>Sheet.1030</title>
-				<desc>Pixel Bundle (fpga_tools::DataBundle&#60;PixelType, kParallelPixels&#62;)</desc>
+				<desc>Pixel Bundle (std::array&#60;PixelType, kParallelPixels&#62;)</desc>
 				<g id="shape1031-28" v:mID="1031" v:groupContext="shape" v:layerMember="0">
 					<title>Sheet.1031</title>
 					<v:userDefs>
@@ -389,7 +389,7 @@
 					<v:textRect cx="104.953" cy="384.927" width="209.91" height="38.2677"/>
 					<text x="6" y="381.33" class="st2" v:langID="4105"><v:paragraph/><v:tabList/>Pixel Bundle<tspan class="st3"
 								v:langID="1033"> </tspan><tspan x="6" dy="2.4em" class="st5" v:langID="1033">(</tspan><tspan
-								class="st6" v:langID="1033">fpga_tools::DataBundle&#60;PixelType, kParallelPixels&#62;</tspan><tspan
+								class="st6" v:langID="1033">std::array&#60;PixelType, kParallelPixels&#62;</tspan><tspan
 								class="st5" v:langID="1033">)</tspan></text>				</g>
 			</g>
 		</g>
@@ -691,7 +691,7 @@
 					<v:ud v:nameU="DarkerColor" v:prompt="" v:val="VT5(#339933)"/>
 				</v:userDefs>
 				<title>Sheet.1084</title>
-				<desc>Pixel Bundle (fpga_tools::DataBundle&#60;PixelType, kParallelPixels&#62;)</desc>
+				<desc>Pixel Bundle (std::array&#60;PixelType, kParallelPixels&#62;)</desc>
 				<g id="shape1085-64" v:mID="1085" v:groupContext="shape" v:layerMember="0">
 					<title>Sheet.1085</title>
 					<v:userDefs>
@@ -719,7 +719,7 @@
 					<v:textRect cx="104.953" cy="384.927" width="209.91" height="38.2677"/>
 					<text x="6" y="381.33" class="st2" v:langID="4105"><v:paragraph/><v:tabList/>Pixel Bundle<tspan class="st3"
 								v:langID="1033"> </tspan><tspan x="6" dy="2.4em" class="st5" v:langID="1033">(</tspan><tspan
-								class="st6" v:langID="1033">fpga_tools::DataBundle&#60;PixelType, kParallelPixels&#62;</tspan><tspan
+								class="st6" v:langID="1033">std::array&#60;PixelType, kParallelPixels&#62;</tspan><tspan
 								class="st5" v:langID="1033">)</tspan></text>				</g>
 			</g>
 		</g>

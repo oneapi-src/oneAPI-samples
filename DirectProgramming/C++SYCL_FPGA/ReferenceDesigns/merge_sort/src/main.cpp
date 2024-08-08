@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
   }
 
   std::cout << "Running on device: "
-            << device.get_info<info::device::name>().c_str() 
+            << device.get_info<sycl::info::device::name>().c_str() 
             << std::endl;
 
   // the input, output, and reference data
@@ -233,8 +233,9 @@ int main(int argc, char *argv[]) {
     // the pointer type for the kernel depends on whether data is coming from
     // USM host or device allocations
     using KernelPtrType =
-        typename std::conditional_t<kUseUSMHostAllocation, host_ptr<ValueT>,
-                                    device_ptr<ValueT>>;
+        typename std::conditional_t<kUseUSMHostAllocation, 
+                                    sycl::ext::intel::host_ptr<ValueT>,
+                                    sycl::ext::intel::device_ptr<ValueT>>;
 
     // run the sort multiple times to increase the accuracy of the timing
     for (int i = 0; i < runs; i++) {

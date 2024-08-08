@@ -1,0 +1,25 @@
+{
+  "guid": "E3AE364B-D5B5-416B-B8AE-014A65AC2B82",
+  "name": "fastWalshTransform",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+  "description": "This sample demonstrates the efficient implementation of naturally-ordered Walsh transform",
+   "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
+                "steps": [
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 
+                 ]
+        }]
+
+  },
+  "expertise": "Concepts and Functionality"
+}

@@ -1,0 +1,1198 @@
+---
+MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          0
+    Length:          0
+    ReplacementText: "#define DPCT_COMPAT_RT_VERSION 12020\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          1894
+    Length:          26
+    ReplacementText: "#define DPCT_PROFILING_ENABLED\n#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          2108
+    Length:          18
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          6018
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:17: The \"0\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          6038
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          6054
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          6615
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          7729
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          7752
+    Length:          32
+    ReplacementText: 'DPCT_CHECK_ERROR(deviceCount = dpct::dev_mgr::instance().device_count())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          7791
+    Length:          177
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8740
+    Length:          14
+    ReplacementText: 'dpct::device_info'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8771
+    Length:          11
+    ReplacementText: 'dpct::err0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8794
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(currentDevice)))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8868
+    Length:          11
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8942
+    Length:          4
+    ReplacementText: 'get_name()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8950
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1035:19: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          8960
+    Length:          51
+    ReplacementText: 'false'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9173
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1093:20: The \"currentDevice\" device may be not the one intended for use. Adjust the selected device if needed.\n        */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9197
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9225
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9354
+    Length:          0
+    ReplacementText: "             /*\n             DPCT1009:21: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.\n             */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9367
+    Length:          28
+    ReplacementText: '"<Placeholder string>"'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9398
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1093:22: The \"currentDevice\" device may be not the one intended for use. Adjust the selected device if needed.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9420
+    Length:          13
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          9448
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          10360
+    Length:          14
+    ReplacementText: DPCT_COMPAT_RT_VERSION
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          12754
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:23: The \"nDevice\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          12758
+    Length:          13
+    ReplacementText: 'dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          12800
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          15216
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:24: The \"currentDevice\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          15220
+    Length:          13
+    ReplacementText: 'dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          17600
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1093:25: The \"currentDevice\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          17604
+    Length:          13
+    ReplacementText: 'dpct::select_device'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          19880
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          19950
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(start = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          19994
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(stop = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          20148
+    Length:          14
+    ReplacementText: DPCT_COMPAT_RT_VERSION
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          20191
+    Length:          114
+    ReplacementText: 'DPCT_CHECK_ERROR(h_idata = (unsigned char *)sycl::malloc_host(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          20328
+    Length:          114
+    ReplacementText: 'DPCT_CHECK_ERROR(h_odata = (unsigned char *)sycl::malloc_host(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21111
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(d_idata = (unsigned char *)sycl::malloc_device(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21212
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21248
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21273
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21386
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1024:26: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21406
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21429
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21431
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21516
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21557
+    Length:          62
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21619
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21623
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21632
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1024:27: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21652
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21674
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21676
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21699
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          21745
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(elapsedTimeInMs = (stop->get_profiling_info<sycl::info::event_profiling::command_end>() - start->get_profiling_info<sycl::info::event_profiling::command_start>()) / 1000000.0f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22099
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22135
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22160
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22551
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(stop))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22594
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(start))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22694
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_idata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22715
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22738
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_odata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22759
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22834
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_idata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          22851
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          23329
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          23398
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(start = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          23442
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(stop = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          23559
+    Length:          14
+    ReplacementText: DPCT_COMPAT_RT_VERSION
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          23675
+    Length:          114
+    ReplacementText: 'DPCT_CHECK_ERROR(h_odata = (unsigned char *)sycl::malloc_host(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          24902
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(d_idata = (unsigned char *)sycl::malloc_device(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25060
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1024:28: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25080
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25103
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25105
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25190
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25231
+    Length:          62
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25293
+    Length:          3
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25297
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25306
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1024:29: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25326
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25348
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25350
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25373
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25419
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(elapsedTimeInMs = (stop->get_profiling_info<sycl::info::event_profiling::command_end>() - start->get_profiling_info<sycl::info::event_profiling::command_start>()) / 1000000.0f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25773
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25809
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          25834
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26225
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(stop))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26268
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(start))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26368
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(sycl::free(h_odata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26389
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26491
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_idata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26508
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          26930
+    Length:          11
+    ReplacementText: 'dpct::event_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27000
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(start = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27044
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(stop = new sycl::event())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27509
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(d_idata = (unsigned char *)sycl::malloc_device(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27594
+    Length:          38
+    ReplacementText: 'DPCT_CHECK_ERROR(d_odata = (unsigned char *)sycl::malloc_device(memSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27684
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27720
+    Length:          24
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27745
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27795
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1024:30: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27813
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27836
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27838
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27929
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27965
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          27992
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28000
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1024:31: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28018
+    Length:          15
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28040
+    Length:          1
+    ReplacementText: '&dpct::get_in_order_queue()'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28042
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28201
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28308
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(elapsedTimeInMs = (stop->get_profiling_info<sycl::info::event_profiling::command_end>() - start->get_profiling_info<sycl::info::event_profiling::command_start>()) / 1000000.0f)'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28723
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(stop))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28766
+    Length:          23
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::destroy_event(start))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28810
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_idata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28827
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28848
+    Length:          17
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_odata, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          28865
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Offset:          32594
+    Length:          14
+    ReplacementText: DPCT_COMPAT_RT_VERSION
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest/bandwidthTest.cu'
+    Digest:          4543433afc5dcadaab036d8eda14200c
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/1_Utilities/bandwidthTest'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

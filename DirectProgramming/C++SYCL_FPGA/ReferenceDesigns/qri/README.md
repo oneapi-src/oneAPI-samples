@@ -57,6 +57,9 @@ You can also find more information about [troubleshooting build errors](/DirectP
 > When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
 >
 > :warning: Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
+>
+> :warning: This code sample may fail to compile with the Intel® oneAPI DPC++/C++ Compiler 2024.2 due to a known bug which will be fixed in a patch. Information about the patch will be available on
+https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html
 
 ## Key Implementation Details
 
@@ -296,14 +299,14 @@ You can perform the QR-based inversion of the set of matrices repeatedly, as sho
 
 ## Example Output
 
-Example output when running on **Terasic’s DE10-Agilex Development Board** for 8 matrices (each consisting of 32 x 32 real numbers).
+Example output when running on **Intel® FPGA SmartNIC N6001-PL** for 8 matrices (each consisting of 32 x 32 real numbers).
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Generating 8 random real matrices of size 32x32 
 Running QR inversion of 8 matrices 6553600 times
-   Total duration:   170.299 s
-Throughput: 307.864k matrices/s
+   Total duration:   166.892 s
+Throughput: 314.149k matrices/s
 Verifying results... 
 PASSED
 ```

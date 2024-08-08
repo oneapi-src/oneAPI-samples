@@ -64,8 +64,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
@@ -82,7 +82,7 @@ To learn more about the extensions, see the
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows*:
 > - `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
@@ -112,7 +112,7 @@ batch or interactive mode.  For the array transform sample, a node
 with GPU and an interactive shell is recommended.
 
 ```
-$ qsub -I -l nodes=1:gpu:ppn=2
+qsub -I -l nodes=1:gpu:ppn=2
 ```
 
 For more information, see the Intel® oneAPI
@@ -127,12 +127,12 @@ offloaded to the GPU can be debugged conveniently.  Auto-attach is
 by default enabled.  To turn this feature off, if desired (e.g., if
 interested in debugging CPU or FPGA-emu only), do:
 ```
-$ export INTELGT_AUTO_ATTACH_DISABLE=1
+export INTELGT_AUTO_ATTACH_DISABLE=1
 ```
 
 To turn the feature back on:
 ```
-$ unset INTELGT_AUTO_ATTACH_DISABLE
+unset INTELGT_AUTO_ATTACH_DISABLE
 ```
 
 ### On a Linux* System
@@ -141,33 +141,33 @@ Perform the following steps:
 
 1.  Build the program using the following `cmake` commands.
     ```
-    $ cd array-transform
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make
+    cd array-transform
+    mkdir build
+    cd build
+    cmake ..
+    make
     ```
     > Note: The cmake configuration enforces the `Debug` build type.
 
 2.  Run the program:
     ```
-    $ ./array-transform
+    ./array-transform
     ```
     > Note: to specify a device type to offload the kernel, use
     > the `ONEAPI_DEVICE_SELECTOR` environment variable.
     > E.g.  to restrict the offload only to CPU devices use:
     ```
-    $ ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform
+    ONEAPI_DEVICE_SELECTOR=*:cpu ./array-transform
     ```
 
 3.  Start a debugging session:
     ```
-    $ gdb-oneapi array-transform
+    gdb-oneapi array-transform
     ```
 
 4.  Clean the program using:
     ```
-    $ make clean
+    make clean
     ```
 
 By default, CMake configures the build for Just-in-Time (JIT)
@@ -182,7 +182,7 @@ compiler.
 For example, to do AoT compilation for a specific GPU device ID:
 
 ```
-$ cmake .. -DSYCL_COMPILE_TARGET=<device id>
+cmake .. -DSYCL_COMPILE_TARGET=<device id>
 ```
 where the `<device id>` specifies the target device, e.g., "xe".
 
@@ -233,7 +233,7 @@ please see [Get Started with Intel® Distribution for GDB* on Windows* OS Host](
 ### Example Outputs
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi -q ./array-transform
+ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
 (gdb) break 54
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
@@ -248,7 +248,7 @@ Thread 4 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator
 ```
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:fpga gdb-oneapi -q ./array-transform
+ONEAPI_DEVICE_SELECTOR=*:fpga gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
 (gdb) break 54
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.
@@ -263,7 +263,7 @@ Thread 6 "array-transform" hit Breakpoint 1, main::{lambda(auto:1&)#1}::operator
 ```
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu gdb-oneapi -q ./array-transform
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu gdb-oneapi -q ./array-transform
 Reading symbols from ./array-transform...
 (gdb) break 54
 Breakpoint 1 at 0x4057b7: file array-transform.cpp, line 54.

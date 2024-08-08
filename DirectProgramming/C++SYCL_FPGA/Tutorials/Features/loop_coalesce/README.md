@@ -20,7 +20,7 @@ The `loop_coalesce` attribute enables you to direct the compiler to combine nest
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -218,7 +218,7 @@ If the innermost coalesced loop has a very small trip count, `loop_coalesce` mig
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ## Read the Reports
-Locate `report.html` in the `loop_coalesce_report.prj/reports/` directory. 
+Locate `report.html` in the `loop_coalesce.report.prj/reports/` directory. 
 
 On the main report page, scroll down to the section titled `Compile Estimated Kernel Resource Utilization Summary`. Each kernel name ends in the `loop_coalesce` attribute argument used for that kernel; for example, KernelCompute<2> uses a `loop_coalesce` argument of `2`. You can verify that the number of ALMs used decreases when the loops are coalesced. Since KernelCompute<2> has fewer loops than KernelCompute<1>, it requires less hardware for loop overhead. 
 

@@ -1,4 +1,5 @@
 #include <sycl/sycl.hpp>
+#include <cmath>
 #include <vector>
 
 #include "host_speed.hpp"
@@ -732,7 +733,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
     constexpr size_t kReqdWgSize = 32 * kKiB;  // 32 KB
     h.parallel_for<NopNDRange>(
         sycl::nd_range<1>(sycl::range<1>(kN), sycl::range<1>(kReqdWgSize)), [=
-    ](auto id) [[sycl::reqd_work_group_size(1, 1, kReqdWgSize)]]{});
+    ](auto id) [[sycl::reqd_work_group_size(kReqdWgSize)]]{});
   });
   // Wait for operation to complete
   e.wait();
@@ -775,7 +776,7 @@ int ShimMetrics::KernelClkFreq(sycl::queue &q, bool report_chk) {
                 << board_info_.quartus_fmax_ << " MHz \n\n";
       // Check that hardware frequency is within 2% of Quartus compiled
       // frequency, terminate test if its not
-      float PercentError = (fabs(board_info_.quartus_fmax_ - kernel_freq_) /
+      float PercentError = (std::fabs(board_info_.quartus_fmax_ - kernel_freq_) /
                             (board_info_.quartus_fmax_)) *
                            100;
       if (PercentError < 2)
@@ -1389,7 +1390,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
                 [=](sycl::nd_item<1> it)
                     [[intel::num_simd_work_items(kSimdItems),
-                      sycl::reqd_work_group_size(1, 1, kWGSize)]] {
+                      sycl::reqd_work_group_size(kWGSize)]] {
                       // Write global ID to memory
                       auto gid = it.get_global_id(0);
                       mem[gid] = gid;
@@ -1400,7 +1401,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
                 [=](sycl::nd_item<1> it)
                     [[intel::num_simd_work_items(kSimdItems),
-                      sycl::reqd_work_group_size(1, 1, kWGSize)]] {
+                      sycl::reqd_work_group_size(kWGSize)]] {
                       // Read memory
                       auto gid = it.get_global_id();
                       unsigned val = mem[gid];
@@ -1416,7 +1417,7 @@ int ShimMetrics::KernelMemBW(sycl::queue &q) {
                 sycl::nd_range<1>(sycl::range<1>(N), sycl::range<1>(kWGSize)),
                 [=](sycl::nd_item<1> it)
                     [[intel::num_simd_work_items(kSimdItems),
-                      sycl::reqd_work_group_size(1, 1, kWGSize)]] {
+                      sycl::reqd_work_group_size(kWGSize)]] {
                       // Read, modify and write to memory
                       auto gid = it.get_global_id(0);
                       mem[gid] = mem[gid] + 2;

@@ -1,66 +1,60 @@
 import sys
 
-try:
-    import neural_compressor as inc
-    print("neural_compressor version {}".format(inc.__version__))
-except:
-    try:
-        import lpot as inc
-        print("LPOT version {}".format(inc.__version__))
-    except:
-        import ilit as inc
-        print("iLiT version {}".format(inc.__version__))
+import neural_compressor as inc
+print("neural_compressor version {}".format(inc.__version__))
 
-if inc.__version__ == '1.2':
-    print("This script doesn't support LPOT 1.2, please install LPOT 1.1, 1.2.1 or newer")
-    sys.exit(1)
+import tensorflow as tf
+print("tensorflow {}".format(tf.__version__))
 
-import alexnet
-import math
+from neural_compressor.config import PostTrainingQuantConfig, AccuracyCriterion, TuningCriterion
+from neural_compressor.data import DataLoader
+from neural_compressor.quantization import fit
+from neural_compressor import Metric
+
 import mnist_dataset
 
 
-def save_int8_frezon_pb(q_model, path):
-    from tensorflow.python.platform import gfile
-    f = gfile.GFile(path, 'wb')
-    f.write(q_model.as_graph_def().SerializeToString())
-    print("Save to {}".format(path))
+class Dataset(object):
+    def __init__(self):
+        _x_train, _y_train, label_train, x_test, y_test, label_test = mnist_dataset.read_data()
+
+        self.test_images = x_test
+        self.labels = label_test
+
+    def __getitem__(self, index):
+        return self.test_images[index], self.labels[index]
+
+    def __len__(self):
+        return len(self.test_images)
 
 
-class Dataloader(object):
-    def __init__(self, batch_size):
-        self.batch_size = batch_size
+def auto_tune(input_graph_path, batch_size):
+    dataset = Dataset()
+    dataloader = DataLoader(framework='tensorflow', dataset=dataset, batch_size=batch_size)
+    tuning_criterion = TuningCriterion(max_trials=100)
+    config = PostTrainingQuantConfig(approach="static", tuning_criterion=tuning_criterion,
+                                     accuracy_criterion = AccuracyCriterion(
+                                         higher_is_better=True,
+                                         criterion='relative',
+                                         tolerable_loss=0.01  )
+                                    )
+    top1 = Metric(name="topk", k=1)
 
-    def __iter__(self):
-        x_train, y_train, label_train, x_test, y_test, label_test = mnist_dataset.read_data()
-        batch_nums = math.ceil(len(x_test) / self.batch_size)
-
-        for i in range(batch_nums - 1):
-            begin = i * self.batch_size
-            end = (i + 1) * self.batch_size
-            yield x_test[begin: end], label_test[begin: end]
-
-        begin = (batch_nums - 1) * self.batch_size
-        yield x_test[begin:], label_test[begin:]
+    q_model = fit(
+        model=input_graph_path,
+        conf=config,
+        calib_dataloader=dataloader,
+        eval_dataloader=dataloader,
+        eval_metric=top1
+        )
 
 
-def auto_tune(input_graph_path, yaml_config, batch_size):
-    fp32_graph = alexnet.load_pb(input_graph_path)
-    quan = inc.Quantization(yaml_config)
-    dataloader = Dataloader(batch_size)
-
-    q_model = quan(
-        fp32_graph,
-        q_dataloader=dataloader,
-        eval_func=None,
-        eval_dataloader=dataloader)
     return q_model
 
 
-yaml_file = "alexnet.yaml"
 batch_size = 200
-fp32_frezon_pb_file = "fp32_frezon.pb"
+fp32_frozen_pb_file = "fp32_frozen.pb"
 int8_pb_file = "alexnet_int8_model.pb"
 
-q_model = auto_tune(fp32_frezon_pb_file, yaml_file, batch_size)
-save_int8_frezon_pb(q_model, int8_pb_file)
+q_model = auto_tune(fp32_frozen_pb_file, batch_size)
+q_model.save(int8_pb_file)

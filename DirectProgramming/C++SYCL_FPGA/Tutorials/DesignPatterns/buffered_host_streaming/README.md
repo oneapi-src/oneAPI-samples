@@ -47,7 +47,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware           | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -136,7 +136,7 @@ This sample demonstrates the following concepts:
       ```
       make report
       ```
-      The report resides at `buffered_host_streaming_report.prj/reports/report.html`.
+      The report resides at `buffered_host_streaming.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -188,7 +188,7 @@ This sample demonstrates the following concepts:
       ```
       nmake report
       ```
-      The report resides at `buffered_host_streaming_report.prj.a/reports/report.html`.
+      The report resides at `buffered_host_streaming.report.prj.a/reports/report.html`.
 
    3. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```

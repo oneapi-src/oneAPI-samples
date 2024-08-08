@@ -1,11 +1,11 @@
-# Modin Get Started Sample
+# Modin* Get Started Sample
 
-The `Modin Getting Started` sample demonstrates how to use distributed Pandas using the Modin package. 
+The `Modin* Getting Started` sample demonstrates how to use distributed Pandas using the Modin package. 
 
 | Area                  | Description
 | :---                  | :---
 | Category              | Getting Started
-| What you will learn   | Basic Modin programming model for Intel processors
+| What you will learn   | Basic Modin* programming model for Intel processors
 | Time to complete      | 5 to 8 minutes
 
 ## Purpose
@@ -52,7 +52,7 @@ This get started sample code is implemented for CPU using the Python language. T
    conda install ipykernel
    python -m ipykernel install --user --name usr_modin
    ```
-## Run the `Modin Get Started` Sample
+## Run the `Modin* Get Started` Sample
 
 You can run the Jupyter notebook with the sample code on your local server or download the sample code from the notebook as a Python file and run it locally. 
 
@@ -62,8 +62,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 
 The basic steps to build and run a sample using VS Code include:
 
-1. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
-2. Configure the oneAPI environment with the extension **Environment Configurator for Intel(R) oneAPI Toolkits**.
+1. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+2. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
 3. Open a Terminal in VS Code by clicking **Terminal** > **New Terminal**.
 4. Run the sample in the VS Code terminal using the instructions below.
 

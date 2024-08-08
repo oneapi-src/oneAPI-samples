@@ -14,10 +14,11 @@
   		"env": [],
   		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
   		"steps": [
-      "source /root/intel/oneapi/intelpython/bin/activate",
+      "source /intel/oneapi/intelpython/bin/activate",
 			"conda activate tensorflow",
-			"conda install -y jupyter",
-			"jupyter nbconvert --execute --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
+			"pip install jupyter ipykernel",
+			"python -m ipykernel install --user --name=tensorflow",
+			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
   		]
   	}
     ]

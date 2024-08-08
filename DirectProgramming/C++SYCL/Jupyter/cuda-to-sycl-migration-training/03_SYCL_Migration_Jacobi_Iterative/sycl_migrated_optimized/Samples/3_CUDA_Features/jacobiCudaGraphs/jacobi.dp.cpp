@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +60,7 @@ static void JacobiMethod(const float *A, const double *b,
                                     const sycl::nd_item<3> &item_ct1,
                                     double *x_shared, double *b_shared) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
     // N_ROWS == n
 
   for (int i = item_ct1.get_local_id(2); i < N_ROWS;
@@ -100,11 +94,7 @@ static void JacobiMethod(const float *A, const double *b,
       rowThreadSum += (A[i * N_ROWS + j] * x_shared[j]);
     }
 
-    /*for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
-         offset > 0; offset /= 2) {
-      rowThreadSum += tile32.shuffle_down(rowThreadSum, offset);
-    }*/
-    rowThreadSum = sycl::reduce_over_group(tile32, rowThreadSum, sycl::plus<>());
+    rowThreadSum = sycl::reduce_over_group(tile32, rowThreadSum, sycl::plus<double>());
 
     if (item_ct1.get_sub_group().get_local_linear_id() == 0) {
       dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(
@@ -153,7 +143,7 @@ static void JacobiMethod(const float *A, const double *b,
 static void finalError(double *x, double *g_sum,
                        const sycl::nd_item<3> &item_ct1, uint8_t *dpct_local) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
   auto warpSum = (double *)dpct_local;
   double sum = 0.0;
 
@@ -168,11 +158,7 @@ static void finalError(double *x, double *g_sum,
 
   sycl::sub_group tile32 = item_ct1.get_sub_group();
 
-  /*for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
-       offset > 0; offset /= 2) {
-    sum += tile32.shuffle_down(sum, offset);
-  }*/
-  sum = sycl::reduce_over_group(tile32, sum, sycl::plus<>());
+  sum = sycl::reduce_over_group(tile32, sum, sycl::plus<double>());
 
   if (item_ct1.get_sub_group().get_local_linear_id() == 0) {
     warpSum[item_ct1.get_local_id(2) /
@@ -194,11 +180,8 @@ static void finalError(double *x, double *g_sum,
   }
 
   if (item_ct1.get_local_id(2) < 32) {
-    /*for (int offset = item_ct1.get_sub_group().get_local_linear_range() / 2;
-         offset > 0; offset /= 2) {
-      blockSum += tile32.shuffle_down(blockSum, offset);
-    }*/
-    blockSum = sycl::reduce_over_group(tile32, blockSum, sycl::plus<>());
+    blockSum = sycl::reduce_over_group(tile32, blockSum, sycl::plus<double>());
+
     if (item_ct1.get_sub_group().get_local_linear_id() == 0) {
       dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(
           g_sum, blockSum);
@@ -216,38 +199,32 @@ double JacobiMethodGpu(const float *A, const double *b,
 
   double sum = 0.0;
   double *d_sum;
-  /*
-  DPCT1003:65: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors(
-      (d_sum = sycl::malloc_device<double>(1, dpct::get_default_queue()), 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      d_sum = sycl::malloc_device<double>(1, dpct::get_in_order_queue())));
   int k = 0;
 
   for (k = 0; k < max_iter; k++) {
-    /*
-    DPCT1003:66: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
     if ((k & 1) == 0) {
       /*
       DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
+      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:95: 'N_ROWS' expression was replaced with a value. Modify the
-        code to use the original expression, provided in comments, if it is
-        correct.
+        DPCT1101:57: 'N_ROWS' expression was replaced with a value. Modify
+        the code to use the original expression, provided in comments, if it
+        is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:96: 'ROWS_PER_CTA + 1' expression was replaced with a value.
-        Modify the code to use the original expression, provided in comments,
-        if it is correct.
+        DPCT1101:58: 'ROWS_PER_CTA + 1' expression was replaced with a
+        value. Modify the code to use the original expression, provided in
+        comments, if it is correct.
         */
         sycl::local_accessor<double, 1> b_shared_acc_ct1(
             sycl::range<1>(9 /*ROWS_PER_CTA + 1*/), cgh);
@@ -255,9 +232,12 @@ double JacobiMethodGpu(const float *A, const double *b,
         cgh.parallel_for(
             sycl::nd_range<3>(nblocks * nthreads, nthreads),
             [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
-              JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1,
-                           x_shared_acc_ct1.get_pointer(),
-                           b_shared_acc_ct1.get_pointer());
+              JacobiMethod(
+                  A, b, conv_threshold, x, x_new, d_sum, item_ct1,
+                  x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                      .get(),
+                  b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                      .get());
             });
       });
     } else {
@@ -266,18 +246,20 @@ double JacobiMethodGpu(const float *A, const double *b,
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
+      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:97: 'N_ROWS' expression was replaced with a value. Modify the
-        code to use the original expression, provided in comments, if it is
-        correct.
+        DPCT1101:59: 'N_ROWS' expression was replaced with a value. Modify
+        the code to use the original expression, provided in comments, if it
+        is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:98: 'ROWS_PER_CTA + 1' expression was replaced with a value.
-        Modify the code to use the original expression, provided in comments,
-        if it is correct.
+        DPCT1101:60: 'ROWS_PER_CTA + 1' expression was replaced with a
+        value. Modify the code to use the original expression, provided in
+        comments, if it is correct.
         */
         sycl::local_accessor<double, 1> b_shared_acc_ct1(
             sycl::range<1>(9 /*ROWS_PER_CTA + 1*/), cgh);
@@ -285,29 +267,28 @@ double JacobiMethodGpu(const float *A, const double *b,
         cgh.parallel_for(
             sycl::nd_range<3>(nblocks * nthreads, nthreads),
             [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
-              JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1,
-                           x_shared_acc_ct1.get_pointer(),
-                           b_shared_acc_ct1.get_pointer());
+              JacobiMethod(
+                  A, b, conv_threshold, x_new, x, d_sum, item_ct1,
+                  x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                      .get(),
+                  b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
+                      .get());
             });
       });
     }
     /*
-    DPCT1003:67: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
+    DPCT1124:48: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+    the origin API might be synchronous, depends on the type of operand memory,
+    so you may need to call wait() on event return by memcpy API to ensure
+    synchronization behavior.
     */
-    checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-    /*
-    DPCT1003:68: Migrated API does not return error code. (*, 0) is inserted.
-    You may need to rewrite this code.
-    */
-    checkCudaErrors((stream->wait(), 0));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+    checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
 
     if (sum <= conv_threshold) {
-      /*
-      DPCT1003:69: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->memset(d_sum, 0, sizeof(double)), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
       nblocks[2] = (N_ROWS / nthreads[2]) + 1;
       /*
       DPCT1083:14: The size of local memory in the migrated code may be
@@ -321,16 +302,22 @@ double JacobiMethodGpu(const float *A, const double *b,
         the limit. To get the device limit, query
         info::device::max_work_group_size. Adjust the work-group size if needed.
         */
+        dpct::has_capability_or_fail(stream->get_device(),
+                                     {sycl::aspect::fp64});
+
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
               sycl::range<1>(sharedMemSize), cgh);
 
-          cgh.parallel_for(sycl::nd_range<3>(nblocks * nthreads, nthreads),
-                           [=](sycl::nd_item<3> item_ct1)
-                               [[intel::reqd_sub_group_size(32)]] {
-                                 finalError(x_new, d_sum, item_ct1,
-                                            dpct_local_acc_ct1.get_pointer());
-                               });
+          cgh.parallel_for(
+              sycl::nd_range<3>(nblocks * nthreads, nthreads),
+              [=](sycl::nd_item<3> item_ct1)
+                  [[intel::reqd_sub_group_size(32)]] {
+                    finalError(x_new, d_sum, item_ct1,
+                               dpct_local_acc_ct1
+                                   .get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
+                  });
         });
       } else {
         /*
@@ -338,39 +325,41 @@ double JacobiMethodGpu(const float *A, const double *b,
         the limit. To get the device limit, query
         info::device::max_work_group_size. Adjust the work-group size if needed.
         */
+        dpct::has_capability_or_fail(stream->get_device(),
+                                     {sycl::aspect::fp64});
+
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
               sycl::range<1>(sharedMemSize), cgh);
 
-          cgh.parallel_for(sycl::nd_range<3>(nblocks * nthreads, nthreads),
-                           [=](sycl::nd_item<3> item_ct1)
-                               [[intel::reqd_sub_group_size(32)]] {
-                                 finalError(x, d_sum, item_ct1,
-                                            dpct_local_acc_ct1.get_pointer());
-                               });
+          cgh.parallel_for(
+              sycl::nd_range<3>(nblocks * nthreads, nthreads),
+              [=](sycl::nd_item<3> item_ct1)
+                  [[intel::reqd_sub_group_size(32)]] {
+                    finalError(x, d_sum, item_ct1,
+                               dpct_local_acc_ct1
+                                   .get_multi_ptr<sycl::access::decorated::no>()
+                                   .get());
+                  });
         });
       }
 
       /*
-      DPCT1003:70: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
+      DPCT1124:49: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
       */
-      checkCudaErrors((stream->memcpy(&sum, d_sum, sizeof(double)), 0));
-      /*
-      DPCT1003:71: Migrated API does not return error code. (*, 0) is inserted.
-      You may need to rewrite this code.
-      */
-      checkCudaErrors((stream->wait(), 0));
+      checkCudaErrors(
+          DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
+      checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
       printf("GPU iterations : %d\n", k + 1);
       printf("GPU error : %.3e\n", sum);
       break;
     }
   }
 
-  /*
-  DPCT1003:72: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  checkCudaErrors((sycl::free(d_sum, dpct::get_default_queue()), 0));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_sum, dpct::get_in_order_queue())));
   return sum;
 }

@@ -65,8 +65,8 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
@@ -178,7 +178,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
 
 2. Start the debugger to watch the application failure and find out where it failed.
    ```
-   $ gdb-oneapi ./a1_matrix_mul_zero_buff
+   gdb-oneapi ./a1_matrix_mul_zero_buff
    ```
 
 3. You should get the prompt `(gdb)`.
@@ -297,7 +297,7 @@ You will run the application and review what happens when the program is run usi
 
 1. Run the program on the GPU using Level Zero.
    ```
-   SYCL_DEVICE_FILTER=level_zero:gpu ./b1_matrix_mul_null_usm
+   ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./b1_matrix_mul_null_usm
    ```
    This run produces troublesome output.
    ```
@@ -310,14 +310,14 @@ You will run the application and review what happens when the program is run usi
 
 2. Check the output if we run on the GPU again but using OpenCL.
    ```
-   SYCL_DEVICE_FILTER=opencl:gpu ./b1_matrix_mul_null_usm
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu ./b1_matrix_mul_null_usm
    ```
 
    The results should be the same as the Level Zero output.
 
 3. Check the output we get by bypassing the GPU entirely and using the OpenCL driver for CPU.
    ```
-   SYCL_DEVICE_FILTER=opencl:cpu ./b1_matrix_mul_null_usm
+   ONEAPI_DEVICE_SELECTOR=opencl:cpu ./b1_matrix_mul_null_usm
    ```
    ```
    Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -333,7 +333,7 @@ Let's see what caused the problem by running in the debugger using the OpenCL dr
 
 1. Start the debugger using OpenCL™ on the CPU.
    ```
-   SYCL_DEVICE_FILTER=opencl:cpu gdb-oneapi ./b1_matrix_mul_null_usm
+   ONEAPI_DEVICE_SELECTOR=opencl:cpu gdb-oneapi ./b1_matrix_mul_null_usm
    ```
 2. You should get the prompt `(gdb)`.
 

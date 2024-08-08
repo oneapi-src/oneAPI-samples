@@ -17,6 +17,11 @@ __global__ void VectorAddKernel(float* A, float* B, float* C)
 
 int main()
 {
+        //# Print device name
+        cudaDeviceProp dev;
+        cudaGetDeviceProperties(&dev, 0);
+        std::cout << "Device: " << dev.name << "\n";
+
         //# Initialize vectors on host
         float A[N] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         float B[N] = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};

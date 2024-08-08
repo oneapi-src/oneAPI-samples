@@ -16,6 +16,7 @@ class LineItemProducer;
 class OrdersProducer;
 class Join;
 class Compute;
+class StartProduction;
 
 bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
                     DBDate high_date, int shipmode1, int shipmode2,
@@ -60,6 +61,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor l_receiptdate_accessor(l_receiptdate_buf, h, read_only);
 
     h.single_task<LineItemProducer>([=]() [[intel::kernel_args_restrict]] {
+#ifdef PRECISE_TIMING
+      (void) LineItemProducerStartPipe::read();
+#endif
       [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < l_iters + 1; i++) {
         bool done = (i == l_iters);
@@ -99,6 +103,9 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
     accessor o_orderpriority_accessor(o_orderpriority_buf, h, read_only);
 
     h.single_task<OrdersProducer>([=]() [[intel::kernel_args_restrict]] {
+#ifdef PRECISE_TIMING
+      (void) OrdersProducerStartPipe::read();
+#endif
       [[intel::initiation_interval(1)]]
       for (size_t i = 0; i < o_iters + 1; i++) {
         bool done = (i == o_iters);
@@ -237,7 +244,20 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   });
   /////////////////////////////////////////////////////////////////////////////
 
-  // wait for the Compute kernel to finish
+#ifdef PRECISE_TIMING
+  // Started last to get more reliable timings
+  /////////////////////////////////////////////////////////////////////////////
+  //// Start Production - Ensure accurate timings
+  auto start_production_event = q.submit([&](handler& h) {
+    h.single_task<StartProduction>([=]() [[intel::kernel_args_restrict]] {
+      OrdersProducerStartPipe::write(true);
+      LineItemProducerStartPipe::write(true);
+    });
+  });
+  /////////////////////////////////////////////////////////////////////////////
+
+  start_production_event.wait();
+#endif
   produce_orders_event.wait();
   produce_lineitem_event.wait();
   join_event.wait();
@@ -248,8 +268,15 @@ bool SubmitQuery12(queue& q, Database& dbinfo, DBDate low_date,
   duration<double, std::milli> diff = host_end - host_start;
 
   //// gather profiling info
+#ifdef PRECISE_TIMING
+  // Measure complete timing from start of pipeline to the end.
+  auto start_time =
+      start_production_event.get_profiling_info<info::event_profiling::command_start>();
+#else
+  // Just measure computation
   auto start_time =
       compute_event.get_profiling_info<info::event_profiling::command_start>();
+#endif // PRECISE_TIMING
   auto end_time =
       compute_event.get_profiling_info<info::event_profiling::command_end>();
 

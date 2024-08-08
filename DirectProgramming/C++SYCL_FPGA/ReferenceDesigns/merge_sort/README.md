@@ -161,7 +161,7 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
       ```
       make report
       ```
-      The report resides at `merge_sort_report.prj/reports/report.html`.
+      The report resides at `merge_sort.report.prj/reports/report.html`.
 
    4. Compile for FPGA hardware (longer compile time, targets FPGA device).
       ```
@@ -190,14 +190,14 @@ For `constexpr_math.hpp`, `pipe_utils.hpp`, and `unrolled_loop.hpp` see the READ
 >**Note**: When running on the FPGA emulator, the *Execution time* and *Throughput* values do not reflect the design's actual hardware performance.
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Running sort 17 times for an input size of 16777216 using 8 4-way merge units
 Streaming data from device memory
-Execution time: 21.3643 ms
-Throughput: 748.914 Melements/s
+Execution time: 33.7713 ms
+Throughput: 473.775 Melements/s
 PASSED
 ```
->**Note**: The performance numbers above were achieved using Terasic’s DE10-Agilex Development Board; your results may vary.
+>**Note**: The performance numbers above were achieved using the Intel® FPGA SmartNIC N6001-PL; your results may vary.
 
 ## License
 

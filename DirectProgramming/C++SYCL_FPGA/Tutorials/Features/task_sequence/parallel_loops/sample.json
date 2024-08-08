@@ -1,0 +1,115 @@
+{
+  "guid": "AE05DF3B-27CD-4B2E-9698-1BD204AC42D4",
+  "name": "Task Sequences Parallel Loops",
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Features/task_sequence"],
+  "description": "An Intel® FPGA tutorial that demonstrates how to use task sequences to describe multiple parallel loops in a single kernel",
+  "toolchain": ["icpx"],
+  "os": ["linux", "windows"],
+  "targetDevice": ["FPGA"],
+  "builder": ["cmake"],
+  "languages": [{"cpp":{}}],
+  "commonFolder": {
+    "base": "../../../..",
+    "include": [
+      "README.md",
+      "Tutorials/Features/task_sequence/parallel_loops",
+      "include"
+    ],
+    "exclude": []
+  },
+  "ciTests": {
+    "linux": [
+      {
+        "id": "fpga_emu_naive",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=NAIVE",
+          "make fpga_emu",
+          "./naive.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_naive",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=NAIVE",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_task_sequence",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
+          "make fpga_emu",
+          "./task_sequences.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_task_sequence",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DTYPE=TASK_SEQUENCE",
+          "make report"
+        ]
+      }
+    ],
+    "windows": [
+      {
+        "id": "fpga_emu_naive",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/parallel_loops -DTYPE=NAIVE",
+          "nmake fpga_emu",
+          "naive.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_naive",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/parallel_loops -DTYPE=NAIVE",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_task_sequence",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/parallel_loops -DTYPE=TASK_SEQUENCE",
+          "nmake fpga_emu",
+          "task_sequences.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_task_sequence",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/task_sequence/parallel_loops -DTYPE=TASK_SEQUENCE",
+          "nmake report"
+        ]
+      }
+    ]
+  },
+  "expertise": "Concepts and Functionality"
+}

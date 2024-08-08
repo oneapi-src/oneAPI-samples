@@ -6,7 +6,7 @@ Block Cholesky Decomposition shows how to use the Intel® oneAPI Math Kernel Lib
 |:---                               |:---
 | OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
 | Hardware                          | Skylake with Gen9 or newer
-| Software                          | Intel® oneAPI Math Kernel Library (oneMKL) 
+| Software                          | Intel® oneAPI Math Kernel Library (oneMKL)
 | What you will learn               | How to use oneMKL BLAS and LAPACK routines with pointer-based (USM) programming
 | Time to complete                  | 15 minutes
 
@@ -20,6 +20,7 @@ The sample code shows how to inform oneMKL of the dependencies between routines 
 
 This sample will use the default SYCL device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how to solve a system of linear equations with a Cholesky-factored symmetric positive definite block tridiagonal coefficient matrix: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/slve-lin-eqs-blck-tridag-symm-pos-def-coeff-mtrx.html.
 
 ## Key Implementation Details
 
@@ -31,8 +32,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.

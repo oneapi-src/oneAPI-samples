@@ -13,6 +13,9 @@
 #include <iostream>
 #include <random>
 
+#include <cmath>
+#include <complex>
+
 // Dense algorithm stores all the bins, even if bin has 0 entries
 // input array [4,4,1,0,1,2]
 // output [(0,1) (1,2)(2,1)(3,0)(4,2)]

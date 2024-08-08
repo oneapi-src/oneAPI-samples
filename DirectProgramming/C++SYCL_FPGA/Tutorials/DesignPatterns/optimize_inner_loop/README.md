@@ -19,7 +19,7 @@ This is an advanced sample (tutorial) that relies on understanding f<sub>MAX</su
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel® oneAPI DPC++/C++ Compiler is enough to compile for emulation, generating reports, generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -309,14 +309,14 @@ Examine the loop attributes for the three different versions of the `Producer` k
     ```
 generating 5000000 random numbers in the range [0,3]
 Running kernel 0
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Running kernel 1
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 Running kernel 2
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Kernel 0 throughput: 745.57 MB/s 
-Kernel 1 throughput: 750.70 MB/s 
-Kernel 2 throughput: 1328.99 MB/s 
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Kernel 0 throughput: 938.08 MB/s 
+Kernel 1 throughput: 787.41 MB/s 
+Kernel 2 throughput: 1131.16 MB/s 
 PASSED
     ```
 

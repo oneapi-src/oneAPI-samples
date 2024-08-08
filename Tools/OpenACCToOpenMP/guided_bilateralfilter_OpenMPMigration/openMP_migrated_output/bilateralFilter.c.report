@@ -1,0 +1,32 @@
+* Lines 118-125 contains the following statement
+#pragma acc kernels copyin(h_Src[0:imageW*imageH],h_Gaussian[0:KERNEL_LENGTH]) copyout(h_Dst[0:imageW*imageH]) create(h_BufferX[0:imageW*imageH], h_BufferY[0:imageW*imageH], h_BufferZ[0:imageW*imageH], h_BufferW[0:imageW*imageH]) if(accelerate)
+that has been as been translated into:
+#pragma omp target map(to:h_Src[0:imageW*imageH],h_Gaussian[0:KERNEL_LENGTH]) map(from:h_Dst[0:imageW*imageH]) map(alloc:h_BufferX[0:imageW*imageH],h_BufferY[0:imageW*imageH],h_BufferZ[0:imageW*imageH],h_BufferW[0:imageW*imageH]) if(accelerate)
+* WARNING(s)! Please review the translation.
+  1. The kernels construct in OpenACC is a hint to the compiler of where it should look for parallelism. OpenMP does not have a direct translation for this construct.
+
+
+* Line 127 contains the following statement
+#pragma acc loop independent, gang
+that has been as been translated into:
+#pragma omp loop order(concurrent)
+
+
+* Line 129 contains the following statement
+#pragma acc loop independent, gang
+that has been as been translated into:
+#pragma omp loop order(concurrent)
+
+
+* Line 139 contains the following statement
+#pragma acc loop independent, gang
+that has been as been translated into:
+#pragma omp loop order(concurrent)
+
+
+* Line 141 contains the following statement
+#pragma acc loop independent, gang
+that has been as been translated into:
+#pragma omp loop order(concurrent)
+
+

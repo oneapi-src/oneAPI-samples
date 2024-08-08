@@ -167,7 +167,7 @@ for development.
 > Linux*:
 > - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
-> - For non-POSIX shells, like csh, use the following command: `$ bash -c 'source <install-dir>/setvars.sh ; exec csh'`
+> - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
@@ -183,8 +183,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
 
@@ -201,7 +201,7 @@ interactive debugging session, we recommend using the interactive mode. To get
 the setting, after connecting to the login node, type the following command:
 
 ```
-$ qsub -I -l nodes=1:gpu:ppn=2
+qsub -I -l nodes=1:gpu:ppn=2
 ```
 
 Within the interactive session on the GPU node, build and run the sample.
@@ -213,11 +213,11 @@ For more information, see the Intel® oneAPI Base Toolkit Get Started Guide
 Build the project using the following `cmake` commands.
 
     ```
-    $ cd jacobi
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make
+    cd jacobi
+    mkdir build
+    cd build
+    cmake ..
+    make
     ```
 
     This builds both `jacobi-bugged` and `jacobi-fixed` versions of the program.
@@ -232,25 +232,25 @@ Please see the setup instructions in the Get Started Guide
 ### Run the buggy program
 
     ```
-    $ ./jacobi-bugged
+    ./jacobi-bugged
     ```
     > Note: to specify a device type to offload the kernel, use
     > the `ONEAPI_DEVICE_SELECTOR` environment variable.
     > E.g.  to restrict the offload only to CPU devices use:
     ```
-    $ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
+    ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
     ```
 
 3.  Start a debugging session on a CPU device:
 
     ```
-    $ ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi jacobi-bugged
+    ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi jacobi-bugged
     ```
 
 4.  Clean the program (optional):
 
     ```
-    $ make clean
+    make clean
     ```
 
 
@@ -373,7 +373,7 @@ a common strategy.  You can specify the device for offloading the kernels
 using `ONEAPI_DEVICE_SELECTOR` variable, for example: 
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:cpu ./myApplication`. 
+ONEAPI_DEVICE_SELECTOR=*:cpu ./myApplication`. 
 ```
 
 The above limits the kernel offloading only to CPU devices.
@@ -383,7 +383,7 @@ The above limits the kernel offloading only to CPU devices.
 When run, the original `jacobi-bugged` program shows the first bug:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -400,7 +400,7 @@ Hint: figure out which elements are farthest from 1.0.
 Once the first bug is fixed, the second bug becomes visible:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -427,7 +427,7 @@ which are the same as in `jacobi-fixed` for the offload to CPU device. Since we'
 only running on the CPU, we don't see the GPU bug:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-fixed
+ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-fixed
 [SYCL] Using device: [Intel(R) Core(TM) i7-7567U processor] from [Intel(R) OpenCL]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -448,7 +448,7 @@ Zero GPU device, if available, is the default choice when no
 Bug 3 is immediately hit while offloading to GPU:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-bugged
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-bugged
 [SYCL] Using device: [Intel(R) Graphics [0x56c1]] from [Intel(R) Level-Zero]
 
 fail; Bug 3. Fix it on GPU. The relative error has invalid value after iteration 0.
@@ -468,7 +468,7 @@ Once all three bugs are fixed, the output of the program should be the same
 as for `jacobi-fixed` with the offload to GPU device:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-fixed
+ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./jacobi-fixed
 [SYCL] Using device: [Intel(R) Graphics [0x56c1]] from [Intel(R) Level-Zero]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557
@@ -483,7 +483,7 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 While offloading to FPGA emulation device, only first two bugs appear (similar to CPU):
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71116
 Iteration 20, relative error = 1.70922
@@ -498,7 +498,7 @@ Hint: figure out which elements are farthest from 1.0.
 And after fixing the first bug:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-bugged
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.71068
 Iteration 20, relative error = 1.77663
@@ -524,7 +524,7 @@ After both bugs are fixed, the output of `jacobi-bugged` should become the same 
 `jacobi-fixed`:
 
 ```
-$ ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-fixed
+ONEAPI_DEVICE_SELECTOR=*:fpga ./jacobi-fixed
 [SYCL] Using device: [Intel(R) FPGA Emulation Device] from [Intel(R) FPGA Emulation Platform for OpenCL(TM) software]
 Iteration 0, relative error = 2.7581
 Iteration 20, relative error = 0.119557

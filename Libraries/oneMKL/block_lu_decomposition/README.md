@@ -18,6 +18,8 @@ Both factoring and solving require several oneMKL routines. Some steps can be pa
 
 This sample will use the default SYCL device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL LAPACK routines can be used to solve a system of linear equations with an LU-factored block tridiagonal coefficient matrix: https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/slv-sys-lin-eq-lu-factor-blk-tridiag-coeff-mat.html.
+
 ## Key Implementation Details
 This sample illustrates several important oneMKL routines: matrix multiplication, triangular solves from BLAS (`gemm`, `trsm`), and LU factorization (`getrf`) from LAPACK, as well as several other utility routines.
 
@@ -26,8 +28,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.

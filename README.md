@@ -34,7 +34,7 @@ Clone an earlier version of the repository using Git by entering a command simil
 
 `git clone -b <tag> https://github.com/oneapi-src/oneAPI-samples.git`
 
-where `<tag>` is the GitHub tag corresponding to the toolkit version number, like **2024.1.0**.
+where `<tag>` is the GitHub tag corresponding to the toolkit version number, like **2024.2.0**.
 
 Alternatively, you can download a zip file containing a specific tagged version of the repository.
 
@@ -85,57 +85,21 @@ The oneAPI-sample repository is organized by high-level categories.
 Samples in this release are validated on the following platforms.
 
 ### Ubuntu 22.04
-Intel(R) Xeon(R) Platinum 8352Y CPU @ 2.20GHz \
-Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 (pvc) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device 1.2 [2023.16.10.0.17_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.28202] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
-
 12th Gen Intel(R) Core(TM) i9-12900 \
 Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
 Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28202] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
-
-11th Gen Intel(R) Core(TM) i7-11700 \
-Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.28202] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.596 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.560 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.743 \
-&dash; Intel AI Tools 2024.1.0.84
+&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.634 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.635 \
 
 ### Windows 11
 12th Gen Intel(R) Core(TM) i9-12900 Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
 Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
 Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28597] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.595 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.561 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.745
-
-11th Gen Intel(R) Core(TM) i7-11700
-Intel(R) UHD Graphics 750 3.0, (gen12, RocketLake) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 750 1.3 [1.3.28597] \
-oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.1.0.595 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.1.0.561 \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.745
-
-### macOS
-Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz \
-&dash; Intel oneAPI Rendering Toolkit Build Version: 2024.1.0.744
+&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.635 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.633 \
 
 ## Known Issues and Limitations
 
@@ -144,6 +108,15 @@ Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz \
 - If you are using Microsoft Visual Studio* 2019, you must use Microsoft Visual Studio 2019 version 16.4.0 or newer.
 - Windows support for the FPGA code samples is limited to the **FPGA emulator** and **optimization reports**. Only Linux supports **FPGA hardware** compilation. See any FPGA code sample README.md for more details.
 - If you encounter `Error MSB6003 The specified task executable ... could not be run...` when building a sample program, it might be due to the length of the directory path. Move the `build` directory to a location with a shorter path. Build the sample in the new location.
+
+## Additional Resources for Code Samples
+A curated list of samples from oneAPI based projects, libraries, and tools. In addition, the most exciting samples from other AI projects that are not necessarily based on oneAPI are also listed here to provide you with the latest and valuable resources for augmenting your productivity.
+-	[OpenVINO™ notebooks](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks): A collection of ready-to-run Jupyter notebooks for learning and experimenting with the OpenVINO™ Toolkit, an open-source AI toolkit that makes it easier to write once, deploy anywhere. The notebooks introduce OpenVINO basics and teach developers how to leverage the API for optimized deep learning inference.
+-	[Intel® Gaudi®  Tutorials](https://github.com/HabanaAI/Gaudi-tutorials): Tutorials with step-by-step instructions for running PyTorch and PyTorch Lightning models on the Intel Gaudi AI Processor for training and inferencing, from beginner level to advanced users.
+-	[Powered-by-Intel Leaderboard](https://huggingface.co/spaces/Intel/powered_by_intel_llm_leaderboard): This leaderboard celebrates and increases the discoverability of models developed on Intel hardware by the AI developer community. We provide developers with sample code and resources (developer programs) to deploy (inference) AI PC, Intel® Xeon® Scalable processors, Intel® Gaudi® processors, Intel® Arc™ GPUs, and Intel® Data Center GPUs.
+-	[Intel® AI Reference Models](https://github.com/intel/models): This repository contains links to pre-trained models, sample scripts, best practices, and step-by-step tutorials for many popular open-source machine learning models optimized by Intel to run on Intel® Xeon® Scalable processors and Intel® Data Center GPUs.
+-	[awesome-oneapi](https://github.com/oneapi-community/awesome-oneapi): A community sourced list of awesome oneAPI and SYCL projects for solutions across a wide range of industry segments.
+- [Generative AI Examples](https://github.com/opea-project/GenAIExamples): A collection of GenAI examples such as ChatQnA, Copilot, which illustrate the pipeline capabilities of the Open Platform for Enterprise AI (OPEA) project. OPEA is an ecosystem orchestration framework to integrate performant GenAI technologies & workflows leading to quicker GenAI adoption and business value.
 
 ## Licenses
 

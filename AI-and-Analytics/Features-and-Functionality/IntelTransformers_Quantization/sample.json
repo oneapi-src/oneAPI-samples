@@ -1,0 +1,26 @@
+{
+	"guid": "01341A25-5FBF-4AE5-B4C9-B84105C8D3E9",
+	"name": "Quantize Transformer Models using Intel® Extension for Transformers* (ITREX)",
+	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+	"description": "Quantizing Transformer models in a step-by-step manner to enable memory efficient LLM inference.",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"targetDevice": ["CPU"],
+	"ciTests": {
+		"linux": [{
+			"env": [
+				"source /intel/oneapi/intelpython/bin/activate",
+				"conda activate pytorch",
+				"pip install -r requirements.txt"
+            ],
+			"id": "itrex_quantize_transformer_models",
+			"steps": [
+				"python quantize_transformer_models_with_itrex.py --model_name \"Intel/neural-chat-7b-v3-1\" --quantize \"int4\" --max_new_tokens 50"
+			]
+		}]
+	},
+    "expertise": "Concepts and Functionality"
+}

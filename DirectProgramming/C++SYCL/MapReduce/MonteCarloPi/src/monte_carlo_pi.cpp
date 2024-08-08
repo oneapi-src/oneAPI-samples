@@ -20,7 +20,7 @@ constexpr int size_n = 10000;  // Must be greater than size_wg
 // Size of parallel work groups
 constexpr int size_wg = 32;
 // Number of parallel work groups
-const int num_wg = (int)ceil((float)size_n / (float)size_wg);
+const int num_wg = (int)sycl::ceil((float)size_n / (float)size_wg);
 
 // Output image dimensions
 constexpr int img_dimensions = 1024;

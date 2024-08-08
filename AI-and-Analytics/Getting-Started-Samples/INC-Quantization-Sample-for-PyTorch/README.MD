@@ -39,7 +39,7 @@ The sample contains one Jupyter Notebook and one Python script. It can be run us
 |:---                      |:---
 |`dataset.py`              | The script provides a PyTorch* Dataset class that tokenizes text data 
 
-### Setup your environment for the offline installer
+### Environment Setup
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
@@ -80,7 +80,7 @@ conda activate pytorch
 3. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 4. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
@@ -91,7 +91,7 @@ jupyter notebook --ip=0.0.0.0
 5. Follow the instructions to open the URL with the token in your browser.
 6. Select the Notebook:
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
 7. Change the kernel to `pytorch`
 8. Run every cell in the Notebook in sequence.
@@ -101,7 +101,7 @@ optimize_pytorch_models_with_ipex.ipynb
 1. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneapi-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
 2. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
@@ -112,7 +112,7 @@ jupyter notebook --ip=0.0.0.0
 4. Follow the instructions to open the URL with the token in your browser.
 5. Select the Notebook:
 ```
-optimize_pytorch_models_with_ipex.ipynb
+quantize_with_inc.ipynb
 ```
 6. Run every cell in the Notebook in sequence.
 

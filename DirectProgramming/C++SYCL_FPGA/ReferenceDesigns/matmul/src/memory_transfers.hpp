@@ -80,7 +80,7 @@ public:
     // the device.
     // Knowing this, the compiler won't generate hardware to potentially get
     // data from the host.
-    sycl::device_ptr<TT> a_ptr_located(a_ptr);
+    sycl::ext::intel::device_ptr<TT> a_ptr_located(a_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA family/part
     TT *a_ptr_located(a_ptr);
@@ -236,7 +236,7 @@ public:
     // the device.
     // Knowing this, the compiler won't generate hardware to potentially get
     // data from the host.
-    sycl::device_ptr<TT> b_ptr_located(b_ptr);
+    sycl::ext::intel::device_ptr<TT> b_ptr_located(b_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA family/part
     TT *b_ptr_located(b_ptr);
@@ -384,7 +384,7 @@ public:
     // the device.
     // Knowing this, the compiler won't generate hardware to potentially get
     // data from the host.
-    sycl::device_ptr<TT> c_ptr_located(c_ptr);
+    sycl::ext::intel::device_ptr<TT> c_ptr_located(c_ptr);
 #else
     // Device pointers are not supported when targeting an FPGA family/part
     TT *c_ptr_located(c_ptr);

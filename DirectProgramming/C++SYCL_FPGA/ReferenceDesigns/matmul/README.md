@@ -54,13 +54,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of March 6, 2023.
+Performance results are based on testing as of May 14, 2024.
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic’s DE10-Agilex Development Board           | 144k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using a systolic array of 8 * 8 PEs (64 DSPs)
+| Intel® FPGA SmartNIC N6001-PL                     | 142k matrices/s for single-precision floating-point matrices of size 64 * 64, computed using a systolic array of 8 * 8 PEs (64 DSPs)
 
 ## Key Implementation Details
 
@@ -354,16 +354,16 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 ## Example Output
 
-Example output when running on **Terasic’s DE10-Agilex Development Board** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
+Example output when running on **Intel® FPGA SmartNIC N6001-PL** for the multiplication of 8 matrices 819200 times (each matrix consisting of 64x64 single-precision floating point numbers, computed using a systolic array of 8x8 PEs).
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
  Matrix A size: 64 x 64 (tile: 8 x 64)
  Matrix B size: 64 x 64 (tile: 64 x 8)
  Systolic array size: 8 x 8 PEs
 Running matrix multiplication of 2 matrices 819200 times
-   Total duration:   11.3746 s
-Throughput: 144.04k matrices/s
+   Total duration:   11.4577 s
+Throughput: 142.995k matrices/s
 
 PASSED
 ```

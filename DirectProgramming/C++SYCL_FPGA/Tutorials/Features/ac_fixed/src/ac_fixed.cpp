@@ -4,6 +4,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include <iomanip>  // for std::setprecision
+#include <math.h>
 
 #include "exception_handler.hpp"
 

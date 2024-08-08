@@ -41,7 +41,7 @@ bool EqualMat(std::vector<float> &c_matrix, std::vector<float> &c_reference,
                     << c_reference[idx] << std::endl;
 #endif
         }
-        if (!std::isfinite(c_matrix[idx])) {
+        if (!sycl::isfinite(c_matrix[idx])) {
           passed = false;
 #if DEBUG
           std::cout << "C[" << col << "][" << row << "] = " << c_matrix[idx]

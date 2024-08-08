@@ -43,7 +43,7 @@ by the `-Xsread-only-cache-size=<N>` flag.
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
@@ -125,8 +125,11 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
    ```
    mkdir build
    cd build
-   cmake ..
+   cmake .. -DPART=<X>
    ```
+   where `X` is:
+   - `CACHE_ENABLED`
+   - `CACHE_DISABLED`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -174,8 +177,11 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
    ```
    mkdir build
    cd build
-   cmake -G "NMake Makefiles" ..
+   cmake -G "NMake Makefiles" .. -DPART=<X>
    ```
+   where `X` is:
+   - `CACHE_ENABLED`
+   - `CACHE_DISABLED`
    > **Note**: You can change the default target by using the command:
    >  ```
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -222,9 +228,7 @@ size of the cache is `512*4 bytes = 2048 bytes`, and so, the flag
 >  ```
 ## Read the Reports
 
-Locate the pair of `report.html` files in the
-`read_only_cache_disabled_report.prj` and `read_only_cache_enabled_report.prj`
-directories.
+Locate the `report.html` files of each build (with and without the cache enabled).
 
 Navigate to the "Area Analysis of System" section of each report
 (Area Analysis > Area Analysis of System) and expand the "Kernel System" entry
@@ -250,8 +254,7 @@ cache has been created.
 
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
-   ./read_only_cache_disabled.fpga
-   ./read_only_cache_enabled.fpga
+   ./read_only_cache.fpga
    ```
 
 ### On Windows
@@ -272,44 +275,43 @@ cache has been created.
 
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
-   read_only_cache_disabled.fpga.exe
-   read_only_cache_enabled.fpga.exe
+   read_only_cache.fpga.exe
    ```
 
 ## Example Output
 
-### Example Output for `./read_only_cache_disabled.fpga`
+### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_DISABLED`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.001677 seconds
-Kernel throughput: 298.184355 MB/s
+Kernel execution time: 0.006714 seconds
+Kernel throughput: 74.469202 MB/s
 ```
 
-### Example Output for `./read_only_cache_disabled.fpga`
+### Example Output for `./read_only_cache.fpga` with `-DPART=CACHE_ENABLED`
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
 
 SQRT LUT size: 512
 Number of outputs: 131072
 Verification PASSED
 
-Kernel execution time: 0.000849 seconds
-Kernel throughput with the read-only cache: 589.155069 MB/s
+Kernel execution time: 0.000860 seconds
+Kernel throughput with the read-only cache: 581.580643 MB/s
 ```
 
-A test compile of this tutorial design achieved the following results on Terasic's DE10-Agilex Development Board:
+A test compile of this tutorial design achieved the following results on the Intel® FPGA SmartNIC N6001-PL:
 
 |Configuration    | Execution Time (ms) | Throughput (MB/s)
 |:---             |:---                 |:---
-|Without caching  | 1.677               | 298.18
-|With caching     | 0.849               | 589.15
+|Without caching  | 6.714               | 74.46
+|With caching     | 0.860               | 581.58
 
 When the read-only cache is enabled, performance notably increases. As
 previously mentioned, when the global memory accesses are random (for example, non-contiguous), enabling the read-only cache and sizing it correctly may allow

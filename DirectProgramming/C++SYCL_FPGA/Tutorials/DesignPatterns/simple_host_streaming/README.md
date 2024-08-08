@@ -25,7 +25,7 @@ This tutorial includes three designs:
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware             | Intel® Agilex® 7, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware             | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
 
@@ -181,7 +181,7 @@ We are currently working on an API and tutorial to address both of these drawbac
        ```
        make report
        ```
-      The report resides at `simple_host_streaming_report.prj/reports/report.html`.
+      The report resides at `simple_host_streaming.report.prj/reports/report.html`.
 
     3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
        ```
@@ -232,7 +232,7 @@ We are currently working on an API and tutorial to address both of these drawbac
       ```
       nmake report
       ```
-      The report resides at `simple_host_streaming_report.prj.a/reports/report.html`.
+      The report resides at `simple_host_streaming.report.prj.a/reports/report.html`.
 
    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
       ```

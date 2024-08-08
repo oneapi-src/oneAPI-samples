@@ -1,0 +1,7 @@
+accelerate==0.29.3
+datasets==2.09.0
+intel-extension-for-transformers==1.4.1
+neural_speed==1.0
+peft==0.10.0
+sentencepiece
+transformers==4.38.0

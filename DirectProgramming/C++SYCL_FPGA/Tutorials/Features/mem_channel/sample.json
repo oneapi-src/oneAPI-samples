@@ -20,48 +20,92 @@
   "ciTests": {
     "linux": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_interleaving",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake .. -DPART=INTERLEAVING",
           "make fpga_emu",
           "./mem_channel.fpga_emu"
         ]
       },
       {
-        "id": "report",
+        "id": "report_interleaving",
         "steps": [
           "icpx --version",
           "mkdir build",
           "cd build",
-          "cmake ..",
+          "cmake .. -DPART=INTERLEAVING",
+          "make report"
+        ]
+      },
+      {
+        "id": "fpga_emu_no_interleaving",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NO_INTERLEAVING",
+          "make fpga_emu",
+          "./mem_channel.fpga_emu"
+        ]
+      },
+      {
+        "id": "report_no_interleaving",
+        "steps": [
+          "icpx --version",
+          "mkdir build",
+          "cd build",
+          "cmake .. -DPART=NO_INTERLEAVING",
           "make report"
         ]
       }
     ],
     "windows": [
       {
-        "id": "fpga_emu",
+        "id": "fpga_emu_interleaving",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel -DPART=INTERLEAVING",
           "nmake fpga_emu",
           "mem_channel.fpga_emu.exe"
         ]
       },
       {
-        "id": "report",
+        "id": "report_interleaving",
         "steps": [
           "icpx --version",
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel -DPART=INTERLEAVING",
+          "nmake report"
+        ]
+      },
+      {
+        "id": "fpga_emu_no_interleaving",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel -DPART=NO_INTERLEAVING",
+          "nmake fpga_emu",
+          "mem_channel.fpga_emu.exe"
+        ]
+      },
+      {
+        "id": "report_no_interleaving",
+        "steps": [
+          "icpx --version",
+          "cd ../../..",
+          "mkdir build",
+          "cd build",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/Features/mem_channel -DPART=NO_INTERLEAVING",
           "nmake report"
         ]
       }

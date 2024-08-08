@@ -7,7 +7,7 @@ SYCL*-compliant FPGA design.
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware                          | Intel® Agilex®, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | Intel® Agilex® 7, Agilex® 5, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 | What you will learn               | How and when to use the `mem_channel` buffer property and the `-Xsno-interleaving` flag
 | Time to complete                  | 30 minutes
@@ -102,8 +102,7 @@ buffer b_buf(b_vec, {property::buffer::mem_channel{2}});
 Channel IDs are in the range `1,2,...,N` where `N` is the number of available
 channels.
 
-The `mem_channel` property has no effect if used without the
-`-Xsno-interleaving` flag. In contrast, when `-Xsno-interleaving` is used,
+When `-Xsno-interleaving` is used,
 buffers that don't have the `mem_channel` property will all be allocated in
 channel `1`.
 
@@ -175,8 +174,11 @@ board.
   ```
   To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
-  cmake ..
+  cmake .. -DPART=<X>
   ```
+   where `-DPART=<X>` is:
+   - `-DPART=INTERLEAVING`
+   - `-DPART=NO_INTERLEAVING`
 
   > **Note**: You can change the default target by using the command:
   >  ```
@@ -228,8 +230,12 @@ board.
   ```
   To compile for the default target (the Agilex® device family), run `cmake` using the command:
   ```
-  cmake -G "NMake Makefiles" ..
+  cmake -G "NMake Makefiles" .. -DPART=<X>
   ```
+   where `-DPART=<X>` is:
+   - `-DPART=INTERLEAVING`
+   - `-DPART=NO_INTERLEAVING`
+
   > **Note**: You can change the default target by using the command:
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
@@ -280,8 +286,7 @@ provide cmake with the full path to your sample directory, for example:
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
 >  ```
 ## Examining the Reports
-Locate the pair of `report.html` files in the `mem_channel_interleaving.prj`
-and `mem_channel_no_interleaving.prj` directories. Open the reports in 
+After generating the reports of both parts of the sample, locate the `report.html` files in the `mem_channel.report.prj` directories. Open the reports in 
 Chrome*, Firefox*, Edge*, or Internet Explorer*. In the "Summary" tab, locate
 the "Quartus Fitter Resource Utilization Summary" entry and expand it to see
 the table showing the FPGA resources that were allocated for the design. Notice
@@ -315,46 +320,43 @@ significantly lower than the case where burst-interleaving is enabled.
     this flow.
 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
      ```
-     ./mem_channel_interleaving.fpga         (Linux)
-     ./mem_channel_no_interleaving.fpga      (Linux)
-     mem_channel_interleaving.fpga.exe       (Windows)
-     mem_channel_no_interleaving.fpga.exe    (Windows)
+     ./mem_channel.fpga         (Linux)
+     mem_channel.fpga.exe       (Windows)
      ```
 
 ### Example of Output
 
-Running `./mem_channel_interleaving.fpga`:
+Running `./mem_channel.fpga` when compiled with `-DPART=INTERLEAVING`:
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ec00000)
 
 Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.001760 seconds
-Kernel throughput: 1704.945536 MB/s
+Kernel execution time: 0.001674 seconds
+Kernel throughput: 1791.987308 MB/s
 ```
 
-Running `./mem_channel_no_interleaving.fpga`:
+Running `./mem_channel.fpga` when compiled with `-DPART=NO_INTERLEAVING`:
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ec00000)
 
 Vector size: 1000000
 Verification PASSED
 
-Kernel execution time: 0.001692 seconds
-Kernel throughput without burst-interleaving: 1772.869425 MB/s
+Kernel execution time: 0.001673 seconds
+Kernel throughput without burst-interleaving: 1793.003700 MB/s
 ```
 
 ### Discussion of Results
 
-A test compile of this tutorial design achieved the following results on Terasic's 
-DE10-Agilex Development Board. The table
-below shows the performance of the design as well as the resources consumed by
+A test compile of this tutorial design achieved the following results on the Intel® FPGA SmartNIC N6001-PL. 
+The table below shows the performance of the design as well as the resources consumed by
 the kernel system.
 Configuration | Execution Time (ms) | Throughput (MB/s) | ALM | REG | MLAB | RAM | DSP
 |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
-|Without `-Xsno-interleaving` | 1.760 | 1704 | 9795 | 50875  | 10 | 245 | 0
-|With `-Xsno-interleaving` | 1.692 | 1772 | 6745  | 29592  | 10 | 186  | 0
+|Without `-Xsno-interleaving` | 1.674 | 1791 | 3192 | 14198 | 6  | 345 | 0 
+|With `-Xsno-interleaving` | 1.673 | 1793 | 1997  | 12458  | 6 | 186  | 0
 
 Notice that the throughput of the design when burst-interleaving is disabled is
 equal or better than when burst-interleaving is enabled. However, the resource

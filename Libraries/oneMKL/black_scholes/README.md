@@ -28,6 +28,10 @@ distribution and a Philox-type generator provided by the oneMKL RNG API.
 This sample performs its computations on the default SYCL* device. You can set
 the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
 
+This article explains in detail how oneMKL functions speed up Black-Scholes
+computation of European options pricing:
+https://www.intel.com/content/www/us/en/docs/onemkl/cookbook/current/black-scholes-formula-european-options-pricing.html.
+
 ## Key Implementation Details
 
 This sample illustrates how to create an RNG engine object (the source of
@@ -43,8 +47,8 @@ You can use Visual Studio Code (VS Code) extensions to set your environment, cre
 and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- - Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
- - Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
+ - Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+ - Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
  - Open a Terminal in VS Code (**Terminal>New Terminal**).
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.

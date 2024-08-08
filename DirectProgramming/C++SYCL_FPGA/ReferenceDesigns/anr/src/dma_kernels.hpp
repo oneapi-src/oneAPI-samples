@@ -45,7 +45,7 @@ event SubmitInputDMA(queue &q, T *in_ptr, int rows, int cols, int frames) {
   return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
 
 #if defined (IS_BSP)
-    device_ptr<T> in(in_ptr);
+    sycl::ext::intel::device_ptr<T> in(in_ptr);
 #else 
     T* in(in_ptr);
 #endif  
@@ -90,7 +90,7 @@ event SubmitOutputDMA(queue &q, T *out_ptr, int rows, int cols, int frames) {
   return q.single_task<KernelId>([=]() [[intel::kernel_args_restrict]] {
 
 #if defined (IS_BSP)
-    device_ptr<T> out(out_ptr);
+    sycl::ext::intel::device_ptr<T> out(out_ptr);
 #else 
     T* out(out_ptr);
 #endif      
