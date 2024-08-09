@@ -15,7 +15,7 @@
 
 // Headers specific to SVD
 #include "memory_transfers.hpp"
-#include "non_std_covariance.hpp"
+#include "streaming_covariance_matrix.hpp"
 #include "post_process.hpp"
 
 
@@ -158,9 +158,9 @@ double SingularValueDecomposition(
 
   // Compute the covariance matrix
   q.single_task<IDCovarianceMatrixComputation>(
-      fpga_linalg::StreamingNStdCovarianceMatrix<
+      fpga_linalg::StreamingCovarianceMatrix<
           T, rows, cols, kNumElementsPerDDRBurst, InputMatrixPipe,
-          CovarianceMatrixPipe>());
+          CovarianceMatrixPipe, false>());
 
   // Compute the Eigen values and Eigen vectors
   q.single_task<IDEigenValuesAndVectorsComputation>(
