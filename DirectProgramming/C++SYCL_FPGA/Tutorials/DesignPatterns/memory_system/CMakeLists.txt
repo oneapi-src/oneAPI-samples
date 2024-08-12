@@ -19,7 +19,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ###############################################################################
 ### Customize these build variables
 ###############################################################################
-set(SOURCE_FILES src/memory_system.cpp)
+set(SOURCE_FILES src/main.cpp)
 set(TARGET_NAME memory_system)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
@@ -115,7 +115,7 @@ set(EMULATOR_LINK_FLAGS )
 set(REPORT_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(REPORT_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -fsycl-link=early)
 set(SIMULATOR_COMPILE_FLAGS -Xssimulation -DFPGA_SIMULATOR)
-set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
+set(SIMULATOR_LINK_FLAGS -Xssimulation -Xsghdl=0 -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${SIMULATOR_OUTPUT_NAME}${EXT})
 set(FPGA_COMPILE_FLAGS -DFPGA_HARDWARE)
 set(FPGA_LINK_FLAGS -Xshardware -Xstarget=${FPGA_DEVICE} ${USER_FPGA_FLAGS} -reuse-exe=${CMAKE_BINARY_DIR}/${FPGA_OUTPUT_NAME}${EXT})
 

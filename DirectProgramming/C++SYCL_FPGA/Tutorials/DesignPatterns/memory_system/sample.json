@@ -2,7 +2,7 @@
   "guid": "2E9E5474-3C85-4A2D-82D2-AD1F92460AAF",
   "name": "Memory System",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
-  "description": "Intel® FPGA tutorial to  ",
+  "description": "Intel® FPGA tutorial on efficient memory system design pattern",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],

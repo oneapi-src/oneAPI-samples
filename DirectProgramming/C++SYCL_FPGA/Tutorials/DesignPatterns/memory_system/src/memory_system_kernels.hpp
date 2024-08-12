@@ -2,45 +2,48 @@
 
 #include "memory_system_defines.hpp"
 
-struct SimpleNaive {
+struct NaiveKernel {
   void operator()() const {
     SimpleInputT input;
     SimpleOutputT output;
 
     [[intel::fpga_memory("BLOCK_RAM")]]
-    int buffer[kNumRowsNaive][kNumColsNaive];
+    int buffer[kNumRows][kNumCols];
 
     [[intel::initiation_interval(1)]]
-    for (int col = 0; col < kNumColsNaive; ++col) {
-      input = InStream_SimpleNaive::read();
+    for (int col = 0; col < kNumCols; ++col) {
+      input = InStream_NaiveKernel::read();
 
       #pragma unroll
-      for (int row = 0; row < 4; ++row) {
+      for (int row = 0; row < kNumRows - 1; ++row) {
         buffer[row][col] = buffer[row + 1][col];
       }
-      buffer[4][col] = input;
+      buffer[kNumRows - 1][col] = input;
       
       #pragma unroll
-      for (int idx = 0; idx < kNumRowsNaive; ++idx) {
+      for (int idx = 0; idx < kNumRows; ++idx) {
         output[idx] = buffer[idx][col];
       }
       
-      OutStream_SimpleNaive::write(output);
+      OutStream_NaiveKernel::write(output);
     }
   }
 };
 
-struct SimpleOptimized {
+struct OptimizedKernel {
   void operator()() const {
     SimpleInputT input;
     SimpleOutputT output;
 
+    // Calculate for the number of banks, which should be a power of two.
+    constexpr size_t kNumBanks = fpga_tools::Pow2(fpga_tools::CeilLog2(kNumRows));
+
     [[intel::fpga_memory("BLOCK_RAM")]]
-    int buffer[kNumRowsOptimized][kNumColsOptimized];
+    int buffer[kNumRowsOptimized][kNumBanks];
 
     [[intel::initiation_interval(1)]]
     for (int row = 0; row < kNumRowsOptimized; ++row) {
-      input = InStream_SimpleOptimized::read();
+      input = InStream_OptimizedKernel::read();
 
       #pragma unroll
       for (int col = 0; col < 4; ++col) {
@@ -49,11 +52,11 @@ struct SimpleOptimized {
       buffer[row][4] = input;
       
       #pragma unroll
-      for (int idx = 0; idx < kNumColsOptimized; ++idx) {
+      for (int idx = 0; idx < 5; ++idx) {
         output[idx] = buffer[row][idx];
       }
       
-      OutStream_SimpleOptimized::write(output);
+      OutStream_OptimizedKernel::write(output);
     }
   }
 };
