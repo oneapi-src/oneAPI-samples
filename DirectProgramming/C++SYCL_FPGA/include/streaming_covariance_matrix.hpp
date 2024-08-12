@@ -209,7 +209,7 @@ struct StreamingCovarianceMatrix {
       [[intel::private_copies(2)]]          // NO-FORMAT: Attribute
       T cov_matrix_std[columns][columns];
 
-      {
+      if (standardized) {
         int row = 0;
         int column = 0;
         for (int it = 0; it < columns * columns; it++) {
