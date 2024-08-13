@@ -12,10 +12,9 @@
 #include "exception_handler.hpp"
 #include "streaming_eigen.hpp"
 #include "streaming_qrd.hpp"
-
+#include "streaming_covariance_matrix.hpp"
 // Headers specific to SVD
 #include "memory_transfers.hpp"
-#include "streaming_covariance_matrix.hpp"
 #include "post_process.hpp"
 
 

@@ -86,7 +86,6 @@ This SVD design consists of 4 computation kernels, as well as several memory acc
 | golden_pca.hpp         | Host code                       | A CPU reference PCA design that is used to calculate reference eigen values for the test bench.                                                                                                      |
 | svd.hpp                | Host code with some device code | Contains wrapper function `SingularValueDecomposition` that launches individual kernels of the SVD design.                                                                                           |
 | memory_transfers.hpp   | Device code                     | Contains kernel implementations of `MatrixReadFromDDRTo2PipesByBlocks` , `MatrixReadPipeToDDR` and `VectorReadPipeToDDR`. These kernels transfers data between DDR and streaming interfaces (pipes).|
-| non_std_covariance.hpp | Device code                     | Contains kernel implementation of `StreamingNStdCovarianceMatrix` that computes covariance matrices.                                                                                                 |
 | post_process.hpp       | Device code                     | Contains kernel implementation of `USVFromEigens`.                                                                                                                                                   |
 ### Input covariance matrix computation
 The covariance computation in this design is the same as used in the [PCA](../pca/README.md) reference design except without standardization.
