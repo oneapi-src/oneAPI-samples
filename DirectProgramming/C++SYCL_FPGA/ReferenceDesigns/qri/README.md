@@ -244,43 +244,33 @@ You can perform the QR-based inversion of the set of matrices repeatedly, as sho
 
 ### On Linux
 
-#### Run on FPGA Emulator
-
-1. Increase the amount of memory that the emulator runtime is permitted to allocate by exporting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
-2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    export CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    ./qri.fpga_emu
    ```
+   * Increase the amount of memory that the emulator runtime is permitted to allocate by exporting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./qri.fpga_sim
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./qri.fpga
    ```
 
 ### On Windows
 
-#### Run on FPGA Emulator
-
-1. Increase the amount of memory that the emulator runtime is permitted to allocate by setting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
-2. Run the sample on the FPGA emulator (the kernel executes on the CPU).
+1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    set CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE=32MB
    qri.fpga_emu.exe
    ```
+   * Increase the amount of memory that the emulator runtime is permitted to allocate by setting the `CL_CONFIG_CPU_FORCE_PRIVATE_MEM_SIZE` environment variable before running the executable.
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    qri.fpga_sim.exe
