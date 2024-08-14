@@ -138,7 +138,7 @@ void run_sparse_cg_example(const sycl::device &dev)
     try {
         mkl::sparse::init_matrix_handle(&handle);
 
-        mkl::sparse::set_csr_data(handle, nrows, nrows, mkl::index_base::zero,
+        mkl::sparse::set_csr_data(main_queue, handle, nrows, nrows, mkl::index_base::zero,
                                           ia_buffer, ja_buffer, a_buffer);
 
         mkl::sparse::set_matrix_property(handle, mkl::sparse::property::symmetric);
@@ -272,7 +272,8 @@ void run_sparse_cg_example(const sycl::device &dev)
         std::cout << "\t\tCaught exception:\n" << e.what() << std::endl;
     }
     
-    mkl::sparse::release_matrix_handle(&handle);
+    mkl::sparse::release_matrix_handle(main_queue, &handle);
+    main_queue.wait();
 }
 
 //
