@@ -16,7 +16,7 @@ namespace oneapi_exp = sycl::ext::oneapi::experimental;
 class StopPipeID;
 class OutputPipeID;
 
-namespace stoppable_counter {
+namespace restartable_counter {
 
 // use sideband signals to signal when a kernel has been reset
 using OutputBeat =
@@ -40,7 +40,7 @@ using StreamingPipeProperties =
 using OutputPipe =
     intel_exp::pipe<OutputPipeID, OutputBeat, 0, StreamingPipeProperties>;
 
-struct StoppableCounter {
+struct RestartableCounter {
   // the kernel argument will be re-read each time the kernel is started.
   int counter_start;
 
@@ -76,5 +76,5 @@ struct StoppableCounter {
     }
   }
 };
-}  // namespace stoppable_counter
+}  // namespace restartable_counter
 #endif

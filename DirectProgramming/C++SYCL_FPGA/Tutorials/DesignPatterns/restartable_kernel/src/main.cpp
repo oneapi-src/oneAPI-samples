@@ -5,7 +5,7 @@
 #include <sycl/sycl.hpp>
 
 #include "exception_handler.hpp"
-#include "stoppable_counter_kernel.hpp"
+#include "restartable_counter_kernel.hpp"
 
 // Forward declare the kernel name in the global scope. This is an FPGA best
 // practice that reduces name mangling in the optimization reports.
@@ -24,12 +24,14 @@ bool CheckIncrements(sycl::queue q, int count_start, int iterations,
 
   if (should_flush) {
     std::cout << "Flush pipe until 'start of packet' is seen." << std::endl;
+  } 
+    else {
+      std::cout << "Start counting from " << expected_count << std::endl;
   }
-  std::cout << "Start counting from " << expected_count << std::endl;
 
   int flushed_count = 0;
   for (int itr = 0; itr < iterations; itr++) {
-    stoppable_counter::OutputBeat beat = PipeType::read(q);
+    restartable_counter::OutputBeat beat = PipeType::read(q);
 
     // Flush the pipe in case we are starting fresh.
     if (should_flush && itr == 0) {
@@ -37,6 +39,8 @@ bool CheckIncrements(sycl::queue q, int count_start, int iterations,
         beat = PipeType::read(q);
         flushed_count++;
       }
+      std::cout << "\tFlushed " << flushed_count << " beats." << std::endl;
+      std::cout << "Start counting from " << expected_count << std::endl;
     }
 
     int calculated_count = beat.data;
@@ -46,10 +50,6 @@ bool CheckIncrements(sycl::queue q, int count_start, int iterations,
       passed = false;
     }
     expected_count++;
-  }
-
-  if (should_flush) {
-    std::cout << "\tFlushed " << flushed_count << " beats." << std::endl;
   }
 
   return passed;
@@ -81,38 +81,38 @@ int main() {
               << std::endl;
     {
       int count_start = 7;
-      std::cout << "\nStart kernel StoppableCounter at " << count_start << ". "
+      std::cout << "\nStart kernel RestartableCounter at " << count_start << ". "
                 << std::endl;
 
       // Capture the event so that we can stop the kernel later on
       sycl::event e = q.single_task<CounterID>(
-          stoppable_counter::StoppableCounter{count_start});
+          restartable_counter::RestartableCounter{count_start});
 
-      passed = CheckIncrements<stoppable_counter::OutputPipe>(q, count_start,
+      passed = CheckIncrements<restartable_counter::OutputPipe>(q, count_start,
                                                               kIterations);
 
       int new_start = count_start + kIterations;
       // continue reading more results
-      passed &= CheckIncrements<stoppable_counter::OutputPipe>(
+      passed &= CheckIncrements<restartable_counter::OutputPipe>(
           q, new_start, kIterations, false);
 
-      std::cout << "Stop kernel StoppableCounter" << std::endl;
+      std::cout << "Stop kernel RestartableCounter" << std::endl;
       // Write a `true` into `StopPipe` to instruct the kernel to break out of
       // its main loop, then wait for the kernel to complete.
-      stoppable_counter::StopPipe::write(q, true);
+      restartable_counter::StopPipe::write(q, true);
       e.wait();
     }
     {
       int count_start = 77;
-      std::cout << "\nStart StoppableCounter at " << count_start << "."
+      std::cout << "\nStart RestartableCounter at " << count_start << "."
                 << std::endl;
       sycl::event e = q.single_task<CounterID>(
-          stoppable_counter::StoppableCounter{count_start});
-      passed &= CheckIncrements<stoppable_counter::OutputPipe>(q, count_start,
+          restartable_counter::RestartableCounter{count_start});
+      passed &= CheckIncrements<restartable_counter::OutputPipe>(q, count_start,
                                                                kIterations);
 
-      std::cout << "Stop kernel StoppableCounter" << std::endl;
-      stoppable_counter::StopPipe::write(q, true);
+      std::cout << "Stop kernel RestartableCounter" << std::endl;
+      restartable_counter::StopPipe::write(q, true);
       e.wait();
     }
 
