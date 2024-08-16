@@ -28,6 +28,7 @@
 
 import string
 import requests
+import os
 
 response = requests.get('https://www.gutenberg.org/cache/epub/1497/pg1497.txt')
 data = response.text.split('\n')
@@ -168,6 +169,11 @@ import intel_extension_for_tensorflow as itex
 # In[ ]:
 
 
+num_epochs = 200
+# For custom epochs numbers from the environment
+if "ITEX_NUM_EPOCHS" in os.environ:
+    num_epochs = int(os.environ.get('ITEX_NUM_EPOCHS'))
+
 neuron_coef = 4
 itex_lstm_model = Sequential()
 itex_lstm_model.add(Embedding(input_dim=vocab_size, output_dim=seq_length, input_length=seq_length))
@@ -177,7 +183,7 @@ itex_lstm_model.add(Dense(units=seq_length * neuron_coef, activation='relu'))
 itex_lstm_model.add(Dense(units=vocab_size, activation='softmax'))
 itex_lstm_model.summary()
 itex_lstm_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-itex_lstm_model.fit(x,y, batch_size=256, epochs=200)
+itex_lstm_model.fit(x,y, batch_size=256, epochs=num_epochs)
 
 
 # ## Compared to LSTM from Keras
@@ -201,6 +207,11 @@ x, y, keras_tokenizer = tokenize_prepare_dataset(lines)
 seq_length = x.shape[1]
 vocab_size = y.shape[1]
 
+num_epochs = 20
+# For custom epochs numbers
+if "KERAS_NUM_EPOCHS" in os.environ:
+    num_epochs = int(os.environ.get('KERAS_NUM_EPOCHS'))
+
 neuron_coef = 1
 keras_lstm_model = Sequential()
 keras_lstm_model.add(Embedding(input_dim=vocab_size, output_dim=seq_length, input_length=seq_length))
@@ -210,7 +221,7 @@ keras_lstm_model.add(Dense(units=seq_length * neuron_coef, activation='relu'))
 keras_lstm_model.add(Dense(units=vocab_size, activation='softmax'))
 keras_lstm_model.summary()
 keras_lstm_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-keras_lstm_model.fit(x,y, batch_size=256, epochs=20)
+keras_lstm_model.fit(x,y, batch_size=256, epochs=num_epochs)
 
 
 # ## Generating text based on the input
@@ -276,4 +287,3 @@ print("::: GENERATED TEXT::: " + generated_text)
 
 
 print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
-
