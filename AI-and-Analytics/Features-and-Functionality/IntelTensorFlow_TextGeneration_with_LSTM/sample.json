@@ -23,7 +23,7 @@
             "id": "inc_text_generation_lstm_py",
             "steps": [
                 "export ITEX_ENABLE_NEXTPLUGGABLE_DEVICE=0",
-                "python TextGenerationModelTraining.py"
+                "ITEX_NUM_EPOCHS=5 KERAS_NUM_EPOCHS=5 python TextGenerationModelTraining.py"
              ]
         }
       ]
