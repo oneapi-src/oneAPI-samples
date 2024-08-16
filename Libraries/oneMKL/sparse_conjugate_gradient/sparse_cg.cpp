@@ -174,13 +174,14 @@ void run_sparse_cg_example(const sycl::device &dev)
 
         // Calculation B^{-1}r_0
         {
+            fp alpha = 1.0;
             mkl::sparse::trsv(main_queue, mkl::uplo::lower,
-                                      mkl::transpose::nontrans, mkl::diag::nonunit,
-                                      handle, r_buffer, t_buffer);
+                                        mkl::transpose::nontrans,
+                                        mkl::diag::nonunit, alpha, handle, r_buffer, t_buffer);
             diagonal_mv<fp, intType>(main_queue, nrows, d_buffer, t_buffer);
             mkl::sparse::trsv(main_queue, mkl::uplo::upper,
-                                      mkl::transpose::nontrans, mkl::diag::nonunit,
-                                      handle, t_buffer, w_buffer);
+                                        mkl::transpose::nontrans,
+                                        mkl::diag::nonunit, alpha, handle, t_buffer, w_buffer);
         }
 
         mkl::blas::copy(main_queue, nrows, w_buffer, 1, p_buffer, 1);
@@ -225,13 +226,14 @@ void run_sparse_cg_example(const sycl::device &dev)
 
             // Calculate w_k = B^{-1}r_k
             {
+                fp alpha = 1.0;
                 mkl::sparse::trsv(main_queue, mkl::uplo::lower,
                                           mkl::transpose::nontrans,
-                                          mkl::diag::nonunit, handle, r_buffer, t_buffer);
+                                          mkl::diag::nonunit, alpha, handle, r_buffer, t_buffer);
                 diagonal_mv<fp, intType>(main_queue, nrows, d_buffer, t_buffer);
                 mkl::sparse::trsv(main_queue, mkl::uplo::upper,
                                           mkl::transpose::nontrans,
-                                          mkl::diag::nonunit, handle, t_buffer, w_buffer);
+                                          mkl::diag::nonunit, alpha, handle, t_buffer, w_buffer);
             }
 
             // Calculate current norm of correction
@@ -271,7 +273,7 @@ void run_sparse_cg_example(const sycl::device &dev)
     catch (std::exception const &e) {
         std::cout << "\t\tCaught exception:\n" << e.what() << std::endl;
     }
-    
+
     mkl::sparse::release_matrix_handle(main_queue, &handle);
     main_queue.wait();
 }
