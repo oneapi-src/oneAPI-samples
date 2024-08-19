@@ -39,7 +39,7 @@ template <typename RealType>
 std::int32_t t_test(sycl::queue& q, RealType* r, std::int64_t n,
                     RealType expected_mean) {
   std::int32_t res = -1;
-  RealType sqrt_n_observations = sycl::sqrt(static_cast<RealType>(n));
+  RealType sqrt_n_observations = std::sqrt(static_cast<RealType>(n));
 
   // Allocate memory to be passed inside oneMKL stats functions
   RealType* mean = sycl::malloc_shared<RealType>(1, q);
@@ -53,8 +53,8 @@ std::int32_t t_test(sycl::queue& q, RealType* r, std::int64_t n,
   oneapi::mkl::stats::central_moment(q, mean, dataset, variance);
   q.wait_and_throw();
   // Check the condition
-  if ((sycl::abs(mean[0] - expected_mean) * sqrt_n_observations /
-       sycl::sqrt(variance[0])) < static_cast<RealType>(threshold)) {
+  if ((std::abs(mean[0] - expected_mean) * sqrt_n_observations /
+       std::sqrt(variance[0])) < static_cast<RealType>(threshold)) {
     res = 1;
   } else {
     res = 0;
@@ -95,8 +95,8 @@ std::int32_t t_test(sycl::queue& q, RealType* r1, std::int64_t n1,
   bool almost_equal =
       (variance1[0] < 2 * variance2[0]) || (variance2[0] < 2 * variance1[0]);
   if (almost_equal) {
-    if ((sycl::abs(mean1[0] - mean2[0]) /
-         sycl::sqrt((static_cast<RealType>(1.0) / static_cast<RealType>(n1) +
+    if ((std::abs(mean1[0] - mean2[0]) /
+         std::sqrt((static_cast<RealType>(1.0) / static_cast<RealType>(n1) +
                      static_cast<RealType>(1.0) / static_cast<RealType>(n2)) *
                     ((n1 - 1) * (n1 - 1) * variance1[0] +
                      (n2 - 1) * (n2 - 1) * variance2[0]) /
@@ -106,8 +106,8 @@ std::int32_t t_test(sycl::queue& q, RealType* r1, std::int64_t n1,
       res = 0;
     }
   } else {
-    if ((sycl::abs(mean1[0] - mean2[0]) /
-         sycl::sqrt((variance1[0] + variance2[0]))) <
+    if ((std::abs(mean1[0] - mean2[0]) /
+         std::sqrt((variance1[0] + variance2[0]))) <
         static_cast<RealType>(threshold)) {
       res = 1;
     } else {
