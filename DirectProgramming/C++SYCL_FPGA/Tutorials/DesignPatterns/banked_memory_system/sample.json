@@ -1,8 +1,8 @@
 {
   "guid": "2E9E5474-3C85-4A2D-82D2-AD1F92460AAF",
-  "name": "Memory System",
+  "name": "Banked Memory System",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
-  "description": "Intel® FPGA tutorial on efficient memory system design pattern",
+  "description": "Intel® FPGA tutorial on efficient banked memory system design pattern",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
@@ -12,7 +12,7 @@
     "base": "../../..",
     "include": [
       "README.md",
-      "Tutorials/DesignPatterns/memory_system",
+      "Tutorials/DesignPatterns/banked_memory_system",
       "include"
     ],
     "exclude": []
@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./memory_system.fpga_emu"
+          "./banked_memory_system.fpga_emu"
         ]
       },
       {
@@ -49,9 +49,9 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/memory_system",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
           "nmake fpga_emu",
-          "memory_system.fpga_emu.exe"
+          "banked_memory_system.fpga_emu.exe"
         ]
       },
       {
@@ -61,7 +61,7 @@
           "cd ../../..",
           "mkdir build",
           "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/memory_system",
+          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
           "nmake report"
         ]
       }

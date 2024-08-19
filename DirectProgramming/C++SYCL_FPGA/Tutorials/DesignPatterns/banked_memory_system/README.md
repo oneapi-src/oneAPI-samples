@@ -1,18 +1,18 @@
-# `Memory System` Sample
+# `Banked Memory System` Sample
 
-This code sample demonstrates a design pattern in optimizing banked memory system.
+This code sample demonstrates how to optimize a banked memory system.
 
 ## Purpose
 
-In comparison to registers, memory gives you the flexibility of multiple read and write accesses. However, an ill-formed memory layout can lead to negative impact on your system performance. 
+When compiling your design for FPGA architectures, the Intel® oneAPI DPC++/C++ Compiler can choose to implement your variables as registers, or as block memories. The details of this decision are better defined in the [Memory System code sample](DirectProgramming/C++SYCL_FPGA/Tutorials/Features/memory_attributes). However, an ill-formed memory layout can lead to negative impact on your system performance. 
 
-In this code sample, we will see:
+In this code sample, you will learn:
 
-* What stallable arbitration looks like and how it leads to bad system performance.
+* When to use a banked memory and how the compiler optimizes banked memory systems.
 
-* How to leverage banked memory system in the correct way.
+* How to recognize stallable arbitration in the FPGA optimization report, and how it can lead to bad system performance.
 
-* Compiler optimization of banked memory system.
+* How to construct an efficient banked memory system to improve throughput in your designs.
 
 ## Prerequisites
 
@@ -55,43 +55,73 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Key Implementation Details
 
-In this code sample, we have two kernels `NaiveKernel` and `OptimizedKernel`.
+The sample design shows access to a 2-dimensional FIFO buffer, `array2d`, implemented in on-chip memory. The design performs a read-modify-write on this buffer in the `col` loop, which should have an initiation interval of 1. The fully-unrolled `row` loop accesses an entire dimension of the buffer in **the same clock cycle**.
 
-The sample design shows access to a buffer implemented in on-chip memory. Read and write operations relies on LSUs.
-
-This tutorial simplifies a real-world access pattern to the banked memory system. There is a `buffer` that is implemented in on-chip memory, which accepts read and write. We write to the buffer and read from the buffer in a loop, which we expect an initiation interval of 1. This means that the read and write to the memory system need to be pipelined. Therefore, a number of read and write to the memory system in the loop body should all happen in 1 clock cycle.
-
-Each memory block (in this case MLAB) has a read port and a write port. For true dual-port memory setup, we can issue one read and one write in a single clock cycle. As a result, when the number of access exceeds the capacity of a memory block, the memory will become the bottleneck. Consequently, efficient access to the memory system becomes a key to the system performance.
+Each memory block has a read port and a write port, so the design can issue one read and one write in the same clock cycle. If the design tries to perform more than 2 accesses in the same clock cycle, arbitration hardware is inserted to resolve any possible access conflicts. If this arbitration hardware has to be used, your design's throughput will suffer. To guarantee the maximum possible throughput, try to avoid arbitration logic in your memory systems.
 
 ### Naive Kernel
 
-The access pattern in the `NaiveKernel` is illustrated in the following diagram:
+The desired memory access pattern in `NaiveKernel` is illustrated in the following diagram:
 
 ![Naive Kernel Memory Access Pattern](./assets/access_pattern_naive.gif)
 
-In the `NaiveKernel`, the first array dimension (row) is unrolled in a loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `buffer[0][col]` to `buffer[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they happens in a single clocl cycle. The memory layout for the `buffer` in this case has 8 banks. Looking at the Details from the Kernel Memory Viewer, we can learn that the bank bits are second to the fourth least significant bits $b_4$, $b_3$, $b_2$. This essentially means that integers in every other column will be in a different memory bank.
+```c++
+struct NaiveKernel {
+  void operator()() const {    
+    [[intel::fpga_memory("BLOCK_RAM")]]
+    int array2d[kNumRows][kNumCols];
+    [[intel::initiation_interval(1)]]
+    for (int col = 0; col < kNumCols; ++col) {
+      SimpleInputT input = InStream_NaiveKernel::read();
+      SimpleOutputT output;
 
-|                | Address | Bank bits | Bank # |
-|----------------|---------|-----------|--------|
-| buffer[0][0]   | 0x0000  | 0b000     | 0      |
-| buffer[0][1]   | 0x0004  | 0b001     | 1      |
-| buffer[0][2]   | 0x0008  | 0b010     | 2      |
-| buffer[0][3]   | 0x000C  | 0b011     | 3      |
-| buffer[0][4]   | 0x0010  | 0b100     | 4      |
-| ...            |         |           |        |
-| buffer[0][499] | 0x07CC  | 0b011     | 3      |
-| buffer[1][0]   | 0x07D0  | 0b100     | 4      |
-| ...            |         |           |        |
+      // Shift one new item into the FIFO.
+      #pragma unroll
+      for (int row = 0; row < kNumRows - 1; ++row) {
+        array2d[row][col] = array2d[row + 1][col];
+      }
+      array2d[kNumRows - 1][col] = input;
 
-We can produce this table showing which integer is stored in which bank of the memory system. 
+      // Populate the output.
+      #pragma unroll
+      for (int idx = 0; idx < kNumRows; ++idx) {
+        output[idx] = array2d[idx][col];
+      }
+      OutStream_NaiveKernel::write(output);
+    }
+  }
+};
+```
+
+In the `NaiveKernel`, the first array dimension (row) is unrolled in a loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `array2d[0][col]` to `array2d[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they happen in a single clock cycle. The  [kernel memory viewer report](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/kernel-memory-viewer.html) shows that the memory system for `array2d` has 8 banks. 
+
+![Stallable Arbitration Node](./assets/stallable_arbitration_node.png)
+
+#### Making sense of the bank-selection bits
+
+The *Details* pane of the Kernel Memory Viewer report shows that the bank bits are the second to the fourth least significant bits, $b_4$, $b_3$, $b_2$. This means that integers in every other column will be in a different memory bank.
+
+The following table shows how each address encodes its bank of the memory system. Note how the banks do not align with the rows.
+
+|                 | Address | Bank bits | Bank # |
+|-----------------|---------|-----------|--------|
+| array2d[0][0]   | 0x0000  | 0b000     | 0      |
+| array2d[0][1]   | 0x0004  | 0b001     | 1      |
+| array2d[0][2]   | 0x0008  | 0b010     | 2      |
+| ...             |         |           |        |
+| array2d[0][7]   | 0x001C  | 0b111     | 7      |
+| array2d[0][8]   | 0x0020  | 0b000     | 0      |
+| array2d[0][9]   | 0x0024  | 0b001     | 1      |
+| array2d[0][10]  | 0x0028  | 0b010     | 2      |
+| ...             |         |           |        |
+| array2d[0][15]  | 0x003C  | 0b111     | 7      |
+| ...             |         |           |        |
+
+Similarly, the following table shows which memory bank each logical array element gets assigned to. Observe that each access to one column of `array2d` creates 2 stores and 3 loads to even numbered memory banks and 2 stores and 2 loads to odd numbered memory banks. Since more than one load and store is scheduled to the same memory bank in the same clock cycle, the compiler inserts arbitration logic along with stallable load-store units (LSUs). You can see this in the Kernel Memory Viewer in the optimization report.
 
 ![Naive Kernel Memory Layout](./assets/memory_system_naive.png)
 
-Observe that each access to one column of the `buffer` creates 2 stores and 3 loads to even numbered memory banks and 2 stores and 2 loads to odd numbered memory banks. These number of load and store surpasses the physical capacity of the memory blocks, and therefore, the compiler inferrs stallable LSUs as arbitration node in the Kernel Memory Viewer.
-
-![Stallable Arbitration Node](./assets/memory_report_naive.png)
-
-The stallable arbitration inside the loop body will stall the downstream logic from making progress, and in this example, we expect stall in pipe write for the `OutStream_NaiveKernel` pipe of which it's output depends on the current column of memory that is being modified. We can verify this behaviour in the simulation waveform: there are constant "dips" in the valid signal for pipe write - i.e. the valid signal is desserted because of the upstream stall from the memory system. This can negatively affect the system throughput and cause outer loop to have serial execution.
+When the kernel executes and simultaneous accesses to the memory system get arbitrated, the loop stalls. These stalls are visible in the simulation waveform: there are occasional gaps in the `valid` signal for pipe write - the valid signal is de-asserted because of the upstream stall from the memory system. This negatively affects the system throughput.
 
 ![Naive System Waveform](./assets/waveform_naive.png)
 
@@ -99,16 +129,16 @@ The stallable arbitration inside the loop body will stall the downstream logic f
 
 To make the memory system more efficient, we can make three changes:
 
-1. We use the right-most array dimension for unrolled accesses, i.e. column dimension.
+1. Use the right-most array dimension for unrolled accesses, (that is, store the **column** dimension in the right-most array dimension).
 
-2. We choose the number of banks to a power-of-2 using `constexpr`-math functions. This line of code computes the closest power-of-2 above the given number. We use this power-of-2 as the number of banks in our optimized memory system. In our case, we use 8.
+2. Choose the number of banks to a power-of-2 using `constexpr`-math functions. This line of code computes the closest power-of-2 above the given number. We use this power-of-2 as the number of banks in our optimized memory system. Since this design performs up to 5 parallel memory accesses, a minimum of 5 banks are required. Since the next power-of-2 is 8, this design should be specified with 8 banks.
    > ```
    > constexpr size_t kNumBanks = fpga_tools::Pow2(fpga_tools::CeilLog2(kNumRows));
    > ```
 
-3. We change the loop induction variables to match with the memory access pattern and result in the correct indices to the `buffer`.
+3. Change the loop induction variables to match with the memory access pattern and result in the correct indices to `array2d` as assigned in change 1.
 
-After making the changes, we have the `OptimizedKernel` exercising the following memory access pattern:
+After making these changes, we have the `OptimizedKernel` exercising the following memory access pattern:
 
 ![Optimized Kernel Memory Access Pattern](./assets/access_pattern_optimized.gif)
 
@@ -116,19 +146,19 @@ Note that in the Kernel Memory Viewer, although the same bank bits ($b_4$, $b_3$
 
 |              | Address | Bank bits | Bank # |
 |--------------|---------|-----------|--------|
-| buffer[0][0] | 0x0000  | 0b000     | 0      |
-| buffer[0][1] | 0x0004  | 0b001     | 1      |
-| buffer[0][2] | 0x0008  | 0b010     | 2      |
-| buffer[0][3] | 0x000C  | 0b011     | 3      |
-| buffer[0][4] | 0x0010  | 0b100     | 4      |
-| buffer[0][5] | 0x0014  | 0b010     | 5      |
-| buffer[0][6] | 0x0018  | 0b011     | 6      |
-| buffer[0][7] | 0x001C  | 0b100     | 7      |
-| buffer[1][0] | 0x0020  | 0b000     | 0      |
-| buffer[1][1] | 0x0024  | 0b001     | 1      |
-| ...          |         |           |        |
+| array2d[0][0] | 0x0000  | 0b000     | 0      |
+| array2d[0][1] | 0x0004  | 0b001     | 1      |
+| array2d[0][2] | 0x0008  | 0b010     | 2      |
+| array2d[0][3] | 0x000C  | 0b011     | 3      |
+| array2d[0][4] | 0x0010  | 0b100     | 4      |
+| array2d[0][5] | 0x0014  | 0b010     | 5      |
+| array2d[0][6] | 0x0018  | 0b011     | 6      |
+| array2d[0][7] | 0x001C  | 0b100     | 7      |
+| array2d[1][0] | 0x0020  | 0b000     | 0      |
+| array2d[1][1] | 0x0024  | 0b001     | 1      |
+| ...           |         |           |        |
 
-Because that we are only accessing the first 5 columns of the `buffer`, that provides sufficient knowledge for the compiler to optimized out the unused memory banks - bank 5 to 7. As a result, we have the following memory layout:
+Because that we are only accessing the first 5 columns of the `array2d`, that provides sufficient knowledge for the compiler to optimize out the unused memory banks - bank 5 to 7. As a result, we have the following memory layout:
 
 ![Optimized Kernel Memory Layout](./assets/memory_system_optimized.png)
 
@@ -136,11 +166,11 @@ Review the memory access pattern above, we can easily find out that within each 
 
 ![Never-stall Node](./assets/memory_report_optimized.png)
 
-Subsequently, since we have made the LSU non-stallable, we expect no stalling in the downstream task - that the output pipe `OutStream_OptimizedKernel` is not stalled by the memory access in the loop. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `ID_OutStream_OptimizedKernel_pipe_channel_write`. The "dips" will no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
+Subsequently, since we have made the LSU non-stallable, we expect no stalls in the loop nor in the downstream task - that the output pipe `OutStream_OptimizedKernel` is not stalled. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `ID_OutStream_OptimizedKernel_pipe_channel_write`. The gaps no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
 
 ![Optimized System Waveform](./assets/waveform_optimized.png)
 
-## Building the `memory_system` Tutorial
+## Building the `banked_memory_system` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
@@ -214,7 +244,7 @@ This design uses CMake to generate a build script for  `nmake`.
 
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
       > ```
-         > cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+      > cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
       > ```
 
 ## Run the `fpga_template` Executable
@@ -222,21 +252,21 @@ This design uses CMake to generate a build script for  `nmake`.
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./memory_system.fpga_emu
+   ./banked_memory_system.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./memory_system.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./banked_memory_system.fpga_sim
    ```
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   memory_system.fpga_emu.exe
+   banked_memory_system.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   memory_system.fpga_sim.exe
+   banked_memory_system.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
