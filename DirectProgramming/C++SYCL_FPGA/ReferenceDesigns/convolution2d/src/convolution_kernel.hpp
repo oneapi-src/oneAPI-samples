@@ -21,6 +21,12 @@ constexpr int kKernelVersion = 1;
 // Define input/output streaming interfaces
 /////////////////////////////////////////////
 
+#if defined(FPGA_SIMULATOR) || defined(FPGA_HARDWARE)
+constexpr size_t kPipeMinCapacity = 0;
+#else  // #if defined(FPGA_EMULATOR)
+constexpr size_t kPipeMinCapacity = 15000;
+#endif
+
 class ID_InStr;
 using InputImgStreamProperties =
     decltype(sycl::ext::oneapi::experimental::properties(
@@ -29,12 +35,14 @@ using InputImgStreamProperties =
         sycl::ext::intel::experimental::ready_latency<0>,
         sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
 using InputImageStream =
-    sycl::ext::intel::experimental::pipe<ID_InStr, conv2d::RGBBeat, 0,
+    sycl::ext::intel::experimental::pipe<ID_InStr, conv2d::RGBBeat,
+                                         kPipeMinCapacity,
                                          InputImgStreamProperties>;
 
 class ID_InStrGrey;
 using InputImageStreamGrey =
-    sycl::ext::intel::experimental::pipe<ID_InStrGrey, conv2d::GreyScaleBeat, 0,
+    sycl::ext::intel::experimental::pipe<ID_InStrGrey, conv2d::GreyScaleBeat,
+                                         kPipeMinCapacity,
                                          InputImgStreamProperties>;
 
 class ID_OutStr;
@@ -45,11 +53,13 @@ using OutputImgStreamProperties =
         sycl::ext::intel::experimental::ready_latency<0>,
         sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
 using OutputImageStreamGrey =
-    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::GreyScaleBeat, 0,
+    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::GreyScaleBeat,
+                                         kPipeMinCapacity,
                                          OutputImgStreamProperties>;
 
 using OutputImageStream =
-    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::RGBBeat, 0,
+    sycl::ext::intel::experimental::pipe<ID_OutStr, conv2d::RGBBeat,
+                                         kPipeMinCapacity,
                                          OutputImgStreamProperties>;
 
 /////////////////////////////////////////////
