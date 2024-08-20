@@ -289,7 +289,7 @@ sycl::event step3_ifft_2d(matrix_r &fhat,
 {
     // Configure descriptor
     std::int64_t strides[3] = {0, (fhat.ldw) / 2, 1}; // fhat.ldw/2, in complex'es
-    ifft2d.set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES, strides);
+    ifft2d.set_value(oneapi::mkl::dft::config_param::FWD_STRIDES, strides);
     ifft2d.commit(main_queue);
 
     sycl::event ifft2d_ev = oneapi::mkl::dft::compute_backward(ifft2d, fhat.data, deps);
