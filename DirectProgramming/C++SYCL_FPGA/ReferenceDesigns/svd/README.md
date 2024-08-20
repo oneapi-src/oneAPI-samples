@@ -69,7 +69,7 @@ Performance results are based on testing as of April 12, 2024 with fixed 55 iter
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Terasic DE10-Agilex Development Board             | 0.92k matrices/s for matrices of size 32 x 32
+| Intel® FPGA SmartNIC N6001                        | 0.99k matrices/s for matrices of size 32 x 32
 
 ## Key Implementation Details
 This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
@@ -332,18 +332,18 @@ Since the singular vectors in $U$ and $V$ are non-unique, their correctness are 
 
 ## Example Output
 
-Example Output when running on the **Terasic DE10-Agilex Development Board**.
+Example Output when running on the **Intel® FPGA SmartNIC N6001**.
 
 ```
-Running on device: de10_agilex : Agilex Reference Platform (aclde10_agilex0)
-Running SVD test with input size 16 x 8, repeating 16384 time(s)
+Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
+Running SVD test with 8 input(s) size 32 x 32, repeating 16384 time(s)
 Using device allocations
-Singular value error: 5.96046e-07(9.04024e-05%)
-Decomposition error (A = USVt): 9.83477e-07(0.00153999%)
-U orthogonal error: 3.05474e-07
-V orthogonal error: 9.53674e-07
-Total duration: 0.989917s
-Throughput: 16.5509k matrices/s
+Singular value differences: 0.00016194
+Decomposition differences (A = USVt): 0.000376672
+U orthogonal differences: 2.38419e-07
+V orthogonal differences: 0.000817776
+Total duration: 132.838s
+Throughput: 0.986704k matrices/s
 PASSED
 ```
 
