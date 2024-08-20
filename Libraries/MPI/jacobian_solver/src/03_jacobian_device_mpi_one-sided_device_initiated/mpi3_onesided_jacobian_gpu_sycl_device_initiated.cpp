@@ -127,12 +127,10 @@ int main(int argc, char *argv[])
         t_start = MPI_Wtime();
     }
 
-    for (int i = 0; i < Niter; ++i)
-    {
-        MPI_Win cwin = win[(i + 1) % 2];
-        double *a = A_device[i % 2];
-        double *a_out = A_device[(i + 1) % 2];
+    int iterations_batch = (NormIteration <= 0) ? Niter : NormIteration;
+    for (passed_iters = 0; passed_iters < Niter; passed_iters += iterations_batch) {
 
+        /* Submit compute kernel to calculate next "iterations_batch" steps */
         q.submit([&](auto & h) {
             h.parallel_for(sycl::nd_range<1>(work_group_size, work_group_size),
                             [=](sycl::nd_item<1> item) {
@@ -143,52 +141,66 @@ int main(int argc, char *argv[])
                 int my_x_lb = col_per_wg * local_id;
                 int my_x_ub = my_x_lb + col_per_wg;
 
-                /* Calculate values on borders to initiate communications early */
-                for (int column = my_x_lb; column < my_x_ub;  column ++) {
-                    int idx = XY_2_IDX(column, 0, my_subarray);
-                    a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                         + a[idx - ROW_SIZE(my_subarray)]
-                                         + a[idx + ROW_SIZE(my_subarray)]);
-                    idx = XY_2_IDX(column, my_subarray.y_size - 1, my_subarray);
-                    a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                         + a[idx - ROW_SIZE(my_subarray)]
-                                         + a[idx + ROW_SIZE(my_subarray)]);
-                }
+                for (int k = 0; k < iterations_batch; ++k)
+                {
+                    int i = passed_iters + k;
+                    MPI_Win cwin = win[(i + 1) % 2];
+                    double *a = A_device[i % 2];
+                    double *a_out = A_device[(i + 1) % 2];
+                    /* Calculate values on borders to initiate communications early */
+                    for (int column = my_x_lb; column < my_x_ub;  column ++) {
+                        int idx = XY_2_IDX(column, 0, my_subarray);
+                        a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                             + a[idx - ROW_SIZE(my_subarray)]
+                                             + a[idx + ROW_SIZE(my_subarray)]);
+                        idx = XY_2_IDX(column, my_subarray.y_size - 1, my_subarray);
+                        a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                             + a[idx - ROW_SIZE(my_subarray)]
+                                             + a[idx + ROW_SIZE(my_subarray)]);
+                    }
 
-                item.barrier(sycl::access::fence_space::global_space);
-                if (local_id == 0) {
-                /* Perform 1D halo-exchange with neighbours */
-                    if (my_subarray.rank != 0) {
-                        int idx = XY_2_IDX(0, 0, my_subarray);
-                        MPI_Put(&a_out[idx], my_subarray.x_size, MPI_DOUBLE,
-                            my_subarray.rank - 1, my_subarray.l_nbh_offt,
-                            my_subarray.x_size, MPI_DOUBLE, cwin);
-                     }
-  
-                     if (my_subarray.rank != (my_subarray.comm_size - 1)) {
-                         int idx = XY_2_IDX(0, my_subarray.y_size - 1, my_subarray);
-                         MPI_Put(&a_out[idx], my_subarray.x_size, MPI_DOUBLE,
-                              my_subarray.rank + 1, 1,
-                              my_subarray.x_size, MPI_DOUBLE, cwin);
-                     }
-                }
+                    item.barrier(sycl::access::fence_space::global_space);
+                    if (local_id == 0) {
+                    /* Perform 1D halo-exchange with neighbours */
+                        if (my_subarray.rank != 0) {
+                            int idx = XY_2_IDX(0, 0, my_subarray);
+                            MPI_Put(&a_out[idx], my_subarray.x_size, MPI_DOUBLE,
+                                my_subarray.rank - 1, my_subarray.l_nbh_offt,
+                                my_subarray.x_size, MPI_DOUBLE, cwin);
+                         }
 
-                /* Recalculate internal points in parallel with comunications */
-                for (int row = 1; row < my_subarray.y_size - 1; ++row) {
-                     for (int column = my_x_lb; column < my_x_ub;  column ++) {
-                          int idx = XY_2_IDX(column, row, my_subarray);
-                          a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                                         + a[idx - ROW_SIZE(my_subarray)]
-                                                         + a[idx + ROW_SIZE(my_subarray)]);
-                     }
+                         if (my_subarray.rank != (my_subarray.comm_size - 1)) {
+                             int idx = XY_2_IDX(0, my_subarray.y_size - 1, my_subarray);
+                             MPI_Put(&a_out[idx], my_subarray.x_size, MPI_DOUBLE,
+                                  my_subarray.rank + 1, 1,
+                                  my_subarray.x_size, MPI_DOUBLE, cwin);
+                         }
+                    }
+
+                    /* Recalculate internal points in parallel with comunications */
+                    for (int row = 1; row < my_subarray.y_size - 1; ++row) {
+                         for (int column = my_x_lb; column < my_x_ub;  column ++) {
+                              int idx = XY_2_IDX(column, row, my_subarray);
+                              a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                                             + a[idx - ROW_SIZE(my_subarray)]
+                                                             + a[idx + ROW_SIZE(my_subarray)]);
+                         }
+                    }
+                    item.barrier(sycl::access::fence_space::global_space);
+                    /* Ensure all communications complete before next iteration */
+                    if (local_id == 0) {
+                        MPI_Win_fence(0, cwin);
+                    }
+                    item.barrier(sycl::access::fence_space::global_space);
                 }
-                item.barrier(sycl::access::fence_space::global_space);
             });
         }).wait();
+
 
         /* Calculate and report norm value after given number of iterations */
         if ((NormIteration > 0) && ((NormIteration - 1) == i % NormIteration)) {
             double rank_norm = 0.0;
+
             {
                 sycl::buffer<double> norm_buf(&rank_norm, 1);
                 q.submit([&](auto & h) {
@@ -204,12 +216,9 @@ int main(int argc, char *argv[])
             /* Get global norm value */
             MPI_Reduce(&rank_norm, &norm, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
             if (my_subarray.rank == 0) {
-                printf("NORM value on iteration %d: %f\n", passed_iters + batch_iters + 1, sqrt(norm));
+                printf("NORM value on iteration %d: %f\n", i+1, sqrt(norm));
             }
-            rank_norm = 0.0;
         }
-        /* Ensure all communications complete before next iteration */
-        MPI_Win_fence(0, cwin);
     }
 
     if (PrintTime) {
