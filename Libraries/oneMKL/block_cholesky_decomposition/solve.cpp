@@ -75,7 +75,7 @@ int main() {
         }
     };
 
-    sycl::device device{sycl::default_selector{}};
+    sycl::device device{sycl::default_selector_v};
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 

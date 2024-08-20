@@ -171,7 +171,7 @@ int main(int argc, char **argv) {
 
   try {
     // Queue constructor passed exception handler
-    sycl::queue q(sycl::default_selector{}, exception_handler);
+    sycl::queue q(sycl::default_selector_v, exception_handler);
     // Prepare buffers for random output
     sycl::buffer<fp_type, 1> rng_buf0(n_points);
     sycl::buffer<fp_type, 1> rng_buf1(n_points);

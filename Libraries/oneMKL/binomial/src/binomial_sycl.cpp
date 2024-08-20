@@ -71,7 +71,7 @@ void Binomial<DATA_TYPE>::body() {
   binomial_queue->submit([&](sycl::handler& h) {
     sycl::local_accessor<DATA_TYPE> slm_call{wg_size + 1, h};
 
-    h.template parallel_for(
+    h.parallel_for(
         sycl::nd_range(sycl::range<1>(opt_n * wg_size),
                        sycl::range<1>(wg_size)),
         [=](sycl::nd_item<1> item)

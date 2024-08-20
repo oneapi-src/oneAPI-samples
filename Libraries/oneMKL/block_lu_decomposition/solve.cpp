@@ -7,35 +7,35 @@
 /*
 *
 *  Content:
-*      Example of solving a system of linear equations with general 
-*      block tridiagonal coefficient matrix 
+*      Example of solving a system of linear equations with general
+*      block tridiagonal coefficient matrix
 ************************************************************************
 * Purpose:
-* ========  
-* Testing solution of a linear system of equations with general block 
+* ========
+* Testing solution of a linear system of equations with general block
 * tridiagonal matrix of coefficients
 *          D(1)*X(1) +     C(1)*X(2)               = F(1)
-*          B(1)*X(1) +     D(2)*X(2) +   C(2)*X(3) = F(2) 
-*          B(2)*X(2) +     D(3)*X(3) +   C(3)*X(4) = F(3) 
+*          B(1)*X(1) +     D(2)*X(2) +   C(2)*X(3) = F(2)
+*          B(2)*X(2) +     D(3)*X(3) +   C(3)*X(4) = F(3)
 *      ...
-*      B(N-2)*X(N-2) + D(N-1)*X(N-1) + C(N-1)*X(N) = F(N-1) 
-*                      B(N-1)*X(N-1) +   D(N)*X(N) = F(N) 
+*      B(N-2)*X(N-2) + D(N-1)*X(N-1) + C(N-1)*X(N) = F(N-1)
+*                      B(N-1)*X(N-1) +   D(N)*X(N) = F(N)
 * Here D(J),B(J),C(J) are NB by NB matrices - block matrix coefficients
 *     X(J),F(J) are NB by NRHS-matrices - unknowns and RHS components
 *
-* Solving is done via LU factorization of the coefficient matrix 
+* Solving is done via LU factorization of the coefficient matrix
 * (call DGEBLTTRF) followed by call DGEBLTTRS to solve a system of
 * equations with coefficient matrix factored by DGEBLTTRF.
 *
 * Coefficients and right hand sides are randomly generated.
 *
-* Testing is done via calculating 
+* Testing is done via calculating
 *      max{||F(1)-D(1)*X(1)-C(1)*X(2)||,
 *          ||F(2)-B(1)*X(1)-D(1)*X(1)-C(1)*X(2)||,
 *           ...
 *           ||F(N)-B(N-1)*X(N-1)-D(N)*X(N)||}
 *
-* ||.|| denotes Frobenius norm of a respective matrix           
+* ||.|| denotes Frobenius norm of a respective matrix
 */
 #include <cstdint>
 #include <iostream>
@@ -65,7 +65,7 @@ int main() {
     int64_t ldf = nb*n;
 
     int64_t info = 0;
-    
+
     // Asynchronous error handler
     auto error_handler = [&] (sycl::exception_list exceptions) {
         for (auto const& e : exceptions) {
@@ -83,7 +83,7 @@ int main() {
         }
     };
 
-    sycl::device device{sycl::default_selector{}};
+    sycl::device device{sycl::default_selector_v};
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 
@@ -132,9 +132,9 @@ int main() {
     std::cout << "matrix by calculating ratios of residuals" << std::endl;
     std::cout << "to RHS vectors' norms." << std::endl;
 
-    // LU factorization of the coefficient matrix      
+    // LU factorization of the coefficient matrix
     info = dgeblttrf(queue, n, nb, d.data(), dl.data(), du1.data(), du2.data(), ipiv.data());
-    if (info) { 
+    if (info) {
         std::cout << "DGEBLTTRF returned nonzero INFO = " << info << std::endl;
         return 1;
     }
@@ -145,10 +145,10 @@ int main() {
         std::cout << -info << "-th parameter in call of dgeblttrs has illegal value" << std::endl;
         return 1;
     } else {
-        // computing the residual      
+        // computing the residual
         double eps = resid2(n, nb, nrhs, dlcpy.data(), dcpy.data(), du1cpy.data(), f.data(), ldf, fcpy.data(), ldf);
         std::cout << "max_(i=1,...,nrhs){||ax(i)-f(i)||/||f(i)||} = " << eps << std::endl;
-    } 
+    }
 
     return 0;
 }
