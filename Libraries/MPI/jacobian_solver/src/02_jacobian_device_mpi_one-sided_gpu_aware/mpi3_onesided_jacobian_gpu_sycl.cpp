@@ -94,6 +94,21 @@ int main(int argc, char *argv[])
     GetMySubarray(&my_subarray);
     InitDeviceArrays(&A_device[0], &A_device[1], q, &my_subarray);
 
+#ifdef GROUP_SIZE_DEFAULT
+      int work_group_size = GROUP_SIZE_DEFAULT;
+#else
+    int work_group_size =
+      q.get_device().get_info<sycl::info::device::max_work_group_size>();
+#endif
+
+    if ((Nx % work_group_size) != 0) {
+        if (my_subarray.rank == 0) {
+            printf("For simplification, sycl::info::device::max_work_group_size should be divider of X dimention of array\n");
+            printf("Please adjust matrix size, or define GROUP_SIZE_DEFAULT\n");
+            printf("sycl::info::device::max_work_group_size=%d Nx=%d (%d)\n", work_group_size, Nx, work_group_size % Nx);
+            MPI_Abort(MPI_COMM_WORLD, -1);
+        }
+    }
     /* Create RMA window using device memory */
     MPI_Win_create(A_device[0],
                    sizeof(double) * (my_subarray.x_size + 2) * (my_subarray.y_size + 2),
@@ -116,18 +131,24 @@ int main(int argc, char *argv[])
         {
             /* Calculate values on borders to initiate communications early */
             q.submit([&](auto & h) {
-                h.parallel_for(sycl::range(my_subarray.x_size), [ =] (auto index) {
-                    int column = index[0];
-                    int idx = XY_2_IDX(column, 0, my_subarray);
-                    a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                         + a[idx - ROW_SIZE(my_subarray)]
-                                         + a[idx + ROW_SIZE(my_subarray)]);
+                h.parallel_for(sycl::nd_range<1>(work_group_size, work_group_size),
+                                [=](sycl::nd_item<1> item) {
+                    int column = item.get_global_id(0);
+                    int col_per_wg = my_subarray.x_size / work_group_size;
 
-                    idx = XY_2_IDX(column, my_subarray.y_size - 1, my_subarray);
-                    a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                         + a[idx - ROW_SIZE(my_subarray)]
-                                         + a[idx + ROW_SIZE(my_subarray)]);
+                    int my_x_lb = col_per_wg * local_id;
+                    int my_x_ub = my_x_lb + col_per_wg;
 
+                    for (int column = my_x_lb; column < my_x_ub;  column ++) {
+                        int idx = XY_2_IDX(column, 0, my_subarray);
+                        a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                             + a[idx - ROW_SIZE(my_subarray)]
+                                             + a[idx + ROW_SIZE(my_subarray)]);
+                        idx = XY_2_IDX(column, my_subarray.y_size - 1, my_subarray);
+                        a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                             + a[idx - ROW_SIZE(my_subarray)]
+                                             + a[idx + ROW_SIZE(my_subarray)]);
+                    }
                 });
             }).wait();
         }
@@ -149,11 +170,23 @@ int main(int argc, char *argv[])
         /* Recalculate internal points  in parallel with communications */
         {
             q.submit([&](auto & h) {
-                h.parallel_for(sycl::range(my_subarray.x_size, my_subarray.y_size - 2), [ =] (auto index) {
-                    int idx = XY_2_IDX(index[0], index[1] + 1, my_subarray);
-                    a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
-                                         + a[idx - ROW_SIZE(my_subarray)]
-                                         + a[idx + ROW_SIZE(my_subarray)]);
+                h.parallel_for(sycl::nd_range<1>(work_group_size, work_group_size),
+                                [=](sycl::nd_item<1> item) {
+                    int local_id = item.get_local_id();
+                    int col_per_wg = my_subarray.x_size / work_group_size;
+
+                    int my_x_lb = col_per_wg * local_id;
+                    int my_x_ub = my_x_lb + col_per_wg;
+
+                    /* Recalculate internal points in parallel with comunications */
+                    for (int row = 1; row < my_subarray.y_size - 1; ++row) {
+                         for (int column = my_x_lb; column < my_x_ub;  column ++) {
+                              int idx = XY_2_IDX(column, row, my_subarray);
+                              a_out[idx] = 0.25 * (a[idx - 1] + a[idx + 1]
+                                                             + a[idx - ROW_SIZE(my_subarray)]
+                                                             + a[idx + ROW_SIZE(my_subarray)]);
+                         }
+                    }
                 });
             }).wait();
         }
