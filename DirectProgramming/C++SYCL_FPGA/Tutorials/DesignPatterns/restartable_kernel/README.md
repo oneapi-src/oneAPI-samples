@@ -38,9 +38,9 @@ flowchart LR
 
    tier1 --> tier2 --> tier3 --> tier4
 
-   style tier1 fill:#f96,stroke:#0071c1,stroke-width:1px,color:#fff
+   style tier1 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
    style tier2 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
-   style tier3 fill:#0071c1,stroke:#333,stroke-width:1px,color:#fff
+   style tier3 fill:#f96,stroke:#333,stroke-width:1px,color:#fff
    style tier4 fill:#0071c1,stroke:#0071c1,stroke-width:1px,color:#fff
 ```
 
@@ -82,7 +82,7 @@ while (keep_going) {
 }
 ```
 
-In this sample, `StopPipe` has been assigned the `protocol::avalon_mm_uses_ready` property so it terminates in the kernel's control/status register (CSR) instead of in a streaming interface. Terminating in the CSR allows this kernel to be managed by a memory-mapped host (such as a Nios® V softcore processor), while terminating in a streaming interface is convenient if this kernel were to be managed by another SYCL kernel. For details about the `protocol::avalon_mm_uses_ready` property, see the [CSR Pipes](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison/csr-pipes) sub-sample within the [Component Interfaces Comparison](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison) code sample.
+In this sample, `StopPipe` has been assigned the `protocol::avalon_mm_uses_ready` property so it is mapped to the kernel's control/status register (CSR) instead of a streaming interface. Mapping to the CSR allows this kernel to be managed by a memory-mapped host (such as a Nios® V softcore processor), but mapping to a streaming interface is convenient if this kernel were to be managed by another SYCL kernel. For details about the `protocol::avalon_mm_uses_ready` property, see the [CSR Pipes](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison/csr-pipes) sub-sample within the [Component Interfaces Comparison](/DirectProgramming/C++SYCL_FPGA/Tutorials/Features/hls_flow_interfaces/component_interfaces_comparison) code sample.
 
 ![](assets/stopcsr.png)
 
@@ -93,7 +93,19 @@ The testbench in `main.cpp` exercises the kernel in the following steps:
 3. Read 256 more outputs from the kernel, which should be a monotonically growing sequence starting at 263.
 4. Stop the kernel.
 5. Initialize the kernel with a new initialization value of 77.
-6. ead 256 more outputs from the kernel, which should be a monotonically growing sequence starting at 77.
+6. Read 256 more outputs from the kernel, which should be a monotonically growing sequence starting at 77.
+
+### Packets
+
+This design uses the Avalon `start_of_packet` signal to indicate when the a new set of values is being written to `OutputPipe`. The `start_of_packet` sideband signal is not *generally* necessary for implementing a restartable kernel, but it is used in this design to compensate for the decoupled way that the `RestartableCounter` kernel executes with respect to the host code. Since the host code does not tell `RestartableCounter` how many values to write to `OutputPipe`, the `RestartableCounter` will continue to write to `OutputPipe` until either
+
+1. `OutputPipe` fills up, in which case the `RestartableCounter` kernel will stop incrementing its internal counter until the pipe can be written to again
+
+2. A `true` is written to the `StopPipe`
+
+Any data written to the `OutputPipe` between the host code writing a `true` to `StopPipe`, and the `RestartableCounter` kernel *consuming* the `true` from `StopPipe` will still be in `OutputPipe` the next time the host code tries to read from it, so it is necessary to flush these extra beats of data. The `start_of_packet` sideband signals the beginning of a new stream of counter data in `OutputPipe`.
+
+![](assets/restartable_kernel_sequence_diagram.svg)
 
 ## Building the `restartable_kernel` Tutorial
 

@@ -1,5 +1,5 @@
-#ifndef __STOPPABLE_COUNTER_KERNEL_HPP__
-#define __STOPPABLE_COUNTER_KERNEL_HPP__
+#ifndef __RESTARTABLE_COUNTER_KERNEL_HPP__
+#define __RESTARTABLE_COUNTER_KERNEL_HPP__
 
 #include <iostream>
 
@@ -26,8 +26,8 @@ using OutputBeat =
                                       // signals
                              false>;  // disable the empty signal>;
 
-// This pipe terminates in the CSR. This way a kernel can respond to CSR
-// updates while it executes.
+// StopPipe is mapped to the CSR. This way a kernel can be controlled by a
+// memory-mapped host while it executes.
 using CsrPipeProperties = decltype(oneapi_exp::properties(
     intel_exp::protocol<
         // Write-only, so no no need for protocol_name::avalon_mm_uses_ready
@@ -36,7 +36,7 @@ using StopPipe = intel_exp::pipe<StopPipeID, bool, 0, CsrPipeProperties>;
 
 using StreamingPipeProperties =
     decltype(oneapi_exp::properties(intel_exp::bits_per_symbol<32>));
-// This pipe terminates in a streaming interface.
+// OutputPipe maps to a streaming interface.
 using OutputPipe =
     intel_exp::pipe<OutputPipeID, OutputBeat, 0, StreamingPipeProperties>;
 

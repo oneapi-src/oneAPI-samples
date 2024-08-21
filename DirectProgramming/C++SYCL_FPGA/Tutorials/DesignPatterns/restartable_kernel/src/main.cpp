@@ -24,9 +24,8 @@ bool CheckIncrements(sycl::queue q, int count_start, int iterations,
 
   if (should_flush) {
     std::cout << "Flush pipe until 'start of packet' is seen." << std::endl;
-  } 
-    else {
-      std::cout << "Start counting from " << expected_count << std::endl;
+  } else {
+    std::cout << "Start counting from " << expected_count << std::endl;
   }
 
   int flushed_count = 0;
@@ -81,15 +80,15 @@ int main() {
               << std::endl;
     {
       int count_start = 7;
-      std::cout << "\nStart kernel RestartableCounter at " << count_start << ". "
-                << std::endl;
+      std::cout << "\nStart kernel RestartableCounter at " << count_start
+                << ". " << std::endl;
 
       // Capture the event so that we can stop the kernel later on
       sycl::event e = q.single_task<CounterID>(
           restartable_counter::RestartableCounter{count_start});
 
       passed = CheckIncrements<restartable_counter::OutputPipe>(q, count_start,
-                                                              kIterations);
+                                                                kIterations);
 
       int new_start = count_start + kIterations;
       // continue reading more results
@@ -109,7 +108,7 @@ int main() {
       sycl::event e = q.single_task<CounterID>(
           restartable_counter::RestartableCounter{count_start});
       passed &= CheckIncrements<restartable_counter::OutputPipe>(q, count_start,
-                                                               kIterations);
+                                                                 kIterations);
 
       std::cout << "Stop kernel RestartableCounter" << std::endl;
       restartable_counter::StopPipe::write(q, true);
