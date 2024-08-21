@@ -54,6 +54,12 @@ This program demonstrates how to initiate one-sided communications directly from
 
 To enable device-initiated communications, you must set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
 
+### `04_jacobian_device_mpi_one-sided_device_initiated_notify`
+
+This program demonstrates how to initiate one-sided communications directly from the offloaded code. The Intel® MPI Library allows calls to some communication primitives directly from the offloaded code (SYCL or OpenMP). In contrast to prior example, this one demonstrates usage of one-sided communications with notification (extention of MPI-4.1 standard).
+
+To enable device-initiated communications, you must set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
+
 ## Build the `Distributed Jacobian Solver SYCL/MPI` Sample
 
 > **Note**: If you have not already done so, set up your CLI
