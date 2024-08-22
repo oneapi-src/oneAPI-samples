@@ -1,6 +1,8 @@
 #ifndef __QFP_EXP_LUT_HPP__
 #define __QFP_EXP_LUT_HPP__
 
+#include <cmath>
+
 #include "qfp.hpp"
 
 // Included from DirectProgramming/C++SYCL_FPGA/include/

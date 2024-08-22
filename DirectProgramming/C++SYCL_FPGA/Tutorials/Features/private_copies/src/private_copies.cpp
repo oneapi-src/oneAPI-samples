@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <math.h>
+#include <cmath>
 
 #include <array>
 #include <iomanip>

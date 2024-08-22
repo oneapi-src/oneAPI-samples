@@ -92,6 +92,7 @@
 
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
+#include <cmath>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
