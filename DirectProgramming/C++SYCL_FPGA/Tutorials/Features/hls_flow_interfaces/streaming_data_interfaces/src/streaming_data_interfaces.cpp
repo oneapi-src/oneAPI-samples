@@ -29,18 +29,25 @@ using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>,
     sycl::ext::intel::experimental::protocol_avalon_streaming_uses_ready));
 
+// Pipe capacity
+#if FPGA_EMULATOR
+constexpr size_t kPipeMinCapacity = 256;
+#else
+constexpr size_t kPipeMinCapacity = 0;
+#endif
+
 // Image streams
 using InPixelPipe = sycl::ext::intel::experimental::pipe<
-    InStream,        // An identifier for the pipe
-    StreamingBeatT,  // The type of data in the pipe
-    0,               // The capacity of the pipe
-    PipePropertiesT  // Customizable pipe properties
+    InStream,          // An identifier for the pipe
+    StreamingBeatT,    // The type of data in the pipe
+    kPipeMinCapacity,  // The capacity of the pipe
+    PipePropertiesT    // Customizable pipe properties
     >;
 using OutPixelPipe = sycl::ext::intel::experimental::pipe<
-    OutStream,       // An identifier for the pipe
-    StreamingBeatT,  // The type of data in the pipe
-    0,               // The capacity of the pipe
-    PipePropertiesT  // Customizable pipe properties
+    OutStream,         // An identifier for the pipe
+    StreamingBeatT,    // The type of data in the pipe
+    kPipeMinCapacity,  // The capacity of the pipe
+    PipePropertiesT    // Customizable pipe properties
     >;
 
 // A kernel that thresholds pixel values in an image over a stream. Uses start

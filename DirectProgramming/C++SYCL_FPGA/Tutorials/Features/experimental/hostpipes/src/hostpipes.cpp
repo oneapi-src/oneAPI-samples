@@ -177,7 +177,6 @@ void LaunchCollectTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
                        size_t repeats) {
   std::cout << "\t Run Loopback Kernel on FPGA" << std::endl;
 
-#if defined(FPGA_SIMULATOR) || defined(FPGA_HARDWARE)
   for (size_t r = 0; r < repeats; r++) {
     std::cout << "\t " << r << ": "
               << "Doing " << count << " writes" << std::endl;
@@ -185,39 +184,24 @@ void LaunchCollectTest(sycl::queue& q, ValueT* in, ValueT* out, size_t count,
       // write data in host-to-device hostpipe
       H2DPipe::write(q, in[i]);
     }
+#if FPGA_EMULATOR
+  auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
+      q, count);
+#else
   }
 
   auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
       q, count * repeats);
 
   for (size_t r = 0; r < repeats; r++) {
-    std::cout << "\t " << r << ": "
-              << "Doing " << count << " reads" << std::endl;
-    for (size_t i = 0; i < count; i++) {
-      // read data from device-to-host hostpipe
-      out[i] = D2HPipe::read(q);
-    }
-  }
-#else  // #if defined(FPGA_EMULATOR)
-  for (size_t r = 0; r < repeats; r++) {
-    std::cout << "\t " << r << ": "
-              << "Doing " << count << " writes" << std::endl;
-    for (size_t i = 0; i < count; i++) {
-      // write data in host-to-device hostpipe
-      H2DPipe::write(q, in[i]);
-    }
-
-    auto e = SubmitLoopBackKernel<LoopBackKernelID, H2DPipe, D2HPipe>(
-        q, count);
-
-    std::cout << "\t " << r << ": "
-              << "Doing " << count << " reads" << std::endl;
-    for (size_t i = 0; i < count; i++) {
-      // read data from device-to-host hostpipe
-      out[i] = D2HPipe::read(q);
-    }
-  }
 #endif
+    std::cout << "\t " << r << ": "
+              << "Doing " << count << " reads" << std::endl;
+    for (size_t i = 0; i < count; i++) {
+      // read data from device-to-host hostpipe
+      out[i] = D2HPipe::read(q);
+    }
+  }
 
   // No need to wait on kernel to finish as the pipe reads are blocking
 

@@ -21,10 +21,11 @@ constexpr int kKernelVersion = 1;
 // Define input/output streaming interfaces
 /////////////////////////////////////////////
 
-#if defined(FPGA_SIMULATOR) || defined(FPGA_HARDWARE)
-constexpr size_t kPipeMinCapacity = 0;
-#else  // #if defined(FPGA_EMULATOR)
+// Pipe capacity
+#if FPGA_EMULATOR
 constexpr size_t kPipeMinCapacity = 15000;
+#else
+constexpr size_t kPipeMinCapacity = 0;
 #endif
 
 class ID_InStr;

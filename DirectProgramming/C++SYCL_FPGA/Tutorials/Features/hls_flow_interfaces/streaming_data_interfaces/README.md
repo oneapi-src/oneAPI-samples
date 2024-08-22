@@ -66,7 +66,7 @@ Each pipe is a class declaration of the templated `pipe` class. A pipe declarati
 | ---                                     | ---
 | `name`                                  | A user-defined type that uniquely identifies this pipe. The name of this type is also used to identify the interface in the generated RTL.
 | `dataT`                                 | The type of data that passes through the pipe*. This is the data type that is read during a successful pipe read() operation, or written during a successful pipe write() operation. The type must have a standard layout and be trivially copyable.
-| `min_capacity`                          | User-defined minimum number of words (in units of `dataT`) that the pipe must be able to store without any being read out. This parameter is optional, and defaults to 0.
+| `min_capacity`                          | User-defined minimum number of words (in units of `dataT`) that the pipe must be able to store without any being read out. This parameter is optional, and defaults to 0. For FPGA emulator, when `min_capacity` is 0, the pipe depth defaults to 1. If the pipe is expected to store `N` (N > 1) words without any being read out, `min_capacity` should be set to a number greater than or equal to `N`.
 | `properties`                            | An unordered list of SYCL properties that define additional semantic properties for a pipe. This parameter is optional.**
 
 > **Note**: Omitting a single property from the properties class instructs the compiler to assume the default value for that property, so you can just define the properties you would like to change from the default. Omitting the properties template parameter entirely instructs the compiler to assume the default values for all properties.
