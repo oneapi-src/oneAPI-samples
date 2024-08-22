@@ -46,8 +46,7 @@ void lottery(sycl::queue& q, size_t m, size_t n, size_t num_exp, size_t* result_
     {
 
         event = q.submit([&] (sycl::handler& h) {
-            sycl::accessor<size_t, 1, sycl::access::mode::read_write, sycl::access::target::local>
-                local_buf(sycl::range<1>{n}, h);
+            sycl::local_accessor<size_t> local_buf(sycl::range<1>{n}, h);
             h.parallel_for(sycl::nd_range<1>(num_exp, 1),
                 [=](sycl::nd_item<1> item) {
                 size_t id = item.get_group(0);
@@ -126,7 +125,7 @@ int main(int argc, char ** argv) {
 
     try {
         // Queue constructor passed exception handler
-        sycl::queue q(sycl::default_selector{}, exception_handler);
+        sycl::queue q(sycl::default_selector_v, exception_handler);
         // Allocate memory
         result_ptr = sycl::malloc_shared<size_t>(m * num_exp, q);
         // Launch lottery for Host USM API

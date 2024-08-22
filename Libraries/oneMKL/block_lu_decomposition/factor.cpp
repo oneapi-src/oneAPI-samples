@@ -10,17 +10,17 @@
 *      Example of LU factorization of general block tridiagonal matrix
 ************************************************************************
 * Purpose:
-* ========  
-* Testing LU factorization of block tridiagonal matrix 
+* ========
+* Testing LU factorization of block tridiagonal matrix
 *          (D_1  C_1                          )
 *          (B_1  D_2  C_2                     )
 *          (     B_2  D_3  C_3                )
 *          (           .........              )
 *          (              B_N-2 D_N-1  C_N-1  )
 *          (                    B_N-1  D_N    )
-* provided by function dgeblttrf by calculating Frobenius norm of the 
-* residual ||A-L*U||. Computation of the residual and its Frobenius norm  
-* is done by function resid1 (for source see file auxi.cpp). 
+* provided by function dgeblttrf by calculating Frobenius norm of the
+* residual ||A-L*U||. Computation of the residual and its Frobenius norm
+* is done by function resid1 (for source see file auxi.cpp).
 * Input block tridiagonal matrix A is randomly generated.
 */
 
@@ -45,7 +45,7 @@ int main(){
         std::cerr << "MKL_INT not 64bit" << std::endl;
         return -1;
     }
-    
+
     int64_t n = 200;
     int64_t nb = 20;
 
@@ -68,7 +68,7 @@ int main(){
         }
     };
 
-    sycl::device device{sycl::default_selector{}};
+    sycl::device device{sycl::default_selector_v};
     sycl::queue queue(device, error_handler);
     sycl::context context = queue.get_context();
 

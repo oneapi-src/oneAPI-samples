@@ -171,7 +171,7 @@ int main(int argc, char** argv) {
 
   try {
     // Queue constructor passed exception handler
-    sycl::queue q(sycl::default_selector{}, exception_handler);
+    sycl::queue q(sycl::default_selector_v, exception_handler);
     // Allocate memory for random output
     fp_type* rng_arr0 = sycl::malloc_shared<fp_type>(n_points, q);
     fp_type* rng_arr1 = sycl::malloc_shared<fp_type>(n_points, q);
