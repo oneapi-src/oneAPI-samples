@@ -307,50 +307,35 @@ You can perform the multiplication of the set of matrices repeatedly. This step 
 
 ### On Linux
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    ./matmul.fpga_emu
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./matmul.fpga_sim
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./matmul.fpga
    ```
 
 ### On Windows
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    matmul.fpga_emu.exe
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    matmul.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   matmul.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

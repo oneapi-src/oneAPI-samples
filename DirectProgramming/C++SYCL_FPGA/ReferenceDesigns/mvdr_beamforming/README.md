@@ -269,10 +269,7 @@ The general syntax for running the program is shown below and the table describe
    mvdr_beamforming.fpga_sim.exe ../data .
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   mvdr_beamforming.fpga.exe 1024 ../data .
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Build and Run the Design Using Real IO-pipes
 

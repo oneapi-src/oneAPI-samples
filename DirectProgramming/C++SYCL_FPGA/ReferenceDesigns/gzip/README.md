@@ -299,10 +299,7 @@ Performance results are based on testing as of May 14, 2024.
     gzip.fpga_sim.exe ../data/100b.txt -o=<output_file>
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
- 3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-    ```
-    gzip.fpga.exe <input_file> -o=<output_file>
-    ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

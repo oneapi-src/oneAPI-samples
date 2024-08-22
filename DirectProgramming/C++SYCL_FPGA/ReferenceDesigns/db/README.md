@@ -305,10 +305,7 @@ Query 12 showcases the `MergeJoin` database operator. The block diagram of the d
    db.fpga_sim.exe --dbroot=../data/sf0.01 --test
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on an FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   db.fpga.exe --dbroot=../data/sf1 --test
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

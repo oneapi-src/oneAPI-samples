@@ -430,51 +430,36 @@ Additionally, the `cmake` build system can be configured using the following par
 
 ### On Linux
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    ./pca.fpga_emu <path to data/abalone.csv>
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./pca.fpga_sim <path to data/abalone.csv>
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./pca.fpga <path to data/abalone.csv>
    ```
 
 ### On Windows
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    pca.fpga_emu.exe <path to data/abalone.csv>
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    pca.fpga_sim.exe <path to data/abalone.csv>
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   pca.fpga.exe <path to data/abalone.csv>
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 
