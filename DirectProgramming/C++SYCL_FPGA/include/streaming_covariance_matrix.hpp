@@ -216,7 +216,7 @@ struct StreamingCovarianceMatrix {
           T numerator = cov_matrix_consume[row][column] -
                         (rows * means[row] * means[column]);
 
-          T denominator = std::sqrt((t_matrix_diagonal_replicate[row] -
+          T denominator = sycl::sqrt((t_matrix_diagonal_replicate[row] -
                                      (rows * means[row] * means[row])) *
                                     (t_matrix_diagonal_replicate[column] -
                                      (rows * means[column] * means[column])));

@@ -15,7 +15,7 @@
 #include "streaming_covariance_matrix.hpp"
 // Headers specific to SVD
 #include "memory_transfers.hpp"
-#include "post_process.hpp"
+#include "usv_from_eigens.hpp"
 
 
 // Forward declare the kernel and pipe names

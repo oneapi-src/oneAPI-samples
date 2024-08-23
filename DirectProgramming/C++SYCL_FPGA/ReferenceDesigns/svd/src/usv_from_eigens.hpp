@@ -1,5 +1,5 @@
-#ifndef _POST_PROCESS_HPP_
-#define _POST_PROCESS_HPP_
+#ifndef _USV_FROM_EIGENS_HPP_
+#define _USV_FROM_EIGENS_HPP_
 
 #include "constexpr_math.hpp"
 #include "tuple.hpp"
@@ -8,7 +8,7 @@
 template <typename T, bool is_complex, int A_rows, int A_cols, int pipe_size,
           typename AIn,     // InputMatrixPipe2,            size A_rows x A_cols
           typename EValIn,  // R matrix from QR iteration,  size 1D - [A_cols]
-          typename EVecIn,  // Q accumilated V input,       size A_cols x A_cols
+          typename EVecIn,  // Q accumulated V input,       size A_cols x A_cols
           typename UOut,    // UTempMatrixPipe              size A_rows x A_rows
           typename SOut,    // SMatrixPipe                  size A_rows x A_cols
           typename VOut>    // VMatrixPipe                  size A_cols x A_cols
@@ -226,4 +226,4 @@ struct USVFromEigens {
   }
 };  // struct USVFromEigens 
 
-#endif  // _POST_PROCESS_HPP_
+#endif  // _USV_FROM_EIGENS_HPP_

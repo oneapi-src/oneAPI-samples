@@ -1,4 +1,4 @@
-# `Singular Value Decomposition (SVD)` Sample
+# `Singular Value Decomposition` Sample
 The `SVD` reference design demonstrates a singular value decomposition implementation for real matrices on an FPGA.
 
 
@@ -19,7 +19,7 @@ where $U$ and $V$ are orthonormal bases of $A$, called (left and right) singular
 
 $S$ is a diagonal matrix (matrix where all elements but the diagonals are zeros). The diagonals are called singular values corresponding to each singular vectors.
 
-While you can apply SVD to complex matrices, this design does not support complex matrices to keep the design simple.
+While SVD can generally be applied to complex matrices, this design does not support complex matrices to simplify its implementation.
 
 ## Prerequisites
 
@@ -63,13 +63,13 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of April 12, 2024 with fixed 55 iterations.
+Performance results are based on testing as of April 12, 2024 with fixed 55 [QR iterations](../pca/README.md#eigen-values-and-eigen-vectors-computation).
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
 | Device                                            | Throughput
 |:---                                               |:---
-| Intel® FPGA SmartNIC N6001                        | 0.99k matrices/s for matrices of size 32 x 32
+| Silicom FPGA SmartNIC N6011                       | 987 matrices/s for matrices of size 32 x 32
 
 ## Key Implementation Details
 This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
@@ -81,14 +81,14 @@ This SVD design consists of 4 computation kernels, as well as several memory acc
 | ---------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | svd_demo.cpp           | Host code                       | Launch a demonstration using the SVD design. Contains the `main()` function.                                                                                                                         |
 | svd_testcase.hpp       | Host code                       | A `struct` that lunches the design with a set of input and check result for correctness. The input can either be specified or generated.                                                             |
-| svd_testbench_tool.hpp  | Host code                       | Helper functions that is used in the test bench of the SVD demonstration to check for correctness.                                                                                                   |
+| svd_testbench_tool.hpp  | Host code                       | Helper functions that are used in the test bench of the SVD demonstration to check for correctness.                                                                                                   |
 | print_matrix.hpp       | Host code                       | Helper functions to print matrices.                                                                                                                                                                  |
-| golden_pca.hpp         | Host code                       | A CPU reference PCA design that is used to calculate reference eigen values for the test bench.                                                                                                      |
+| golden_pca.hpp         | Host code                       | A CPU reference PCA design that is used to calculate reference eigenvalues for the test bench.                                                                                                      |
 | svd.hpp                | Host code with some device code | Contains wrapper function `SingularValueDecomposition` that launches individual kernels of the SVD design.                                                                                           |
 | memory_transfers.hpp   | Device code                     | Contains kernel implementations of `MatrixReadFromDDRTo2PipesByBlocks` , `MatrixReadPipeToDDR` and `VectorReadPipeToDDR`. These kernels transfers data between DDR and streaming interfaces (pipes).|
-| post_process.hpp       | Device code                     | Contains kernel implementation of `USVFromEigens`.                                                                                                                                                   |
+| usv_from_eigens.hpp       | Device code                     | Contains kernel implementation of `USVFromEigens`.                                                                                                                                                   |
 ### Input covariance matrix computation
-The covariance computation in this design is the same as used in the [PCA](../pca/README.md) reference design except without standardization.
+The covariance computation in this design is from `streaming_covariance_matrix.hpp` in the shared [include](../../include) directory and the parameter `standardized` is set to `false`. This source code is shared with [PCA](../pca/) reference design.
 
 The covariance of input A is equal to the transpose of A multiplied by A:
 ```math
@@ -104,7 +104,7 @@ This kernel works only with input of rank sufficient matrix (all columns are lin
 The source code for the the eigenvalues and eigenvectors computation kernel can be found in `streaming_eigen.hpp` in the shared [include](../../include) directory. An detailed explanation of the algorithm of computing eigenvalues can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
 
 ### Construct Output from Eigenvalues and Eigenvectors
-The final outputs of SVD can be constructed from the eigenvalues and eigenvectors of the input covariance. 
+In `usv_from_eigens.hpp`, the final outputs of SVD is constructed from the eigenvalues and eigenvectors of the input covariance. 
 
 Consider an input matrix $A$ of size $m \times n$.
 
@@ -192,7 +192,7 @@ Since the singular vectors in $U$ and $V$ are non-unique, their correctness are 
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ```
-  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
    > ```
    > $> aoc -list-boards
    > Board list:
@@ -332,7 +332,7 @@ Since the singular vectors in $U$ and $V$ are non-unique, their correctness are 
 
 ## Example Output
 
-Example Output when running on the **Intel® FPGA SmartNIC N6001**.
+Example Output when running on the **Silicom FPGA SmartNIC N6011**.
 
 ```
 Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)
