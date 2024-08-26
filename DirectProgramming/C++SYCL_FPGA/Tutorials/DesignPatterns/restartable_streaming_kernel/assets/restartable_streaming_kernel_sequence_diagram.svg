@@ -110,7 +110,7 @@
 				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 				<v:textRect cx="57.0472" cy="441.537" width="114.1" height="25.5118"/>
 				<rect x="0" y="428.782" width="114.094" height="25.5118" class="st1"/>
-				<text x="10.42" y="445.14" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>CheckIncrements()</text>			</g>
+				<text x="5.42" y="445.14" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>CheckIncrements()</text>			</g>
 		</g>
 		<g id="group54-27" transform="translate(309.799,-420.543)" v:mID="54" v:groupContext="group">
 			<v:userDefs>
@@ -188,7 +188,7 @@
 				<v:ud v:nameU="visNavOrder" v:val="VT0(13000):26"/>
 			</v:userDefs>
 			<title>Object lifeline.142</title>
-			<desc>RestartableKernel</desc>
+			<desc>RestartableCounter</desc>
 			<g id="shape143-59" v:mID="143" v:groupContext="shape" transform="translate(31.5354,5.68434E-14)">
 				<title>Sheet.143</title>
 				<rect x="0" y="428.782" width="51.0236" height="25.5118" class="st1"/>
@@ -208,7 +208,7 @@
 				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 				<v:textRect cx="57.0472" cy="441.537" width="114.1" height="25.5118"/>
 				<rect x="0" y="428.782" width="114.094" height="25.5118" class="st1"/>
-				<text x="12.18" y="445.14" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RestartableKernel</text>			</g>
+				<text x="6.18" y="445.14" class="st3" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RestartableCounter</text>			</g>
 		</g>
 		<g id="shape149-71" v:mID="149" v:groupContext="shape" v:layerMember="0" transform="translate(54.6808,-396.448)">
 			<title>Asynchronous Message</title>

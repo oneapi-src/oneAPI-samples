@@ -1,6 +1,6 @@
-# `Restartable Kernel` Sample
+# `Restartable Streaming Kernel` Sample
 
-This tutorial demonstrates how to make a restartable kernel. The technique shown in this tutorial lets you dynamically terminate your kernel while it runs, allowing it to load a new set of kernel arguments.
+This tutorial demonstrates how to make a streaming kernel that can be stopped at any time by the host application, then restarted again at a later time. The technique shown in this tutorial lets you dynamically terminate your kernel while it runs, allowing it to load a new set of kernel arguments.
 
 | Optimized for       | Description                                                                                 |
 | :------------------ | :------------------------------------------------------------------------------------------ |
@@ -97,7 +97,7 @@ The testbench in `main.cpp` exercises the kernel in the following steps:
 
 ### Packets
 
-This design uses the Avalon `start_of_packet` signal to indicate when the a new set of values is being written to `OutputPipe`. The `start_of_packet` sideband signal is not *generally* necessary for implementing a restartable kernel, but it is used in this design to compensate for the decoupled way that the `RestartableCounter` kernel executes with respect to the host code. Since the host code does not tell `RestartableCounter` how many values to write to `OutputPipe`, the `RestartableCounter` will continue to write to `OutputPipe` until either
+This design uses the Avalon `start_of_packet` signal to indicate when the a new set of values is being written to `OutputPipe`. The `start_of_packet` sideband signal is not *generally* necessary for implementing a restartable streaming kernel, but it is used in this design to compensate for the decoupled way that the `RestartableCounter` kernel executes with respect to the host code. Since the host code does not tell `RestartableCounter` how many values to write to `OutputPipe`, the `RestartableCounter` will continue to write to `OutputPipe` until either
 
 1. `OutputPipe` fills up, in which case the `RestartableCounter` kernel will stop incrementing its internal counter until the pipe can be written to again
 
@@ -105,9 +105,9 @@ This design uses the Avalon `start_of_packet` signal to indicate when the a new 
 
 Any data written to the `OutputPipe` between the host code writing a `true` to `StopPipe`, and the `RestartableCounter` kernel *consuming* the `true` from `StopPipe` will still be in `OutputPipe` the next time the host code tries to read from it, so it is necessary to flush these extra beats of data. The `start_of_packet` sideband signals the beginning of a new stream of counter data in `OutputPipe`.
 
-![](assets/restartable_kernel_sequence_diagram.svg)
+![](assets/restartable_streaming_kernel_sequence_diagram.svg)
 
-## Building the `restartable_kernel` Tutorial
+## Building the `restartable_streaming_kernel` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables.
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window.
@@ -228,7 +228,7 @@ This design uses CMake to generate a build script for `nmake`.
    > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
    > ```
 
-## Run the `restartable_kernel` Executable
+## Run the `restartable_streaming_kernel` Executable
 
 ### On Linux
 
