@@ -1,0 +1,82 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2024  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 352 184)
+	(text "add_kernel_wrapper" (rect 116 -1 197 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 168 20 180)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "clk_clk" (rect 0 0 27 12)(font "Arial" (font_size 8)))
+		(text "clk_clk" (rect 4 61 46 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 144 72)(line_width 1))
+	)
+	(port
+		(pt 0 152)
+		(input)
+		(text "reset_reset_n" (rect 0 0 56 12)(font "Arial" (font_size 8)))
+		(text "reset_reset_n" (rect 4 141 82 152)(font "Arial" (font_size 8)))
+		(line (pt 0 152)(pt 144 152)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(output)
+		(text "exception_add_data[63..0]" (rect 0 0 103 12)(font "Arial" (font_size 8)))
+		(text "exception_add_data[63..0]" (rect 4 101 154 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 144 112)(line_width 3))
+	)
+	(port
+		(pt 352 72)
+		(output)
+		(text "irq_add_irq" (rect 0 0 44 12)(font "Arial" (font_size 8)))
+		(text "irq_add_irq" (rect 294 61 360 72)(font "Arial" (font_size 8)))
+		(line (pt 352 72)(pt 208 72)(line_width 1))
+	)
+	(drawing
+		(text "clk" (rect 129 43 276 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 149 67 316 144)(font "Arial" (color 0 0 0)))
+		(text "exception_add" (rect 62 83 202 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "data" (rect 149 107 322 224)(font "Arial" (color 0 0 0)))
+		(text "irq_add" (rect 209 43 460 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "irq" (rect 194 67 406 144)(font "Arial" (color 0 0 0)))
+		(text "reset" (rect 115 123 260 259)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "reset_n" (rect 149 147 340 304)(font "Arial" (color 0 0 0)))
+		(text " add_kernel_wrapper " (rect 262 168 644 346)(font "Arial" ))
+		(line (pt 144 32)(pt 208 32)(line_width 1))
+		(line (pt 208 32)(pt 208 168)(line_width 1))
+		(line (pt 144 168)(pt 208 168)(line_width 1))
+		(line (pt 144 32)(pt 144 168)(line_width 1))
+		(line (pt 145 52)(pt 145 76)(line_width 1))
+		(line (pt 146 52)(pt 146 76)(line_width 1))
+		(line (pt 145 92)(pt 145 116)(line_width 1))
+		(line (pt 146 92)(pt 146 116)(line_width 1))
+		(line (pt 207 52)(pt 207 76)(line_width 1))
+		(line (pt 206 52)(pt 206 76)(line_width 1))
+		(line (pt 145 132)(pt 145 156)(line_width 1))
+		(line (pt 146 132)(pt 146 156)(line_width 1))
+		(line (pt 0 0)(pt 352 0)(line_width 1))
+		(line (pt 352 0)(pt 352 184)(line_width 1))
+		(line (pt 0 184)(pt 352 184)(line_width 1))
+		(line (pt 0 0)(pt 0 184)(line_width 1))
+	)
+)

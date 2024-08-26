@@ -1,0 +1,66 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\haoyanwa\Documents\oneAPI-samples\DirectProgramming\C++SYCL_FPGA\Tutorials\Tools\platform_designer\add_quartus\add_kernel_wrapper.qsys --block-symbol-file --output-directory=C:\Users\haoyanwa\Documents\oneAPI-samples\DirectProgramming\C++SYCL_FPGA\Tutorials\Tools\platform_designer\add_quartus\add_kernel_wrapper --family="Cyclone V" --part=5CSEMA5F31C6
+Progress: Loading add_quartus/add_kernel_wrapper.qsys
+Progress: Reading input file
+Progress: Adding add_report_di_0 [add_report_di 1.0]
+Progress: Parameterizing module add_report_di_0
+Progress: Adding clk_0 [clock_source 23.1]
+Progress: Parameterizing module clk_0
+Progress: Adding master_0 [altera_jtag_avalon_master 23.1]
+Progress: Parameterizing module master_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\haoyanwa\Documents\oneAPI-samples\DirectProgramming\C++SYCL_FPGA\Tutorials\Tools\platform_designer\add_quartus\add_kernel_wrapper.qsys --synthesis=VERILOG --output-directory=C:\Users\haoyanwa\Documents\oneAPI-samples\DirectProgramming\C++SYCL_FPGA\Tutorials\Tools\platform_designer\add_quartus\add_kernel_wrapper\synthesis --family="Cyclone V" --part=5CSEMA5F31C6
+Progress: Loading add_quartus/add_kernel_wrapper.qsys
+Progress: Reading input file
+Progress: Adding add_report_di_0 [add_report_di 1.0]
+Progress: Parameterizing module add_report_di_0
+Progress: Adding clk_0 [clock_source 23.1]
+Progress: Parameterizing module clk_0
+Progress: Adding master_0 [altera_jtag_avalon_master 23.1]
+Progress: Parameterizing module master_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: add_kernel_wrapper: Generating add_kernel_wrapper "add_kernel_wrapper" for QUARTUS_SYNTH
+Info: Interconnect is inserted between master master_0.master and slave add_report_di_0.csr_ring_root_avs because the master has address signal 32 bit wide, but the slave is 5 bit wide.
+Info: Interconnect is inserted between master master_0.master and slave add_report_di_0.csr_ring_root_avs because the master has readdata signal 32 bit wide, but the slave is 64 bit wide.
+Info: Interconnect is inserted between master master_0.master and slave add_report_di_0.csr_ring_root_avs because the master has writedata signal 32 bit wide, but the slave is 64 bit wide.
+Info: Interconnect is inserted between master master_0.master and slave add_report_di_0.csr_ring_root_avs because the master has byteenable signal 4 bit wide, but the slave is 8 bit wide.
+Info: add_report_di_0: "add_kernel_wrapper" instantiated add_report_di "add_report_di_0"
+Info: master_0: "add_kernel_wrapper" instantiated altera_jtag_avalon_master "master_0"
+Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: mm_interconnect_0: "add_kernel_wrapper" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: rst_controller: "add_kernel_wrapper" instantiated altera_reset_controller "rst_controller"
+Info: jtag_phy_embedded_in_jtag_master: "master_0" instantiated altera_jtag_dc_streaming "jtag_phy_embedded_in_jtag_master"
+Info: timing_adt: "master_0" instantiated timing_adapter "timing_adt"
+Info: fifo: "master_0" instantiated altera_avalon_sc_fifo "fifo"
+Info: b2p: "master_0" instantiated altera_avalon_st_bytes_to_packets "b2p"
+Info: p2b: "master_0" instantiated altera_avalon_st_packets_to_bytes "p2b"
+Info: transacto: "master_0" instantiated altera_avalon_packets_to_master "transacto"
+Info: b2p_adapter: "master_0" instantiated channel_adapter "b2p_adapter"
+Info: p2b_adapter: "master_0" instantiated channel_adapter "p2b_adapter"
+Info: master_0_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "master_0_master_translator"
+Info: add_report_di_0_csr_ring_root_avs_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "add_report_di_0_csr_ring_root_avs_translator"
+Info: master_0_master_agent: "mm_interconnect_0" instantiated altera_merlin_master_agent "master_0_master_agent"
+Info: add_report_di_0_csr_ring_root_avs_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "add_report_di_0_csr_ring_root_avs_agent"
+Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: router_001: "mm_interconnect_0" instantiated altera_merlin_router "router_001"
+Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file C:/Users/haoyanwa/Documents/oneAPI-samples/DirectProgramming/C++SYCL_FPGA/Tutorials/Tools/platform_designer/add_quartus/add_kernel_wrapper/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: add_report_di_0_csr_ring_root_avs_cmd_width_adapter: "mm_interconnect_0" instantiated altera_merlin_width_adapter "add_report_di_0_csr_ring_root_avs_cmd_width_adapter"
+Info: Reusing file C:/Users/haoyanwa/Documents/oneAPI-samples/DirectProgramming/C++SYCL_FPGA/Tutorials/Tools/platform_designer/add_quartus/add_kernel_wrapper/synthesis/submodules/altera_merlin_burst_uncompressor.sv
+Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
+Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
+Info: add_kernel_wrapper: Done "add_kernel_wrapper" with 25 modules, 96 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis
