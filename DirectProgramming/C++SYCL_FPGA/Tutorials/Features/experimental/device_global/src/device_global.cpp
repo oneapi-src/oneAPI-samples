@@ -3,8 +3,6 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <cmath>
-
 #include <iostream>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <sycl/sycl.hpp>
@@ -15,13 +13,13 @@ constexpr size_t kNumIterations = 4;
 constexpr unsigned kNumWeightIncrements = 3;
 constexpr unsigned kVectorSize = 4;
 
-namespace exp = sycl::ext::oneapi::experimental;
+namespace syclexp = sycl::ext::oneapi::experimental;
 
-using WeightsDeviceGlobalProperties =
-    decltype(exp::properties(exp::device_image_scope, exp::host_access_write));
+using WeightsDeviceGlobalProperties = decltype(syclexp::properties(
+    syclexp::device_image_scope, syclexp::host_access_write));
 
 // globally declared weights for the calculation
-exp::device_global<int[kVectorSize], WeightsDeviceGlobalProperties> weights;
+syclexp::device_global<int[kVectorSize], WeightsDeviceGlobalProperties> weights;
 
 // Forward declare the kernel name in the global scope.
 // This FPGA best practice reduces name mangling in the optimization reports.
@@ -30,7 +28,6 @@ class Kernel;
 // Launch a kernel that does a weighted vector add
 // result = a + (weights * b)
 void WeightedVectorAdd(sycl::queue q, int *a, int *b, int *result) {
-
   q.single_task<Kernel>([=]() [[intel::kernel_args_restrict]] {
     for (auto i = 0; i < kVectorSize; i++) {
       result[i] = a[i] + (weights[i] * b[i]);
@@ -47,7 +44,7 @@ int main() {
     auto selector = sycl::ext::intel::fpga_simulator_selector_v;
 #elif FPGA_HARDWARE
     auto selector = sycl::ext::intel::fpga_selector_v;
-#else // #if FPGA_EMULATOR
+#else  // #if FPGA_EMULATOR
     auto selector = sycl::ext::intel::fpga_emulator_selector_v;
 #endif
 

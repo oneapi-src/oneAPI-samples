@@ -1,7 +1,6 @@
 #ifndef __INTENSITY_SIGMA_LUT_HPP__
 #define __INTENSITY_SIGMA_LUT_HPP__
 
-#include <cmath>
 #include <sycl/sycl.hpp>
 #include <sycl/ext/intel/fpga_extensions.hpp>
 #include <type_traits>
