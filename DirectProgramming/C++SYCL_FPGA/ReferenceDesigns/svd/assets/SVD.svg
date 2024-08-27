@@ -12,11 +12,11 @@
 		.st2 {fill:#feffff;font-family:Calibri;font-size:0.666664em}
 		.st3 {font-size:1em}
 		.st4 {fill:#386288;stroke:#2d5171;stroke-width:0.75}
-		.st5 {marker-end:url(#mrkr4-22);stroke:#4672c4;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
+		.st5 {marker-end:url(#mrkr4-25);stroke:#4672c4;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
 		.st6 {fill:#4672c4;fill-opacity:1;stroke:#4672c4;stroke-opacity:1;stroke-width:0.28409090909091}
-		.st7 {fill:url(#grad0-31);stroke:#3d64ac;stroke-width:0.75}
+		.st7 {fill:url(#grad0-34);stroke:#3d64ac;stroke-width:0.75}
 		.st8 {fill:#3d64ac;font-family:Calibri;font-size:0.666664em}
-		.st9 {marker-end:url(#mrkr4-38);stroke:#759fcc;stroke-dasharray:3,3;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
+		.st9 {marker-end:url(#mrkr4-41);stroke:#759fcc;stroke-dasharray:3,3;stroke-linecap:round;stroke-linejoin:round;stroke-width:1}
 		.st10 {fill:#759fcc;fill-opacity:1;stroke:#759fcc;stroke-opacity:1;stroke-width:0.28409090909091}
 		.st11 {fill:none;stroke:none;stroke-width:0.25}
 		.st12 {fill:#4672c4;font-family:Calibri;font-size:0.666664em}
@@ -28,7 +28,7 @@
 	</style>
 
 	<defs id="Patterns_And_Gradients">
-		<linearGradient id="grad0-31" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(60 0.5 0.5)">
+		<linearGradient id="grad0-34" x1="0" y1="0" x2="1" y2="0" gradientTransform="rotate(60 0.5 0.5)">
 			<stop offset="0" stop-color="#e8ebf4" stop-opacity="1"/>
 			<stop offset="0.24" stop-color="#f4f5f9" stop-opacity="1"/>
 			<stop offset="0.54" stop-color="#feffff" stop-opacity="1"/>
@@ -38,11 +38,11 @@
 		<g id="lend4">
 			<path d="M 2 1 L 0 0 L 2 -1 L 2 1 " style="stroke:none"/>
 		</g>
-		<marker id="mrkr4-22" class="st6" v:arrowType="4" v:arrowSize="2" v:setback="7.04" refX="-7.04" orient="auto"
+		<marker id="mrkr4-25" class="st6" v:arrowType="4" v:arrowSize="2" v:setback="7.04" refX="-7.04" orient="auto"
 				markerUnits="strokeWidth" overflow="visible">
 			<use xlink:href="#lend4" transform="scale(-3.52,-3.52) "/>
 		</marker>
-		<marker id="mrkr4-38" class="st10" v:arrowType="4" v:arrowSize="2" v:setback="7.04" refX="-7.04" orient="auto"
+		<marker id="mrkr4-41" class="st10" v:arrowType="4" v:arrowSize="2" v:setback="7.04" refX="-7.04" orient="auto"
 				markerUnits="strokeWidth" overflow="visible">
 			<use xlink:href="#lend4" transform="scale(-3.52,-3.52) "/>
 		</marker>
@@ -56,7 +56,7 @@
 		<v:layer v:name="Annotations" v:index="2"/>
 		<g id="shape1007-1" v:mID="1007" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-403.978)">
 			<title>Process.1007</title>
-			<desc>InputMatrixFrom DDRToLocalMem</desc>
+			<desc>InputMatrixFrom DDRToLocalMem (MatrixReadFrom DDRTo2PipesBy B...</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -79,15 +79,17 @@
 				<v:ud v:nameU="DefaultWidth" v:prompt="" v:val="VT0(0.98425196850394):24"/>
 				<v:ud v:nameU="DefaultHeight" v:prompt="" v:val="VT0(0.59055118110236):24"/>
 				<v:ud v:nameU="ResizeTxtHeight" v:prompt="" v:val="VT0(0.59055118110236):24"/>
+				<v:ud v:nameU="ResizeTxtHeight" v:prompt="" v:val="VT0(0.74803149606299):24"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="6.11" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>InputMatrixFrom <tspan
-						x="5.94" dy="1.2em" class="st3">DDRToLocalMem</tspan></text>		</g>
-		<g id="shape1009-5" v:mID="1009" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-182.876)">
+			<text x="6.11" y="449.79" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>InputMatrixFrom <tspan
+						x="5.94" dy="1.2em" class="st3">DDRToLocalMem </tspan><tspan x="5.37" dy="1.2em" class="st3">(MatrixReadFrom </tspan><tspan
+						x="8.21" dy="1.2em" class="st3">DDRTo2PipesBy </tspan><tspan x="22.53" dy="1.2em" class="st3">Blocks)</tspan></text>		</g>
+		<g id="shape1009-8" v:mID="1009" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-182.876)">
 			<title>On-page reference.7</title>
-			<desc>EigenValuesAnd VectorsComputation (StreamingEigen)</desc>
+			<desc>EigenValuesAnd Vectors Computation (StreamingEigen)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -115,11 +117,11 @@
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st4"/>
 			<text x="7.89" y="454.59" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>EigenValuesAnd <tspan
-						x="2.39" dy="1.2em" class="st3">VectorsComputatio</tspan><tspan x="31.91" dy="1.2em" class="st3">n   </tspan><tspan
+						x="21.66" dy="1.2em" class="st3">Vectors </tspan><tspan x="12.65" dy="1.2em" class="st3">Computation   </tspan><tspan
 						x="6.17" dy="1.2em" class="st3">(StreamingEigen)</tspan></text>		</g>
-		<g id="shape1008-11" v:mID="1008" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-293.427)">
+		<g id="shape1008-14" v:mID="1008" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-293.427)">
 			<title>Process.1008</title>
-			<desc>CovarianceMatrix Computation (StreamingCovarinceMatrix)</desc>
+			<desc>CovarianceMatrix Computation (Streaming CovarinceMatrix)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -147,17 +149,17 @@
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st4"/>
 			<text x="5.32" y="454.59" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>CovarianceMatrix <tspan
-						x="12.65" dy="1.2em" class="st3">Computation </tspan><tspan x="2.16" dy="1.2em" class="st3">(StreamingCovarinc</tspan><tspan
-						x="20.09" dy="1.2em" class="st3">eMatrix)</tspan></text>		</g>
-		<g id="shape1002-17" v:mID="1002" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-293.427)">
+						x="12.65" dy="1.2em" class="st3">Computation </tspan><tspan x="16.23" dy="1.2em" class="st3">(Streaming </tspan><tspan
+						x="6.02" dy="1.2em" class="st3">CovarinceMatrix)</tspan></text>		</g>
+		<g id="shape1002-20" v:mID="1002" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-293.427)">
 			<title>Dynamic connector.1002</title>
 			<path d="M7.09 500.61 L7.09 536.09" class="st5"/>
 		</g>
-		<g id="shape1004-23" v:mID="1004" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-403.978)">
+		<g id="shape1004-26" v:mID="1004" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-403.978)">
 			<title>Dynamic connector.1004</title>
 			<path d="M7.09 500.61 L7.09 536.09" class="st5"/>
 		</g>
-		<g id="shape1010-28" v:mID="1010" v:groupContext="shape" v:layerMember="0;2" transform="translate(0.75,-412.804)">
+		<g id="shape1010-31" v:mID="1010" v:groupContext="shape" v:layerMember="0;2" transform="translate(0.75,-412.804)">
 			<title>Document.1010</title>
 			<desc>input_matrix_device</desc>
 			<v:custProps>
@@ -188,13 +190,13 @@
 			<path d="M0 494.31 L0 450.23 L75.57 450.23 L75.57 494.31 A31.4871 31.4871 -180 0 0 37.78 494.31 A31.4871 31.4871 0 0
 						 1 -0 494.31 Z" class="st7"/>
 			<text x="4.24" y="471.52" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>input_matrix_device</text>		</g>
-		<g id="shape1006-33" v:mID="1006" v:groupContext="shape" v:layerMember="1" transform="translate(76.3191,-430.907)">
+		<g id="shape1006-36" v:mID="1006" v:groupContext="shape" v:layerMember="1" transform="translate(76.3191,-430.907)">
 			<title>Dynamic connector.1006</title>
 			<path d="M0 493.52 L95.01 493.52" class="st9"/>
 		</g>
-		<g id="shape1011-39" v:mID="1011" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-63.8209)">
+		<g id="shape1011-42" v:mID="1011" v:groupContext="shape" v:layerMember="0;1" transform="translate(178.366,-63.8209)">
 			<title>Process.1011</title>
-			<desc>RankDeficientFlag FromLocalMemToDDR</desc>
+			<desc>RankDeficientFlag FromLocalMemTo DDR (VectorReadPipeToDDR)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -217,17 +219,19 @@
 				<v:ud v:nameU="DefaultWidth" v:prompt="" v:val="VT0(0.98425196850394):24"/>
 				<v:ud v:nameU="DefaultHeight" v:prompt="" v:val="VT0(0.59055118110236):24"/>
 				<v:ud v:nameU="ResizeTxtHeight" v:prompt="" v:val="VT0(0.59055118110236):24"/>
+				<v:ud v:nameU="ResizeTxtHeight" v:prompt="" v:val="VT0(0.74803149606299):24"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="4.82" y="459.39" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RankDeficientFlag <tspan
-						x="2.04" dy="1.2em" class="st3">FromLocalMemToD</tspan><tspan x="29.38" dy="1.2em" class="st3">DR</tspan></text>		</g>
-		<g id="shape1012-44" v:mID="1012" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-182.876)">
+			<text x="4.82" y="449.79" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RankDeficientFlag <tspan
+						x="4.5" dy="1.2em" class="st3">FromLocalMemTo </tspan><tspan x="26.92" dy="1.2em" class="st3">DDR </tspan><tspan
+						x="2.69" dy="1.2em" class="st3">(VectorReadPipeTo</tspan><tspan x="25.71" dy="1.2em" class="st3">DDR)</tspan></text>		</g>
+		<g id="shape1012-49" v:mID="1012" v:groupContext="shape" v:layerMember="1" transform="translate(205.295,-182.876)">
 			<title>Dynamic connector.1012</title>
 			<path d="M7.09 500.61 L7.09 544.59" class="st5"/>
 		</g>
-		<g id="shape1013-49" v:mID="1013" v:groupContext="shape" v:layerMember="0;2" transform="translate(6.87026,-72.6469)">
+		<g id="shape1013-54" v:mID="1013" v:groupContext="shape" v:layerMember="0;2" transform="translate(6.87026,-72.6469)">
 			<title>Document.1013</title>
 			<desc>rank_deficient_flag_device</desc>
 			<v:custProps>
@@ -259,11 +263,11 @@
 						 494.82 Z" class="st7"/>
 			<text x="3.3" y="467.23" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>rank_deficient_flag<tspan
 						x="22.23" dy="1.2em" class="st3">_device</tspan></text>		</g>
-		<g id="shape1014-54" v:mID="1014" v:groupContext="shape" v:layerMember="1" transform="translate(178.366,-104.923)">
+		<g id="shape1014-59" v:mID="1014" v:groupContext="shape" v:layerMember="1" transform="translate(178.366,-104.923)">
 			<title>Dynamic connector.1014</title>
 			<path d="M0 507.69 L-95.01 507.69" class="st9"/>
 		</g>
-		<g id="shape1015-59" v:mID="1015" v:groupContext="shape" transform="translate(161.358,-148.86)">
+		<g id="shape1015-64" v:mID="1015" v:groupContext="shape" transform="translate(161.358,-148.86)">
 			<title>Sheet.1015</title>
 			<desc>RankDeficientFlagPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
@@ -271,7 +275,7 @@
 			<rect x="0" y="477.929" width="51.0236" height="22.6772" class="st11"/>
 			<text x="2.87" y="486.87" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RankDeficient<tspan
 						x="11.88" dy="1.2em" class="st3">FlagPipe</tspan></text>		</g>
-		<g id="shape1016-63" v:mID="1016" v:groupContext="shape" transform="translate(167.028,-262.246)">
+		<g id="shape1016-68" v:mID="1016" v:groupContext="shape" transform="translate(167.028,-262.246)">
 			<title>Sheet.1016</title>
 			<desc>CovarianceMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
@@ -279,7 +283,7 @@
 			<rect x="0" y="483.598" width="45.3543" height="17.0079" class="st11"/>
 			<text x="4.7" y="489.7" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Covariance<tspan
 						x="4.88" dy="1.2em" class="st3">MatrixPipe</tspan></text>		</g>
-		<g id="shape1017-67" v:mID="1017" v:groupContext="shape" transform="translate(167.028,-375.632)">
+		<g id="shape1017-72" v:mID="1017" v:groupContext="shape" transform="translate(167.028,-375.632)">
 			<title>Sheet.1017</title>
 			<desc>InputMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
@@ -287,7 +291,7 @@
 			<rect x="0" y="483.598" width="45.3543" height="17.0079" class="st11"/>
 			<text x="3.3" y="489.7" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>InputMatrix<tspan
 						x="15.6" dy="1.2em" class="st3">Pipe</tspan></text>		</g>
-		<g id="shape1018-71" v:mID="1018" v:groupContext="shape" v:layerMember="0;1" transform="translate(371.122,-182.876)">
+		<g id="shape1018-76" v:mID="1018" v:groupContext="shape" v:layerMember="0;1" transform="translate(371.122,-182.876)">
 			<title>On-page reference.1018</title>
 			<desc>USVFromEigens</desc>
 			<v:custProps>
@@ -317,29 +321,29 @@
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st13"/>
 			<text x="8.39" y="468.99" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>USVFromEigens</text>		</g>
-		<g id="shape1019-74" v:mID="1019" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-221.144)">
+		<g id="shape1019-79" v:mID="1019" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-221.144)">
 			<title>Dynamic connector.1019</title>
 			<path d="M0 493.52 L117.68 493.52" class="st5"/>
 		</g>
-		<g id="shape1020-79" v:mID="1020" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-198.467)">
+		<g id="shape1020-84" v:mID="1020" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-198.467)">
 			<title>Dynamic connector.1020</title>
 			<path d="M0 493.52 L117.68 493.52" class="st5"/>
 		</g>
-		<g id="shape1021-84" v:mID="1021" v:groupContext="shape" transform="translate(264.823,-228.23)">
+		<g id="shape1021-89" v:mID="1021" v:groupContext="shape" transform="translate(264.823,-228.23)">
 			<title>Sheet.1021</title>
 			<desc>EigenValuesPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="38.2677" cy="492.102" width="76.54" height="17.0079"/>
 			<rect x="0" y="483.598" width="76.5354" height="17.0079" class="st11"/>
 			<text x="11.59" y="494.5" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>EigenValuesPipe</text>		</g>
-		<g id="shape1022-87" v:mID="1022" v:groupContext="shape" transform="translate(269.075,-180.041)">
+		<g id="shape1022-92" v:mID="1022" v:groupContext="shape" transform="translate(269.075,-180.041)">
 			<title>Sheet.1022</title>
 			<desc>EigenVectorsPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.7244" cy="487.85" width="69.45" height="25.5118"/>
 			<rect x="0" y="475.094" width="69.4488" height="25.5118" class="st11"/>
 			<text x="6.44" y="490.25" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>EigenVectorsPipe</text>		</g>
-		<g id="shape1026-90" v:mID="1026" v:groupContext="shape" v:layerMember="0;1" transform="translate(371.122,-63.8209)">
+		<g id="shape1026-95" v:mID="1026" v:groupContext="shape" v:layerMember="0;1" transform="translate(371.122,-63.8209)">
 			<title>Process.1026</title>
 			<desc>OrthogonalizingU (StreamingQRD)</desc>
 			<v:custProps>
@@ -370,9 +374,9 @@
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st4"/>
 			<text x="5.53" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>OrthogonalizingU <tspan
 						x="7.69" dy="1.2em" class="st3">(StreamingQRD)</tspan></text>		</g>
-		<g id="shape1027-94" v:mID="1027" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-245.137)">
+		<g id="shape1027-99" v:mID="1027" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-245.137)">
 			<title>Process.1027</title>
-			<desc>SMatrixFromLocalMemToDDR</desc>
+			<desc>SMatrixFromLocalMemToDDR (MatrixReadPipeToDDR)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -399,11 +403,12 @@
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="4.6" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>SMatrixFromLocal<tspan
-						x="14.26" dy="1.2em" class="st3">MemToDDR</tspan></text>		</g>
-		<g id="shape1028-98" v:mID="1028" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-163.675)">
+			<text x="4.6" y="454.59" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>SMatrixFromLocal<tspan
+						x="14.26" dy="1.2em" class="st3">MemToDDR </tspan><tspan x="2.77" dy="1.2em" class="st3">(MatrixReadPipeTo</tspan><tspan
+						x="25.71" dy="1.2em" class="st3">DDR)</tspan></text>		</g>
+		<g id="shape1028-105" v:mID="1028" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-163.675)">
 			<title>Process.1028</title>
-			<desc>VMatrixFromLocalMemToDDR</desc>
+			<desc>VMatrixFromLocalMemToDDR (MatrixReadPipeToDDR)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -430,11 +435,12 @@
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="4.17" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>VMatrixFromLocal<tspan
-						x="14.26" dy="1.2em" class="st3">MemToDDR</tspan></text>		</g>
-		<g id="shape1029-102" v:mID="1029" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-82.2123)">
+			<text x="4.17" y="454.59" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>VMatrixFromLocal<tspan
+						x="14.26" dy="1.2em" class="st3">MemToDDR </tspan><tspan x="2.77" dy="1.2em" class="st3">(MatrixReadPipeTo</tspan><tspan
+						x="25.71" dy="1.2em" class="st3">DDR)</tspan></text>		</g>
+		<g id="shape1029-111" v:mID="1029" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-82.2123)">
 			<title>Process.1029</title>
-			<desc>UMatrixFromLocalMemToDDR</desc>
+			<desc>UMatrixFromLocalMemToDDR (MatrixReadPipeToDDR)</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -461,11 +467,12 @@
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="3.88" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>UMatrixFromLocal<tspan
-						x="14.26" dy="1.2em" class="st3">MemToDDR</tspan></text>		</g>
-		<g id="shape1030-106" v:mID="1030" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-0.75)">
+			<text x="3.88" y="454.59" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>UMatrixFromLocal<tspan
+						x="14.26" dy="1.2em" class="st3">MemToDDR </tspan><tspan x="2.77" dy="1.2em" class="st3">(MatrixReadPipeTo</tspan><tspan
+						x="25.71" dy="1.2em" class="st3">DDR)</tspan></text>		</g>
+		<g id="shape1030-117" v:mID="1030" v:groupContext="shape" v:layerMember="0;1" transform="translate(561.043,-0.75)">
 			<title>Process.1030</title>
-			<desc>RMatrixPipeTerminate</desc>
+			<desc>RMatrixPipe Terminate</desc>
 			<v:custProps>
 				<v:cp v:nameU="Cost" v:lbl="Cost" v:prompt="" v:type="7" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
 						v:langID="1033" v:cal="0"/>
@@ -492,13 +499,13 @@
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="34.0158" cy="466.591" width="68.04" height="68.0315"/>
 			<rect x="0" y="432.575" width="68.0315" height="68.0315" class="st1"/>
-			<text x="2.5" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RMatrixPipeTermin<tspan
-						x="28.77" dy="1.2em" class="st3">ate</tspan></text>		</g>
-		<g id="shape1031-110" v:mID="1031" v:groupContext="shape" v:layerMember="1" transform="translate(398.051,-182.876)">
+			<text x="14.05" y="464.19" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RMatrixPipe <tspan
+						x="17.22" dy="1.2em" class="st3">Terminate</tspan></text>		</g>
+		<g id="shape1031-121" v:mID="1031" v:groupContext="shape" v:layerMember="1" transform="translate(398.051,-182.876)">
 			<title>Dynamic connector.1031</title>
 			<path d="M7.09 500.61 L7.09 544.59" class="st5"/>
 		</g>
-		<g id="shape1032-115" v:mID="1032" v:groupContext="shape" transform="translate(359.784,-273.585)">
+		<g id="shape1032-126" v:mID="1032" v:groupContext="shape" transform="translate(359.784,-273.585)">
 			<title>Sheet.1032</title>
 			<desc>InputMatrixPipe2</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
@@ -506,7 +513,7 @@
 			<rect x="0" y="475.095" width="45.3543" height="25.5118" class="st11"/>
 			<text x="3.3" y="485.45" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>InputMatrix<tspan
 						x="13.57" dy="1.2em" class="st3">Pipe2</tspan></text>		</g>
-		<g id="shape1033-119" v:mID="1033" v:groupContext="shape" transform="translate(352.697,-146.026)">
+		<g id="shape1033-130" v:mID="1033" v:groupContext="shape" transform="translate(352.697,-146.026)">
 			<title>Sheet.1033</title>
 			<desc>UTempMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
@@ -514,51 +521,51 @@
 			<rect x="0" y="475.094" width="51.0236" height="25.5118" class="st11"/>
 			<text x="2.99" y="485.45" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>UTempMatrix<tspan
 						x="18.44" dy="1.2em" class="st3">Pipe</tspan></text>		</g>
-		<g id="shape1034-123" v:mID="1034" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-228.23)">
+		<g id="shape1034-134" v:mID="1034" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-228.23)">
 			<title>Dynamic connector.1034</title>
 			<path d="M0 500.61 L23.39 500.61 L23.39 449.68 L114.85 449.68" class="st5"/>
 		</g>
-		<g id="shape1035-128" v:mID="1035" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-208.708)">
+		<g id="shape1035-139" v:mID="1035" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-208.708)">
 			<title>Dynamic connector.1035</title>
 			<path d="M0 503.76 L23.95 503.76 L23.95 511.62 L114.85 511.62" class="st5"/>
 		</g>
-		<g id="shape1036-133" v:mID="1036" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-105.615)">
+		<g id="shape1036-144" v:mID="1036" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-105.615)">
 			<title>Dynamic connector.1036</title>
 			<path d="M0 497.05 L19.84 497.05 L19.84 489.99 L114.85 489.99" class="st5"/>
 		</g>
-		<g id="shape1037-138" v:mID="1037" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-83.6634)">
+		<g id="shape1037-149" v:mID="1037" v:groupContext="shape" v:layerMember="1" transform="translate(439.154,-83.6634)">
 			<title>Dynamic connector.1037</title>
 			<path d="M0 500.61 L19.84 500.61 L19.84 549.5 L114.85 549.5" class="st5"/>
 		</g>
-		<g id="shape1038-143" v:mID="1038" v:groupContext="shape" transform="translate(480.256,-283.506)">
+		<g id="shape1038-154" v:mID="1038" v:groupContext="shape" transform="translate(480.256,-283.506)">
 			<title>Sheet.1038</title>
 			<desc>SMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="28.3465" cy="494.937" width="56.7" height="11.3386"/>
 			<rect x="0" y="489.268" width="56.6929" height="11.3386" class="st11"/>
 			<text x="8.71" y="497.34" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>SMatrixPipe</text>		</g>
-		<g id="shape1039-146" v:mID="1039" v:groupContext="shape" transform="translate(480.256,-202.719)">
+		<g id="shape1039-157" v:mID="1039" v:groupContext="shape" transform="translate(480.256,-202.719)">
 			<title>Sheet.1039</title>
 			<desc>VMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="28.3465" cy="494.937" width="56.7" height="11.3386"/>
 			<rect x="0" y="489.268" width="56.6929" height="11.3386" class="st11"/>
 			<text x="8.28" y="497.34" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>VMatrixPipe</text>		</g>
-		<g id="shape1040-149" v:mID="1040" v:groupContext="shape" transform="translate(478.697,-35.6236)">
+		<g id="shape1040-160" v:mID="1040" v:groupContext="shape" transform="translate(478.697,-35.6236)">
 			<title>Sheet.1040</title>
 			<desc>RMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="36.9921" cy="493.52" width="73.99" height="14.1732"/>
 			<rect x="0" y="486.433" width="73.9843" height="14.1732" class="st11"/>
 			<text x="17.02" y="495.92" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>RMatrixPipe</text>		</g>
-		<g id="shape1041-152" v:mID="1041" v:groupContext="shape" transform="translate(473.169,-119.947)">
+		<g id="shape1041-163" v:mID="1041" v:groupContext="shape" transform="translate(473.169,-119.947)">
 			<title>Sheet.1041</title>
 			<desc>UMatrixPipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="37.559" cy="491.11" width="75.12" height="18.9921"/>
 			<rect x="0" y="481.614" width="75.1181" height="18.9921" class="st11"/>
 			<text x="17.2" y="493.51" class="st12" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>UMatrixPipe</text>		</g>
-		<g id="shape1042-155" v:mID="1042" v:groupContext="shape" v:layerMember="0;2" transform="translate(655.816,-253.963)">
+		<g id="shape1042-166" v:mID="1042" v:groupContext="shape" v:layerMember="0;2" transform="translate(655.816,-253.963)">
 			<title>Document.1042</title>
 			<desc>s_matrix_device</desc>
 			<v:custProps>
@@ -589,7 +596,7 @@
 			<path d="M0 494.31 L0 450.23 L75.57 450.23 L75.57 494.31 A31.4871 31.4871 -180 0 0 37.78 494.31 A31.4871 31.4871 0 0
 						 1 -0 494.31 Z" class="st7"/>
 			<text x="11.24" y="471.52" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>s_matrix_device</text>		</g>
-		<g id="shape1043-159" v:mID="1043" v:groupContext="shape" v:layerMember="0;2" transform="translate(658.8,-172.501)">
+		<g id="shape1043-170" v:mID="1043" v:groupContext="shape" v:layerMember="0;2" transform="translate(658.8,-172.501)">
 			<title>Document.1043</title>
 			<desc>v_matrix_device</desc>
 			<v:custProps>
@@ -620,7 +627,7 @@
 			<path d="M0 494.31 L0 450.23 L75.57 450.23 L75.57 494.31 A31.4871 31.4871 -180 0 0 37.78 494.31 A31.4871 31.4871 0 0
 						 1 -0 494.31 Z" class="st7"/>
 			<text x="11" y="471.52" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>v_matrix_device</text>		</g>
-		<g id="shape1044-163" v:mID="1044" v:groupContext="shape" v:layerMember="0;2" transform="translate(658.8,-91.0384)">
+		<g id="shape1044-174" v:mID="1044" v:groupContext="shape" v:layerMember="0;2" transform="translate(658.8,-91.0384)">
 			<title>Document.1044</title>
 			<desc>u_matrix_device</desc>
 			<v:custProps>
@@ -651,19 +658,19 @@
 			<path d="M0 494.31 L0 450.23 L75.57 450.23 L75.57 494.31 A31.4871 31.4871 -180 0 0 37.78 494.31 A31.4871 31.4871 0 0
 						 1 -0 494.31 Z" class="st7"/>
 			<text x="10.7" y="471.52" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>u_matrix_device</text>		</g>
-		<g id="shape1046-167" v:mID="1046" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-272.066)">
+		<g id="shape1046-178" v:mID="1046" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-272.066)">
 			<title>Dynamic connector.1046</title>
 			<path d="M0 493.52 L19.7 493.52" class="st9"/>
 		</g>
-		<g id="shape1047-172" v:mID="1047" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-190.604)">
+		<g id="shape1047-183" v:mID="1047" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-190.604)">
 			<title>Dynamic connector.1047</title>
 			<path d="M0 493.52 L22.68 493.52" class="st9"/>
 		</g>
-		<g id="shape1048-177" v:mID="1048" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-109.141)">
+		<g id="shape1048-188" v:mID="1048" v:groupContext="shape" v:layerMember="1" transform="translate(629.075,-109.141)">
 			<title>Dynamic connector.1048</title>
 			<path d="M0 493.52 L22.68 493.52" class="st9"/>
 		</g>
-		<g id="shape1050-182" v:mID="1050" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.679,-401.144)">
+		<g id="shape1050-193" v:mID="1050" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.679,-401.144)">
 			<title>Process.1050</title>
 			<desc>Kernel Name</desc>
 			<v:custProps>
@@ -694,7 +701,7 @@
 			<rect x="0" y="472.26" width="28.3465" height="28.3465" class="st1"/>
 			<text x="3.7" y="484.03" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Kernel <tspan x="4.49"
 						dy="1.2em" class="st3">Name</tspan></text>		</g>
-		<g id="shape1051-186" v:mID="1051" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.881,-467.285)">
+		<g id="shape1051-197" v:mID="1051" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.881,-467.285)">
 			<title>Process.1051</title>
 			<desc>Kernel Name</desc>
 			<v:custProps>
@@ -725,15 +732,15 @@
 			<rect x="0" y="472.26" width="28.3465" height="28.3465" class="st13"/>
 			<text x="3.7" y="484.03" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Kernel <tspan x="4.49"
 						dy="1.2em" class="st3">Name</tspan></text>		</g>
-		<g id="shape1052-190" v:mID="1052" v:groupContext="shape" v:layerMember="1" transform="translate(601.471,-351.463)">
+		<g id="shape1052-201" v:mID="1052" v:groupContext="shape" v:layerMember="1" transform="translate(601.471,-351.463)">
 			<title>Dynamic connector.1052</title>
 			<path d="M0 493.52 L18.94 493.52" class="st5"/>
 		</g>
-		<g id="shape1053-195" v:mID="1053" v:groupContext="shape" v:layerMember="1" transform="translate(601.471,-332.566)">
+		<g id="shape1053-206" v:mID="1053" v:groupContext="shape" v:layerMember="1" transform="translate(601.471,-332.566)">
 			<title>Dynamic connector.1053</title>
 			<path d="M0 493.52 L21.31 493.52" class="st9"/>
 		</g>
-		<g id="shape1054-200" v:mID="1054" v:groupContext="shape" v:layerMember="0;2" transform="translate(596.679,-373.331)">
+		<g id="shape1054-211" v:mID="1054" v:groupContext="shape" v:layerMember="0;2" transform="translate(596.679,-373.331)">
 			<title>Document.1054</title>
 			<desc>Data Name</desc>
 			<v:custProps>
@@ -765,57 +772,57 @@
 						 498.24 Z" class="st7"/>
 			<text x="6.54" y="484.51" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Data <tspan x="4.49"
 						dy="1.2em" class="st3">Name</tspan></text>		</g>
-		<g id="shape1055-205" v:mID="1055" v:groupContext="shape" transform="translate(645.689,-475.459)">
+		<g id="shape1055-216" v:mID="1055" v:groupContext="shape" transform="translate(645.689,-475.459)">
 			<title>Sheet.1055</title>
 			<desc>Computation Kernel</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="43.4252" cy="494.606" width="86.86" height="12"/>
 			<rect x="0" y="488.606" width="86.8504" height="12" class="st11"/>
 			<text x="2" y="497.01" class="st12" v:langID="1033"><v:paragraph/><v:tabList/>Computation Kernel</text>		</g>
-		<g id="shape1056-208" v:mID="1056" v:groupContext="shape" transform="translate(645.487,-409.317)">
+		<g id="shape1056-219" v:mID="1056" v:groupContext="shape" transform="translate(645.487,-409.317)">
 			<title>Sheet.1056</title>
 			<desc>Memory-access Kernel</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="43.4252" cy="494.606" width="86.86" height="12"/>
 			<rect x="0" y="488.606" width="86.8504" height="12" class="st11"/>
 			<text x="2" y="497.01" class="st12" v:langID="1033"><v:paragraph/><v:tabList/>Memory-access Kernel</text>		</g>
-		<g id="shape1057-211" v:mID="1057" v:groupContext="shape" transform="translate(645.689,-378.669)">
+		<g id="shape1057-222" v:mID="1057" v:groupContext="shape" transform="translate(645.689,-378.669)">
 			<title>Sheet.1057</title>
 			<desc>Input/output data</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="43.4252" cy="494.606" width="86.86" height="12"/>
 			<rect x="0" y="488.606" width="86.8504" height="12" class="st11"/>
 			<text x="2" y="497.01" class="st12" v:langID="1033"><v:paragraph/><v:tabList/>Input/output data</text>		</g>
-		<g id="shape1058-214" v:mID="1058" v:groupContext="shape" transform="translate(645.689,-352.624)">
+		<g id="shape1058-225" v:mID="1058" v:groupContext="shape" transform="translate(645.689,-352.624)">
 			<title>Sheet.1058</title>
 			<desc>Pipe</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="43.4252" cy="494.606" width="86.86" height="12"/>
 			<rect x="0" y="488.606" width="86.8504" height="12" class="st11"/>
 			<text x="2" y="497.01" class="st12" v:langID="1033"><v:paragraph/><v:tabList/>Pipe</text>		</g>
-		<g id="shape1059-217" v:mID="1059" v:groupContext="shape" transform="translate(645.487,-330.278)">
+		<g id="shape1059-228" v:mID="1059" v:groupContext="shape" transform="translate(645.487,-330.278)">
 			<title>Sheet.1059</title>
 			<desc>Memory access</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="43.4252" cy="494.606" width="86.86" height="12"/>
 			<rect x="0" y="488.606" width="86.8504" height="12" class="st11"/>
 			<text x="2" y="497.01" class="st12" v:langID="1033"><v:paragraph/><v:tabList/>Memory access</text>		</g>
-		<g id="shape1060-220" v:mID="1060" v:groupContext="shape" transform="translate(586.555,-330.278)">
+		<g id="shape1060-231" v:mID="1060" v:groupContext="shape" transform="translate(586.555,-330.278)">
 			<title>Sheet.1060</title>
 			<rect x="0" y="330.528" width="145.984" height="170.079" class="st14"/>
 		</g>
-		<g id="shape1061-222" v:mID="1061" v:groupContext="shape" transform="translate(85.949,170.329) rotate(-90)">
+		<g id="shape1061-233" v:mID="1061" v:groupContext="shape" transform="translate(85.949,170.329) rotate(-90)">
 			<title>Sheet.1061</title>
 			<desc>legend</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
 			<v:textRect cx="85.0394" cy="493.52" width="170.08" height="14.1732"/>
 			<rect x="0" y="486.433" width="170.079" height="14.1732" class="st15"/>
 			<text x="74.06" y="495.92" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>legend</text>		</g>
-		<g id="shape1062-225" v:mID="1062" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-437.994)">
+		<g id="shape1062-236" v:mID="1062" v:groupContext="shape" v:layerMember="1" transform="translate(246.398,-437.994)">
 			<title>Dynamic connector.1062</title>
 			<path d="M0 500.61 L158.74 500.61 L158.74 680.65" class="st5"/>
 		</g>
-		<g id="shape1063-230" v:mID="1063" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.679,-434.889)">
+		<g id="shape1063-241" v:mID="1063" v:groupContext="shape" v:layerMember="0;1" transform="translate(596.679,-434.889)">
 			<title>Process.1063</title>
 			<desc>Kernel Name</desc>
 			<v:custProps>
@@ -846,7 +853,7 @@
 			<rect x="0" y="472.26" width="28.3465" height="28.3465" class="st4"/>
 			<text x="3.7" y="484.03" class="st2" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Kernel <tspan x="4.49"
 						dy="1.2em" class="st3">Name</tspan></text>		</g>
-		<g id="shape1064-234" v:mID="1064" v:groupContext="shape" transform="translate(645.487,-443.063)">
+		<g id="shape1064-245" v:mID="1064" v:groupContext="shape" transform="translate(645.487,-443.063)">
 			<title>Sheet.1064</title>
 			<desc>Computation Kernel (shared source code)</desc>
 			<v:textBlock v:margins="rect(2,2,2,2)" v:tabSpace="42.5197"/>
