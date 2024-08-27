@@ -1,4 +1,4 @@
-# `Singular Value Decomposition` Sample
+# `Singular Value Decomposition (SVD)` Sample
 The `SVD` reference design demonstrates a singular value decomposition implementation for real matrices on an FPGA.
 
 
@@ -77,6 +77,7 @@ This SVD design consists of 4 computation kernels, as well as several memory acc
 ![](assets/SVD.svg)
 
 ### Source file structure
+#### Design specific files:
 | File name              | Type                            | Content                                                                                                                                                                                              |
 | ---------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | svd_demo.cpp           | Host code                       | Launch a demonstration using the SVD design. Contains the `main()` function.                                                                                                                         |
@@ -87,24 +88,31 @@ This SVD design consists of 4 computation kernels, as well as several memory acc
 | svd.hpp                | Host code with some device code | Contains wrapper function `SingularValueDecomposition` that launches individual kernels of the SVD design.                                                                                           |
 | memory_transfers.hpp   | Device code                     | Contains kernel implementations of `MatrixReadFromDDRTo2PipesByBlocks` , `MatrixReadPipeToDDR` and `VectorReadPipeToDDR`. These kernels transfers data between DDR and streaming interfaces (pipes).|
 | usv_from_eigens.hpp       | Device code                     | Contains kernel implementation of `USVFromEigens`.                                                                                                                                                   |
+#### Shared source file:
+| Shared file                                                                      | Type        | Content                                                                                           |
+|----------------------------------------------------------------------------------|-------------|---------------------------------------------------------------------------------------------------|
+| [streaming_covariance_matrix.hpp](../../include/streaming_covariance_matrix.cpp) | Device code | Contains kernel implementations of `StreamingCovarianceMatrix` that computes covariance matrix.   |
+| [streaming_eigen.hpp](../../include/streaming_eigen.hpp)                         | Device code | Contains kernel implementations of `StreamingEigen` that computes eigen values and eigen vectors. |
+| [streaming_qrd.hpp](../../include/streaming_qrd.hpp)                             | Device code | Contains kernel implementations of `StreamingQRD` that is used to compute orthogonalized matrix.  |
+
 ### Input covariance matrix computation
-The covariance computation in this design is from `streaming_covariance_matrix.hpp` in the shared [include](../../include) directory and the parameter `standardized` is set to `false`. This source code is shared with [PCA](../pca/) reference design.
+This design imports `streaming_covariance_matrix.hpp` from the shared [include](../../include) directory. The covariance computation in this design uses the `fpga_linalg::StreamingCovarianceMatrix` functor, with the `standardized` parameter of the `StreamingCovarianceMatrix` functor set to `false`.
 
 The covariance of input A is equal to the transpose of A multiplied by A:
 ```math
 Cov(A) = A^{T}A
 ```
-Therefore this kernel performs a matrix multiplication by blocks, as described in the PCA reference design.
+Therefore this kernel performs a matrix multiplication by blocks, as described in the [PCA](../pca/) reference design, which also uses this functor.
 
 ### Eigenvalues and Eigenvectors computation
-We are reusing the `fpga_linalg::StreamingEigen` design from the PCA sample to compute eigenvalues and eigenvectors of the input covariance matrix. These eigenvalues and eigenvectors are going to be used to construct the final outputs of SVD.
+This design imports `streaming_eigen.hpp` from the shared [include]() directory. The eigenvalues and eigenvectors of the input covariance matrix are computed using the `fpga_linalg::StreamingEigen` functor. These eigenvalues and eigenvectors are going to be used to construct the final outputs of SVD.
 
 This kernel works only with input of rank sufficient matrix (all columns are linearly independent). It produces an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag is set to 1, the result of the SVD is known to be incorrect.
 
-The source code for the the eigenvalues and eigenvectors computation kernel can be found in `streaming_eigen.hpp` in the shared [include](../../include) directory. An detailed explanation of the algorithm of computing eigenvalues can be found [here](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
+The [PCA](../pca/) reference design also uses this functor. A detailed explanation of the algorithm of computing eigenvalues can be found in [Eigen values and Eigen vectors computation](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
 
 ### Construct Output from Eigenvalues and Eigenvectors
-In `usv_from_eigens.hpp`, the final outputs of SVD is constructed from the eigenvalues and eigenvectors of the input covariance. 
+The functor `USVFromEigens` in `usv_from_eigens.hpp`, constructs the final outputs of SVD from the eigenvalues and eigenvectors of the input covariance matrix. 
 
 Consider an input matrix $A$ of size $m \times n$.
 
@@ -147,7 +155,7 @@ When the input matrix $A$ is not square, the number of eigenvectors calculated i
 ### $U$ Matrix Orthogonalization
 As mentioned above, when extra filler vectors are needed to complete the $U$ matrix, we need to orthogonalize the matrix.
 
-An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md), so here we will insert an instance of the `fpga_linalg::streamingQRD` design. The $Q$ output of this kernel is orthogonalized $U$ matrix. Since we only care about the orthogonalized $U$ matrix, $R$ output of the Streaming QRD kernel is discarded.
+An efficient algorithm to do this is already implemented in our [QR Decomposition sample](../qrd/README.md), so here we will insert an instance of the `fpga_linalg::streamingQRD` functor from [`streaming_qrd.hpp`](../../include/streaming_qrd.hpp). The $Q$ output of this kernel is orthogonalized $U$ matrix. Since we only care about the orthogonalized $U$ matrix, $R$ output of the Streaming QRD kernel is discarded.
 
 ### Demonstration Testbench
 In this sample, a testbench is used to demonstrate the SVD design.
