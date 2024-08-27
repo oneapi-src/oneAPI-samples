@@ -1,5 +1,5 @@
 #!/bin/bash
-source /opt/intel/inteloneapi/setvars.sh
+source /opt/intel/oneapi/setvars.sh
 /bin/echo "##" $(whoami) is compiling SYCL_Essentials Module6 -- Intel Vtune profiler - 1 of 1 Vtune_Profiler
 #vtune
 #type=hotspots

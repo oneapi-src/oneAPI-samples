@@ -1,5 +1,5 @@
 #!/bin/bash
-source /opt/intel/inteloneapi/setvars.sh > /dev/null 2>&1
+source /opt/intel/oneapi/setvars.sh > /dev/null 2>&1
 
 #Command Line Arguments
 arg=" -n 1024 -m 16" # set matrix size
