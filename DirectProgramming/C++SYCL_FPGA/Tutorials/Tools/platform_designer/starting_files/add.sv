@@ -14,16 +14,18 @@ module add (
   
   always @ (posedge i_clk)
   begin
-    reset_button_d1 <= reset_button_n;
+    reset_button_d1 <= ~reset_button_n;
     reset_button_d2 <= reset_button_d1;
     reset_button_d3 <= reset_button_d2;
   end
+  
   
   // register the signal used by the LED
   wire sort_done;
   always @(posedge i_clk)
   begin
-    fpga_led <= sort_done;
+	// led is inverted
+    fpga_led <= ~sort_done;
   end
   
   add_kernel_wrapper u0 (

@@ -31,7 +31,7 @@ set(TARGET_NAME add)
 # You can also specify a device family (E.g. "Arria10" or "Stratix10") or a
 # specific part number (E.g. "10AS066N3F40E2SG") to generate a standalone IP.
 if(NOT DEFINED FPGA_DEVICE)
-    set(FPGA_DEVICE "5CSEMA5F31C6")
+    set(FPGA_DEVICE "10AS066N3F40E2SG")
 endif()
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend

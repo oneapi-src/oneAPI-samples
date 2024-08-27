@@ -72,7 +72,7 @@ This tutorial is structured with four source code directories.
 ### Board-specific Considerations
 
 This design is intended to work with the Intel® Arria® 10 SX SoC Development Kit. These board-specific configurations are not guaranteed to work with different boards:
-1. Choose `5CSXFC6D6F31C6` device to match the devkit
+1. Choose `10AS066N3F40E2SG` device to match the devkit
 2. Choose pin `PIN_AM10` to drive the `i_clk` signal
 3. Choose pin `PIN_AR23` to drive the `fpga_led` signal
 4. Choose pin `PIN_AV21` to drive the `reset_button_n` signal
