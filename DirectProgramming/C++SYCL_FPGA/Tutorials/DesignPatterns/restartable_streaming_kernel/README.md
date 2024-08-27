@@ -97,11 +97,11 @@ The testbench in `main.cpp` exercises the kernel in the following steps:
 
 ### Packets
 
-This design uses the Avalon `start_of_packet` signal to indicate when the a new set of values is being written to `OutputPipe`. The `start_of_packet` sideband signal is not *generally* necessary for implementing a restartable streaming kernel, but it is used in this design to compensate for the decoupled way that the `RestartableCounter` kernel executes with respect to the host code. Since the host code does not tell `RestartableCounter` how many values to write to `OutputPipe`, the `RestartableCounter` will continue to write to `OutputPipe` until either
+This design uses the Avalon `start_of_packet` signal to indicate when the a new set of values is being written to `OutputPipe`. The `start_of_packet` sideband signal is not *generally* necessary for implementing a restartable streaming kernel, but it is used in this design to compensate for the decoupled way that the `RestartableCounter` kernel executes with respect to the host code. Since the host code does not tell `RestartableCounter` how many values to write to `OutputPipe`, the `RestartableCounter` will continue to write to `OutputPipe` until either:
 
-1. `OutputPipe` fills up, in which case the `RestartableCounter` kernel will stop incrementing its internal counter until the pipe can be written to again
+1. `OutputPipe` fills up, in which case the `RestartableCounter` kernel will stop incrementing its internal counter until the pipe can be written to again, or 
 
-2. A `true` is written to the `StopPipe`
+2. A `true` is written to the `StopPipe`.
 
 Any data written to the `OutputPipe` between the host code writing a `true` to `StopPipe`, and the `RestartableCounter` kernel *consuming* the `true` from `StopPipe` will still be in `OutputPipe` the next time the host code tries to read from it, so it is necessary to flush these extra beats of data. The `start_of_packet` sideband signals the beginning of a new stream of counter data in `OutputPipe`.
 
