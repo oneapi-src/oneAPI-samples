@@ -1,9 +1,0 @@
-	component add_kernel_wrapper is
-		port (
-			clk_clk            : in  std_logic                     := 'X'; -- clk
-			exception_add_data : out std_logic_vector(63 downto 0);        -- data
-			irq_add_irq        : out std_logic;                            -- irq
-			reset_reset_n      : in  std_logic                     := 'X'  -- reset_n
-		);
-	end component add_kernel_wrapper;
-

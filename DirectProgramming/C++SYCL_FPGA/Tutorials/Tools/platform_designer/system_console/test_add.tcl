@@ -8,7 +8,7 @@ proc pause {{message "Hit Enter to continue ==> "}} {
 }
 
 proc load_inputs { VAL_A VAL_B } {
-    global master_service_path
+    global claim_path
 
     # addresses from add_oneapi/build/add.report.prj/include/kenrel_headers/IDAdder_register_map.hpp
     set ADDR_A 0x80
@@ -16,27 +16,27 @@ proc load_inputs { VAL_A VAL_B } {
     set ADDR_START 0x08
 
     puts "Store $VAL_A to address $ADDR_A"
-    master_write_32 $master_service_path $ADDR_A $VAL_A
+    master_write_32 $claim_path $ADDR_A $VAL_A
 
     puts "Store $VAL_B to address $ADDR_B"
-    master_write_32 $master_service_path $ADDR_B $VAL_B
+    master_write_32 $claim_path $ADDR_B $VAL_B
 
     # start component
     puts "Set 'Start' bit to 1"
-    master_write_32 $master_service_path $ADDR_START 0x01
+    master_write_32 $claim_path $ADDR_START 0x01
 }
 
 proc read_outputs {} {
-    global master_service_path
+    global claim_path
 
     # addresses from add_oneapi/build/add.report.prj/include/kenrel_headers/IDAdder_register_map.hpp
     set ADDR_STATUS 0x00
     set ADDR_C 0x88
     set ADDR_FINISH_COUNT 0x30
 
-    set readData       [master_read_32 $master_service_path $ADDR_C 2];
-    set statusReg      [master_read_32 $master_service_path $ADDR_STATUS 2];
-    set finishCounter  [master_read_32 $master_service_path $ADDR_FINISH_COUNT 2];
+    set readData       [master_read_32 $claim_path $ADDR_C 2];
+    set statusReg      [master_read_32 $claim_path $ADDR_STATUS 2];
+    set finishCounter  [master_read_32 $claim_path $ADDR_FINISH_COUNT 2];
 
     puts "  Data   ($ADDR_C): $readData"
     puts "  Status ($ADDR_STATUS): $statusReg"
@@ -44,13 +44,20 @@ proc read_outputs {} {
 }
 
 # set up jtag interface
-get_service_paths master
-set master_service_path [ lindex [get_service_paths master] 0]
+# get_service_paths master
+# set master_service_path [ lindex [get_service_paths master] 0]
 
-open_service master $master_service_path
+# open_service master $master_service_path
 
-puts "Resetting IP..."
-jtag_debug_reset_system $master_service_path
+# puts "Resetting IP..."
+# jtag_debug_reset_system $master_service_path
+
+load_package systemconsole
+initialize_systemconsole
+set service_type "master"
+set master_path [lindex [get_service_paths master] 0]
+# Claims service. 
+set claim_path [claim_service $service_type $master_path add];
 
 # interact with the IP
 puts "TEST 1: READ OUTPUT AFTER RESET"

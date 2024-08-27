@@ -81,4 +81,3 @@ set_global_assignment -name QSYS_FILE add_kernel_wrapper.qsys
 set_global_assignment -name SYSTEMVERILOG_FILE add.sv
 set_global_assignment -name SDC_FILE add.sdc
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp
