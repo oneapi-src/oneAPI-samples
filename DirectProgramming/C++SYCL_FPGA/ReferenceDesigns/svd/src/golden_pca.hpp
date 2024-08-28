@@ -6,7 +6,7 @@
 
 /*
 This file implements the steps to
-identify principal components (Eigen vectors)
+identify principal components (Eigenvectors)
 of a matrix and finally transform input matrix
 along the directions of the principal components
 
@@ -17,7 +17,7 @@ making it an n row, p columns matrix
 
 Here are the steps performed by this file:
 1. Compute the covariance matrices of these matrices
-2. Compute Eigen vectors and Eigen values of the covariance matrices using the
+2. Compute Eigenvectors and Eigenvalues of the covariance matrices using the
 QR iteration method
 
 */
@@ -31,8 +31,8 @@ class GoldenPCA {
   bool benchmark_mode;               // pull data from actual dataset
   std::vector<T> a_matrix;           // storage for input matrices
   std::vector<T> covariance_matrix;  // storage for covariance matrices
-  std::vector<T> eigen_values;       // storage for the Eigen values
-  std::vector<T> eigen_vectors;      // storage for the Eigen vectors
+  std::vector<T> eigenvalues;       // storage for the Eigenvalues
+  std::vector<T> eigenvectors;      // storage for the Eigenvectors
   std::vector<T> iterations;         // the number of QR iterations per matrix
 
  private:
@@ -57,8 +57,8 @@ class GoldenPCA {
 
     covariance_matrix.resize(p * p * matrix_count);
 
-    eigen_values.resize(p * matrix_count);
-    eigen_vectors.resize(p * p * matrix_count);
+    eigenvalues.resize(p * matrix_count);
+    eigenvectors.resize(p * p * matrix_count);
 
     iterations.resize(matrix_count);
   }
@@ -116,14 +116,14 @@ class GoldenPCA {
 
   // Compute the covariance matrix of the standardized A matrix
   void ComputeEigenValuesAndVectors() {
-    // Compute the Eigen values and Eigen vectors using the QR iteration method
+    // Compute the Eigenvalues and Eigenvectors using the QR iteration method
     // This implementation uses the Wilkinson shift to speedup the convergence
 
     constexpr float kZeroThreshold = 1e-8;
 
     for (int matrix_index = 0; matrix_index < matrix_count; matrix_index++) {
       if (debug)
-        std::cout << "\nComputing Eigen values and vectors of matrix #"
+        std::cout << "\nComputing Eigenvalues and vectors of matrix #"
                   << matrix_index << std::endl;
 
       int offset = matrix_index * features * features;
@@ -140,10 +140,10 @@ class GoldenPCA {
         rq[k] = covariance_matrix[offset + k];
       }
 
-      // Initialize the Eigen vectors matrix to the identity matrix
+      // Initialize the Eigenvectors matrix to the identity matrix
       for (int row = 0; row < features; row++) {
         for (int column = 0; column < features; column++) {
-          eigen_vectors[offset + row * features + column] =
+          eigenvectors[offset + row * features + column] =
               row == column ? 1 : 0;
         }
       }
@@ -235,24 +235,24 @@ class GoldenPCA {
           }
         }
 
-        // Compute the updated Eigen vectors
-        std::vector<T> eigen_vectors_q_product;
-        eigen_vectors_q_product.resize(features * features);
+        // Compute the updated Eigenvectors
+        std::vector<T> eigenvectors_q_product;
+        eigenvectors_q_product.resize(features * features);
         for (int row = 0; row < features; row++) {
           for (int col = 0; col < features; col++) {
             double prod = 0;
             for (int k = 0; k < features; k++) {
-              prod += eigen_vectors[offset + row * features + k] *
+              prod += eigenvectors[offset + row * features + k] *
                       q[k * features + col];
             }
-            eigen_vectors_q_product[row * features + col] = prod;
+            eigenvectors_q_product[row * features + col] = prod;
           }
         }
 
         for (int row = 0; row < features; row++) {
           for (int col = 0; col < features; col++) {
-            eigen_vectors[offset + row * features + col] =
-                eigen_vectors_q_product[row * features + col];
+            eigenvectors[offset + row * features + col] =
+                eigenvectors_q_product[row * features + col];
           }
         }
 
@@ -271,7 +271,7 @@ class GoldenPCA {
           rq[row + features * row] += shift_value;
         }
 
-        // Check if we found all Eigen Values
+        // Check if we found all Eigenvalues
         bool all_below_threshold = true;
         for (int row = 1; row < features; row++) {
           for (int col = 0; col < row; col++) {
@@ -293,18 +293,18 @@ class GoldenPCA {
                   << " iterations" << std::endl;
       this->iterations[matrix_index] = iterations;
       if (debug)
-        std::cout << "Eigen values for matrix #" << matrix_index << std::endl;
+        std::cout << "Eigenvalues for matrix #" << matrix_index << std::endl;
       for (int k = 0; k < features; k++) {
-        eigen_values[k + matrix_index * features] = rq[k + features * k];
+        eigenvalues[k + matrix_index * features] = rq[k + features * k];
         if (debug) std::cout << rq[k + features * k] << " ";
       }
       if (debug) std::cout << std::endl;
 
       if (debug) {
-        std::cout << "Eigen vectors for matrix #" << matrix_index << std::endl;
+        std::cout << "Eigenvectors for matrix #" << matrix_index << std::endl;
         for (int row = 0; row < features; row++) {
           for (int col = 0; col < features; col++) {
-            std::cout << eigen_vectors[offset + row * features + col] << " ";
+            std::cout << eigenvectors[offset + row * features + col] << " ";
           }
           std::cout << std::endl;
         }

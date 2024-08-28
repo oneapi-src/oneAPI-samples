@@ -109,7 +109,7 @@ This design imports `streaming_eigen.hpp` from the shared [include]() directory.
 
 This kernel works only with input of rank sufficient matrix (all columns are linearly independent). It produces an output `rank_deficent_flag` to indicate if the input matrix is not linearly independent. If the flag is set to 1, the result of the SVD is known to be incorrect.
 
-The [PCA](../pca/) reference design also uses this functor. A detailed explanation of the algorithm of computing eigenvalues can be found in [Eigen values and Eigen vectors computation](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
+The [PCA](../pca/) reference design also uses this functor. A detailed explanation of the algorithm of computing eigenvalues can be found in [Eigenvalues and Eigenvectors computation](../pca/README.md#eigen-values-and-eigen-vectors-computation) in the PCA sample.
 
 ### Construct Output from Eigenvalues and Eigenvectors
 The functor `USVFromEigens` in `usv_from_eigens.hpp`, constructs the final outputs of SVD from the eigenvalues and eigenvectors of the input covariance matrix. 
@@ -160,7 +160,7 @@ An efficient algorithm to do this is already implemented in our [QR Decompositio
 ### Demonstration Testbench
 In this sample, a testbench is used to demonstrate the SVD design.
 
-The resulting singular values are checked against eigen values calculated by a reference PCA algorithm that is also used in the PCA sample.
+The resulting singular values are checked against eigenvalues calculated by a reference PCA algorithm that is also used in the PCA sample.
 
 Since the singular vectors in $U$ and $V$ are non-unique, their correctness are checked by (1) checking for orthogonality, and (2) that they satisfy the relationship $A = USV^T$.
 

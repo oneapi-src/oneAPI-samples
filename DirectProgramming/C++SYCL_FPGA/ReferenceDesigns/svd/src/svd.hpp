@@ -161,14 +161,14 @@ double SingularValueDecomposition(
           T, rows, cols, kNumElementsPerDDRBurst, InputMatrixPipe,
           CovarianceMatrixPipe, false>());
 
-  // Compute the Eigen values and Eigen vectors
+  // Compute the Eigenvalues and Eigenvectors
   q.single_task<IDEigenValuesAndVectorsComputation>(
       fpga_linalg::StreamingEigen<T, cols, fixed_iteration,
                                   kNumElementsPerDDRBurst, zero_threshold_1e,
                                   CovarianceMatrixPipe, EigenValuesPipe,
                                   EigenVectorsPipe, RankDeficientFlagPipe>());
 
-  // Post process. Using eigen values and eigen vector to produce U, S, V matrix
+  // Post process. Using eigenvalues and eigenvector to produce U, S, V matrix
   q.single_task<IDUSVFromEigens>(
       USVFromEigens <T, false, rows, cols, kNumElementsPerDDRBurst,
                             InputMatrixPipe2, EigenValuesPipe, EigenVectorsPipe,
