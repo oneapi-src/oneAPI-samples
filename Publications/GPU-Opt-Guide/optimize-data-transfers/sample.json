@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make test-Map-UpdateTo",
+          "make openmp_host_usm openmp_register_mem openmp_system_mem sycl_prepare_bench.cpp",
           "make clean"
         ]
       }

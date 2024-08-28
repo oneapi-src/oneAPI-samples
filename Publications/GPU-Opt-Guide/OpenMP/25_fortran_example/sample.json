@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make test-HostMem-DeviceMem-Map-UpdateTo",
+          "make test-SharedMem test-Map-UpdateTo test-HostMem-DeviceMem-Map-UpdateTo",
           "make clean"
         ]
       }
