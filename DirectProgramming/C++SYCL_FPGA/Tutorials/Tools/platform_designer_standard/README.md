@@ -5,7 +5,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware                          | This process applies to the [Cyclone® V FPGA and SoC FPGA](https://www.intel.com/content/www/us/en/products/details/fpga/cyclone/v.html)
+| Hardware                          | This process applies to the [Cyclone® V SE SoC FPGAs](https://www.intel.com/content/www/us/en/products/details/fpga/cyclone/v/se.html)
 | Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Standard Edition Version 22.3 or later
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel with an Intel® Quartus® Prime Standard Edition
 | Time to complete                  | 1 hour
@@ -71,7 +71,7 @@ This tutorial is structured with four source code directories.
 
 ### Board-specific Considerations
 
-This design is intended to work with the Intel® Cyclone® V SoC FPGA. These board-specific configurations are not guaranteed to work with different boards:
+This design is intended to work with the [Terasic DE1-SOC Development Board](https://de1-soc.terasic.com/). These board-specific configurations are not guaranteed to work with different boards:
 1. Choose `5CSEMA5F31C6` device to match the devkit
 2. Choose pin `PIN_AF14` to drive the `i_clk` signal
 3. Choose pin `PIN_V16` to drive the `fpga_led` signal
@@ -94,7 +94,7 @@ This design is intended to work with the Intel® Cyclone® V SoC FPGA. These boa
 >
 > For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html) or [Use the setvars Script with Windows*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-windows.html).
 
-**Follow these steps to compile and test the design:**
+Follow these steps to compile and test the design:
 1. Compile the SYCL code to RTL. Although this design supports emulation and simulation like other FPGA code samples, they are not the focus of this tutorial. The emulation and simulation commands have been omitted.
 
    Linux:
@@ -210,7 +210,7 @@ This design is intended to work with the Intel® Cyclone® V SoC FPGA. These boa
 
 6. Select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to Avalon® Master Bridge Intel FPGA IP handles the connection between your design and the JTAG pins on your board automatically.
 
-   1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. In the bottom pane in Pin Planner GUI, you will find a list of signals to be assigned a pin. Consult the data sheet for your board to choose an appropriate clock input. Double-click the *Location* cell and select a proper clock input. In this project, the `PIN_AF14` was chosen because it supplies a 50MHz clock signal.
+   1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. In the bottom pane of the Pin Planner GUI, you will find a list of signals to assign pins to. Consult the data sheet for your board to choose an appropriate clock input. Double-click the *Location* cell and select a proper clock input. In this project, the `PIN_AF14` was chosen because it supplies a 50MHz clock signal.
 
    2. Assign pins for the `fpga_led` and `reset_button_n` signals using the same method. Your final pin assignment should match with the following screenshot.
 
@@ -277,57 +277,14 @@ To move the design to a different computer for testing, copy the entire `system_
 See output:
 
 ```
-Info: *******************************************************************
-Info: Running Quartus Prime Programmer
-    Info: Version 23.1std.1 Build 993 05/14/2024 SC Standard Edition
-    Info: Copyright (C) 2024  Intel Corporation. All rights reserved.
-    Info: Your use of Intel Corporation's design tools, logic functions
-    Info: and other software and tools, and any partner logic
-    Info: functions, and any output files from any of the foregoing
-    Info: (including device programming or simulation files), and any
-    Info: associated documentation or information are expressly subject
-    Info: to the terms and conditions of the Intel Program License
-    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
-    Info: the Intel FPGA IP License Agreement, or other applicable license
-    Info: agreement, including, without limitation, that your use is for
-    Info: the sole purpose of programming logic devices manufactured by
-    Info: Intel and sold by Intel or its authorized distributors.  Please
-    Info: refer to the applicable agreement for further details, at
-    Info: https://fpgasoftware.intel.com/eula.
-    Info: Processing started: Mon Aug 26 13:33:34 2024
-Info: Command: quartus_pgm -m jtag -c 1 -o p;add.sof@2
-Info (213045): Using programming cable "DE-SoC [USB-1]"
-Info (213011): Using programming file add.sof with checksum 0x00C70E5A for device 5CSEMA5F31@2
-Info (209060): Started Programmer operation at Mon Aug 26 13:33:36 2024
-Info (209016): Configuring device index 2
-Info (209017): Device 2 contains JTAG ID code 0x02D120DD
-Info (209007): Configuration succeeded -- 1 device(s) configured
-Info (209011): Successfully performed operation(s)
-Info (209061): Ended Programmer operation at Mon Aug 26 13:33:39 2024
+<output from Intel® Quartus® Prime programmer>
 Info: Quartus Prime Programmer was successful. 0 errors, 0 warnings
     Info: Peak virtual memory: 4465 megabytes
     Info: Processing ended: Mon Aug 26 13:33:39 2024
     Info: Elapsed time: 00:00:05
     Info: Total CPU time (on all processors): 00:00:00
 Press any key to continue . . .
-Info: *******************************************************************
-Info: Running Quartus Prime Shell
-    Info: Version 23.1std.1 Build 993 05/14/2024 SC Standard Edition
-    Info: Copyright (C) 2024  Intel Corporation. All rights reserved.
-    Info: Your use of Intel Corporation's design tools, logic functions
-    Info: and other software and tools, and any partner logic
-    Info: functions, and any output files from any of the foregoing
-    Info: (including device programming or simulation files), and any
-    Info: associated documentation or information are expressly subject
-    Info: to the terms and conditions of the Intel Program License
-    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
-    Info: the Intel FPGA IP License Agreement, or other applicable license
-    Info: agreement, including, without limitation, that your use is for
-    Info: the sole purpose of programming logic devices manufactured by
-    Info: Intel and sold by Intel or its authorized distributors.  Please
-    Info: refer to the applicable agreement for further details, at
-    Info: https://fpgasoftware.intel.com/eula.
-    Info: Processing started: Mon Aug 26 13:35:02 2024
+<output from Intel® Quartus® Prime Tcl Shell>
 Info: Command: quartus_sh -t test_add.tcl
 Info (345047): Preparing to create a connection to System Console. This may take several seconds.
 Info (345009): A connection to System Console was successfully established on port 58780
