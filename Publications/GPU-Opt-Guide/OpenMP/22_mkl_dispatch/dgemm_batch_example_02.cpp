@@ -18,7 +18,6 @@
 * License.
 *******************************************************************************/
 
-// Snippet begin
 #include <stdio.h>
 #include <omp.h>
 #include "mkl.h"
@@ -153,6 +152,7 @@ int main() {
     cblas_dgemm_batch(layout, transA, transB, m, n, k, alpha, (const double **) a_array, lda,
                       (const double **) b_array, ldb, beta, c_ref_array, ldc, GROUP_COUNT, group_size);
 
+// Snippet begin
     double *a, *b, *c;
     for (i = 0; i < total_batch_size; i++) {
         a = a_array[i];
@@ -182,6 +182,7 @@ int main() {
         c = c_array[i];
 #pragma omp target exit data map(from:a[0:sizea_array[i]],b[0:sizeb_array[i]],c[0:sizec_array[i]])
     }
+// Snippet end
 
     double computed, reference, diff;
     MKL_INT l;
@@ -254,4 +255,3 @@ int main() {
     mkl_free(alpha); mkl_free(beta);
     return 0;
 }
-// Snippet end

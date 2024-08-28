@@ -55,8 +55,7 @@
 
     nstream_time = omp_get_wtime()
     do iter = 1, iterations
-       !$omp target teams distribute parallel do &
-           map(to: A, B) map(tofrom: C)
+       !$omp target teams distribute parallel do map(to: A, B) map(tofrom: C)
        do i = 1, length
           C(i) = C(i) + A(i) + scalar * B(i)
        end do

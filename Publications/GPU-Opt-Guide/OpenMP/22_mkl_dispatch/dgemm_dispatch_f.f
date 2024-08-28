@@ -3,7 +3,6 @@
         !
         ! SPDX-License-Identifier: MIT
         !=============================================================
-        ! Snippet begin
         include "mkl_omp_offload.f90"
 
         program DGEMM_MAIN
@@ -68,12 +67,14 @@
 
         ! Execute DGEMM on device
 
+! Snippet begin
 !$omp target data map(to: a, b) map(tofrom: c2)
 
 !$omp dispatch
         call DGEMM('N','N',m,n,k,alpha,a,m,b,k,beta,c2,m)
 
 !$omp end target data
+! Snippet end
 
         print *
         print *, 'c2 - After DGEMM device execution'
@@ -86,4 +87,3 @@
  110    format(7x,10(f10.2,2x))
 
         end
-        ! Snippet end
