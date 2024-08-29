@@ -39,11 +39,11 @@ using OutStream_NaiveKernel =
     sycl::ext::intel::experimental::pipe<ID_OutStream_NaiveKernel, SimpleOutputT, 0,
                                          PipePropertiesT>;
 
-class ID_InStream_OptimizedKernel;
-using InStream_OptimizedKernel =
-    sycl::ext::intel::experimental::pipe<ID_InStream_OptimizedKernel, SimpleInputT, 0,
+class ID_InStream_OptKernel;
+using InStream_OptKernel =
+    sycl::ext::intel::experimental::pipe<ID_InStream_OptKernel, SimpleInputT, 0,
                                          PipePropertiesT>;
-class ID_OutStream_OptimizedKernel;
-using OutStream_OptimizedKernel =
-    sycl::ext::intel::experimental::pipe<ID_OutStream_OptimizedKernel, SimpleOutputT, 0,
+class ID_OutStream_OptKernel;
+using OutStream_OptKernel =
+    sycl::ext::intel::experimental::pipe<ID_OutStream_OptKernel, SimpleOutputT, 0,
                                          PipePropertiesT>;

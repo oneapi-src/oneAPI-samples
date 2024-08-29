@@ -15,7 +15,7 @@ bool CheckOutput(sycl::queue &q) {
   bool passed = true;
   for (int i = 0; i < 500; ++i) {
     resultNaive = OutStream_NaiveKernel::read(q);
-    resultOptimized = OutStream_OptimizedKernel::read(q);
+    resultOptimized = OutStream_OptKernel::read(q);
     if (resultNaive[4] != i || resultOptimized[4] != i) {
       passed = false;
     }
@@ -39,7 +39,7 @@ int main() {
     q.single_task<class Input>([=]() {
       for (int i = 0; i < 500; ++i) {
         InStream_NaiveKernel::write(i);
-        InStream_OptimizedKernel::write(i);
+        InStream_OptKernel::write(i);
       }
     });
 

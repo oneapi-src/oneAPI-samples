@@ -166,7 +166,7 @@ Review the memory access pattern above, we can easily find out that within each 
 
 ![Never-stall Node](./assets/memory_report_optimized.png)
 
-Subsequently, since we have made the LSU non-stallable, we expect no stalls in the loop nor in the downstream task - that the output pipe `OutStream_OptimizedKernel` is not stalled. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `ID_OutStream_OptimizedKernel_pipe_channel_write`. The gaps no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
+Subsequently, since we have made the LSU non-stallable, we expect no stalls in the loop nor in the downstream task - that the output pipe `OutStream_OptKernel` is not stalled. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `ID_OutStream_OptKernel_pipe_channel_write`. The gaps no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
 
 ![Optimized System Waveform](./assets/waveform_optimized.png)
 
@@ -252,21 +252,21 @@ This design uses CMake to generate a build script for  `nmake`.
 ### On Linux
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   ./banked_memory_system.fpga_emu
+   ./banked_mem.fpga_emu
    ```
 2. Run the sample on the FPGA simulator device.
    ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./banked_memory_system.fpga_sim
+   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./banked_mem.fpga_sim
    ```
 ### On Windows
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
-   banked_memory_system.fpga_emu.exe
+   banked_mem.fpga_emu.exe
    ```
 2. Run the sample on the FPGA simulator device.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   banked_memory_system.fpga_sim.exe
+   banked_mem.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 

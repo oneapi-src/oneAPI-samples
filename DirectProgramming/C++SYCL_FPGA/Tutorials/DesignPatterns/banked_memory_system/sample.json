@@ -27,7 +27,7 @@
           "cd build",
           "cmake ..",
           "make fpga_emu",
-          "./banked_memory_system.fpga_emu"
+          "./banked_mem.fpga_emu"
         ]
       },
       {
@@ -51,7 +51,7 @@
           "cd build",
           "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
           "nmake fpga_emu",
-          "banked_memory_system.fpga_emu.exe"
+          "banked_mem.fpga_emu.exe"
         ]
       },
       {

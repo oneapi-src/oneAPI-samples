@@ -20,7 +20,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 ### Customize these build variables
 ###############################################################################
 set(SOURCE_FILES src/main.cpp)
-set(TARGET_NAME banked_memory_system)
+set(TARGET_NAME banked_mem)
 
 # Use cmake -DFPGA_DEVICE=<board-support-package>:<board-variant> to choose a
 # different device.

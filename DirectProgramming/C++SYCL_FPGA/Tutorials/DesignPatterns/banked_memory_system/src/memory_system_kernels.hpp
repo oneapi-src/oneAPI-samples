@@ -38,7 +38,7 @@ struct OptimizedKernel {
 
     [[intel::initiation_interval(1)]]
     for (int row = 0; row < kNumRowsOptimized; ++row) {
-      SimpleInputT input = InStream_OptimizedKernel::read();
+      SimpleInputT input = InStream_OptKernel::read();
       SimpleOutputT output;
 
       #pragma unroll
@@ -52,7 +52,7 @@ struct OptimizedKernel {
         output[idx] = array2d[row][idx];
       }
       
-      OutStream_OptimizedKernel::write(output);
+      OutStream_OptKernel::write(output);
     }
   }
 };
