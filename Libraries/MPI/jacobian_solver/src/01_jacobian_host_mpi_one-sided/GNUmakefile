@@ -15,6 +15,8 @@ debug: CFLAGS += -O0 -g
 debug: CXXFLAGS += -O0 -g
 debug: $(example)
 
+%(example): ../include/common.h
+
 % : %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $< $(LDFLAGS)
 

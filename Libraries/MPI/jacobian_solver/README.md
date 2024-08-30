@@ -29,15 +29,96 @@ This sample implements a well-known distributed 2D Jacobian solver with 1D data 
 
 The sample has three variants demonstrating different approaches to the Jacobi solver.
 
+### `Data layout description`
+
+The data layout is a 2D grid of size (Nx+2) x (Ny+2), distributed across MPI processes along the Y-axis.
+Where first and last row/column areconstant and used for boundary conditions.
+Each porcess handles Nx x (Ny/comm_size) subarray. 
+
+```
+             Left border                                Right border  
+                  |                                            |
+                  v                                            v
+                 ------------------------------------------------
+ Top border ---> |X|                                          |X|
+                 ------------------------------------------------
+                 | |                /\                        | |
+                 | |                 |                        | |
+                 | |                 |                        | |
+                 | |                 |                        | |                    ------------------------------------------------
+                 | |                 |                        | |                    |X|                                          |X| <- Last row of of i-1 subarray from previous iterarion used for calculation
+                 | |                 |                        | |....................------------------------------------------------
+                 | |<--------- Nx x Ny array ---------------->| |                    | |                                          | |
+                 | |                 |                        | |                    | |          i-th process subarray           | |
+                 | |                 |                        | |                    | |            Nx x (Ny/comm_size)           | |
+                 | |                 |                        | |                    | |                                          | |
+                 | |                 |                        | |....................------------------------------------------------
+                 | |                 |                        | |                    |X|                                          |X| <- First row of of i+1 subarray from previous iterarion used for calculation
+                 | |                 V                        | |                    ------------------------------------------------
+                 ------------------------------------------------
+ Bottom border-> |X|                                          |X|
+                 ------------------------------------------------
+```
+
 ### `01_jacobian_host_mpi_one-sided`
 
 This program demonstrates baseline implementation of the distributed Jacobian solver. In this sample you will see the basic idea of the algorithm, as well as how to implement the halo-exchange using MPI-3 one-sided primitives required for this solver.
 
 The solver is an iterative algorithm where each iteration of the program recalculates border values first, then border values transfer to neighbor processes, which are used in next iteration of algorithm. Each process recalculate internal points values for the next iteration in parallel with communication. After a number of iterations, the algorithm reports NORM values for validation purposes.
 
+```mermaid
+sequenceDiagram
+  participant APP as Application
+  participant HC as Host compute
+  participant COMM as Communication
+  participant GC as GPU compute
+
+  loop Solever: batch iterations
+    loop Solver: single iteration
+      APP ->>+ HC: Calculate values on the edges
+      HC ->>- APP: edge values
+      APP ->>+ COMM: transfer data to neighbours using MPI_Put
+      APP ->>+ HC: Recalculate internal points
+      HC ->> HC: Main compute loop
+      HC ->>- APP: Updated internal points
+      APP ->> COMM: RMA window synchronization
+      COMM ->>- APP: RMA syncronization completion
+    end
+    APP ->>+ HC: start compute of local norm
+    HC ->>- APP: local norm value
+    APP ->>+ COMM: Collect global norm using MPI_Reduce
+    COMM ->>- APP: global norm value
+  end
+```
+
 ### `02_jacobian_device_mpi_one-sided_gpu_aware`
 
 This program demonstrates how the same algorithm can be modified to add GPU offload capability. The program comes in two versions: OpenMP and SYCL. The program illustrates how device memory can be passed directly to MPI one-sided primitives. In particular, device memory may be passed to `MPI_Win_create` call to create an RMA Window placed on a device. Also, aside from a device RMA-window placement, device memory can be passed to `MPI_Put`/`MPI_Get` primitives as a target or origin buffer.
+
+```mermaid
+sequenceDiagram
+  participant APP as Application
+  participant HC as Host compute
+  participant GC as GPU compute
+  participant COMM as Communication
+
+  loop Solever: batch iterations
+    loop Solver: single iteration
+      APP ->>+ GC: Calculate values on the edges
+      GC ->>- APP: edge values
+      APP ->>+ COMM: transfer data to neighbours using MPI_Put
+      APP ->>+ GC: Recalculate internal points
+      GC ->> GC: Main compute loop
+      GC ->>- APP: Updated internal points
+      APP ->> COMM: RMA window synchronization
+      COMM ->>- APP: RMA syncronization completion
+    end
+    APP ->>+ GC: start compute of local norm
+    GC ->>- APP: local norm value
+    APP ->>+ COMM: Collect global norm using MPI_Reduce
+    COMM ->>- APP: global norm value
+  end
+```
 
 > **Note**: Only contigouous MPI datatypes are supported.
 
@@ -54,11 +135,59 @@ This program demonstrates how to initiate one-sided communications directly from
 
 To enable device-initiated communications, you must set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
 
+```mermaid
+sequenceDiagram
+  participant APP as Application
+  participant HC as Host compute
+  participant GC as GPU compute
+  participant COMM as Communication
+
+  loop Solver: batch iterations
+    APP ->>+ GC: Start fused kernel
+    loop Solver: single iteration
+      GC ->> GC: Calculate values on the edges
+      GC ->>+ COMM: transfer data to neighbours using MPI_Put
+      GC ->> GC: Recalculate internal points
+      GC ->> COMM: RMA window synchronization
+      COMM ->>- GC: RMA syncronization completion
+    end
+    GC ->>- APP: Fused kernel completion
+    APP ->>+ GC: start compute of local norm
+    GC ->>- APP: local norm value
+    APP ->>+ COMM: Collect global norm using MPI_Reduce
+    COMM ->>- APP: global norm value
+  end
+```
+
+
 ### `04_jacobian_device_mpi_one-sided_device_initiated_notify`
 
 This program demonstrates how to initiate one-sided communications directly from the offloaded code. The Intel® MPI Library allows calls to some communication primitives directly from the offloaded code (SYCL or OpenMP). In contrast to prior example, this one demonstrates usage of one-sided communications with notification (extention of MPI-4.1 standard).
 
 To enable device-initiated communications, you must set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
+
+```mermaid
+sequenceDiagram
+  participant APP as Application
+  participant HC as Host compute
+  participant GC as GPU compute
+  participant COMM as Communication
+
+  loop Solver: batch iterations
+    APP ->>+ GC: Start fused kernel
+    loop Solver: single iteration
+      GC ->> GC: Calculate values on the edges
+      GC ->>+ COMM: transfer data to neighbours using MPI_Put_notify
+      GC ->> GC: Recalculate internal points
+      COMM -->>- GC: notification from the remote rank
+    end
+    GC ->>- APP: Fused kernel completion
+    APP ->>+ GC: start compute of local norm
+    GC ->>- APP: local norm value
+    APP ->>+ COMM: Collect global norm using MPI_Reduce
+    COMM ->>- APP: global norm value
+  end
+```
 
 ## Build the `Distributed Jacobian Solver SYCL/MPI` Sample
 

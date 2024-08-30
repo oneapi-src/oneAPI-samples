@@ -1,12 +1,12 @@
 /*==============================================================
- * Copyright © 2023 Intel Corporation
+ * Copyright © 2024 Intel Corporation
  *
  * SPDX-License-Identifier: MIT
  * ============================================================= */
 #ifndef MPIX_COMPAT_H
 #define MPIX_COMPAT_H
 
-#define MPI_ERR_INVALID_NOTOFOCATION MPI_ERR_OTHER
+#define MPI_ERR_INVALID_NOTIFICATION MPI_ERR_OTHER
 
 /* int MPI_Win_notify_attach(MPI_Win win, int notification_num, MPI_Info info); */
 #define MPI_Win_notify_attach(win, notification_num, info) \
