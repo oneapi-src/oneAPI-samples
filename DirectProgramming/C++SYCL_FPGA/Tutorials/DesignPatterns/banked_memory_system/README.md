@@ -6,7 +6,7 @@ This code sample demonstrates how to optimize a banked memory system.
 
 When compiling your design for FPGA architectures, the Intel® oneAPI DPC++/C++ Compiler can choose to implement your variables as registers, or as block memories. The details of this decision are better defined in the [Memory System code sample](DirectProgramming/C++SYCL_FPGA/Tutorials/Features/memory_attributes). However, an ill-formed memory layout can lead to negative impact on your system performance. 
 
-In this code sample, you will learn:
+This tutorial will teach you:
 
 * When to use a banked memory and how the compiler optimizes banked memory systems.
 
@@ -55,7 +55,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ## Key Implementation Details
 
-The sample design shows access to a 2-dimensional FIFO buffer, `array2d`, implemented in on-chip memory. The design performs a read-modify-write on this buffer in the `col` loop, which should have an initiation interval of 1. The fully-unrolled `row` loop accesses an entire dimension of the buffer in **the same clock cycle**.
+The design in this tutorial accesses a 2-dimensional FIFO buffer, `array2d`, which is implemented in on-chip memory. The design performs a read-modify-write on this buffer in the `col` loop, which is constrained to have an initiation interval of 1. The fully-unrolled `row` loops each access an entire dimension of the buffer in **the same clock cycle**. 
 
 ```c++
 struct NaiveKernel {
@@ -76,8 +76,8 @@ struct NaiveKernel {
 
       // Populate the output.
       #pragma unroll
-      for (int idx = 0; idx < kNumRows; ++idx) {
-        output[idx] = array2d[idx][col];
+      for (int row = 0; row < kNumRows; ++row) {
+        output[row] = array2d[row][col];
       }
       OutStream_NaiveKernel::write(output);
     }
@@ -85,7 +85,7 @@ struct NaiveKernel {
 };
 ```
 
-Each memory block has a read port and a write port, so the design can issue one read and one write in the same clock cycle. If the design tries to perform more than 2 accesses in the same clock cycle, arbitration hardware is inserted to resolve any possible access conflicts. If this arbitration hardware has to be used, your design's throughput will suffer. To guarantee the maximum possible throughput, try to avoid arbitration logic in your memory systems.
+Each memory block has a read port and a write port, so the design can issue one read and one write in the same clock cycle. If the design tries to perform more than 2 accesses in the same clock cycle, the compiler inserts arbitration hardware to allow any possible access conflicts to resolve at run-time. If this arbitration hardware has to be used, your design's throughput will suffer. To guarantee the maximum possible throughput, try to avoid arbitration logic in your memory systems.
 
 ### Naive Kernel
 
@@ -93,31 +93,31 @@ The desired memory access pattern in `NaiveKernel` is illustrated in the followi
 
 ![Naive Kernel Memory Access Pattern](./assets/access_pattern_naive.gif)
 
-In the `NaiveKernel`, the first array dimension (row) is accessed in an unrolled loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `array2d[0][col]` to `array2d[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they **should** happen in a single clock cycle. The  [kernel memory viewer report](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/kernel-memory-viewer.html) shows that the memory system for `array2d` has 8 banks. This report shows the stallable arbitration nodes that prevent the 4 loads and 5 stores from happening in a single clock cycle, and explains why the compiler decided to insert them.
+In the `NaiveKernel`, the first array dimension (row) is accessed in an unrolled loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `array2d[0][col]` to `array2d[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they **should** happen in a single clock cycle. Note that though the second `row` loop, which prepares the output to the `OutStream_NaiveKernel` pipe, also performs loads on each bank, since the values to be loaded are already accessed in the previous loop, these loads are shared. The [kernel memory viewer report](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/kernel-memory-viewer.html) shows that the memory system for `array2d` has 8 banks. This report shows the stallable load-store units (LSUs) that prevent the 4 loads and 5 stores from happening in a single clock cycle, and explains why the compiler decided to insert them.
 
 ![Stallable Arbitration Node](./assets/stallable_arbitration_node.png)
 
 #### Making sense of the bank-selection bits
 
-The *Details* pane of the Kernel Memory Viewer report shows that the bank bits are the second to the fourth least significant bits, $b_4$, $b_3$, $b_2$. This means that integers in every other column will be in a different memory bank.
+The *Details* pane of the Kernel Memory Viewer report shows that the bank bits are the second to the fourth least significant bits, $b_4$, $b_3$, $b_2$. This means that integers in every other column of `array2d` will be in a different memory bank.
 
 The following table shows how each address encodes its bank of the memory system. Note how the banks do not align with the rows.
 
-|                 | Address | Bank bits | Bank # |
-|-----------------|---------|-----------|--------|
-| array2d[0][0]   | 0x0000  | 0b000     | 0      |
-| array2d[0][1]   | 0x0004  | 0b001     | 1      |
-| array2d[0][2]   | 0x0008  | 0b010     | 2      |
-| ...             |         |           |        |
-| array2d[0][7]   | 0x001C  | 0b111     | 7      |
-| array2d[0][8]   | 0x0020  | 0b000     | 0      |
-| array2d[0][9]   | 0x0024  | 0b001     | 1      |
-| array2d[0][10]  | 0x0028  | 0b010     | 2      |
-| ...             |         |           |        |
-| array2d[0][15]  | 0x003C  | 0b111     | 7      |
-| ...             |         |           |        |
+|                | Address | Bank bits       | Bank # |
+|----------------|---------|-----------------|--------|
+| array2d[0][0]  | 0x0000  | 0b000**0 00**00 | 0      |
+| array2d[0][1]  | 0x0004  | 0b000**0 01**00 | 1      |
+| array2d[0][2]  | 0x0008  | 0b000**0 10**00 | 2      |
+| ...            |         |                 |        |
+| array2d[0][7]  | 0x001C  | 0b000**1 11**00 | 7      |
+| array2d[0][8]  | 0x0020  | 0b001**0 00**00 | 0      |
+| array2d[0][9]  | 0x0024  | 0b001**0 01**00 | 1      |
+| array2d[0][10] | 0x0028  | 0b001**0 10**00 | 2      |
+| ...            |         |                 |        |
+| array2d[0][15] | 0x003C  | 0b001**1 11**00 | 7      |
+| ...            |         |                 |        |
 
-Similarly, the following table shows which memory bank each logical array element gets assigned to. Observe that each access to one column of `array2d` accesses more than one memory bank. Since more than one load and more than one store store is scheduled to a particular memory bank in the same clock cycle, the compiler inserts arbitration logic along with stallable load-store units (LSUs). You can see this in the Kernel Memory Viewer in the optimization report.
+Similarly, the following table shows which memory bank each logical array element gets assigned to. Observe that each access to one column of `array2d` accesses more than one memory bank. Since more than one load and more than one store store is scheduled to a particular memory bank in the same clock cycle, the compiler inserts arbitration logic along with stallable arbitration logic, which was shown above in the FPGA optimization report.
 
 ![Naive Kernel Memory Layout](./assets/memory_system_naive.png)
 
@@ -144,25 +144,25 @@ The `OptimizedKernel` implements these changes, and executes the following memor
 
 Note that in the Kernel Memory Viewer, although the same bank bits ($b_4$, $b_3$, $b_2$) are used, this time, the memory partitioning is exactly what desired. We can deduce a memory layout using the same table:
 
-|              | Address | Bank bits | Bank # |
-|--------------|---------|-----------|--------|
-| array2d[0][0] | 0x0000  | 0b000     | 0      |
-| array2d[0][1] | 0x0004  | 0b001     | 1      |
-| array2d[0][2] | 0x0008  | 0b010     | 2      |
-| array2d[0][3] | 0x000C  | 0b011     | 3      |
-| array2d[0][4] | 0x0010  | 0b100     | 4      |
-| array2d[0][5] | 0x0014  | 0b010     | 5      |
-| array2d[0][6] | 0x0018  | 0b011     | 6      |
-| array2d[0][7] | 0x001C  | 0b100     | 7      |
-| array2d[1][0] | 0x0020  | 0b000     | 0      |
-| array2d[1][1] | 0x0024  | 0b001     | 1      |
-| ...           |         |           |        |
+|              | Address  | Bank bits         | Bank # |
+|--------------|----------|-------------------|--------|
+| array2d[0][0] | 0x0000  | 0b000**0 00**00   | 0      |
+| array2d[0][1] | 0x0004  | 0b000**0 01**00   | 1      |
+| array2d[0][2] | 0x0008  | 0b000**0 10**00   | 2      |
+| array2d[0][3] | 0x000C  | 0b000**0 11**00   | 3      |
+| array2d[0][4] | 0x0010  | 0b000**1 00**00   | 4      |
+| array2d[0][5] | 0x0014  | 0b000**1 01**00   | 5      |
+| array2d[0][6] | 0x0018  | 0b000**1 10**00   | 6      |
+| array2d[0][7] | 0x001C  | 0b000**1 11**00   | 7      |
+| array2d[1][0] | 0x0020  | 0b001**0 00**00   | 0      |
+| array2d[1][1] | 0x0024  | 0b001**0 01**00   | 1      |
+| ...           |         |                   |        |
 
 Because that we are only accessing the first 5 columns of `array2d`, that provides sufficient knowledge for the compiler to optimize out the unused memory banks - bank 5 to 7. As a result, we have the following memory layout:
 
 ![Optimized Kernel Memory Layout](./assets/memory_system_optimized.png)
 
-Review the memory access pattern above, we can easily find out that within each loop iteration, each of the memory banks is access precisely twice: 1 load and 1 store. Note that though the `idx` loop also performs loads on each bank, since the values to be loaded are already accessed in the `col` loop, these loads are shared. This time, the memory accesses do not surpass the physical limit of the memory block hardware, and thus, we have eliminated the memory bottleneck. In the meantime, observe that the Kernel Memory Viewer shows pipelined never-stall LSUs for our optimized memory system, and the compiler successfully optimized out the unused memory banks.
+Review the memory access pattern above, we can easily find out that within each loop iteration, each of the memory banks is access precisely twice: 1 load and 1 store. This time, the memory accesses do not surpass the physical limit of the memory block hardware, and thus, we have eliminated the memory bottleneck. In the meantime, observe that the Kernel Memory Viewer shows pipelined never-stall LSUs for our optimized memory system, and the compiler successfully optimized out the unused memory banks.
 
 ![Never-stall Node](./assets/memory_report_optimized.png)
 

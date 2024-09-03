@@ -19,8 +19,8 @@ struct NaiveKernel {
       array2d[kNumRows - 1][col] = input;
       
       #pragma unroll
-      for (int idx = 0; idx < kNumRows; ++idx) {
-        output[idx] = array2d[idx][col];
+      for (int row = 0; row < kNumRows; ++row) {
+        output[row] = array2d[row][col];
       }
       
       OutStream_NaiveKernel::write(output);
@@ -48,8 +48,8 @@ struct OptimizedKernel {
       array2d[row][4] = input;
       
       #pragma unroll
-      for (int idx = 0; idx < 5; ++idx) {
-        output[idx] = array2d[row][idx];
+      for (int col = 0; col < 5; ++col) {
+        output[col] = array2d[row][col];
       }
       
       OutStream_OptKernel::write(output);
