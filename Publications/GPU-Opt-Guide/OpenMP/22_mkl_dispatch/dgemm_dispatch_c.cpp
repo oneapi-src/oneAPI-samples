@@ -63,7 +63,7 @@ int main()
 
     #pragma omp target data map(to: A[0:m*k], B[0:k*n]) map(tofrom: C[0:m*n])
     {
-       #pragma omp target variant dispatch use_device_ptr(A, B, C)
+       #pragma omp dispatch
        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                    m, n, k, alpha, A, k, B, n, beta, C, n);
     }
