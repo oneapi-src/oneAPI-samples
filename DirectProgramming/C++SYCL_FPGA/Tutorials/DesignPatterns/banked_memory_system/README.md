@@ -6,7 +6,7 @@ This code sample demonstrates how to optimize a banked memory system.
 
 When compiling your design for FPGA architectures, the Intel® oneAPI DPC++/C++ Compiler can choose to implement your variables as registers, or as block memories. The details of this decision are better defined in the [Memory System code sample](DirectProgramming/C++SYCL_FPGA/Tutorials/Features/memory_attributes). However, an ill-formed memory layout can lead to negative impact on your system performance. 
 
-This tutorial will teach you:
+This tutorial teaches you:
 
 * When to use a banked memory and how the compiler optimizes banked memory systems.
 
@@ -39,7 +39,7 @@ You can also find more information about [troubleshooting build errors](/DirectP
 | Optimized for      | Description
 |:---                |:---
 | OS                 | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware           | Intel® Agilex® 7, Agilex® 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
+| Hardware           | Agilex™ 7, Agilex™ 5, Arria® 10, Stratix® 10, and Cyclone® V FPGAs
 | Software           | Intel® oneAPI DPC++/C++ Compiler
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
