@@ -5,7 +5,7 @@ This example design shows how to use an FPGA IP produced with the Intel® oneAPI
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware                          | This process applies to the [Cyclone® V SE SoC FPGAs](https://www.intel.com/content/www/us/en/products/details/fpga/cyclone/v/se.html), but the sample Intel® Quartus® Prime Standard Edition project targets the [Terasic DE1-SOC Development Board](https://de1-soc.terasic.com/)
+| Hardware                          | This process applies to the Cyclone® V line of FPGAs, but the sample Intel® Quartus® Prime Standard Edition project targets the [Terasic DE1-SOC Development Board](https://de1-soc.terasic.com/)
 | Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Standard Edition Version 22.3 or later
 | What you will learn               | How to integrate an RTL IP generated from a SYCL kernel with an Intel® Quartus® Prime Standard Edition
 | Time to complete                  | 1 hour
@@ -71,7 +71,7 @@ This tutorial is structured with four source code directories.
 
 ### Board-specific Considerations
 
-This design is intended to work with the [Terasic DE1-SOC Development Board](https://de1-soc.terasic.com/). These board-specific configurations are not guaranteed to work with different boards:
+This design is intended to work with the Terasic DE1-SOC Development Board. These board-specific configurations are not guaranteed to work with different boards:
 1. Choose `5CSEMA5F31C6` device to match the devkit
 2. Choose pin `PIN_AF14` to drive the `i_clk` signal
 3. Choose pin `PIN_V16` to drive the `fpga_led` signal
