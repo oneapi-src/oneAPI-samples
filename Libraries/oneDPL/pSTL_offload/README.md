@@ -110,13 +110,13 @@ When working with the command-line interface (CLI), you should configure the one
    Run `pSTL_offload-ParSTLTest` on GPU.
     ```
     $ export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
-    $ make
+    $ ./ParSTLTest
     $ unset ONEAPI_DEVICE_SELECTOR
     ```
    Run `pSTL_offload-ParSTLTest` on CPU.
     ```
     $ export ONEAPI_DEVICE_SELECTOR=*:cpu
-    $ make
+    $ ./ParSTLTest
     $ unset ONEAPI_DEVICE_SELECTOR
     ```
 
