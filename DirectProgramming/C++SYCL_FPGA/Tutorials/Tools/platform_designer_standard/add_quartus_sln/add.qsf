@@ -59,7 +59,6 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_location_assignment PIN_AA14 -to reset_button_n
 set_location_assignment PIN_AF14 -to i_clk
 set_location_assignment PIN_V16 -to fpga_led
 set_global_assignment -name ENABLE_OCT_DONE OFF
@@ -80,4 +79,7 @@ set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp1.stp
 set_global_assignment -name QSYS_FILE add_kernel_wrapper.qsys
 set_global_assignment -name SYSTEMVERILOG_FILE add.sv
 set_global_assignment -name SDC_FILE add.sdc
+set_location_assignment PIN_AA14 -to reset_button
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_instance_assignment -name IO_STANDARD LVDS -to i_clk
+set_location_assignment PIN_AF15 -to "i_clk(n)"

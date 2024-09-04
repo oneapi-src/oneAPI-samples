@@ -75,7 +75,7 @@ This design is intended to work with the Terasic DE1-SOC Development Board. Thes
 1. Choose `5CSEMA5F31C6` device to match the devkit
 2. Choose pin `PIN_AF14` to drive the `i_clk` signal
 3. Choose pin `PIN_V16` to drive the `fpga_led` signal
-4. Choose pin `PIN_AA14` to drive the `reset_button_n` signal
+4. Choose pin `PIN_AA14` to drive the `reset_button` signal
 
 ## Building the `platform_designer` Tutorial
 
@@ -208,11 +208,11 @@ Follow these steps to compile and test the design:
 
    ![](assets/start-analysis.png)
 
-6. Select pins for the `i_clk` and `reset_button_n` inputs and `fpga_led` output. The JTAG to Avalon® Master Bridge Intel FPGA IP handles the connection between your design and the JTAG pins on your board automatically.
+6. Select pins for the `i_clk` and `reset_button` inputs and `fpga_led` output. The JTAG to Avalon® Master Bridge Intel FPGA IP handles the connection between your design and the JTAG pins on your board automatically.
 
    1. Open the pin planner using `Assignments` > `Pin Planner` in the main Intel® Quartus® Prime GUI. In the bottom pane of the Pin Planner GUI, you will find a list of signals to assign pins to. Consult the data sheet for your board to choose an appropriate clock input. Double-click the *Location* cell and select a proper clock input. In this project, the `PIN_AF14` was chosen because it supplies a 50MHz clock signal.
 
-   2. Assign pins for the `fpga_led` and `reset_button_n` signals using the same method. Your final pin assignment should match with the following screenshot.
+   2. Assign pins for the `fpga_led` and `reset_button` signals using the same method. Your final pin assignment should match with the following screenshot.
 
       *Final pin planner configuration:*
 
@@ -242,7 +242,7 @@ Follow these steps to compile and test the design:
    > xcopy add_quartus\output_files\add.sof system_console /Y
    ```
 
-You may also build the SOF using the pre-generated Intel® Qupartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script. This script has been verified against the latest version of Quartus® Prime Standard Edition software available at the time of writing (23.1). The script and pre-generated project may not work with other versions of Quartus® Prime.
+You may also build the SOF using the pre-generated Intel® Quartus® Prime project in the `add_quartus_sln` directory by executing the included `build_system.tcl` script. This script has been verified against the latest version of Quartus® Prime Standard Edition software available at the time of writing (23.1). The script and pre-generated project may not work with other versions of Quartus® Prime.
 
    Linux:
 

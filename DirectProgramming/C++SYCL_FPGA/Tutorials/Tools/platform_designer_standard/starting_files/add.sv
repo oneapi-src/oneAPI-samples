@@ -3,18 +3,17 @@
 
 module add (
     input wire i_clk,
-    input wire reset_button_n,
+    input wire reset_button,
     output logic fpga_led
   );  
   
-  // invert reset_button_n and pipeline it a bit
   logic reset_button_d1;
   logic reset_button_d2;
   logic reset_button_d3;
   
   always @ (posedge i_clk)
   begin
-    reset_button_d1 <= reset_button_n;
+    reset_button_d1 <= reset_button;
     reset_button_d2 <= reset_button_d1;
     reset_button_d3 <= reset_button_d2;
   end
