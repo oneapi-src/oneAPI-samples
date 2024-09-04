@@ -14,12 +14,13 @@ The `pSTL_offload` sample demonstrates the offloading of C++ standard parallel a
 
 Offloading the C++ standard parallel STL code (par-unseq policy) to GPU and CPU  without any code changes when using the `-fsycl-pstl-offload` compiler option with Intel® DPC+/C+ compiler. It is an experimental feature of oneDPL.
 
-This folder contains two sample examples in the following folders:
+This folder contains three sample examples in the following folders:
 
 | Folder Name                           | Description
 |:---                                   |:---
 | `FileWordCount`                       | Counting Words in Files Example
 | `WordCount`                           | Counting Words generated Example
+| 'ParSTLTests'                         | Examples of Various STL Algorithms with Execution Policies
 
 > **Note**: For more information refer to [Get Started with Parallel STL](https://www.intel.com/content/www/us/en/developer/articles/guide/get-started-with-parallel-stl.html).
 
@@ -34,8 +35,8 @@ This folder contains two sample examples in the following folders:
 
 ## Key Implementation Details
 
-The example includes two samples `FileWordCount` and `WordCount` which count the number of words in files and the number of words generated respectively using the standard C++17 Parallel Algorithm [transfor_reduce](https://en.cppreference.com/w/cpp/algorithm/transform_reduce). This computation can be offloaded to the GPU device with the help of `-fsycl-pstl-offload` compiler option and standard <algorithm> header inclusion is explicitly required for PSTL Offload to work.
-FileWordCount sample also demonstrates the use of transform, copy, copy_if, and for_each standard C++17 Parallel Algorithms.
+The example includes three samples `FileWordCount` , `WordCount` and and ParSTLTests. FileWordCount and WordCount   counts the number of words  which count the number of words in files and the number of words generated respectively using the standard C++17 Parallel Algorithm [transfor_reduce](https://en.cppreference.com/w/cpp/algorithm/transform_reduce). ParSTLTests demonstrates the use of various STL algorithms with different execution policies (seq, par, par_unseq). It applies these algorithms to large datasets and prints the results for each execution. This computation can be offloaded to the GPU device with the help of `-fsycl-pstl-offload` compiler option and standard <algorithm> header inclusion is explicitly required for PSTL Offload to work.
+FileWordCount sample also demonstrates the use of transform, copy, copy_if, and for_each standard C++17 Parallel Algorithms. .  The ParSTLTests uses STL algorithms such as reduce, accumulate, find, copy_if, inclusive_scan, min_element, max_element, minmax_element, is_partitioned, lexicographical_compare, binary_search, lower_bound, and upper_bound. These algorithms perform tasks like summing elements, finding values, copying based on conditions, scanning, and searching within large datasets. 
 The `-fsycl-pstl-offload` option enables the offloading of C++ standard parallel algorithms that were only called with `std::execution::par_unseq` policy to a SYCL device. The offloaded algorithms are implemented via the oneAPI Data Parallel C++ Library (oneDPL). This option is an experimental feature. If the argument is not specified, the compiler offloads to the default SYCL device.
 The performance of memory allocations may be improved by using the `SYCL_PI_LEVEL_ZERO_USM_ALLOCATOR` environment variable.
 
@@ -106,7 +107,19 @@ When working with the command-line interface (CLI), you should configure the one
     $ make run_fwc1              //for PAR Policy
     $ unset ONEAPI_DEVICE_SELECTOR
     ```
-    
+   Run `pSTL_offload-ParSTLTest` on GPU.
+    ```
+    $ export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
+    $ make
+    $ unset ONEAPI_DEVICE_SELECTOR
+    ```
+   Run `pSTL_offload-ParSTLTest` on CPU.
+    ```
+    $ export ONEAPI_DEVICE_SELECTOR=*:cpu
+    $ make
+    $ unset ONEAPI_DEVICE_SELECTOR
+    ```
+
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with the `VERBOSE=1` argument:
