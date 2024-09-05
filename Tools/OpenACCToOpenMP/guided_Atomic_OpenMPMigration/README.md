@@ -4,7 +4,7 @@ This sample illustrates the read, write, update & capture clauses for the atomic
 
 | Area                  | Description
 |:---                       |:---
-| What you will learn       | Migrating and optimizing Atomic from OpenACC to OpenMP
+| What you will learn       | Migrating Atomic from OpenACC to OpenMP
 | Time to complete          | 15 minutes
 | Category                  | Concepts and Functionality
 
