@@ -1,8 +1,8 @@
 {
-  "guid": "293B78FB-40A3-4F81-A3CB-D2C3ED344AE1",
-  "name": "Platform Designer - Intel® Arria® 10 SX SoC Developer Kit",
+  "guid": "14A16C18-C4D5-43DC-A770-5EA36A1C60A0",
+  "name": "Platform Designer Standard - Cyclone® V SoC FPGAs",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Tools"],
-  "description": "An Intel® FPGA tutorial demonstrating how to export a reusable IP component to Intel® Quartus® Prime Pro and Platform Designer.",
+  "description": "An Intel® FPGA tutorial demonstrating how to export a reusable IP component to Intel® Quartus® Prime Standard and Platform Designer.",
   "toolchain": ["icpx"],
   "os": ["linux", "windows"],
   "targetDevice": ["FPGA"],
