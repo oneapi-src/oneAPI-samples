@@ -203,7 +203,9 @@ Follow these steps to compile and test the design:
       ![](assets/generate-hdl.png)
 
    7. Close Platform Designer. 
-   
+   > Upon closing the Platform Designer window, if you are prompted to add this IP to your Quartus project, please follow the instructions in the pop-up window by clicking `Project` > `Add/Remove Files in Project` to add the IP files.
+   > ![](assets/add-files-in-project.png)
+
 5. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
 
    ![](assets/start-analysis.png)
