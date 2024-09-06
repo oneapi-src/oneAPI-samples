@@ -1,24 +1,24 @@
 # `Platform Designer` Sample
 
-This example design shows how to use an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with the Intel® Quartus® Prime Pro Edition software suite. Please refer to [Platform Designer Standard](../platform_designer_standard/) code sample when targeting a Cyclone® V SoC Board.
+This example design shows how to use an FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) software suite.
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
-| Hardware                          | This process applies to any Intel® FPGA that is supported by the DPC++/C++ compiler, but the sample Intel® Quartus® Prime Pro Edition project targets the [Intel® Arria® 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
-| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition Version 22.3 or later
-| What you will learn               | How to integrate an RTL IP generated from a SYCL kernel with an Intel® Quartus® Prime Pro Edition project
+| Hardware                          | This process applies to any Intel® FPGA that is supported by the DPC++/C++ compiler, but the sample Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) project targets the [Intel® Arria® 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html)
+| Software                          | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) Version 22.3 or later
+| What you will learn               | How to integrate an RTL IP generated from a SYCL kernel with an Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) project
 | Time to complete                  | 1 hour
 
 > **Note**: Even though the Intel DPC++/C++ oneAPI compiler is enough to compile for emulation, generating reports and generating RTL, there are extra software requirements for the simulation flow and FPGA compiles.
 >
-> To use the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
+> To use the simulator flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) and one of the following simulators must be installed and accessible through your PATH:
 > - Questa*-Intel® FPGA Edition
 > - Questa*-Intel® FPGA Starter Edition
 > - Questa* Advanced Simulator
 > - ModelSim® SE
 >
-> To use the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
+> To use the hardware compile flow, Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) must be installed and accessible through your PATH.
 
 ## Prerequisites
 
@@ -118,7 +118,7 @@ Follow these steps to compile and test the design:
    > cd ..
    ```
 
-2. **From the same terminal**, prepare a project directory called `add_quartus` for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `starting_files` directory into it. Then launch the Intel® Quartus® Prime Pro Edition GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
+2. **From the same terminal**, prepare a project directory called `add_quartus` for the Intel® Quartus® Prime project and copy the source files `add.sv` and `jtag.sdc` from the `starting_files` directory into it. Then launch the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) GUI, and create a new Intel® Quartus® Prime project using the 'New Project' wizard.
 
    > **Note**: You may confirm your Intel® Quartus® Prime project settings by comparing with the sample Intel® Quartus® Prime project included in the `add_quartus_sln` directory.
 
@@ -300,10 +300,10 @@ You may also build the SOF using the pre-generated Intel® Qupartus® Prime proj
 ### Additional Documentation
 - [Intel® Arria® 10 SoC Golden System Reference Design](https://rocketboards.org/foswiki/Documentation/Arria10SoCGSRD) describes a reference design you can use with your Intel® Arria® 10 SX SoC Developer kit.
 - [Intel® Arria® 10 SX SoC Development Kit](https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/arria/10-sx.html) describes the Intel® Arria® 10 SX SoC Development kit in greater detail.
-- [Intel® FPGA Software Installation and Licensing](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/) describes how to license Intel® Quartus® Prime Pro Edition software.
-- [Intel® Quartus® Prime Pro Edition User Guide: Getting Started](https://www.intel.com/content/www/us/en/docs/programmable/683463/current/) introduces you to the Intel® Quartus® Prime Pro Edition software.
-- [Intel® Quartus® Prime Pro Edition User Guide: Platform Designer](https://www.intel.com/content/www/us/en/docs/programmable/683609/current/) describes the Intel® Platform Designer software.
-- [Intel® Quartus® Prime Pro Edition User Guide: Programmer](https://www.intel.com/content/www/us/en/docs/programmable/683039/current/) describes the Intel® Quartus® Prime Pro Programmer software.
+- [Intel® FPGA Software Installation and Licensing](https://www.intel.com/content/www/us/en/docs/programmable/683472/current/) describes how to license Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) software.
+- [Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) User Guide: Getting Started](https://www.intel.com/content/www/us/en/docs/programmable/683463/current/) introduces you to the Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) software.
+- [Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) User Guide: Platform Designer](https://www.intel.com/content/www/us/en/docs/programmable/683609/current/) describes the Intel® Platform Designer software.
+- [Intel® Quartus® Prime Pro Edition (or Standard Edition when targeting Cyclone® V) User Guide: Programmer](https://www.intel.com/content/www/us/en/docs/programmable/683039/current/) describes the Intel® Quartus® Prime Pro Programmer software.
 
 ## Running the Sample
 
