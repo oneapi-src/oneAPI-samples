@@ -77,7 +77,7 @@ This design is intended to work with the Terasic DE1-SOC Development Board. Thes
 3. Choose pin `PIN_V16` to drive the `fpga_led` signal
 4. Choose pin `PIN_AA14` to drive the `reset_button` signal
 
-## Building the `platform_designer` Tutorial
+## Building the `platform_designer_standard` Tutorial
 
 > **Note**: When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. 
 > Set up your CLI environment by sourcing the `setvars` script located in the root of your oneAPI installation every time you open a new terminal window. 
@@ -203,7 +203,7 @@ Follow these steps to compile and test the design:
       ![](assets/generate-hdl.png)
 
    7. Close Platform Designer. 
-   > Upon closing the Platform Designer window, if you are prompted to add this IP to your Quartus project, please follow the instructions in the pop-up window by clicking `Project` > `Add/Remove Files in Project` to add the IP files.
+   >  **Note**: Upon closing the Platform Designer window, if you are prompted to add this IP to your Quartus project, please follow the instructions in the pop-up window by clicking `Project` > `Add/Remove Files in Project` to add the IP files.
    > ![](assets/add-files-in-project.png)
 
 5. In the Intel® Quartus® Prime window, run Analysis and Elaboration by clicking 'Start Analysis and Elaboration'.
