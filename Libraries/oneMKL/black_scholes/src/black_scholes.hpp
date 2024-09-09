@@ -109,8 +109,13 @@ void BlackScholes<DATA_TYPE>::check()
             std::printf("L1 norm: %E\n", errorVal = sum_delta / sum_ref);
         else
             std::printf("Avg. diff: %E\n", errorVal = sum_delta / opt_n);
-        std::printf((errorVal < 5e-4) ? "TEST PASSED\n" : "TEST FAILED\n");
-
+        if(errorVal < 5e-4){
+            std::printf("TEST PASSED\n");
+        }
+        else{
+            std::printf("TEST FAILED\n");
+            exit(1);
+        }
     }
 }
 
