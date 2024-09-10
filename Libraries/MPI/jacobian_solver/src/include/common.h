@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//const int Nx = 16384; /* Grid size */
-const int Nx = 1024; /* Grid size */
+const int Nx = 16384; /* Grid size */
 const int Ny = Nx;
 const int Niter = 100; /* Nuber of algorithm iterations */
 const int NormIteration = 10; /* Recaluculate norm after given number of iterations. 0 to disable norm calculation */

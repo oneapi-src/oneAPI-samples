@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
                  *
                  * NOTE: For simplification and unification across samples we use single team
                  *       to avoid extra syncronization across teams in the future */ 
-                #pragma omp target teams distribute parallel for simd is_device_ptr(in, out) num_teams(1)
+                #pragma omp target teams distribute parallel for is_device_ptr(in, out) num_teams(1)
                 /* Calculate values on borders to initiate communications early */
                 for (int column = 0; column < my_subarray.x_size; ++column) {
                     RECALCULATE_POINT(out, in, column, 0, row_size);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                 }
 
                 /* Offload compute loop to the device */
-                #pragma omp target teams distribute parallel for simd is_device_ptr(in, out) collapse(2) num_teams(1)
+                #pragma omp target teams distribute parallel for is_device_ptr(in, out) collapse(2) num_teams(1)
                 /* Recalculate internal points in parallel with communication */
                 for (int row = 1; row < my_subarray.y_size - 1; ++row) {
                     for (int column = 0; column < my_subarray.x_size; ++column) {
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
                 double result_norm = 0.0;
                 double norm = 0.0;
 
-                #pragma omp target teams distribute parallel for simd is_device_ptr(b1, b2) reduction(+:norm) collapse(2)
+                #pragma omp target teams distribute parallel for is_device_ptr(b1, b2) reduction(+:norm) collapse(2)
                 for (int row = 0; row < my_subarray.y_size; ++row) {
                     for (int column = 0; column < my_subarray.x_size; ++column) {
                         int idx = XY_2_IDX(column, row, row_size);

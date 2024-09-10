@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
     double *buffs[2] = { NULL, NULL };
     MPI_Win win[2] = { MPI_WIN_NULL, MPI_WIN_NULL };
 
+    /* Initialization of runtime and initial state of data */
+    MPI_Init(&argc, &argv);
     /* Initialize subarray owned by current process
      * and create RMA-windows for MPI-3 one-sided communications.
      *  - For this sample, we use host memory for buffers and windows.
