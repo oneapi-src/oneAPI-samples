@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     InitSubarryAndWindows(&my_subarray, buffs, win, "device", true);
 
     /* Enable notification counters */
-    MPI_Win_notify_attach(win[0], 1, MPI_INFO_NULL);
-    MPI_Win_notify_attach(win[1], 1, MPI_INFO_NULL);
+    MPI_Win_notify_set_num(win[0], MPI_INFO_NULL, 1);
+    MPI_Win_notify_set_num(win[1], MPI_INFO_NULL, 1);
     /* Start RMA exposure epoch */
     MPI_Win_lock_all(0, win[0]);
     MPI_Win_lock_all(0, win[1]);
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
     /* Timestamp start time to measure overall execution time */
     BEGIN_PROFILING
     /* Main computation loop offloaded to the device:
-     * "#pragma omp target data clauser" map the data to the device memory for a following code region*/
-    #pragma omp target data map(to: Niter, my_subarray, win[0:2], NormIteration, iter_counter_step) use_device_ptr(b1, b2)
+     * "#pragma omp target data" maps the data to the device memory for a following code region*/
+    #pragma omp target data map(to: my_subarray, win[0:2], iterations_batch, iter_counter_step) use_device_ptr(b1, b2)
     {
         for (int passed_iters = 0; passed_iters < Niter; passed_iters += iterations_batch) {
             /* Offload compute loop to the device:
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
              *
              * NOTE: For simplification and unification across samples we use single team
              *       to avoid extra syncronization across teams in the future */
-            #pragma omp target teams num_teams(1)
+            #pragma omp target thread_limit(1024)
             {
                 for (int k = 0; k < iterations_batch; ++k)
                 {
@@ -94,14 +94,15 @@ int main(int argc, char *argv[])
                      *  To be completely standard compliant, application should check memory model
                      *  and call MPI_Win_sync(prev_win) in case of MPI_WIN_SEPARATE mode after notification has been recieved.
                      *  Although, IntelMPI uses MPI_WIN_UNIFIED memory model, so this call could be omitted.
-                     */ 
+                     */
                     MPI_Count c = 0;
+                    MPI_Win_flush_local_all(current_win);
                     while (c < (iter_counter_step*i)) {
                         MPI_Win_notify_get_value(prev_win, 0, &c);
                     }
 
                     /* Start parallel loop on the device, to accelerate a calculation */
-                    #pragma omp parallel for simd
+                    #pragma omp parallel for
                     /* Calculate values on borders to initiate communications early */
                     for (int column = 0; column < my_subarray.x_size;  column ++) {
                         RECALCULATE_POINT(out, in, column, 0, row_size);
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
 
 
                     /* Start parallel loop on the device, to accelerate a calculation */
-                    #pragma omp parallel for simd collapse(2)
+                    #pragma omp parallel for collapse(2)
                     /* Recalculate internal points in parallel with communication */
                     for (int row = 1; row < my_subarray.y_size - 1; ++row) {
                         for (int column = 0; column < my_subarray.x_size; ++column) {

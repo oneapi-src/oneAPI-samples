@@ -9,12 +9,13 @@
 #define MPI_ERR_INVALID_NOTIFICATION MPI_ERR_OTHER
 
 /* int MPI_Win_notify_attach(MPI_Win win, int notification_num, MPI_Info info); */
-#define MPI_Win_notify_attach(win, notification_num, info) \
-            MPIX_Win_create_notify(win, notification_num)
-
-/* int MPI_Win_notify_detach(MPI_Win win); */
-#define MPI_Win_notify_detach(win) \
-            MPIX_Win_free_notify(win)
+static inline int MPI_Win_notify_set_num(MPI_Win win, MPI_Info info, int notification_num)
+{
+    if (notification_num == 0) {
+        return MPIX_Win_free_notify(win);
+    }
+    return MPIX_Win_create_notify(win, notification_num);
+}
 
 /* int MPI_Win_notify_get_value(MPI_Win win, int notification_idx, MPI_Count *value) */
 #define MPI_Win_notify_get_value(win, notification_idx, value) \

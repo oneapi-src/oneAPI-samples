@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "MPI_THREAD_MULTIPLE is required for this sample\n");
         MPI_Abort(MPI_COMM_WORLD, -1);
     }
-      
+
     /* Initialize subarray owned by current process
      * and create RMA-windows for MPI-3 one-sided communications.
      *  - For this sample, we use GPU memory for buffers and windows.
@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
 #endif
 
     /* Enable notification counters */
-    MPI_Win_notify_attach(win[0], 1, MPI_INFO_NULL);
-    MPI_Win_notify_attach(win[1], 1, MPI_INFO_NULL);
+    MPI_Win_notify_set_num(win[0], MPI_INFO_NULL, 1);
+    MPI_Win_notify_set_num(win[1], MPI_INFO_NULL, 1);
     /* Start RMA exposure epoch */
     MPI_Win_lock_all(0, win[0]);
     MPI_Win_lock_all(0, win[1]);
@@ -141,6 +141,7 @@ int main(int argc, char *argv[])
                     item.barrier(sycl::access::fence_space::global_space);
                     if (id == 0) {
                         MPI_Count c = 0;
+                        MPI_Win_flush_all(current_win);
                         /* Wait till the moment counter would reach expected value */
                         while (c < c_expected) MPI_Win_notify_get_value(current_win, 0, &c);
                         /* Reset counter value to 0 */

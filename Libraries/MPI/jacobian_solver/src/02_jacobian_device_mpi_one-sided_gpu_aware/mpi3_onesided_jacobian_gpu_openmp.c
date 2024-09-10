@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
     /* Timestamp start time to measure overall execution time */
     BEGIN_PROFILING
     /* Main computation loop partly offloaded to the device:
-     * "#pragma omp target data clauser" map the data to the device memory for a following code region*/
-    #pragma omp target data map(to: Niter, my_subarray, win[0:2], NormIteration) use_device_ptr(b1,b2)
+     * "#pragma omp target data" maps the data to the device memory for a following code region*/
+    #pragma omp target data map(to: my_subarray) use_device_ptr(b1,b2)
     {
         for (int passed_iters = 0; passed_iters < Niter; passed_iters += iterations_batch) {
             /* Perfrom a batch of iterations before checking norm */
@@ -60,11 +60,13 @@ int main(int argc, char *argv[])
                 MPI_Win current_win = win[(i + 1) % 2];
 
                 /* Offload compute loop to the device:
-                 * "#pragma omp target teams distribute parallel for" offloads the loop to the device 
+                 * "#pragma omp target" offloads the code to the device 
+                 * "#pragma omp parallel for" parallelizes the loop on the device using single team
                  *
                  * NOTE: For simplification and unification across samples we use single team
                  *       to avoid extra syncronization across teams in the future */ 
-                #pragma omp target teams distribute parallel for is_device_ptr(in, out) num_teams(1)
+                #pragma omp target is_device_ptr(in, out) thread_limit(1024)
+                #pragma omp parallel loop
                 /* Calculate values on borders to initiate communications early */
                 for (int column = 0; column < my_subarray.x_size; ++column) {
                     RECALCULATE_POINT(out, in, column, 0, row_size);
@@ -87,7 +89,8 @@ int main(int argc, char *argv[])
                 }
 
                 /* Offload compute loop to the device */
-                #pragma omp target teams distribute parallel for is_device_ptr(in, out) collapse(2) num_teams(1)
+                #pragma omp target is_device_ptr(in, out) thread_limit(1024)
+                #pragma omp parallel loop collapse(2)
                 /* Recalculate internal points in parallel with communication */
                 for (int row = 1; row < my_subarray.y_size - 1; ++row) {
                     for (int column = 0; column < my_subarray.x_size; ++column) {
