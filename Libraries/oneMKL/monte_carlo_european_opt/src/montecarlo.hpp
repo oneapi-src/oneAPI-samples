@@ -90,11 +90,11 @@ const MonteCarlo_vector& h_StockPrice, const MonteCarlo_vector& h_OptionStrike, 
     std::cout << "L1_Norm          = "<< L1_norm << std::endl;
     std::cout << "Average RESERVE  = "<< sum_reserve << std::endl;
     std::cout << "Max Error        = "<< max_delta << std::endl;
-    if(sum_reserve > 1.0f){
-        std::cout << "TEST PASSED!" << std::endl;
+    if(sum_reserve > 1.0f) {
+        std::cout << "TEST PASSED" << std::endl;
     }
     else{
-        std::cout << "TEST FAILED!" << std::endl;
+        std::cout << "TEST FAILED" << std::endl;
         exit(1);
     }
 }
