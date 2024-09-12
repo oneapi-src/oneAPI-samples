@@ -118,9 +118,9 @@ bool IsRankDeficient(std::vector<std::vector<T>> &input_matrix) {
     }
   }
 
-  for (int row = 0; row < num_rows; ++row) {
+  for (int row = 0; row < min_dim; ++row) {
     bool all_zeroes = true;
-    for (int col = 0; col < num_cols; ++col) {
+    for (int col = 0; col < min_dim; ++col) {
       if (std::abs(temp_matrix[row][col]) > 1e-6) {
         all_zeroes = false;
         break;

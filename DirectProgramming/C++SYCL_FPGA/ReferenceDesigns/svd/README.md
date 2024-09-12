@@ -63,13 +63,14 @@ You can also find more information about [troubleshooting build errors](/DirectP
 
 ### Performance
 
-Performance results are based on testing as of April 12, 2024 with fixed 55 [QR iterations](../pca/README.md#eigen-values-and-eigen-vectors-computation).
+Performance results are based on testing as of September 12, 2024 with fixed 55 [QR iterations](../pca/README.md#eigen-values-and-eigen-vectors-computation).
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
-| Device                                            | Throughput
-|:---                                               |:---
-| Silicom FPGA SmartNIC N6011                       | 987 matrices/s for matrices of size 32 x 32
+| Device                      | Input size (Rows x Cols) | Throughput     |
+|-----------------------------|--------------------------|----------------|
+| Silicom FPGA SmartNIC N6011 | 32 x 32                  | 987 matrices/s |
+| Silicom FPGA SmartNIC N6011 | 128 x 32                 | 560 matrices/s |
 
 ## Key Implementation Details
 This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
