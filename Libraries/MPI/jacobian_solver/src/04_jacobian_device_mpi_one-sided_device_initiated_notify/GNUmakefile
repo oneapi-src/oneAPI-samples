@@ -5,7 +5,7 @@ CXXFLAGS = -fsycl -Wall -Wformat-security -Werror=format-security
 # Use icx from DPC++ oneAPI toolkit to compile. Please source DPCPP's vars.sh before compilation.
 CC       = mpiicx
 CXX      = mpiicpx
-example  = mpi3_onesided_jacobian_gpu_omp_device_initiated_notify mpi3_onesided_jacobian_gpu_sycl_device_initiated_notify
+example  = mpi3_onesided_jacobian_gpu_omp_device_initiated_notify mpi3_onesided_jacobian_gpu_sycl_device_initiated_notify mpi3_onesided_jacobian_cpu_notify
 
 all: CFLAGS += -O2
 all: CXXFLAGS += -O2
