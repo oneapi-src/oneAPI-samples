@@ -1,4 +1,4 @@
-# `Distributed Jacobian Solver SYCL/MPI` Sample
+# `Distributed Jacobian Solver SYCL/MPI` sample
 
 The `Distributed Jacobian Solver SYCL/MPI` demonstrates using GPU-aware MPI-3, one-sided communications available in the Intel® MPI Library.
 
@@ -13,27 +13,27 @@ see the [Intel® MPI Library Documentation](https://www.intel.com/content/www/us
 
 ## Purpose
 
-The sample demonstrates an actual use case (Jacobian solver) for MPI-3 one-sided communications allowing to overlap compute kernel and communications. The sample illustrated how to use host- and device-initiated onesided communication with SYCL kernels.
+The sample demonstrates an actual use case (Jacobian solver) for MPI-3 one-sided communications allowing to overlap compute kernel and communications. The sample illustrates how to use host- and device-initiated one-sided communication with SYCL kernels.
 
 ## Prerequisites
 
 | Optimized for    | Description
 |:---              |:---
 | OS               | Linux*
-| Hardware         | 4th Generation Intel® Xeon® Scalable Processors <br> Intel® Data Center GPU Max Series
+| Hardware         | 4th Generation Intel® Xeon® Scalable processors <br> Intel® Data Center GPU Max Series
 | Software         | Intel® MPI Library 2021.11
 
 ## Key Implementation Details
 
-This sample implements a well-known distributed 2D Jacobian solver with 1D data distribution. The sampple uses Intel® MPI [GPU Support](https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/current/gpu-support.html). 
+This sample implements a well-known distributed 2D Jacobi solver with 1D data distribution. The sample uses Intel® MPI [GPU Support](https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/current/gpu-support.html). 
 
 The sample has three variants demonstrating different approaches to the Jacobi solver.
 
 ### `Data layout description`
 
 The data layout is a 2D grid of size (Nx+2) x (Ny+2), distributed across MPI processes along the Y-axis.
-Where first and last row/column areconstant and used for boundary conditions.
-Each porcess handles Nx x (Ny/comm_size) subarray. 
+The first and last rows/columns are constant and used for boundary conditions.
+Each process handles Nx x (Ny/comm_size) subarray. 
 
 ```
              Left border                                Right border  
@@ -46,14 +46,14 @@ Each porcess handles Nx x (Ny/comm_size) subarray.
                  | |                 |                        | |
                  | |                 |                        | |
                  | |                 |                        | |                    ------------------------------------------------
-                 | |                 |                        | |                    |X|                                          |X| <- Last row of of i-1 subarray from previous iterarion used for calculation
+                 | |                 |                        | |                    |X|                                          |X| <- Last row of i-1 subarray from the previous iteration used for calculation
                  | |                 |                        | |....................------------------------------------------------
                  | |<--------- Nx x Ny array ---------------->| |                    | |                                          | |
                  | |                 |                        | |                    | |          i-th process subarray           | |
                  | |                 |                        | |                    | |            Nx x (Ny/comm_size)           | |
                  | |                 |                        | |                    | |                                          | |
                  | |                 |                        | |....................------------------------------------------------
-                 | |                 |                        | |                    |X|                                          |X| <- First row of of i+1 subarray from previous iterarion used for calculation
+                 | |                 |                        | |                    |X|                                          |X| <- First row of i+1 subarray from the previous iteration used for calculation
                  | |                 V                        | |                    ------------------------------------------------
                  ------------------------------------------------
  Bottom border-> |X|                                          |X|
@@ -62,9 +62,9 @@ Each porcess handles Nx x (Ny/comm_size) subarray.
 
 ### `01_jacobian_host_mpi_one-sided`
 
-This program demonstrates baseline implementation of the distributed Jacobian solver. In this sample you will see the basic idea of the algorithm, as well as how to implement the halo-exchange using MPI-3 one-sided primitives required for this solver.
+This program demonstrates a baseline implementation of the distributed Jacobian solver. In this sample you will see the basic idea of the algorithm, as well as how to implement the halo-exchange using MPI-3 one-sided primitives required for this solver.
 
-The solver is an iterative algorithm where each iteration of the program recalculates border values first, then border values transfer to neighbor processes, which are used in next iteration of algorithm. Each process recalculate internal points values for the next iteration in parallel with communication. After a number of iterations, the algorithm reports NORM values for validation purposes.
+The solver is an iterative algorithm where each iteration of the program recalculates border values first, then border values transfer to neighbor processes, which are used in next iteration of algorithm. Each process recalculates internal point values for the next iteration in parallel with communication. After a number of iterations, the algorithm reports norm values for validation purposes.
 
 ```mermaid
 sequenceDiagram
@@ -73,7 +73,7 @@ sequenceDiagram
   participant COMM as Communication
   participant GC as GPU compute
 
-  loop Solever: batch iterations
+  loop Solver: batch iterations
     loop Solver: single iteration
       APP ->>+ HC: Calculate values on the edges
       HC ->>- APP: edge values
@@ -82,7 +82,7 @@ sequenceDiagram
       HC ->> HC: Main compute loop
       HC ->>- APP: Updated internal points
       APP ->> COMM: RMA window synchronization
-      COMM ->>- APP: RMA syncronization completion
+      COMM ->>- APP: RMA synchronization completion
     end
     APP ->>+ HC: start compute of local norm
     HC ->>- APP: local norm value
@@ -93,7 +93,7 @@ sequenceDiagram
 
 ### `02_jacobian_device_mpi_one-sided_gpu_aware`
 
-This program demonstrates how the same algorithm can be modified to add GPU offload capability. The program comes in two versions: OpenMP and SYCL. The program illustrates how device memory can be passed directly to MPI one-sided primitives. In particular, device memory may be passed to `MPI_Win_create` call to create an RMA Window placed on a device. Also, aside from a device RMA-window placement, device memory can be passed to `MPI_Put`/`MPI_Get` primitives as a target or origin buffer.
+This program demonstrates how the same algorithm can be modified to add GPU offload capability. The program comes in two versions: OpenMP and SYCL. The program illustrates how device memory can be passed directly to MPI one-sided primitives. In particular, device memory can be passed to `MPI_Win_create` call to create an RMA Window placed on a device. Also, aside from a device RMA-window placement, device memory can be passed to `MPI_Put`/`MPI_Get` primitives as a target or origin buffer.
 
 ```mermaid
 sequenceDiagram
@@ -102,7 +102,7 @@ sequenceDiagram
   participant GC as GPU compute
   participant COMM as Communication
 
-  loop Solever: batch iterations
+  loop Solver: batch iterations
     loop Solver: single iteration
       APP ->>+ GC: Calculate values on the edges
       GC ->>- APP: edge values
@@ -111,7 +111,7 @@ sequenceDiagram
       GC ->> GC: Main compute loop
       GC ->>- APP: Updated internal points
       APP ->> COMM: RMA window synchronization
-      COMM ->>- APP: RMA syncronization completion
+      COMM ->>- APP: RMA synchronization completion
     end
     APP ->>+ GC: start compute of local norm
     GC ->>- APP: local norm value
@@ -120,7 +120,7 @@ sequenceDiagram
   end
 ```
 
-> **Note**: Only contigouous MPI datatypes are supported.
+> **Note**: Only contiguous MPI datatypes are supported.
 
 ### `03_jacobian_device_mpi_one-sided_device_initiated`
 
@@ -149,7 +149,7 @@ sequenceDiagram
       GC ->>+ COMM: transfer data to neighbours using MPI_Put
       GC ->> GC: Recalculate internal points
       GC ->> COMM: RMA window synchronization
-      COMM ->>- GC: RMA syncronization completion
+      COMM ->>- GC: RMA synchronization completion
     end
     GC ->>- APP: Fused kernel completion
     APP ->>+ GC: start compute of local norm
@@ -162,7 +162,14 @@ sequenceDiagram
 
 ### `04_jacobian_device_mpi_one-sided_device_initiated_notify`
 
-This program demonstrates how to initiate one-sided communications directly from the offloaded code. The Intel® MPI Library allows calls to some communication primitives directly from the offloaded code (SYCL or OpenMP). In contrast to prior example, this one demonstrates usage of one-sided communications with notification (extention of MPI-4.1 standard).
+---
+**NOTE**
+Intel® MPI Library 2021.13 is minimaly required version to run this sample.
+Intel® MPI Library 2021.14 or later is recommended version to run this sample.
+
+---
+
+This program demonstrates how to initiate one-sided communications directly from the offloaded code. The Intel® MPI Library allows calls to some communication primitives directly from the offloaded code (SYCL or OpenMP). In contrast to the prior example, this one demonstrates the usage of one-sided communications with notification (extension of MPI-4.1 standard).
 
 To enable device-initiated communications, you must set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
 
@@ -239,9 +246,9 @@ If you receive an error message, troubleshoot the problem using the Diagnostics 
    mpirun -n 2 -genv I_MPI_OFFLOAD=1 ./src/02_jacobian_device_mpi_one-sided_gpu_aware/mpi3_onesided_jacobian_gpu_sycl
    ```
 
-Device-initiated communications requires that you set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
+Device-initiated communications require to set an extra environment variable: `I_MPI_OFFLOAD_ONESIDED_DEVICE_INITIATED=1`.
 
-If everything worked, the Jacobi solver started an iterative computation for defined number of iterations. By default, the sample reports NORM values after every 10 computation iterations and reports the overall solver time at the end.
+If everything worked, the Jacobi solver started an iterative computation for a defined number of iterations. By default, the sample reports norm values after every 10 computation iterations and reports the overall solver time at the end.
 
 ## Example Output
 

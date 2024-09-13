@@ -16,26 +16,26 @@ int main(int argc, char *argv[])
 {
     double t_start;
     struct subarray my_subarray = { };
-    /* Here we uses double buffering to allow overlap of compute and communication phase.
-     * Odd iterations use buffs[0] as input and buffs[1] as output and vice versa.
-     * Same scheme is used for MPI_Win objects.
+    /* Here we use double buffering to allow the overlap of the compute and communication phases.
+     * Odd iterations use buffs[0] as input and buffs[1] as output, and vice versa.
+     * The same scheme is used for MPI_Win objects.
      */
     double *buffs[2] = { NULL, NULL };
     MPI_Win win[2] = { MPI_WIN_NULL, MPI_WIN_NULL };
 
-    /* Initialization of runtime and initial state of data */
+    /* Initialization of runtime and initial state of data. */
     MPI_Init(&argc, &argv);
 
-    /* Initialize subarray owned by current process
-     * and create RMA-windows for MPI-3 one-sided communications.
+    /* Initialize the subarray owned by the current process
+     * and create RMA windows for MPI-3 one-sided communications.
      *  - For this sample, we use GPU memory for buffers and windows.
-     *  - Sample uses MPI_Win_fence for synchronization.
+     *  - This sample uses MPI_Win_fence for synchronization.
      */
     InitSubarryAndWindows(&my_subarray, buffs, win, "device", false);
-    /* Create SYCL GPU queue */
+    /* Create SYCL GPU queue. */
     sycl::queue q(sycl::gpu_selector_v);
-    /* NOTE: For simplification and unification across samples we use single workgroup
-     *       to avoid extra syncronization across workgroups in the future.
+    /* NOTE: For simplification and unification across samples, we use a single workgroup
+     *       to avoid extra synchronization across workgroups in the future.
      */
 #ifdef GROUP_SIZE_DEFAULT
     int work_group_size = GROUP_SIZE_DEFAULT;
@@ -44,15 +44,15 @@ int main(int argc, char *argv[])
       q.get_device().get_info<sycl::info::device::max_work_group_size>();
 #endif
 
-    /* Start RMA exposure epoch */
+    /* Start the RMA exposure epoch. */
     MPI_Win_fence(0, win[0]);
     MPI_Win_fence(0, win[1]);
     
     const int row_size = ROW_SIZE(my_subarray);
-    /* Amount of iterations to perform between norm calculations */
+    /* Number of iterations to perform between norm calculations. */
     const int iterations_batch = (NormIteration <= 0) ? Niter : NormIteration;
 
-    /* Timestamp start time to measure overall execution time */
+    /* Timestamp the start time to measure overall execution time. */
     BEGIN_PROFILING
     for (int passed_iters = 0; passed_iters < Niter; passed_iters += iterations_batch) {
         for (int k = 0; k < iterations_batch; ++k) {
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
             double *in = buffs[i % 2];
             double *out = buffs[(1 + i) % 2];
 
-            /* Calculate values on borders to initiate communications early */
+            /* Calculate values on the borders to initiate communications early. */
             q.submit([&](auto & h) {
                 h.parallel_for(sycl::nd_range<1>(work_group_size, work_group_size),
                                 [=](sycl::nd_item<1> item) {
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
                 });
             }).wait(); 
 
-            /* Perform halo-exchange with neighbours */
+            /* Perform halo-exchange with neighbors. */
             if (my_subarray.up_neighbour != MPI_PROC_NULL) {
                 int idx = XY_2_IDX(0, 0, row_size);
                 MPI_Put(&out[idx], my_subarray.x_size, MPI_DOUBLE,
@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
                         my_subarray.x_size, MPI_DOUBLE, current_win);
             }
 
-            /* Recalculate internal points in parallel with communication */
+            /* Recalculate internal points in parallel with communication. */
             q.submit([&](auto & h) {
                 h.parallel_for(sycl::nd_range<1>(work_group_size, work_group_size),
                                 [=](sycl::nd_item<1> item) {
                     int id = item.get_local_id();
 
-                    /* Recalculate internal points in parallel with comunications */
+                    /* Recalculate internal points in parallel with communications. */
                     for (int row = 1; row < my_subarray.y_size - 1; ++row) {
                         int column = 0;
                         for (; (column + work_group_size) < my_subarray.x_size; 
@@ -117,11 +117,11 @@ int main(int argc, char *argv[])
                 });
             }).wait();
 
-            /* Ensure all communications are complete before next iteration */
+            /* Ensure all communications are complete before the next iteration. */
             MPI_Win_fence(0, current_win);
         }
 
-        /* Calculate norm value after given number of iterations */
+        /* Calculate the norm value after the given number of iterations. */
         if (NormIteration > 0) {
             double result_norm = 0.0;
             double norm = 0.0;
@@ -146,10 +146,10 @@ int main(int argc, char *argv[])
             }
         }
     }
-    /* Timestamp end time to measure overall execution time and report average compute time */
+    /* Timestamp the end time to measure overall execution time and report average compute time. */
     END_PROFILING
 
-    /* Close RMA exposure epoch and free resources */
+    /* Close the RMA exposure epoch and free resources. */
     MPI_Win_fence(0, win[0]);
     MPI_Win_fence(0, win[1]);
     MPI_Win_free(&win[1]);
