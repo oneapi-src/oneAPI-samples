@@ -64,25 +64,10 @@ int main(int argc, char *argv[])
         for (int k = 0; k < iterations_batch; ++k)
         {
             int i = passed_iters + k;
-            MPI_Win prev_win = win[i % 2];
             MPI_Win current_win = win[(i + 1) % 2];
             double *in = buffs[i % 2];
             double *out = buffs[(1 + i) % 2];
 
-            /* Wait for the notification counter to reach the expected value:
-             * here we check that communication operations issued by peers on the previous iteration are completed
-             * and data is ready for the next iteration.
-             * 
-             * NOTE:
-             * To be completely standard compliant, the application should check the memory model
-             * and call MPI_Win_sync(prev_win) in case of MPI_WIN_SEPARATE mode after the notification has been received.
-             * Although, IntelMPI uses the MPI_WIN_UNIFIED memory model, so this call could be omitted.
-             */
-            MPI_Count c = 0;
-            MPI_Win_flush_local_all(current_win);
-            while (c < (iter_counter_step * i)) {
-                MPI_Win_notify_get_value(prev_win, 0, &c);
-            }
 
             /* Calculate values on the borders to initiate communications early */
             for (int column = 0; column < my_subarray.x_size; column++) {
@@ -119,6 +104,22 @@ int main(int argc, char *argv[])
                     RECALCULATE_POINT(out, in, column, row, row_size);
                 }
             }
+
+            /* Wait for the notification counter to reach the expected value:
+             * here we check that communication operations issued by peers on the previous iteration are completed
+             * and data is ready for the next iteration.
+             * 
+             * NOTE:
+             * To be completely standard compliant, the application should check the memory model
+             * and call MPI_Win_sync(prev_win) in case of MPI_WIN_SEPARATE mode after the notification has been received.
+             * Although, IntelMPI uses the MPI_WIN_UNIFIED memory model, so this call could be omitted.
+             */
+            MPI_Count c = 0;
+            MPI_Win_flush_all(current_win);
+            while (c < iter_counter_step) {
+                MPI_Win_notify_get_value(current_win, 0, &c);
+            }
+            MPI_Win_notify_set_value(current_win, 0, 0);
         }
 
         /* Calculate the norm value after the given number of iterations */
