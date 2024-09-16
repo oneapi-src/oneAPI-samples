@@ -71,6 +71,7 @@ Performance results are based on testing as of September 12, 2024 with fixed 55 
 |-----------------------------|--------------------------|----------------|
 | Silicom FPGA SmartNIC N6011 | 32 x 32                  | 987 matrices/s |
 | Silicom FPGA SmartNIC N6011 | 128 x 32                 | 560 matrices/s |
+| Silicom FPGA SmartNIC N6011 | 128 x 16                 | 1531 matrices/s|
 
 ## Key Implementation Details
 This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
