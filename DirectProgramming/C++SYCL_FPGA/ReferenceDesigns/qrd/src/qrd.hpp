@@ -15,6 +15,9 @@
 #include "streaming_qrd.hpp"
 #include "tuple.hpp"
 
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
+
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class QRDDDRToLocalMem;
@@ -68,8 +71,13 @@ void QRDecompositionImpl(
 #else
   // malloc_device are not supported when targetting an FPGA part/family
   TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
-  TT *q_device = sycl::malloc_shared<TT>(kQMatrixSize * matrix_count, q);
   TT *r_device = sycl::malloc_shared<TT>(kRMatrixSize * matrix_count, q);
+
+  constexpr int BL0 = 0;
+  using PtrAnn = annotated_ptr<TT, decltype(properties{buffer_location<BL0>,
+                                                       dwidth<512>})>;
+  TT *q_device = sycl::malloc_shared<TT>(kQMatrixSize * matrix_count, q);
+  PtrAnn q_device_ptr(q_device);
 #endif  
 
   q.memcpy(a_device, a_matrix.data(), kAMatrixSize * matrix_count
@@ -96,7 +104,13 @@ void QRDecompositionImpl(
     // Read the Q matrix from the QMatrixPipe pipe and copy it to the
     // FPGA DDR
     MatrixReadPipeToDDR<TT, rows, columns, kNumElementsPerDDRBurst,
-                        QMatrixPipe>(q_device, matrix_count, repetitions);
+                        QMatrixPipe>(
+#if defined (IS_BSP)
+                          q_device,
+#else
+                          q_device_ptr,
+#endif
+                          matrix_count, repetitions);
   });
 
   auto r_event = q.single_task<QRDLocalMemToDDRR>([=
