@@ -84,8 +84,8 @@ void CPUParticleMotion(const int seed, float* particle_X, float* particle_Y,
       // integer value from floating point value to get just the
       // decimal portion. Use this value to later determine if the
       // particle is inside or outside of the cell
-      float dX = sycl::abs(particle_X[p] - sycl::round(particle_X[p]));
-      float dY = sycl::abs(particle_Y[p] - sycl::round(particle_Y[p]));
+      float dX = fabs(particle_X[p] - sycl::round(particle_X[p]));
+      float dY = fabs(particle_Y[p] - sycl::round(particle_Y[p]));
       /* Grid point indices closest the particle, defined by the following:
       ------------------------------------------------------------------
       |               Condition               |         Result         |
