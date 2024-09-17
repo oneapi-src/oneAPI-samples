@@ -156,7 +156,7 @@ void MatrixReadPipeToDDR(
   sycl::ext::intel::device_ptr<TT> matrix_ptr_located(matrix_ptr);
 #else
   // Device pointers are not supported when targeting an FPGA 
-  // family/part. We want to use the ptr_annotation that was definied in qri.hpp
+  // family/part. We want to use the ptr_annotation that was definied in qrd.hpp
   auto matrix_ptr_located = matrix_ptr;
 #endif  
 
