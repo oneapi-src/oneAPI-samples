@@ -1,0 +1,48 @@
+* Line 18 contains the following statement
+#pragma acc parallel loop copy(data[0:n]) copyout(readSum)
+that has been as been translated into:
+#pragma omp target teams loop map(tofrom:data[0:n]) map(from:readSum)
+
+
+* Line 21 contains the following statement
+#pragma acc atomic read
+that has been as been translated into:
+#pragma omp atomic read
+
+
+* Line 28 contains the following statement
+#pragma acc parallel loop copy(data[0:n]) copyout(writeSum)
+that has been as been translated into:
+#pragma omp target teams loop map(tofrom:data[0:n]) map(from:writeSum)
+
+
+* Line 31 contains the following statement
+#pragma acc atomic write
+that has been as been translated into:
+#pragma omp atomic write
+
+
+* Line 37 contains the following statement
+#pragma acc parallel loop copy(data[0:n]) copyout(captureSum)
+that has been as been translated into:
+#pragma omp target teams loop map(tofrom:data[0:n]) map(from:captureSum)
+
+
+* Line 40 contains the following statement
+#pragma acc atomic capture
+that has been as been translated into:
+#pragma omp atomic capture
+
+
+* Line 49 contains the following statement
+#pragma acc parallel loop copy(data[0:n]) copyout(updateSum)
+that has been as been translated into:
+#pragma omp target teams loop map(tofrom:data[0:n]) map(from:updateSum)
+
+
+* Line 52 contains the following statement
+#pragma acc atomic update
+that has been as been translated into:
+#pragma omp atomic update
+
+
