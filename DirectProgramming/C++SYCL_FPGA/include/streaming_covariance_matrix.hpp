@@ -200,16 +200,18 @@ struct StreamingCovarianceMatrix {
         }
       }
 
-      // cov_matrix_consume now contains the full matrix product of the transpose
-      // of A times A. mean now contains the mean of all the columns of A. We
-      // now need to compose all of these results to get the covariance matrix
-      [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
-      [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
-      [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
-      [[intel::private_copies(2)]]          // NO-FORMAT: Attribute
-      T cov_matrix_std[columns][columns];
+      
 
       if (standardized) {
+        // cov_matrix_consume now contains the full matrix product of the transpose
+        // of A times A. mean now contains the mean of all the columns of A. We
+        // now need to compose all of these results to get the covariance matrix
+        [[intel::numbanks(kNumBanksNextPow2)]]  // NO-FORMAT: Attribute
+        [[intel::bankwidth(kBankwidth)]]        // NO-FORMAT: Attribute
+        [[intel::max_replicates(1)]]            // NO-FORMAT: Attribute
+        [[intel::private_copies(2)]]          // NO-FORMAT: Attribute
+        T cov_matrix_std[columns][columns];
+
         int row = 0;
         int column = 0;
         for (int it = 0; it < columns * columns; it++) {
@@ -229,52 +231,77 @@ struct StreamingCovarianceMatrix {
             column++;
           }
         }
-      }
 
-      // Write the standardized covariance matrix to the output pipe
-      // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
-      for (int li = 0; li < kLoopIterations; li++) {
-        int column_iter = li % kLoopIterationPerRow;
-        bool get[kLoopIterationPerRow];
+        // Write the standardized covariance matrix to the output pipe
+        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        for (int li = 0; li < kLoopIterations; li++) {
+          int column_iter = li % kLoopIterationPerRow;
+          bool get[kLoopIterationPerRow];
 #pragma unroll
-        for (size_t k = 0; k < kLoopIterationPerRow; ++k) {
-          get[k] = column_iter == k;
-          column_iter = sycl::ext::intel::fpga_reg(column_iter);
+          for (size_t k = 0; k < kLoopIterationPerRow; ++k) {
+            get[k] = column_iter == k;
+            column_iter = sycl::ext::intel::fpga_reg(column_iter);
+          }
+
+          fpga_tools::NTuple<T, pipe_size> pipe_write;
+          fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
+            fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+              if constexpr (t * pipe_size + k < columns) {
+                pipe_write.template get<k>() =
+                    get[t]
+                        ? cov_matrix_std[li / kLoopIterationPerRow][t * pipe_size + k]
+                        : sycl::ext::intel::fpga_reg(
+                              pipe_write.template get<k>());
+              }
+            });
+          });
+
+          if (block == block_count - 1) {
+            OutputPipe::write(pipe_write);
+          }
         }
 
-        fpga_tools::NTuple<T, pipe_size> pipe_write;
-        fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
-          fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
-            if constexpr (t * pipe_size + k < columns) {
-              // pick output source depends on if standardization is required
-              if (standardized) {
-              pipe_write.template get<k>() =
-                  get[t]
-                      ? cov_matrix_std[li / kLoopIterationPerRow][t * pipe_size + k]
-                      : sycl::ext::intel::fpga_reg(
-                            pipe_write.template get<k>());
-              }
-              else {
+        if (block == block_count - 1) {
+          block = 0;
+        } else {
+          block++;
+        }
+      } else {
+        // Write the standardized covariance matrix to the output pipe
+        // [[intel::initiation_interval(1)]]  // NO-FORMAT: Attribute
+        for (int li = 0; li < kLoopIterations; li++) {
+          int column_iter = li % kLoopIterationPerRow;
+          bool get[kLoopIterationPerRow];
+#pragma unroll
+          for (size_t k = 0; k < kLoopIterationPerRow; ++k) {
+            get[k] = column_iter == k;
+            column_iter = sycl::ext::intel::fpga_reg(column_iter);
+          }
+
+          fpga_tools::NTuple<T, pipe_size> pipe_write;
+          fpga_tools::UnrolledLoop<kLoopIterationPerRow>([&](auto t) {
+            fpga_tools::UnrolledLoop<pipe_size>([&](auto k) {
+              if constexpr (t * pipe_size + k < columns) {
                 pipe_write.template get<k>() =
                   get[t]
                       ? cov_matrix_consume[li / kLoopIterationPerRow][t * pipe_size + k]
                       : sycl::ext::intel::fpga_reg(
                             pipe_write.template get<k>());
               }
-            }
+            });
           });
-        });
+
+          if (block == block_count - 1) {
+            OutputPipe::write(pipe_write);
+          }
+        }
 
         if (block == block_count - 1) {
-          OutputPipe::write(pipe_write);
+          block = 0;
+        } else {
+          block++;
         }
-      }
-
-      if (block == block_count - 1) {
-        block = 0;
-      } else {
-        block++;
-      }
+      } // end of if else (standardized)
     }  // end of while
   };   // end of operator()
 };     // end of struct{}

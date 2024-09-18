@@ -71,12 +71,12 @@ struct SVDTestcase {
       GoldenPCA<T> pca(rows_A, cols_A, 1, false, true, input_A[mat_idx]);
       pca.ComputeCovarianceMatrix();
       pca.ComputeEigenValuesAndVectors();
-      std::sort(std::begin(pca.eigen_values), std::end(pca.eigen_values),
+      std::sort(std::begin(pca.eigenvalues), std::end(pca.eigenvalues),
                 std::greater<>());
 
       // fill output S with sqrt(eigen values)
       for (int i = 0; i < cols_A; i++) {
-        output_S[mat_idx].push_back(std::sqrt(pca.eigen_values[i]));
+        output_S[mat_idx].push_back(std::sqrt(pca.eigenvalues[i]));
       }
     }
   }
