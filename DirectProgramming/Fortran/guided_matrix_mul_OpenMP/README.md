@@ -106,7 +106,7 @@ Note that:
    ```
 4. Run the program.
    ```
-   01_mm_sequential.exe
+   01_mm_CPU_sequential.exe
    ```
 
 ### Example Sequential Program Output
