@@ -80,8 +80,8 @@ a [setvars config file](https://www.intel.com/content/www/us/en/develop/document
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
-- Download a sample using the extension **Code Sample Browser for Intel&reg; oneAPI Toolkits**.
-- Configure the oneAPI environment with the extension **Environment Configurator for Intel&reg; oneAPI Toolkits**.
+- Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
+- Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
 - Open a Terminal in VS Code (**Terminal>New Terminal**).
 - Run the sample in the VS Code terminal using the instructions below.
 

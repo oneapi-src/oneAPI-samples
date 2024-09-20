@@ -292,10 +292,7 @@ For larger and more complex projects, the device link method has the advantage o
    fast_recompile.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-   ```
-   fast_recompile.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

@@ -288,10 +288,7 @@ This design measures the FPGA performance to determine how many assets can be pr
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   crr.fpga.exe <input_file> [-o=<output_file>]
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

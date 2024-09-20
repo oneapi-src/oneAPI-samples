@@ -78,8 +78,8 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
@@ -256,6 +256,48 @@ The compiler may be able to perform additional optimizations if it can optimize 
     LOOP END
    ```
 2. Run the program, and record the execution time.
+
+### On Windows*
+#### Step 1. Establish a Performance Baseline
+1. Open an Intel oneAPI command window.
+2. Change to the sample directory.
+3. Compile the sources with the following command.
+   ```
+   ifx /real-size:64 -O1 src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+4. Run generated `MatVector.exe`.
+   ```
+   MatVector.exe
+   ```
+5. Record the execution time reported in the output. This is the baseline against which subsequent improvements will be measured.
+
+#### Step 2. Generate a Vectorization Report
+1. Compile the sources with following command.
+   ```
+   ifx /real-size:64 -O2 /Qopt-report=1 src\matvec.f90 src\driver.f90 -o MatVectors
+   ```
+2. Run generated `MatVector.exe` again.
+3. Record the new execution time.
+4. Recompile your project with the **/Qopt-report=2** option.
+   ```
+   ifx /real-size:64 -O2 /Qopt-report=2 src\matvec.f90 src\driver.f90 -o MatVectors
+   ```
+5. Run `MatVector.exe` and record the new execution time.
+
+#### Step 3. Improve Performance by Aligning Data
+1. Recompile the program after adding the ALIGNED macro to ensure consistently aligned data.
+   ```
+   ifx /real-size:64 /Qopt-report=2 -D ALIGNED src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+2. Run `MatVector.exe` again, and record the new execution time.
+
+#### Step 4. Improve Performance with Interprocedural Optimization
+1. Recompile the program using the `/Qipo` option to enable interprocedural optimization.
+   ```
+   ifx /real-size:64 /Qopt-report=2 -D ALIGNED /Qipo src\matvec.f90 src\driver.f90 -o MatVector
+   ```
+2. Run the program, and record the execution time.
+
 
 ### Additional Exercises
 

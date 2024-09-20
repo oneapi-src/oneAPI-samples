@@ -286,10 +286,7 @@ The design uses the following generic header files.
    anr.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Alternatively, run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   anr.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

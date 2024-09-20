@@ -258,10 +258,7 @@ Locate `report.html` in the `dsp_control.report.prj/reports/` directory.
    dsp_control.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   dsp_control.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

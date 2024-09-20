@@ -138,7 +138,7 @@ void run_sparse_cg_example(const sycl::device &dev)
     try {
         mkl::sparse::init_matrix_handle(&handle);
 
-        mkl::sparse::set_csr_data(handle, nrows, nrows, mkl::index_base::zero,
+        mkl::sparse::set_csr_data(main_queue, handle, nrows, nrows, mkl::index_base::zero,
                                           ia_buffer, ja_buffer, a_buffer);
 
         mkl::sparse::set_matrix_property(handle, mkl::sparse::property::symmetric);
@@ -174,13 +174,14 @@ void run_sparse_cg_example(const sycl::device &dev)
 
         // Calculation B^{-1}r_0
         {
+            fp alpha = 1.0;
             mkl::sparse::trsv(main_queue, mkl::uplo::lower,
-                                      mkl::transpose::nontrans, mkl::diag::nonunit,
-                                      handle, r_buffer, t_buffer);
+                                        mkl::transpose::nontrans,
+                                        mkl::diag::nonunit, alpha, handle, r_buffer, t_buffer);
             diagonal_mv<fp, intType>(main_queue, nrows, d_buffer, t_buffer);
             mkl::sparse::trsv(main_queue, mkl::uplo::upper,
-                                      mkl::transpose::nontrans, mkl::diag::nonunit,
-                                      handle, t_buffer, w_buffer);
+                                        mkl::transpose::nontrans,
+                                        mkl::diag::nonunit, alpha, handle, t_buffer, w_buffer);
         }
 
         mkl::blas::copy(main_queue, nrows, w_buffer, 1, p_buffer, 1);
@@ -189,7 +190,7 @@ void run_sparse_cg_example(const sycl::device &dev)
         fp initial_norm_of_correction = 0;
         mkl::blas::nrm2(main_queue, nrows, w_buffer, 1, temp_buffer);
         {
-            auto temp_accessor = temp_buffer.template get_access<sycl::access::mode::read>();
+            auto temp_accessor = temp_buffer.get_host_access(sycl::read_only);
             initial_norm_of_correction = temp_accessor[0];
         }
         fp norm_of_correction = initial_norm_of_correction;
@@ -200,7 +201,7 @@ void run_sparse_cg_example(const sycl::device &dev)
 
         mkl::blas::dot(main_queue, nrows, r_buffer, 1, w_buffer, 1, temp_buffer);
         {
-            auto temp_accessor = temp_buffer.template get_access<sycl::access::mode::read>();
+            auto temp_accessor = temp_buffer.get_host_access(sycl::read_only);
             temp               = temp_accessor[0];
         }
 
@@ -213,7 +214,7 @@ void run_sparse_cg_example(const sycl::device &dev)
             mkl::blas::dot(main_queue, nrows, p_buffer, 1, t_buffer, 1, temp_buffer);
             {
                 auto temp_accessor =
-                        temp_buffer.template get_access<sycl::access::mode::read>();
+                        temp_buffer.get_host_access(sycl::read_only);
                 alpha = temp / temp_accessor[0];
             }
 
@@ -225,19 +226,20 @@ void run_sparse_cg_example(const sycl::device &dev)
 
             // Calculate w_k = B^{-1}r_k
             {
+                fp alpha = 1.0;
                 mkl::sparse::trsv(main_queue, mkl::uplo::lower,
                                           mkl::transpose::nontrans,
-                                          mkl::diag::nonunit, handle, r_buffer, t_buffer);
+                                          mkl::diag::nonunit, alpha, handle, r_buffer, t_buffer);
                 diagonal_mv<fp, intType>(main_queue, nrows, d_buffer, t_buffer);
                 mkl::sparse::trsv(main_queue, mkl::uplo::upper,
                                           mkl::transpose::nontrans,
-                                          mkl::diag::nonunit, handle, t_buffer, w_buffer);
+                                          mkl::diag::nonunit, alpha, handle, t_buffer, w_buffer);
             }
 
             // Calculate current norm of correction
             mkl::blas::nrm2(main_queue, nrows, w_buffer, 1, temp_buffer);
             {
-                auto temp_accessor = temp_buffer.template get_access<sycl::access::mode::read>();
+                auto temp_accessor = temp_buffer.get_host_access(sycl::read_only);
                 norm_of_correction = temp_accessor[0];
             }
             std::cout << "\t\trelative norm of residual on " << ++k
@@ -249,7 +251,7 @@ void run_sparse_cg_example(const sycl::device &dev)
             // Calculate beta_k
             mkl::blas::dot(main_queue, nrows, r_buffer, 1, w_buffer, 1, temp_buffer);
             {
-                auto temp_accessor = temp_buffer.template get_access<sycl::access::mode::read>();
+                auto temp_accessor = temp_buffer.get_host_access(sycl::read_only);
                 beta = temp_accessor[0] / temp;
                 temp = temp_accessor[0];
             }
@@ -262,7 +264,7 @@ void run_sparse_cg_example(const sycl::device &dev)
         std::cout << "\n\t\tPreconditioned CG process has successfully converged, and\n"
                   << "\t\tthe following solution has been obtained:\n\n";
 
-        auto result = x_buffer.template get_access<sycl::access::mode::read>();
+        auto result = x_buffer.get_host_access(sycl::read_only);
         for (std::int32_t i = 0; i < 4; i++) {
             std::cout << "\t\tx[" << i << "] = " << result[i] << std::endl;
         }
@@ -271,8 +273,9 @@ void run_sparse_cg_example(const sycl::device &dev)
     catch (std::exception const &e) {
         std::cout << "\t\tCaught exception:\n" << e.what() << std::endl;
     }
-    
-    mkl::sparse::release_matrix_handle(&handle);
+
+    mkl::sparse::release_matrix_handle(main_queue, &handle);
+    main_queue.wait();
 }
 
 //
@@ -303,7 +306,7 @@ int main(int argc, char **argv)
 {
     print_banner();
 
-    sycl::device my_dev{sycl::default_selector{}};
+    sycl::device my_dev{sycl::default_selector_v};
 
     std::cout << "Running tests on " << my_dev.get_info<sycl::info::device::name>() << ".\n";
 

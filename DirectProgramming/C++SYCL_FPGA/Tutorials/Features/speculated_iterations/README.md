@@ -262,10 +262,7 @@ These results make sense when you recall that the loop exit computation has a la
    speculated_iterations.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   speculated_iterations.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example of Output
 

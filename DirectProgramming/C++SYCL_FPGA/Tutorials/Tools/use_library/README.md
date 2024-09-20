@@ -238,6 +238,8 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./use_library.fpga_sim
    ```
 
+> **Note**: Running this sample on an actual FPGA device requires a BSP that supports host pipes. As there are currently no commercial BSPs with such support, only the SYCL HLS flow is enabled for this code sample.
+
 ### On Windows
 
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
@@ -250,6 +252,8 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    use_library.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
+
+> **Note**: Hardware runs are not supported on Windows.
 
 ### Example of Output
 

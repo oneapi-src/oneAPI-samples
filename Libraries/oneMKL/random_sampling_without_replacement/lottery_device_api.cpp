@@ -34,8 +34,7 @@ void lottery_device_api(sycl::queue& q, size_t m, size_t n, size_t num_exp, std:
 
         q.submit([&](sycl::handler& h) {
             auto res_acc = result_buf.template get_access<sycl::access::mode::write>(h);
-            sycl::accessor<size_t, 1, sycl::access::mode::read_write, sycl::access::target::local>
-                local_buf(sycl::range<1>{n}, h);
+            sycl::local_accessor<size_t> local_buf(sycl::range<1>{n}, h);
             h.parallel_for(sycl::nd_range<1>(num_exp, 1),
                 [=](sycl::nd_item<1> item) {
                 size_t id = item.get_group(0);
@@ -117,7 +116,7 @@ int main(int argc, char ** argv) {
 
     try {
         // Queue constructor passed exception handler
-        sycl::queue q(sycl::default_selector{}, exception_handler);
+        sycl::queue q(sycl::default_selector_v, exception_handler);
         // Launch lottery for device API
         lottery_device_api(q, m, n, num_exp, result_vec);
     } catch (...) {

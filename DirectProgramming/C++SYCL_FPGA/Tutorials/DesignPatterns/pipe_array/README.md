@@ -331,10 +331,7 @@ The host must thus enqueue the producer kernel and `kNumRows * kNumCols` separat
    pipe_array.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   pipe_array.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

@@ -15,6 +15,9 @@
 #include "streaming_qri.hpp"
 #include "tuple.hpp"
 
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
+
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class QRIDDRToLocalMem;
@@ -74,7 +77,13 @@ void QRIImpl(
 #else
   // malloc_device are not supported when targetting an FPGA part/family
   TT *a_device = sycl::malloc_shared<TT>(kAMatrixSize * matrix_count, q);
-  TT *i_device = sycl::malloc_shared<TT>(kInverseMatrixSize * matrix_count, q);
+
+  constexpr int BL0 = 0;
+  using PtrAnn = annotated_ptr<TT, decltype(properties{buffer_location<BL0>,
+                                                       dwidth<512>})>;
+  TT *i_device = sycl::malloc_shared<TT>(kInverseMatrixSize * matrix_count,
+                                             q);
+  PtrAnn i_device_ptr(i_device);
 #endif  
 
 
@@ -109,7 +118,13 @@ void QRIImpl(
       // Read the inverse matrix from the InverseMatrixPipe pipe and copy it
       // to the FPGA DDR
       MatrixReadPipeToDDR<TT, rows, columns, kNumElementsPerDDRBurst,
-              InverseMatrixPipe>(i_device, matrix_count, repetitions);
+              InverseMatrixPipe>(
+#if defined (IS_BSP)
+                i_device,
+#else
+                i_device_ptr,
+#endif
+                matrix_count, repetitions);
   });
 
   i_event.wait();
@@ -132,7 +147,7 @@ void QRIImpl(
 
   // Copy the Q and R matrices result from the FPGA DDR to the host memory
   q.memcpy(inverse_matrix.data(), i_device,
-               kInverseMatrixSize * matrix_count * sizeof(TT)).wait();
+           kInverseMatrixSize * matrix_count * sizeof(TT)).wait();
 
   // Clean allocated FPGA memory
     free(a_device, q);

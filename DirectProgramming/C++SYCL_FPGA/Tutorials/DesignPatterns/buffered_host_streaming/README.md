@@ -226,10 +226,7 @@ This sample demonstrates the following concepts:
    buffered_host_streaming.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-   ```
-   buffered_host_streaming.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

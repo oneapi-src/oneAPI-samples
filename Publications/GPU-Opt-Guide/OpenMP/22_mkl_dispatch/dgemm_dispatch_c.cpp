@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
-// Snippet begin
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -61,12 +60,14 @@ int main()
 
     printf (" Computing matrix product using Intel oneMKL dgemm function via CBLAS interface \n\n");
 
+// Snippet begin
     #pragma omp target data map(to: A[0:m*k], B[0:k*n]) map(tofrom: C[0:m*n])
     {
-       #pragma omp target variant dispatch use_device_ptr(A, B, C)
+       #pragma omp dispatch
        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                    m, n, k, alpha, A, k, B, n, beta, C, n);
     }
+// Snippet end
 
     printf ("\n Top left corner of matrix C: \n");
     for (i=0; i<min(m,6); i++) {
@@ -115,7 +116,7 @@ int main()
     mkl_free(A);
     mkl_free(B);
     mkl_free(C);
+    mkl_free(C_fl);
 
     return fail;
 }
-// Snippet end

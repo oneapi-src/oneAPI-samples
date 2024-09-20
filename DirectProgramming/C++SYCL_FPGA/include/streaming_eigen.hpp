@@ -1,5 +1,5 @@
-#ifndef __STREAMING_QRD_HPP__
-#define __STREAMING_QRD_HPP__
+#ifndef __STREAMING_EIGEN_HPP__
+#define __STREAMING_EIGEN_HPP__
 
 #include <sycl/ext/intel/ac_types/ac_int.hpp>
 
@@ -522,7 +522,7 @@ struct StreamingEigen {
             }
 
             if ((row > column) && (row == shift_row + 1)) {
-              row_is_zero &= fabs(rq_value) < k_zero_threshold;
+              row_is_zero &= sycl::fabs(rq_value) < k_zero_threshold;
             }
 
             if (row == column) {
@@ -538,7 +538,7 @@ struct StreamingEigen {
         T d_squared = d * d;
         T b_squared_signed = d < 0 ? -b_squared : b_squared;
         T shift_value_current_shift_row =
-            c - b_squared_signed / (abs(d) + sqrt(d_squared + b_squared));
+            c - b_squared_signed / (sycl::fabs(d) + sycl::sqrt(d_squared + b_squared));
 
         T d_above = (a_above - c_above) / 2;
         T b_squared_above = b_above * b_above;
@@ -548,7 +548,7 @@ struct StreamingEigen {
         T shift_value_above =
             c_above -
             b_squared_signed_above /
-                (abs(d_above) + sqrt(d_squared_above + b_squared_above));
+                (sycl::fabs(d_above) + sycl::sqrt(d_squared_above + b_squared_above));
 
         if ((shift_row < 0) || (row_is_zero && (shift_row == 0))) {
           shift_value = 0;
@@ -655,4 +655,4 @@ struct StreamingEigen {
 
 }  // namespace fpga_linalg
 
-#endif /* __STREAMING_QRD_HPP__ */
+#endif /* __STREAMING_EIGEN_HPP__ */

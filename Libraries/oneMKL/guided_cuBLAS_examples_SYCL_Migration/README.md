@@ -115,7 +115,7 @@ Run the programs on a CPU or GPU. Each sample uses a default device, which in mo
 > line in the code.
 
 
-1. Run the samples in the `02_sycl_dpct_migrated` folder.
+1. Run the samples in the `build` folder.
    ```
    make run_amax
    ```

@@ -253,14 +253,7 @@ The tests listed above check the following interfaces in a platform:
     ```
     board_test.exe -test=<test_number>
     ```
- 2. Run the sample on the FPGA device.
-    ```
-    board_test.fpga.exe
-    ```
-    By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
-    ```
-    board_test.fpga.exe -test=<test_number>
-    ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 
@@ -274,7 +267,6 @@ Command to run board_test using generated binary:
   > To run all tests (default): run board_test.fpga
   > To run a specific test (see list below); pass the test number as argument to "-test" option: 
   Linux: ./board_test.fpga -test=<test_number>
-  Windows: board_test.exe -test=<test_number>
   > To see more details on what each test does use -help option
 The tests are:
   1. Host Speed and Host Read Write Test

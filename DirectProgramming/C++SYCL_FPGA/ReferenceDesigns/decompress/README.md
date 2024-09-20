@@ -450,10 +450,7 @@ For `constexpr_math.hpp`, `memory_utils.hpp`, `metaprogramming_utils.hpp`, `tupl
     decompress.fpga_sim.exe
     set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
     ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-    ```
-    decompress.fpga.exe
-    ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

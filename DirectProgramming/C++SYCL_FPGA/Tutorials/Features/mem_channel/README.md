@@ -318,11 +318,8 @@ significantly lower than the case where burst-interleaving is enabled.
     Note that the `mem_channel` property and the `-Xsno-interleaving` flag have
     no impact on the simulator which is why we only have a single executable for
     this flow.
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`):
-     ```
-     ./mem_channel.fpga         (Linux)
-     mem_channel.fpga.exe       (Windows)
-     ```
+
+> **Note**: Hardware runs are not supported on Windows.
 
 ### Example of Output
 

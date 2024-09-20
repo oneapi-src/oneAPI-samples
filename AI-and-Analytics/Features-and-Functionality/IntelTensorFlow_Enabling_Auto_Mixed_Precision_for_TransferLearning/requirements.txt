@@ -1,4 +1,5 @@
-notebook
+neural_compressor==2.4.1
 Pillow
-tensorflow_hub
+py-cpuinfo
 requests
+tensorflow_hub==0.16.0

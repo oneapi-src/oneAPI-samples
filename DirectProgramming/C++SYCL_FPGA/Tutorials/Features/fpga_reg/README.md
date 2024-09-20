@@ -288,10 +288,7 @@ Observe the structure of the design in the optimization report's System Viewer a
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   fpga_reg.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

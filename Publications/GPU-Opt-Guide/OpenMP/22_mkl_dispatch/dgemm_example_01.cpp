@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
-// Snippet begin
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -70,6 +69,7 @@ int main()
 
     t_start = omp_get_wtime();
 
+// Snippet begin
     #pragma omp target data				   \
       map(to: A1[0:m*k], B1[0:k*n], A2[0:m*k], B2[0:k*n])  \
       map(tofrom: C1[0:m*n], C2[0:m*n])
@@ -82,6 +82,7 @@ int main()
        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                    m, n, k, alpha, A2, k, B2, n, beta, C2, n);
     }
+// Snippet end
 
     t_end = omp_get_wtime();
 
@@ -166,4 +167,3 @@ int main()
 
     return 0;
 }
-// Snippet end

@@ -1,0 +1,3 @@
+add_fortran_example_with_mkl(test-SharedMem)
+add_fortran_example_with_mkl(test-Map-UpdateTo)
+add_fortran_example_with_mkl(test-HostMem-DeviceMem-Map-UpdateTo)

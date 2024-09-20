@@ -78,8 +78,8 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
@@ -90,6 +90,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 1. Change to the sample directory.
 2. Build the program.
    ```
+   cd linux
    mkdir build
    cd build
    cmake ..

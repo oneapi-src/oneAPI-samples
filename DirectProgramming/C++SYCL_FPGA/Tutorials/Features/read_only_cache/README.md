@@ -273,10 +273,7 @@ cache has been created.
    ```
    > **Note**: Although the circuit for the read-only cache is implemented in simulation, one cannot see consistent performance increases with the cache enabled, as each clock cycle in the simulator does not have a consistent latency as it does in the hardware. For this reason here is just a single executable for this flow.
 
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   read_only_cache.fpga.exe
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

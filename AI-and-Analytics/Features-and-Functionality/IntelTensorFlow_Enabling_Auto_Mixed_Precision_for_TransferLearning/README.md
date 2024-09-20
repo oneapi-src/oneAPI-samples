@@ -2,7 +2,7 @@
 
 The `Enable Auto-Mixed Precision for Transfer Learning with TensorFlow*` sample guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow* (TF).
 
-The sample demonstrates the end-to-end pipeline tasks typically performed in a deep learning use-case: training (and retraining), inference optimization, and serving the model with TensorFlow Serving.
+The sample demonstrates the tasks typically performed in a deep learning use-case: training (and retraining), and inference optimization. The sample also includes tips and boilerplate code for serving the model with TensorFlow Serving.
 
 | Area                    | Description
 |:---                     |:---
@@ -36,10 +36,6 @@ You will need to download and install the following toolkits, tools, and compone
 - **Jupyter Notebook**
 
   Install using PIP: `$pip install notebook`. <br> Alternatively, see [*Installing Jupyter*](https://jupyter.org/install) for detailed installation instructions.
-
-- **TensorFlow Serving**
-
-  See *TensorFlow Serving* [*Installation*](https://www.tensorflow.org/tfx/serving/setup) for detailed installation options.
 
 - **Other dependencies**
 
@@ -111,6 +107,70 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 You will see diagrams comparing performance and analysis. This includes performance comparison for training speedup obtained by enabling auto-mixed precision and inference speedup obtained by optimizing the saved model for inference.
 
 For performance analysis, you will see histograms showing different Tensorflow* operations in the analyzed pre-trained model pb file.
+
+## Serve the model with TensorFlow Serving
+
+### Installation
+See *TensorFlow Serving* [*Installation*](https://www.tensorflow.org/tfx/serving/setup) for detailed installation options.
+
+### Example Code
+
+Create a copy of the optimized model in a well-defined directory hierarchy with a version number "1".
+
+```
+!mkdir serving
+!cp -r models/my_optimized_model serving/1
+```
+
+```
+os.environ["MODEL_DIR"] = os.getcwd() + "/serving"
+```
+
+This is where we start running TensorFlow Serving and load our model. After it loads we can start making inference requests using REST. There are some important parameters:
+- **rest_api_port**: The port that you'll use for REST requests.
+- **model_name**: You'll use this in the URL of REST requests. It can be anything.
+- **model_base_path**: This is the path to the directory where you've saved your model.
+
+```
+%%bash --bg
+nohup tensorflow_model_server --rest_api_port=8501 --model_name=rn50 --model_base_path=${MODEL_DIR} > server.log 2>&1
+```
+
+#### Prepare the testing data for prediction
+
+```
+for image_batch, labels_batch in val_ds:
+    print(image_batch.shape)
+    print(labels_batch.shape)
+    break
+test_data, test_labels = image_batch.numpy(), labels_batch.numpy()
+```
+
+#### Make REST requests
+
+Now let's create the JSON object for a batch of three inference requests and we'll send a predict request as a POST to our server's REST endpoint, and pass it three examples.
+
+```
+import json
+import matplotlib.pyplot as plt
+
+def show(idx, title):
+    plt.figure()
+    plt.imshow(test_data[idx])
+    plt.axis('off')
+    plt.title('\n\n{}'.format(title), fontdict={'size': 16})
+
+data = json.dumps({"signature_name": "serving_default", "instances": test_data[0:3].tolist()})
+print('Data: {} ... {}'.format(data[:50], data[len(data)-52:]))
+
+headers = {"content-type": "application/json"}
+json_response = requests.post('http://localhost:8501/v1/models/rn50:predict', data=data, headers=headers)
+predictions = json.loads(json_response.text)['predictions']
+
+for i in range(0,3):
+    show(i, 'The model thought this was a {} (class {}), and it was actually a {} (class {})'.format(
+        class_names[np.argmax(predictions[i])], np.argmax(predictions[i]), class_names[test_labels[i]], test_labels[i]))
+```
 
 ## License
 

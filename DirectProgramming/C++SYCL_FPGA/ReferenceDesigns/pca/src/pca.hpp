@@ -11,6 +11,9 @@
 #include "streaming_eigen.hpp"
 #include "tuple.hpp"
 
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
+
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
 class InputMatrixFromDDRToLocalMem;
@@ -115,6 +118,13 @@ void PCAKernel(
     std::terminate();
   }
 
+#if not defined (IS_BSP)
+    constexpr int BL0 = 0;
+    using PtrAnn = annotated_ptr<T, decltype(properties{buffer_location<BL0>,
+                                                        dwidth<512>})>;
+    PtrAnn eigen_vectors_device_ptr(eigen_vectors_device);
+#endif
+
   // Check that the malloc succeeded.
   if (input_matrix_device == nullptr) {
     std::cerr << "Error when allocating the input matrix." << std::endl;
@@ -184,12 +194,19 @@ void PCAKernel(
             rank_deficient_flag_device, matrix_count, repetitions);
       });
 
-  // Write the Eigen vectors from local memory to FPGA DDR
+  // Write the Eigen vectors from local memory to FPGA DDR. If we have USM
+  // device allocations then we want to use eigen_vectors_device, but if we
+  // have USM shared allocations then we want to use eigen_vectors_device_ptr.
   auto eigen_vectors_event = q.single_task<EigenVectorsFromLocalMemToDDR>([=
   ]() [[intel::kernel_args_restrict]] {
     MatrixReadPipeToDDR<T, k_features_count, k_features_count,
                         kNumElementsPerDDRBurst, EigenVectorsPipe>(
-        eigen_vectors_device, matrix_count, repetitions);
+#if defined (IS_BSP)
+        eigen_vectors_device,
+#else
+        eigen_vectors_device_ptr,
+#endif
+        matrix_count, repetitions);
   });
 
   // Wait for the completion of the pipeline

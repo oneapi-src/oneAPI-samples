@@ -142,6 +142,7 @@ flowchart LR
 | [platform_designer](Tutorials/Tools/platform_designer)                            | [Tutorials/Tools](Tutorials/Tools)                   | How to use FPGA IP produced with the Intel® oneAPI DPC++/C++ Compiler with Intel® Quartus® Prime Pro Edition software suite and Platform Designer
 | [private_copies](Tutorials/Features/private_copies)                               | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program
 | [read_only_cache](Tutorials/Features/read_only_cache)                             | [Tutorials/Features](Tutorials/Features)             | How and when to use the read-only cache feature
+| [restartable_streaming_kernel](Tutorials/DesignPatterns/restartable_streaming_kernel)                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to make a restartable kernel. The technique shown in this tutorial lets you dynamically terminate your kernel while it runs, allowing it to load a new set of kernel arguments.
 | [scheduler_target_fmax](Tutorials/Features/scheduler_target_fmax)                 | [Tutorials/Features](Tutorials/Features)             | The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it <br> The effect this attribute can have on kernel performance on FPGA
 | [shannonization](Tutorials/DesignPatterns/shannonization)                         | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II
 | [simple_host_streaming](Tutorials/DesignPatterns/simple_host_streaming)           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to achieve low-latency host-device streaming while maintaining throughput
@@ -190,6 +191,7 @@ All the Tier 4 samples are in the [ReferenceDesigns](ReferenceDesigns) category.
 | [pca](ReferenceDesigns/pca)                               | How to implement high performance principal component analysis on a FPGA
 | [qrd](ReferenceDesigns/qrd)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm
 | [qri](ReferenceDesigns/qri)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion
+| [svd](ReferenceDesigns/svd)                               | How to implement a high performance Singular Value Decomposition on an FPGA
 
 #### Start exploring the FPGA code samples with this selection
 
@@ -226,8 +228,8 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel® oneAPI Toolkits**.
- 2. Download a sample using the extension **Code Sample Browser for Intel® oneAPI Toolkits**.
+ 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
+ 2. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using instructions for Linux.
  5. (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the Generate Launch Configurations extension.
