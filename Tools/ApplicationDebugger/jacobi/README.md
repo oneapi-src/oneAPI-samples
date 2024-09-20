@@ -38,7 +38,7 @@ then focus on possibly more difficult GPU-oriented bugs.
 We recommend to first make sure that the program you intend to debug is running
 correctly on CPU and only after that switch the offload to GPU.
 
-> *Note**: although the sample can be built and run on Windows* 10 and 11 too,
+> *Note**: although the sample can be built and run on Windows* 10, 11 and 11 too,
 > we focus on demonstrating how the GDB* interface can be used
 > to examine the program on Linux* OS.
 

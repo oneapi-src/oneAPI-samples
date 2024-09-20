@@ -18,7 +18,7 @@ These measurements are a simple example of useful information needed for simulat
 ## Prerequisites
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Ubuntu* 18.04 <br>Windows* 10 <br>Windows* Server 2017
+| OS                                | Ubuntu* 18.04 <br>Windows* 10, 11 <br>Windows* Server 2017
 | Hardware                          | Kaby Lake with Gen9 or newer
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 

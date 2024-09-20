@@ -4,7 +4,7 @@
 ## Requirements
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu 20.04, 20 Windows* 10
+| OS                                | Linux* Ubuntu 20.04, 20 Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; AI Analytics Tookkit, Jupyter Notebooks, Intel DevCloud
 |                                   | pip install seaborn

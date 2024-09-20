@@ -3,7 +3,7 @@ A sample containing multiple implementations of matrix multiplication. This samp
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | Kaby Lake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; VTune&trade; Profiler
 | What you will learn               | How to profile an application using Intel&reg; VTune&trade; Profiler

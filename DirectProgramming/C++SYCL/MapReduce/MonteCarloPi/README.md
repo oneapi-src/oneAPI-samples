@@ -21,7 +21,7 @@ The code attempts to execute on an available GPU and will fall back to the syste
 ## Prerequisites
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br>Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 

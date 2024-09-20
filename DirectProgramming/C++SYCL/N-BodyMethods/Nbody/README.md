@@ -14,7 +14,7 @@ This algorithm is highly data parallel, so the code a good candidate to offload 
 ## Prerequisites
 | Optimized for     | Description
 |:---               |:---
-| OS                | Ubuntu* 18.04 <br> Windows* 10
+| OS                | Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware          | Skylake with GEN9 or newer
 | Software          | Intel® oneAPI DPC++ Compiler
 

@@ -3,7 +3,7 @@ The sample included with the Intel VTune Profiler installer, containing multiple
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | Intel CPU
 | Software                          | Intel&reg; oneAPI DPC++ Compiler <br> Intel&reg; VTune&trade; Profiler
 | What you will learn               | How to profile an application using Intel&reg; VTune&trade; Profiler

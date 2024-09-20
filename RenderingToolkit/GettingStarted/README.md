@@ -13,7 +13,7 @@ Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/rende
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <BR>CentOS 8 (or compatible) <BR>Windows* 10 <BR>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 18.04 <BR>CentOS 8 (or compatible) <BR>Windows* 10, 11 <BR>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions, ARM64 with NEON extensions<br>(Optimized requirement: Intel 64 Skylake or newer with AVX512 extensions, ARM64 with NEON extensions)
 | Compiler Toolchain                | Windows OS: MSVS 2019 with Windows SDK and CMake*<BR>Other platforms: C++11 compiler, a C99 compiler (for example, gcc/c++/clang), and CMake*
 | Libraries                         | Install Intel&reg; Rendering Toolkit, including Intel&reg; OSPRay, Intel&reg; Embree, Intel&reg; Open Volume Kernel Library (Intel&reg; Open VKL), and Intel&reg; Open Image Denoise

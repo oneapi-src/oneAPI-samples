@@ -22,7 +22,7 @@ Each of the cuBLAS samples source files shows the usage of oneMKL cuBLAS routine
 
 | Optimized for         | Description
 |:---                   |:---
-| OS                    | Ubuntu* 20.04
+| OS                    | Ubuntu* 20.04 <br> Windows 10, 11
 | Hardware              | 10th Gen Intel® processors or newer
 | Software              | Intel® oneAPI DPC++/C++ Compiler
 
@@ -55,6 +55,10 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
+> Windows*:
+> - `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
+> - Windows PowerShell*, use the following command: `cmd.exe "/K" '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'`
+>
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
 ### On Linux*
@@ -69,6 +73,25 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 
    By default, this command sequence builds the version of the source code in the  `02_sycl_dpct_migrated` folder.
+
+### On a Windows* System
+
+Open "Intel oneAPI command prompt for Intel 64 for Visual Studio 2017" or
+"Intel oneAPI command prompt for Intel 64 for Visual Studio 2019" and perform the following steps:
+
+#### Microsoft Visual Studio Compiler
+
+##### 1. Setup oneAPI development environment
+```
+C:\Program Files (x86)\Intel\oneAPI\setvars.bat
+```
+##### 2. Build the program using `cmake`
+```
+mkdir build
+cd build
+cmake -G "Visual Studio 16 2019" ..
+cmake --build .
+```
 
 #### Troubleshooting
 

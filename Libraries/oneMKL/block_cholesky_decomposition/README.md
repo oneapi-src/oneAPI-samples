@@ -4,7 +4,7 @@ Block Cholesky Decomposition shows how to use the Intel® oneAPI Math Kernel Lib
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | Skylake with Gen9 or newer
 | Software                          | Intel® oneAPI Math Kernel Library (oneMKL)
 | What you will learn               | How to use oneMKL BLAS and LAPACK routines with pointer-based (USM) programming

@@ -24,7 +24,7 @@ output](example_images/rkRayTracer.png)
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 18.04 <br>CentOS* 8 (or compatible) <br>Windows* 10, 11 or 11<br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or higher with SSE4.1 extensions; ARM64 with NEON extensions <br>(Optimization requirement: Intel&reg; Embree is further optimized for Intel 64 Skylake or higher with AVX512 extensions)
 | Compiler Toolchain                | Windows* OS: MSVS 2022 or MSVS 2019 with Windows* SDK and CMake* <br>Other platforms: C++11 compiler and CMake*
 | Libraries                         | <ul><li>Install Intel Rendering Toolkit (Render Kit) for Intel Embree and Intel&reg; oneAPI Threading Building Blocks (oneTBB)</li><li>Install Intel&reg; oneAPI Base Toolkit (Base Kit) for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler Runtimes</li><li>macOS: Base Kit not required</li></ul>

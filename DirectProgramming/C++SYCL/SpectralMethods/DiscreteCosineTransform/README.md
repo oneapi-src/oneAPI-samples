@@ -22,7 +22,7 @@ The quantizing process allows this data to be compressed to a smaller size than 
 ## Prerequisites
 | Optimized for            | Description
 |:---                      |:---
-| OS                       | Ubuntu* 18.04 <br> Windows* 10
+| OS                       | Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                 | Skylake with GEN9 or newer
 | Software                 | Intel&reg; oneAPI DPC++/C++ Compiler
 
