@@ -29,21 +29,21 @@ using PipePropertiesT = decltype(sycl::ext::oneapi::experimental::properties(
     sycl::ext::intel::experimental::first_symbol_in_high_order_bits<true>));
 
 // Interfaces for the illustrative simple kernels.
-class ID_InStream_NaiveKernel;
-using InStream_NaiveKernel =
-    sycl::ext::intel::experimental::pipe<ID_InStream_NaiveKernel, SimpleInputT, 0,
+class IDInStreamNaiveKernel;
+using InStreamNaiveKernel =
+    sycl::ext::intel::experimental::pipe<IDInStreamNaiveKernel, SimpleInputT, 0,
                                          PipePropertiesT>;
 
-class ID_OutStream_NaiveKernel;
-using OutStream_NaiveKernel =
-    sycl::ext::intel::experimental::pipe<ID_OutStream_NaiveKernel, SimpleOutputT, 0,
+class IDOutStreamNaiveKernel;
+using OutStreamNaiveKernel =
+    sycl::ext::intel::experimental::pipe<IDOutStreamNaiveKernel, SimpleOutputT, 0,
                                          PipePropertiesT>;
 
-class ID_InStream_OptKernel;
-using InStream_OptKernel =
-    sycl::ext::intel::experimental::pipe<ID_InStream_OptKernel, SimpleInputT, 0,
+class IDInStreamOptKernel;
+using InStreamOptKernel =
+    sycl::ext::intel::experimental::pipe<IDInStreamOptKernel, SimpleInputT, 0,
                                          PipePropertiesT>;
-class ID_OutStream_OptKernel;
-using OutStream_OptKernel =
-    sycl::ext::intel::experimental::pipe<ID_OutStream_OptKernel, SimpleOutputT, 0,
+class IDOutStreamOptKernel;
+using OutStreamOptKernel =
+    sycl::ext::intel::experimental::pipe<IDOutStreamOptKernel, SimpleOutputT, 0,
                                          PipePropertiesT>;

@@ -5,18 +5,18 @@
 #include "memory_system_kernels.hpp"
 
 // Forward declaration of kernel names.
-class ID_NaiveKernel;
-class ID_OptimizedKernel;
+class IDNaiveKernel;
+class IDOptimizedKernel;
 
 // Function that verifies the output from example kernels.
 bool CheckOutput(sycl::queue &q) {
-  SimpleOutputT resultNaive;
-  SimpleOutputT resultOptimized;
+  SimpleOutputT result_naive;
+  SimpleOutputT result_optimized;
   bool passed = true;
   for (int i = 0; i < 500; ++i) {
-    resultNaive = OutStream_NaiveKernel::read(q);
-    resultOptimized = OutStream_OptKernel::read(q);
-    if (resultNaive[4] != i || resultOptimized[4] != i) {
+    result_naive = OutStreamNaiveKernel::read(q);
+    result_optimized = OutStreamOptKernel::read(q);
+    if (result_naive[4] != i || result_optimized[4] != i) {
       passed = false;
     }
   }
@@ -38,15 +38,15 @@ int main() {
     // Test for simple kernels.
     q.single_task<class Input>([=]() {
       for (int i = 0; i < 500; ++i) {
-        InStream_NaiveKernel::write(i);
-        InStream_OptKernel::write(i);
+        InStreamNaiveKernel::write(i);
+        InStreamOptKernel::write(i);
       }
     });
 
     std::cout << "Launch kernel" << std::endl;
 
-    q.single_task<ID_NaiveKernel>(NaiveKernel{});
-    q.single_task<ID_OptimizedKernel>(OptimizedKernel{});
+    q.single_task<IDNaiveKernel>(NaiveKernel{});
+    q.single_task<IDOptimizedKernel>(OptimizedKernel{});
 
     std::cout << "Checking output" << std::endl;
     bool passed = CheckOutput(q);
@@ -55,6 +55,7 @@ int main() {
       std::cout << "Verification PASSED.\n";
     } else {
       std::cout << "Verification FAILED.\n";
+      return 1;
     }
   }
   catch (sycl::exception const &e) {
@@ -62,4 +63,5 @@ int main() {
               << std::endl;
     std::terminate();
   }
+  return 0;
 }

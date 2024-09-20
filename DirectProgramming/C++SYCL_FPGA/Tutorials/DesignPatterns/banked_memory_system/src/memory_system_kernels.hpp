@@ -9,7 +9,7 @@ struct NaiveKernel {
 
     [[intel::initiation_interval(1)]]
     for (int col = 0; col < kNumCols; ++col) {
-      SimpleInputT input = InStream_NaiveKernel::read();
+      SimpleInputT input = InStreamNaiveKernel::read();
       SimpleOutputT output;
 
       #pragma unroll
@@ -23,7 +23,7 @@ struct NaiveKernel {
         output[row] = array2d[row][col];
       }
       
-      OutStream_NaiveKernel::write(output);
+      OutStreamNaiveKernel::write(output);
     }
   }
 };
@@ -38,7 +38,7 @@ struct OptimizedKernel {
 
     [[intel::initiation_interval(1)]]
     for (int row = 0; row < kNumRowsOptimized; ++row) {
-      SimpleInputT input = InStream_OptKernel::read();
+      SimpleInputT input = InStreamOptKernel::read();
       SimpleOutputT output;
 
       #pragma unroll
@@ -52,7 +52,7 @@ struct OptimizedKernel {
         output[col] = array2d[row][col];
       }
       
-      OutStream_OptKernel::write(output);
+      OutStreamOptKernel::write(output);
     }
   }
 };

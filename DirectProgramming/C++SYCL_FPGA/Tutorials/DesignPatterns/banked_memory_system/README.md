@@ -64,7 +64,7 @@ struct NaiveKernel {
     int array2d[kNumRows][kNumCols];
     [[intel::initiation_interval(1)]]
     for (int col = 0; col < kNumCols; ++col) {
-      SimpleInputT input = InStream_NaiveKernel::read();
+      SimpleInputT input = InStreamNaiveKernel::read();
       SimpleOutputT output;
 
       // Shift one new item into the FIFO.
@@ -79,7 +79,7 @@ struct NaiveKernel {
       for (int row = 0; row < kNumRows; ++row) {
         output[row] = array2d[row][col];
       }
-      OutStream_NaiveKernel::write(output);
+      OutStreamNaiveKernel::write(output);
     }
   }
 };
@@ -93,7 +93,7 @@ The desired memory access pattern in `NaiveKernel` is illustrated in the followi
 
 ![Naive Kernel Memory Access Pattern](./assets/access_pattern_naive.gif)
 
-In the `NaiveKernel`, the first array dimension (row) is accessed in an unrolled loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `array2d[0][col]` to `array2d[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they **should** happen in a single clock cycle. Note that though the second `row` loop, which prepares the output to the `OutStream_NaiveKernel` pipe, also performs loads on each bank, since the values to be loaded are already accessed in the previous loop, these loads are shared. The [kernel memory viewer report](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/kernel-memory-viewer.html) shows that the memory system for `array2d` has 8 banks. This report shows the stallable load-store units (LSUs) that prevent the 4 loads and 5 stores from happening in a single clock cycle, and explains why the compiler decided to insert them.
+In the `NaiveKernel`, the first array dimension (row) is accessed in an unrolled loop. In this way, the kernel tries to access all five elements in one column of the buffer, namely `array2d[0][col]` to `array2d[4][col]`. As a result, there are 4 loads and 5 stores to the memory system in each loop iteration, and since the initiation interval is 1, they **should** happen in a single clock cycle. Note that though the second `row` loop, which prepares the output to the `OutStreamNaiveKernel` pipe, also performs loads on each bank, since the values to be loaded are already accessed in the previous loop, these loads are shared. The [kernel memory viewer report](https://www.intel.com/content/www/us/en/docs/oneapi-fpga-add-on/developer-guide/current/kernel-memory-viewer.html) shows that the memory system for `array2d` has 8 banks. This report shows the stallable load-store units (LSUs) that prevent the 4 loads and 5 stores from happening in a single clock cycle, and explains why the compiler decided to insert them.
 
 ![Stallable Arbitration Node](./assets/stallable_arbitration_node.png)
 
@@ -166,7 +166,7 @@ Review the memory access pattern above, we can easily find out that within each 
 
 ![Never-stall Node](./assets/memory_report_optimized.png)
 
-Subsequently, since we have made the LSU non-stallable, we expect no stalls in the loop nor in the downstream task - that the output pipe `OutStream_OptKernel` is not stalled. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `ID_OutStream_OptKernel_pipe_channel_write`. The gaps no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
+Subsequently, since we have made the LSU non-stallable, we expect no stalls in the loop nor in the downstream task - that the output pipe `OutStreamOptKernel` is not stalled. To verify this improvement, refer to the simulation waveform and observe the `valid` and `data` signal of the output pipe `IDOutStreamOptKernel_pipe_channel_write`. The gaps no longer appear in the `valid` signal, and the pipe writes out data every clock cycle.
 
 ![Optimized System Waveform](./assets/waveform_optimized.png)
 
@@ -194,7 +194,7 @@ This design uses CMake to generate a build script for GNU/make.
 
 1. Change to the sample directory.
 
-2. Configure the build system for the Arria 10 device family, which is the default.
+2. Build the program for Intel® Agilex® 7 device family, which is the default.
 
    ```
    mkdir build
@@ -207,45 +207,84 @@ This design uses CMake to generate a build script for GNU/make.
    > cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    > ```
 
-3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   | Compilation Type    | Command
-   |:---                 |:---
-   | FPGA Emulator       | `make fpga_emu`
-   | Optimization Report | `make report`
-   | FPGA Simulator      | `make fpga_sim`
-   | FPGA Hardware       | `nmake fpga`
+    1. Compile for emulation (fast compile time, targets emulated FPGA device):
+       ```
+       make fpga_emu
+       ```
+    2. Generate the optimization report:
+       ```
+       make report
+       ```
+      The report resides at `banked_mem.report.prj/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
-### On a Windows* System
-This design uses CMake to generate a build script for  `nmake`.
+    3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+       ```
+       make fpga_sim
+       ```
+    4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+       ```
+       make fpga
+       ```
+
+### On Windows*
 
 1. Change to the sample directory.
 
-2. Configure the build system for the Agilex® 7 device family, which is the default.
+2. Build the program for the Intel® Agilex® 7 device family, which is the default.
    ```
    mkdir build
    cd build
    cmake -G "NMake Makefiles" ..
    ```
-
    > **Note**: You can change the default target by using the command:
-   > ```
-   > cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   > ```
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
+   >  ```
+   >
+   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
+   >  ```
+   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
+   >  ```
+  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+  > ```
+  > $> aoc -list-boards
+  > Board list:
+  >   <board-variant>
+  >      Board Package: <path/to/board/package>/board-support-package
+  >   <board-variant2>
+  >      Board Package: <path/to/board/package>/board-support-package
+  > ```
+   >
+   > You will only be able to run an executable on the FPGA if you specified a BSP.
 
-3. Compile the design through the generated `Makefile`. The following build targets are provided, matching the recommended development flow:
+3. Compile the design. (The provided targets match the recommended development flow.)
 
-   | Compilation Type    | Command (Windows)
-   |:---                 |:---
-   | FPGA Emulator       | `nmake fpga_emu`
-   | Optimization Report | `nmake report`
-   | FPGA Simulator      | `nmake fpga_sim`
-   | FPGA Hardware       | `nmake fpga`
+   1. Compile for emulation (fast compile time, targets emulated FPGA device):
+      ```
+      nmake fpga_emu
+      ```
+   2. Generate the optimization report:
+      ```
+      nmake report
+      ```
+      The report resides at `banked_mem.report.prj.a/reports/report.html`. See the [*Reading the Reports*](#reading-the-reports) section below to understand the report contents.
 
-   > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
-      > ```
-      > cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
-      > ```
+   3. Compile for simulation (fast compile time, targets simulated FPGA device, reduced data size):
+      ```
+      nmake fpga_sim
+      ```
+   4. Compile for FPGA hardware (longer compile time, targets FPGA device):
+      ```
+      nmake fpga
+      ```
+
+> **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+>
+>  ```
+  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
+>  ```
 
 ## Run the `fpga_template` Executable
 
