@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <random>
 #include <vector>
 
 int main() {
-  constexpr size_t N = 8192 * 8192;
-  constexpr size_t M = 257;
+  constexpr int N = 8192 * 8192;
+  constexpr int M = 257;
 
   sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
