@@ -48,8 +48,8 @@ void GenerateMatrix(std::vector<float> &input_matrix,
 
     for (int j = i * kSize; j < kSize * (i + 1); ++j) {
       input_matrix[j] = distr(engine);
-      input_matrix[j] = round(100. * input_matrix[j]) / 100.;
-      sum += fabs(input_matrix[j]);
+      input_matrix[j] = sycl::round(100. * input_matrix[j]) / 100.;
+      sum += sycl::fabs(input_matrix[j]);
     }
 
     oneapi::dpl::uniform_int_distribution<int> distr2(0, 100);
@@ -61,7 +61,7 @@ void GenerateMatrix(std::vector<float> &input_matrix,
       input_matrix[i * kSize + i] = -1 * (sum + 1);
 
     input_results[i] = distr(engine);
-    input_results[i] = round(100. * input_results[i]) / 100.;
+    input_results[i] = sycl::round(100. * input_results[i]) / 100.;
   }
 }
 // Function responsible for printing the matrix, called only for N < 10.
@@ -100,7 +100,7 @@ bool CheckIfEqual(Real *data, Real *old_output_data) {
   int correct_result = 0;
 
   for (int i = 0; i < kSize; ++i) {
-    if (fabs(data[i] - old_output_data[i]) < kCheckError) correct_result++;
+    if (sycl::fabs(data[i] - old_output_data[i]) < kCheckError) correct_result++;
   }
 
   return correct_result == kSize;
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
   // given. If the difference is less than the error rate for each of
   // the elements, then all values have been calculated correctly.
   for (int i = 0; i < kSize; ++i) {
-    Real diff = fabs(output_results[i] - input_results[i]);
+    Real diff = sycl::fabs(output_results[i] - input_results[i]);
     if (diff > kCalculationError) all_eq = false;
   }
 
