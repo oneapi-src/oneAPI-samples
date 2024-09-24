@@ -200,7 +200,6 @@ Note that the library files (\*.a) must be included after all of the cpp files i
    >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
    >  ```
    >
-   > **Note**: The sample is defaultly targeting device Agilex family in `lib_rtl_dsp_spec.xml`. You will need to manually change the parameter in `lib_rtl_dsp_spec.xml` if you wish to target other devices.
 
 3. Compile the design. (The provided targets match the recommended development flow.)
 
