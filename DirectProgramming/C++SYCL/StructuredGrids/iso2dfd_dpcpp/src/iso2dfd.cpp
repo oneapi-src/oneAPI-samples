@@ -149,7 +149,7 @@ bool WithinEpsilon(float* output, float* reference, const size_t dim_x,
   }
 
   err_file.close();
-  norm2 = sqrt(norm2);
+  norm2 = 1/rsqrt(norm2);
   if (error) printf("error (Euclidean norm): %.9e\n", norm2);
   return error;
 }
