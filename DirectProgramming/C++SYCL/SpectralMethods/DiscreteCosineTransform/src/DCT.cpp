@@ -47,7 +47,8 @@ void MatrixTranspose(float x[block_size], float xinv[block_size]) {
 }
 
 // Multiply two matrices x and y and write output to xy
-SYCL_EXTERNAL void MatrixMultiply(float x[block_size], float y[block_size],
+SYCL_EXTERNAL void MatrixMultiply(multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> x, 
+                                  multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> y,
                                   float xy[block_size]) {
   for (int i = 0; i < block_dims; ++i) {
     for (int j = 0; j < block_dims; ++j) {
@@ -60,8 +61,9 @@ SYCL_EXTERNAL void MatrixMultiply(float x[block_size], float y[block_size],
 }
 
 // Processes an individual 8x8 subset of image data
-SYCL_EXTERNAL void ProcessBlock(rgb* indataset, rgb* outdataset,
-                                float dct[block_size], float dctinv[block_size],
+SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::global_space, (sycl::access::decorated)2> indataset, rgb* outdataset,
+                                multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> dct,
+                                multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> dctinv,
                                 int start_index, int width) {
   float interim[block_size], product[block_size], red_input[block_size],
       blue_input[block_size], green_input[block_size], temp[block_size];
