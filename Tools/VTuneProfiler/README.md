@@ -6,6 +6,8 @@
 | matrix                                    | CPU                          | Sample C matrix multiplication program included with VTune installer
 | tachyon                                   | CPU                          | Simple ray tracer demonstrating parallelism with OpenMP and Intel oneTBB
 
+## Documentation
+Browse all Intel® VTune™ Profiler documentation: http://developer.intel.com/vtunedocs
 
 ## License  
 Code samples are licensed under the MIT license. See
