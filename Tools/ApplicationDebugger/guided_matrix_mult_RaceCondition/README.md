@@ -29,7 +29,7 @@ The sample includes different versions of a simple matrix multiplication program
 
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 20.04 <br> Windows* 10, 11
+| OS                      | Ubuntu* 20.04
 | Hardware                | GEN9 or newer
 | Software                | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Distribution for GDB* <br> [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace), which is available from the [onetrace](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) GitHub repository.
 
