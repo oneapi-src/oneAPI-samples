@@ -55,8 +55,8 @@ template <typename AccRandom, typename AccGrid, bool HasFp64> class ParticleMoti
       // integer value from floating point value to get just the
       // decimal portion. Use this value to later determine if the
       // particle is inside or outside of the cell
-      float dX = sycl::abs(particle_X_a[p] - sycl::round(particle_X_a[p]));
-      float dY = sycl::abs(particle_Y_a[p] - sycl::round(particle_Y_a[p]));
+      float dX = std::abs(particle_X_a[p] - sycl::round(particle_X_a[p]));
+      float dY = std::abs(particle_Y_a[p] - sycl::round(particle_Y_a[p]));
       /* Grid point indices closest the particle, defined by the following:
       ------------------------------------------------------------------
       |               Condition               |         Result         |

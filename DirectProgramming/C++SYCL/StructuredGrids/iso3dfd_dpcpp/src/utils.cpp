@@ -159,7 +159,7 @@ bool WithinEpsilon(float* output, float* reference, const size_t dim_x,
   }
 
   error_file.close();
-  norm2 = 1/rsqrt(norm2);
+  norm2 = std::sqrt(norm2);
   if (error) std::cout << "error (Euclidean norm): " << norm2 << "\n";
   return error;
 }

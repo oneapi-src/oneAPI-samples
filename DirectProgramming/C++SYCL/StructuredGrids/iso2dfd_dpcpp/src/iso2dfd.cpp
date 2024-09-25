@@ -149,7 +149,7 @@ bool WithinEpsilon(float* output, float* reference, const size_t dim_x,
   }
 
   err_file.close();
-  norm2 = 1/rsqrt(norm2);
+  norm2 = std::sqrt(norm2);
   if (error) printf("error (Euclidean norm): %.9e\n", norm2);
   return error;
 }
@@ -195,7 +195,8 @@ void Iso2dfdIterationCpu(float* next, float* prev, float* vel,
  *
  */
 void Iso2dfdIterationGlobal(id<2> it, float* next, float* prev,
-                               float* vel, const float dtDIVdxy, int n_rows,
+                               multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> vel, 
+                               const float dtDIVdxy, int n_rows,
                                int n_cols) {
   float value = 0.0;
 
