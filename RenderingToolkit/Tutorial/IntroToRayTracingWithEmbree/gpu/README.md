@@ -19,7 +19,7 @@ output](example_images/rkRayTracerGPU.png)
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10 or 11<br>macOS* 10.15+
+| OS                                | Linux* Ubuntu* 22.04 <br>CentOS* 8 (or compatible) <br>Windows* 10, 11 or 11<br>macOS* 10.15+
 | Hardware                          | Intel&reg; GPU compatible with Intel Xe-HPG or Intel Xe-HPC architectures<ul><li>Intel&reg; Arc&trade; A-Series GPU or higher</li><li>Intel&reg; Data Center GPU or higher</li></ul>
 | Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit) including Intel&reg; Embree, and Intel® oneAPI Threading Building Blocks (oneTBB) <br>Install Intel&reg; oneAPI Base Toolkit for the `dev-utilities` default component and Intel&reg; oneAPI DPC++ Compiler
 | SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher

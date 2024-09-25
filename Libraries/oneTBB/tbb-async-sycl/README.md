@@ -5,7 +5,7 @@ The Flow Graph asynchronous node uses SYCL* to implement GPU calculations while 
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 | What you will learn               | How to offload the computation to GPU using the Intel&reg; oneAPI DPC++/C++ Compiler

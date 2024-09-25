@@ -27,7 +27,7 @@ The sample includes four different versions of the iso3dfd project.
 ## Prerequisites
 | Optimized for                       | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br>Windows* 10
+| OS                                | Linux* Ubuntu* 18.04 <br>Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler <br>Intel&reg; Advisor
 

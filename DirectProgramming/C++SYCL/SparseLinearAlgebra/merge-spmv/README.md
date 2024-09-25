@@ -12,7 +12,7 @@ Sparse linear algebra algorithms are common in high-performance computing in fie
 ## Prerequisites
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 18.04 <br> Windows* 10
+| OS                      | Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                | Skylake with GEN9 or newer
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 

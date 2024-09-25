@@ -23,7 +23,7 @@ To get the area of the circle, you can pick random points on the paper and count
 
 | Optimized for             | Description
 |:---                       |:---
-| OS                        | Linux, Windows
+| OS                        | Linux, Windows* 10, 11
 | Hardware                  | Intel® and Intel-compatible CPU
 | Software                  | Intel® Fortran Compiler
 
