@@ -44,7 +44,7 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for        | Description
 |:---                  |:---
@@ -100,7 +100,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 |`StreamingQRD.hpp`          | StreamingQRD kernel, performs Q-R Decomposition on a matrix
 |`Transpose.hpp`             | Transpose kernel, reorders data for the StreamingQRD kernel
 |`udp_loopback_test.cpp`     | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
-|`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes (for example not in Intel® DevCloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
+|`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes. This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
 |`UnrolledLoop.hpp`          | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ## Build the `MVDR Beamforming` Design

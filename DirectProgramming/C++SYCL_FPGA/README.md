@@ -6,7 +6,6 @@ You will need the following toolkits and add-ons:
 
 - [Intel® oneAPI Base Toolkit (Base Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html), specifically the Intel® oneAPI DPC++/C++ Compiler.
 - [Intel® FPGA Add-On for oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html).
-- Optionally, you might need access to [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/).
 
 >**Note**: The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository that corresponds to the version of the compiler you are using.
 
@@ -264,35 +263,6 @@ Intel technologies’ features and benefits depend on system configuration and m
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
 © Intel Corporation.
-
-## Build and Run the Samples on Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-You can specify a FPGA runtime node using a single line script similar to the following example.
-
-```
-qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |FPGA Compile Time  |`qsub -I -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime       |`qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .`
-  |GPU                |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.
 
 ## Documentation
 
