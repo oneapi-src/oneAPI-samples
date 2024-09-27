@@ -126,7 +126,7 @@ template <typename TT,           // Datatype of the elements of the matrix
           >
 void MatrixReadPipeToDDR(
 #if defined (IS_BSP)
-    TT matrix_ptr,  // Output matrix pointer
+    TT* matrix_ptr,  // Output matrix pointer
 # else
     annotated_ptr<TT, decltype(properties{buffer_location<BL0>,
                                           dwidth<512>})> matrix_ptr,
