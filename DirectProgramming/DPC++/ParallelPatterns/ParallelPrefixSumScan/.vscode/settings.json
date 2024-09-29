@@ -1,0 +1,14 @@
+{
+    "programName": "scan",
+    "files.associations": {
+        "stdexcept": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "regex": "cpp",
+        "utility": "cpp",
+        "algorithm": "cpp",
+        "iostream": "cpp"
+    }
+}
