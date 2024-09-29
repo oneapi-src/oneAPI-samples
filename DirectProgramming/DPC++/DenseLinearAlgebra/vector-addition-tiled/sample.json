@@ -1,0 +1,68 @@
+{
+  "guid": "161F74A8-65E4-4844-B3FD-56E494660E7B",
+  "name": "Base: Vector Addition Tiled",
+  "categories": ["Toolkit/Get Started", "Toolkit/oneAPI Direct Programming/DPC++/Dense Linear Algebra", "Toolkit/oneAPI Tools/Advisor"],
+  "description": "This sample demonstrates the use of local accessors",
+  "toolchain": ["icpx"],
+  "languages": [{"cpp": {"properties": {"projectOptions": [{"projectType": "makefile"}]}}}],
+  "targetDevice": ["CPU", "GPU"],
+  "os": ["linux"],
+  "builder": ["make"],
+  "ciTests": {
+    "linux": [
+      {
+        "id": "default",
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "cpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=CPU"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "gpu",
+        "env": [
+          "export SYCL_DEVICE_TYPE=GPU"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      },
+      {
+        "id": "HOST",
+        "env": [
+          "export SYCL_DEVICE_TYPE=HOST"
+        ],
+        "steps": [
+	  "mkdir build",
+          "cd build",
+          "cmake ..",
+          "make",
+          "./vector-add-buffers",
+          "make clean"
+        ]
+      }
+  },
+  "expertise": "Getting Started"
+}
