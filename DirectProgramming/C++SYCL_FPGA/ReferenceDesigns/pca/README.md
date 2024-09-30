@@ -40,11 +40,11 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for        | Description
 |:---                  |:---
-| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10, 11 <br> Windows Server* 2019
 | Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
@@ -430,51 +430,36 @@ Additionally, the `cmake` build system can be configured using the following par
 
 ### On Linux
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    ./pca.fpga_emu <path to data/abalone.csv>
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./pca.fpga_sim <path to data/abalone.csv>
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
    ```
    ./pca.fpga <path to data/abalone.csv>
    ```
 
 ### On Windows
 
-#### Run on FPGA Emulator
-
 1. Run the sample on the FPGA emulator (the kernel executes on the CPU).
    ```
    pca.fpga_emu.exe <path to data/abalone.csv>
    ```
 
-#### Run on FPGA Simulator
-
-1. Run the sample on the FPGA simulator.
+2. Run the sample on the FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    pca.fpga_sim.exe <path to data/abalone.csv>
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
 
-#### Run on FPGA
-
-1. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   pca.fpga.exe <path to data/abalone.csv>
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 

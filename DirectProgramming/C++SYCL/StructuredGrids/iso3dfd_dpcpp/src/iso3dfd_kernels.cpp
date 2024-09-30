@@ -186,7 +186,8 @@ void Iso3dfdIterationSLM(sycl::nd_item<3> it, float *next, float *prev,
  *
  */
 void Iso3dfdIterationGlobal(sycl::nd_item<3> it, float *next, float *prev,
-                            float *vel, const float *coeff, int nx, int nxy,
+                            multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> vel,
+                            const float *coeff, int nx, int nxy,
                             int bx, int by, int z_offset, int full_end_z) {
   // We compute the start and the end position in the grid
   // for each work-item.

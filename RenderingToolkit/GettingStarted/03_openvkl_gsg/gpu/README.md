@@ -7,7 +7,7 @@ sampling functionality for a variety of data formats.
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br> Windows* 10 or 11
+| OS                                | Linux* Ubuntu* 22.04 <br>CentOS 8 (or compatible) <br> Windows* 10, 11 or 11
 | Hardware                          | Intel&reg; Arc&trade; GPU (DG2-128, DG2-512) or higher, compatible with Intel Xe-HPG or Intel Xe-HPC architectures
 | Compiler Toolchain                | <ul><li>Windows* OS only: MSVS 2022 (or 2019) installed with Windows* SDK and CMake*</li><li> All Platforms: Intel&reg; oneAPI DPC++ Compiler from the Intel&reg; oneAPI Base Toolkit</li></ul>
 | SYCL Compiler                     | oneAPI DPC++ 2024.0.0 compiler or higher

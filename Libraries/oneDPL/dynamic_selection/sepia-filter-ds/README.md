@@ -31,7 +31,7 @@ This sample includes two versions:
 
 | Optimized for  | Description
 |:---            |:---
-| OS             | Ubuntu* 18.04 <br>Windows* 10
+| OS             | Ubuntu* 18.04 <br>Windows* 10, 11
 | Hardware       | Skylake with GEN9 or newer
 | Software       | Intel&reg; oneAPI DPC++/C++ Compiler
 

@@ -90,6 +90,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 1. Change to the sample directory.
 2. Build the program.
    ```
+   cd linux
    mkdir build
    cd build
    cmake ..

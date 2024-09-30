@@ -39,7 +39,7 @@ template <typename RealType>
 std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r,
                     std::int64_t n, RealType expected_mean) {
   std::int32_t res = -1;
-  RealType sqrt_n_observations = sycl::sqrt(static_cast<RealType>(n));
+  RealType sqrt_n_observations = std::sqrt(static_cast<RealType>(n));
 
   // Create buffers to be passed inside oneMKL stats functions
   sycl::buffer<RealType, 1> mean_buf(sycl::range{1});
@@ -55,8 +55,8 @@ std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r,
   // Create Host accessors and check the condition
   sycl::host_accessor mean_acc(mean_buf);
   sycl::host_accessor variance_acc(variance_buf);
-  if ((sycl::abs(mean_acc[0] - expected_mean) * sqrt_n_observations /
-       sycl::sqrt(variance_acc[0])) < static_cast<RealType>(threshold)) {
+  if ((std::abs(mean_acc[0] - expected_mean) * sqrt_n_observations /
+       std::sqrt(variance_acc[0])) < static_cast<RealType>(threshold)) {
     res = 1;
   } else {
     res = 0;
@@ -100,19 +100,19 @@ std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r1,
   bool almost_equal = (variance1_acc[0] < 2 * variance2_acc[0]) ||
                       (variance2_acc[0] < 2 * variance1_acc[0]);
   if (almost_equal) {
-    if ((sycl::abs(mean1_acc[0] - mean2_acc[0]) /
-         sycl::sqrt((static_cast<RealType>(1.0) / static_cast<RealType>(n1) +
-                     static_cast<RealType>(1.0) / static_cast<RealType>(n2)) *
-                    ((n1 - 1) * (n1 - 1) * variance1_acc[0] +
-                     (n2 - 1) * (n2 - 1) * variance2_acc[0]) /
-                    (n1 + n2 - 2))) < static_cast<RealType>(threshold)) {
+    if ((std::abs(mean1_acc[0] - mean2_acc[0]) /
+         std::sqrt((static_cast<RealType>(1.0) / static_cast<RealType>(n1) +
+                    static_cast<RealType>(1.0) / static_cast<RealType>(n2)) *
+                  ((n1 - 1) * (n1 - 1) * variance1_acc[0] +
+                   (n2 - 1) * (n2 - 1) * variance2_acc[0]) /
+                   (n1 + n2 - 2))) < static_cast<RealType>(threshold)) {
       res = 1;
     } else {
       res = 0;
     }
   } else {
-    if ((sycl::abs(mean1_acc[0] - mean2_acc[0]) /
-         sycl::sqrt((variance1_acc[0] + variance2_acc[0]))) <
+    if ((std::abs(mean1_acc[0] - mean2_acc[0]) /
+         std::sqrt((variance1_acc[0] + variance2_acc[0]))) <
         static_cast<RealType>(threshold)) {
       res = 1;
     } else {
@@ -171,7 +171,7 @@ int main(int argc, char **argv) {
 
   try {
     // Queue constructor passed exception handler
-    sycl::queue q(sycl::default_selector{}, exception_handler);
+    sycl::queue q(sycl::default_selector_v, exception_handler);
     // Prepare buffers for random output
     sycl::buffer<fp_type, 1> rng_buf0(n_points);
     sycl::buffer<fp_type, 1> rng_buf1(n_points);

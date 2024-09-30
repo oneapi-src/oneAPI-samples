@@ -30,11 +30,11 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Ubuntu* 20.04 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| OS                                | Ubuntu* 20.04 <br> SUSE* 15 <br> Windows* 10, 11 <br> Windows Server* 2019
 | Hardware                          | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler<br> Intel® Quartus® Prime Pro Edition Version 23.1 or later
 
@@ -263,7 +263,7 @@ You can manually follow the steps below, or run the `build_and_sim_testsystem.tc
 
 1. Navigate to the `/simulation_files` directory
 
-2. Run the simulation script:
+2. Run the simulation script (this happens automatically if you use `build_and_sim_testsystem.tcl`):
 
     ```bash
     vsim -c -do test_nios_commandline.tcl
@@ -281,11 +281,20 @@ You can manually follow the steps below, or run the `build_and_sim_testsystem.tc
     # Software will now exit.
     ```
 
->**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example `C:\samples\build`. You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+4. View the simulation waveform:
+
+    ```bash
+    vsim -view simulation_files/vsim.wlf -do simulation_files/wave.do
+    ```
+
+
+>**Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to copy this code sample (that is, the contents of the `niosv` direcotry) to a directory with a shorter path, for example `C:\niosv`. You can then run the `build_and_sim_testsystem.tcl` script from that directory, for example:
 >
->  ```
-  > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
->  ```
+> ```
+> :: Shared 'include' directory contains "exception_handler.hpp".
+> SET "INCLUDE=C:\long\path\to\code\sample\..\..\include;%INCLUDE%"
+> C:\niosv> quartus_sh.exe -t build_and_sim_testsystem.tcl
+> ```
 ## License
 
 Code samples are licensed under the MIT license. See [License.txt](/License.txt) for details.

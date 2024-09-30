@@ -73,7 +73,18 @@ void run()
         double total_time = 0.0;
 
         namespace mkl_rng = oneapi::mkl::rng;
-        mkl_rng::mcg59 engine(
+#if USE_PHILOX
+        using EngineTypeHost   = mkl_rng::philox4x32x10;
+        using EngineTypeDevice = mkl_rng::device::philox4x32x10<VEC_SIZE>;
+#elif USE_MRG
+        using EngineTypeHost   = mkl_rng::mrg32k3a;
+        using EngineTypeDevice = mkl_rng::device::mrg32k3a<VEC_SIZE>;
+#else
+        using EngineTypeHost   = mkl_rng::mcg59;
+        using EngineTypeDevice = mkl_rng::device::mcg59<VEC_SIZE>;
+#endif
+
+        EngineTypeHost engine(
 #if !INIT_ON_HOST
             my_queue,
 #else
@@ -86,18 +97,10 @@ void run()
         auto rng_event_3 = mkl_rng::generate(mkl_rng::uniform<DataType>(1.0, 5.0), engine, num_options, h_option_years_ptr);
 
         std::size_t n_states = global_size;
-        using EngineType =
-#if USE_PHILOX
-            mkl_rng::device::philox4x32x10<VEC_SIZE>;
-#elif USE_MRG
-            mkl_rng::device::mrg32k3a<VEC_SIZE>;
-#else
-            mkl_rng::device::mcg59<VEC_SIZE>;
-#endif
 
         // initialization needs only on first step
         auto deleter = [my_queue](auto* ptr) {sycl::free(ptr, my_queue);};
-        auto rng_states_uptr = std::unique_ptr<EngineType, decltype(deleter)>(sycl::malloc_device<EngineType>(n_states, my_queue), deleter);
+        auto rng_states_uptr = std::unique_ptr<EngineTypeDevice, decltype(deleter)>(sycl::malloc_device<EngineTypeDevice>(n_states, my_queue), deleter);
         auto* rng_states = rng_states_uptr.get();
 
         my_queue.parallel_for<k_initialize_state<DataType>>(
@@ -107,9 +110,9 @@ void run()
                 auto id = idx[0];
 #if USE_MRG
                 constexpr std::uint32_t seed = 12345u;
-                rng_states[id] = EngineType({ seed, seed, seed, seed, seed, seed }, { 0, (4096 * id) });
+                rng_states[id] = EngineTypeDevice({ seed, seed, seed, seed, seed, seed }, { 0, (4096 * id) });
 #else
-                rng_states[id] = EngineType(rand_seed, id * ITEMS_PER_WORK_ITEM * VEC_SIZE * block_n);
+                rng_states[id] = EngineTypeDevice(rand_seed, id * ITEMS_PER_WORK_ITEM * VEC_SIZE * block_n);
 #endif
         })
         .wait_and_throw();

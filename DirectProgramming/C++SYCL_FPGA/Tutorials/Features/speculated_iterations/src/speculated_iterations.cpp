@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
-#include <math.h>
+#include <cmath>
 
 #include "exception_handler.hpp"
 

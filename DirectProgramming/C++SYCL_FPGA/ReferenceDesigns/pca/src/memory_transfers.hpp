@@ -5,6 +5,11 @@
 #include "tuple.hpp"
 #include "unrolled_loop.hpp"
 
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
+
+constexpr int BL0 = 0;
+
 /*
   Read matrix_count matrices of type TT from DDR by bursts of num_elem_per_bank
   elements, and write the matrices to the "MatrixPipe" pipe num_elem_per_bank by
@@ -66,7 +71,12 @@ template <typename TT,            // Datatype of the elements of the matrix
           typename MatrixPipe     // Input matrix
           >
 void MatrixReadPipeToDDR(
-    TT* matrix_ptr,    // Output matrix pointer
+#if defined (IS_BSP)
+    TT* matrix_ptr,  // Output matrix pointer
+# else
+    annotated_ptr<TT, decltype(properties{buffer_location<BL0>,
+                                          dwidth<512>})> matrix_ptr,
+#endif
     int matrix_count,  // Number of matrix to write to DDR
     int repetitions    // Number of time to read the same matrix to the pipe
 ) {

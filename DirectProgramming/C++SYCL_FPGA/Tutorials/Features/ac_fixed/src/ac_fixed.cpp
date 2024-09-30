@@ -4,7 +4,7 @@
 #include <sycl/ext/intel/fpga_extensions.hpp>
 
 #include <iomanip>  // for std::setprecision
-#include <math.h>
+#include <cmath>
 
 #include "exception_handler.hpp"
 
@@ -75,7 +75,7 @@ void TestCalculateWithFloat(queue &q, const float &x, float &ret) {
     h.single_task<CalculateWithFloat>([=] {
       float sin_x = sinf(x[0]);
       float cos_x = cosf(x[0]);
-      res[0] = sqrtf(sin_x * sin_x + cos_x * cos_x);
+      res[0] = sycl::sqrt(sin_x * sin_x + cos_x * cos_x);
     });
   });
 }

@@ -81,7 +81,7 @@ void GenerateMatrix(std::vector<float> &input_matrix,
         in_mat_acc[i * kSize + i] = -1 * (sum + 1);
 
       in_res_acc[i] = distr(engine);
-      in_res_acc[i] = round(100. * in_res_acc[i]) / 100.;
+      in_res_acc[i] = sycl::round(100. * in_res_acc[i]) / 100.;
     });
   });
   q[1].submit([&](handler &h) {

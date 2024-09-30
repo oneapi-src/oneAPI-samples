@@ -44,11 +44,11 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for        | Description
 |:---                  |:---
-| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| OS                   | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10, 11 <br> Windows Server* 2019
 | Hardware             | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software             | Intel® oneAPI DPC++/C++ Compiler
 
@@ -100,7 +100,7 @@ The `DataProducer` kernel replaces the input IO pipe in the first image. The spl
 |`StreamingQRD.hpp`          | StreamingQRD kernel, performs Q-R Decomposition on a matrix
 |`Transpose.hpp`             | Transpose kernel, reorders data for the StreamingQRD kernel
 |`udp_loopback_test.cpp`     | Contains the `main()` function for the loopback test. This code is only relevant for use with real IO pipes
-|`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes (for example not in Intel® DevCloud). This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
+|`UDP.hpp`                   | This code is **only** relevant for using the real IO pipes. This is discussed later in the [Using Real IO-pipes Section](#using-real-io-pipes)
 |`UnrolledLoop.hpp`          | A templated-based loop unroller that unrolls loops in the compiler front end
 
 ## Build the `MVDR Beamforming` Design
@@ -269,10 +269,7 @@ The general syntax for running the program is shown below and the table describe
    mvdr_beamforming.fpga_sim.exe ../data .
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-3. Run the sample on the FPGA device (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-   ```
-   mvdr_beamforming.fpga.exe 1024 ../data .
-   ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Build and Run the Design Using Real IO-pipes
 

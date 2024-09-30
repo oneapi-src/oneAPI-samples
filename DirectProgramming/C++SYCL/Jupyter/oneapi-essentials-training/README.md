@@ -4,7 +4,7 @@
 ## Requirements
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu 20.04/22.04 Windows* 10
+| OS                                | Linux* Ubuntu 20.04/22.04 Windows* 10, 11
 | Hardware                          | Intel&reg; Gen9 or newer GPU
 | Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel DevCloud
   

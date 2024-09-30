@@ -205,7 +205,7 @@ void GSimulation::Start() {
   total_time_ = t0.Elapsed();
   total_flops_ = gflops * get_nsteps();
   av /= (double)(nf - 2);
-  dev = sqrt(dev / (double)(nf - 2) - av * av);
+  dev = std::sqrt(dev / (double)(nf - 2) - av * av);
 
   std::cout << "\n";
   std::cout << "# Total Time (s)     : " << total_time_ << "\n";

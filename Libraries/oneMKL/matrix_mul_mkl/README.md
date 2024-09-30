@@ -4,7 +4,7 @@ Matrix Multiplication with Intel® oneAPI Math Kernel Library (oneMKL) shows how
 
 | Optimized for       | Description
 |:---                 |:---
-| OS                  | Linux* Ubuntu* 18.04 <br> Windows* 10
+| OS                  | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware            | Skylake with Gen9 or newer
 | Software            | Intel® oneAPI Math Kernel Library (oneMKL)
 | What you will learn | How to use the oneMKL matrix multiplication functionality

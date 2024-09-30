@@ -12,3 +12,17 @@ pd_system_tb
 /ip/*/*/
 !/ip/*/
 !/ip/*/*.ip
+
+# ignore Questa outputs
+transcript
+simulation_files/libraries
+simulation_files/*.ver
+simulation_files/*.ini
+simulation_files/transcript
+simulation_files/*.wlf
+simulation_files/*.vstf
+simulation_files/*.dat
+simulation_files/*.hex
+simulation_files/*.mif
+simulation_files/*.f
+simulation_files/*.log

@@ -36,11 +36,11 @@ flowchart LR
 ```
 
 Find more information about how to navigate this part of the code samples in the [FPGA top-level README.md](/DirectProgramming/C++SYCL_FPGA/README.md).
-You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [running the sample on the Intel® DevCloud](/DirectProgramming/C++SYCL_FPGA/README.md#build-and-run-the-samples-on-intel-devcloud-optional), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
+You can also find more information about [troubleshooting build errors](/DirectProgramming/C++SYCL_FPGA/README.md#troubleshooting), [using Visual Studio Code with the code samples](/DirectProgramming/C++SYCL_FPGA/README.md#use-visual-studio-code-vs-code-optional), [links to selected documentation](/DirectProgramming/C++SYCL_FPGA/README.md#documentation), etc.
 
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10 <br> Windows Server* 2019
+| OS                      | Ubuntu* 20.04 <br> RHEL*/CentOS* 8 <br> SUSE* 15 <br> Windows* 10, 11 <br> Windows Server* 2019
 | Hardware                | Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                | Intel® oneAPI DPC++/C++ Compiler
 
@@ -253,14 +253,7 @@ The tests listed above check the following interfaces in a platform:
     ```
     board_test.exe -test=<test_number>
     ```
- 2. Run the sample on the FPGA device.
-    ```
-    board_test.fpga.exe
-    ```
-    By default the program runs all tests. To run a specific test, enter the test number as an argument to the `-test` option:
-    ```
-    board_test.fpga.exe -test=<test_number>
-    ```
+> **Note**: Hardware runs are not supported on Windows.
 
 ## Example Output
 
@@ -274,7 +267,6 @@ Command to run board_test using generated binary:
   > To run all tests (default): run board_test.fpga
   > To run a specific test (see list below); pass the test number as argument to "-test" option: 
   Linux: ./board_test.fpga -test=<test_number>
-  Windows: board_test.exe -test=<test_number>
   > To see more details on what each test does use -help option
 The tests are:
   1. Host Speed and Host Read Write Test

@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #define _USE_MATH_DEFINES
 #include <cmath>

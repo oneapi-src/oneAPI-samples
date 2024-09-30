@@ -19,7 +19,7 @@ This feature allows users to examine different patterns and create their own. Th
 ## Prerequisites
 | Property                       | Description
 |:---                               |:---
-| OS                                | Ubuntu* 18.04 <br>Windows* 10 or newer
+| OS                                | Ubuntu* 18.04 <br>Windows* 10, 11 or newer
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler
 

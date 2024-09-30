@@ -24,7 +24,7 @@ This sample provides example implementations of both Unified Shared Memory (USM)
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Ubuntu* 18.04 <br> Windows* 10
+| OS                                | Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | GEN9 or newer <br> Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
 

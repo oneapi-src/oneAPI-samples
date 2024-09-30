@@ -6,7 +6,6 @@ You will need the following toolkits and add-ons:
 
 - [Intel® oneAPI Base Toolkit (Base Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html), specifically the Intel® oneAPI DPC++/C++ Compiler.
 - [Intel® FPGA Add-On for oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fpga.html).
-- Optionally, you might need access to [Intel® DevCloud for oneAPI](https://devcloud.intel.com/oneapi/get_started/).
 
 >**Note**: The latest versions of code samples on the master branch are not guaranteed to be stable. Use a [stable release version](https://github.com/oneapi-src/oneAPI-samples/tags) of the repository that corresponds to the version of the compiler you are using.
 
@@ -125,6 +124,7 @@ flowchart LR
 | [annotated_class_clean_coding  (experimental)](Tutorials/Features/experimental/annotated_class_clean_coding)  | [Tutorials/Features](Tutorials/Features)             | How to use `annotated_class_util.hpp` to simplify your oneAPI code that annotates properties to `pipe`s and `annotated_arg`
 | [annotated_ptr (experimental)](Tutorials/Features/experimental/annotated_ptr) | [Tutorials/Features](Tutorials/Features)             | How to use `annotated_ptr` to constrain a specific memory access
 | [autorun](Tutorials/DesignPatterns/autorun)                                       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How and when to use autorun kernels
+| [banked_memory_system](Tutorials/DesignPatterns/banked_memory_system)             | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimize a banked memory system and improve throughput
 | [buffered_host_streaming](Tutorials/DesignPatterns/buffered_host_streaming)       | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to optimally stream data between the host and device to maximize throughput
 | [compute_units](Tutorials/DesignPatterns/compute_units)                           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate multiple compute units using template metaprogramming
 | [dsp_control](Tutorials/Features/dsp_control)                                     | [Tutorials/Features](Tutorials/Features)             | How to apply global DSP control in command-line interface <br> How to apply local DSP control in source code <br> Scope of datatypes and math operations that support DSP control
@@ -143,6 +143,7 @@ flowchart LR
 | [pipe_array](Tutorials/DesignPatterns/pipe_array)                                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | A design pattern to generate an array of pipes using SYCL* <br> Static loop unrolling through template metaprogramming
 | [private_copies](Tutorials/Features/private_copies)                               | [Tutorials/Features](Tutorials/Features)             | The basic usage of the `private_copies` attribute <br> How the `private_copies` attribute affects the throughput and resource use of your FPGA program <br> How to apply the `private_copies` attribute to variables or arrays in your program <br> How to identify the correct `private_copies` factor for your program
 | [read_only_cache](Tutorials/Features/read_only_cache)                             | [Tutorials/Features](Tutorials/Features)             | How and when to use the read-only cache feature
+| [restartable_streaming_kernel](Tutorials/DesignPatterns/restartable_streaming_kernel)                 | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to make a restartable kernel. The technique shown in this tutorial lets you dynamically terminate your kernel while it runs, allowing it to load a new set of kernel arguments.
 | [scheduler_target_fmax](Tutorials/Features/scheduler_target_fmax)                 | [Tutorials/Features](Tutorials/Features)             | The behavior of the `scheduler_target_fmax_mhz` attribute and when to use it <br> The effect this attribute can have on kernel performance on FPGA
 | [shannonization](Tutorials/DesignPatterns/shannonization)                         | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to make FPGA-specific optimizations to remove computation from the critical path and improve f<sub>MAX</sub>/II
 | [simple_host_streaming](Tutorials/DesignPatterns/simple_host_streaming)           | [Tutorials/DesignPatterns](Tutorials/DesignPatterns) | How to achieve low-latency host-device streaming while maintaining throughput
@@ -191,6 +192,7 @@ All the Tier 4 samples are in the [ReferenceDesigns](ReferenceDesigns) category.
 | [pca](ReferenceDesigns/pca)                               | How to implement high performance principal component analysis on a FPGA
 | [qrd](ReferenceDesigns/qrd)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition algorithm
 | [qri](ReferenceDesigns/qri)                               | Implementing a high performance FPGA version of the Gram-Schmidt QR decomposition to compute a matrix inversion
+| [svd](ReferenceDesigns/svd)                               | How to implement a high performance Singular Value Decomposition on an FPGA
 
 #### Start exploring the FPGA code samples with this selection
 
@@ -263,35 +265,6 @@ Intel technologies’ features and benefits depend on system configuration and m
 Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
 
 © Intel Corporation.
-
-## Build and Run the Samples on Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-You can specify a FPGA runtime node using a single line script similar to the following example.
-
-```
-qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:fpga_runtime:ppn=2` (lower case L) assigns one full node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |FPGA Compile Time  |`qsub -I -l nodes=1:fpga_compile:ppn=2 -d .`
-  |FPGA Runtime       |`qsub -I -l nodes=1:fpga_runtime:ppn=2 -d .`
-  |GPU                |`qsub -I -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -I -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes read, [Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/) in the Intel® DevCloud for oneAPI Documentation.
-
-Only `fpga_compile` nodes support compiling to FPGA. When compiling for FPGA hardware, increase the job timeout to 24 hours.
-
-Neither compiling nor executing programs on FPGA hardware are supported on the login nodes. For more information, see the [Intel® oneAPI Base Toolkit Get Started Guide](https://devcloud.intel.com/oneapi/documentation/base-toolkit/).
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured for you, you do not need to set environment variables.
 
 ## Documentation
 

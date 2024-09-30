@@ -8,7 +8,7 @@ This workshop is designed to be used on Intel® DevCloud and includes details on
 
 | Optimized for             | Description
 |:---                       |:---
-| OS                        | Ubuntu* 20.04 (or newer) <br> Windows* 10
+| OS                        | Ubuntu* 20.04 (or newer) <br> Windows* 10, 11
 | Hardware                  | Gen (or newer)
 | Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> Intel® AI Analytics Toolkit (AI Kit) <br> pip install seaborn
 

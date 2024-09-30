@@ -14,6 +14,9 @@ constexpr int wg_size = 128;
 
 sycl::queue* binomial_queue;
 
+template<typename Type>
+class k_binomial; // can be useful for profiling
+
 template<typename DATA_TYPE>
 Binomial<DATA_TYPE>::Binomial() {
   binomial_queue = new sycl::queue;
@@ -71,7 +74,7 @@ void Binomial<DATA_TYPE>::body() {
   binomial_queue->submit([&](sycl::handler& h) {
     sycl::local_accessor<DATA_TYPE> slm_call{wg_size + 1, h};
 
-    h.template parallel_for(
+    h.parallel_for<k_binomial<DATA_TYPE>>(
         sycl::nd_range(sycl::range<1>(opt_n * wg_size),
                        sycl::range<1>(wg_size)),
         [=](sycl::nd_item<1> item)

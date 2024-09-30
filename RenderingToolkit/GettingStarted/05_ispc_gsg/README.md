@@ -10,7 +10,7 @@ of the Intel&reg; Rendering Toolkit (Render Kit).
 
 | Minimum Requirements              | Description
 |:---                               |:---
-| OS                                | Linux*Ubuntu* 18.04 <br>CentOS*8 (or compatible) <br> Windows* 10 <br>macOS* 10.15+
+| OS                                | Linux*Ubuntu* 18.04 <br>CentOS*8 (or compatible) <br> Windows* 10, 11 <br>macOS* 10.15+
 | Hardware                          | Intel 64 Penryn or newer with SSE4.1 extensions; or an ARM64 with NEON extensions <br>(Optimized requirements: Intel 64 Skylake or newer with AVX512 extensions; or ARM64 with NEON extensions)
 | Compiler Toolchain                | Windows*OS: MSVS 2019 installed with Windows* SDK and CMake*; Other platforms: C++11 compiler and CMake*
 | Libraries                         | Install Intel&reg; Rendering Toolkit (Render Kit), including the Intel&reg; Implicit SPMD Program Compiler

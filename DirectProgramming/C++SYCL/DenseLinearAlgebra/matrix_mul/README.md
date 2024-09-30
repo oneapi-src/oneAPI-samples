@@ -18,7 +18,7 @@ The code will attempt to execute on an available GPU first and fallback to the s
 
 | Optimized for                     | Description
 |:---                               |:---
-| OS                                | Linux* Ubuntu* 18.04 <br> Windows 10*
+| OS                                | Linux* Ubuntu* 18.04 <br> Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++/C++ Compiler  <br> Intel&reg; oneAPI C++ Compiler Classic <br> Intel&reg; C++ Compiler
 

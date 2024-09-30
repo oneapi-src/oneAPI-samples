@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 
+#include <cmath>
 #include <iostream>
 #include <sycl/sycl.hpp>
 
@@ -136,7 +137,7 @@ int test() {
   for (int i = 0; i < M; i++) {
     for (int j = 0; j < N; j++) {
       if constexpr (std::is_same_v<Tc, float>) {
-        if (fabs(C[i * N + j] - D[i * N + j]) > BF16_EPSILON) {
+        if (std::fabs(C[i * N + j] - D[i * N + j]) > BF16_EPSILON) {
           res = false;
           std::cout << "Incorrect result in matrix. "
                     << "i: " << i << ", j: " << j << ", Ref: " << D[i * N + j]

@@ -67,7 +67,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
                 sycl::vec<float, 2> r;
                 size_t count = 0;
                 for(int i = 0; i < count_per_thread; i++) {
-                    r.load(i + item.get_global_linear_id() * count_per_thread, rng_acc.get_pointer());
+                    r.load(i + item.get_global_linear_id() * count_per_thread, rng_acc.template get_multi_ptr<sycl::access::decorated::yes>());
                     if(sycl::length(r) <= 1.0f) {
                         count += 1;
                     }
@@ -116,7 +116,7 @@ int main(int argc, char ** argv) {
 
     try {
         // Queue constructor passed exception handler
-        sycl::queue q(sycl::default_selector{}, exception_handler);
+        sycl::queue q(sycl::default_selector_v, exception_handler);
         // Launch Pi number calculation
         estimated_pi = estimate_pi(q, n_points);
     } catch (...) {

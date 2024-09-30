@@ -119,7 +119,7 @@ int main(int argc, char ** argv) {
 
     try {
         // Queue constructor passed exception handler
-        sycl::queue q(sycl::default_selector{}, exception_handler);
+        sycl::queue q(sycl::default_selector_v, exception_handler);
         // Launch Pi number calculation
         estimated_pi = estimate_pi(q, n_points);
     } catch (...) {
