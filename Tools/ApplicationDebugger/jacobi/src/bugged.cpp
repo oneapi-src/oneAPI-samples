@@ -12,8 +12,8 @@
 
 // Compute x_k1 and write the result to its accessor.
 
-void compute_x_k1_kernel (id<1> &index, float *b, 
-                          float *x_k, float *x_k1) {
+void compute_x_k1_kernel (id<1> &index, const float *b,
+                          const float *x_k, float *x_k1) {
   // Current index.
   int i = index[0];
 
@@ -54,8 +54,10 @@ void compute_x_k1 (queue &q, buffer_args &buffers) {
     accessor acc_x_k1(buffers.x_k1, h, write_only);
 
     h.parallel_for(range{n}, [=](id<1> index) {
-      compute_x_k1_kernel (index, acc_b.get_pointer(), acc_x_k.get_pointer(), 
-                           acc_x_k1.get_pointer());
+      compute_x_k1_kernel (index,
+                           acc_b.template get_multi_ptr<access::decorated::no>().get(),
+                           acc_x_k.template get_multi_ptr<access::decorated::no>().get(),
+                           acc_x_k1.template get_multi_ptr<access::decorated::no>().get());
     });
   });
 }
