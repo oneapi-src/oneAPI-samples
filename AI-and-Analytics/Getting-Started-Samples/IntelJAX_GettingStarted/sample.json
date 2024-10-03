@@ -1,8 +1,8 @@
 {
 	"guid": "111213A0-C930-45B4-820F-02472BABBF34",
-	"name": "Intel® Optimization for TensorFlow* Getting Started",
+	"name": "Getting Started example for JAX CPU",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
-	"description": "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN.",
+	"description": "This sample illustrates how to train a JAX model and run inference",
 	"builder": ["cli"],
 	"languages": [{
 		"python": {}
@@ -11,11 +11,12 @@
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
-			"id": "tensorflow hello world",
+			"id": "JAX CPU example",
 			"steps": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"python TensorFlow_HelloWorld.py"
+				"git clone https://github.com/google/jax.git",
+				"cd jax",
+				"export PYTHONPATH=$PYTHONPATH:$(pwd)",
+				"python examples/spmd_mnist_classifier_fromscratch.py"
 			]
 		}]
 	},
