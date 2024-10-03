@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 const int Nx = 16384; /* Grid size */
 const int Ny = Nx;
