@@ -11,7 +11,7 @@ The `JAX Getting Started` sample demonstrates how to train a JAX model and run i
 
 JAX is a high-performance numerical computing library that enables automatic differentiation. It provides features like just-in-time compilation and efficient parallelization for machine learning and scientific computing tasks.
 
-This sample code shows how to get started with JAX in CPU. The sample code defines a simple neural network that trains on the MNIST dataset using JAX for parallel computations across multiple CPU cores. The network trains over multiple epochs, evaluates accuracy, and adjusts parameters using stochastic gradient descent across devices. 
+This sample code shows how to get started with JAX on CPU. The sample code defines a simple neural network that trains on the MNIST dataset using JAX for parallel computations across multiple CPU cores. The network trains over multiple epochs, evaluates accuracy, and adjusts parameters using stochastic gradient descent across devices. 
 
 ## Prerequisites
 
@@ -25,7 +25,8 @@ This sample code shows how to get started with JAX in CPU. The sample code defin
 
 ## Key Implementation Details
 
-The example implementation involves a python file 'spmd_mnist_classifier_fromscratch.py' under the examples directory from the jax repo [(https://github.com/google/jax/)].
+The getting-started sample code uses the python file 'spmd_mnist_classifier_fromscratch.py' under the examples directory in the 
+[jax repository](https://github.com/google/jax/).
 It implements a simple neural network's training and inference for mnist images. The images are downloaded to a temporary directory when the example is run first. 
 - **init_random_params** initializes the neural network weights and biases for each layer.
 - **predict** computes the forward pass of the network, applying weights, biases, and activations to inputs.
@@ -84,7 +85,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 ### Docker
 AI Tools Docker images already have Get Started samples pre-installed. Refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 ## Example Output
-1. With the initial run, you should see results similar to the following:
+1. When the program is run, you should see results similar to the following:
 
 ```
 downloaded https://storage.googleapis.com/cvdf-datasets/mnist/train-images-idx3-ubyte.gz to /tmp/jax_example_data/
