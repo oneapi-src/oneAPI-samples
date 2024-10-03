@@ -1,5 +1,5 @@
 {
-	"guid": "111213A0-C930-45B4-820F-02472BABBF34",
+	"guid": "9A6A140B-FBD0-4CB2-849A-9CAF15A6F3B1",
 	"name": "Getting Started example for JAX CPU",
 	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
 	"description": "This sample illustrates how to train a JAX model and run inference",
