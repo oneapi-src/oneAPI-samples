@@ -39,9 +39,6 @@ To learn more about the extensions, see the
 
 
 ## Building the Block LU Decomposition Sample
-### Running Samples In Intel® DevCloud
-If running a sample in the Intel® DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/)
-
 
 ### On a Linux* System
 Run `make` to build and run the factor and solve programs. You can remove all generated files with `make clean`.
