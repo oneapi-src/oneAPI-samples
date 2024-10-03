@@ -1,3 +1,6 @@
-source /opt/intel/oneapi/setvars.sh
-source activate tensorflow
-python TensorFlow_HelloWorld.py
+source $HOME/intel/oneapi/intelpython/bin/activate
+conda activate jax
+git clone https://github.com/google/jax.git
+cd jax
+export PYTHONPATH=$PYTHONPATH:$(pwd)
+python examples/spmd_mnist_classifier_fromscratch.py
