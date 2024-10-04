@@ -53,7 +53,7 @@ void reduceBlock(volatile float *sdata, float mySum, const unsigned int tid,
                  sycl::group<3> cta, const sycl::nd_item<3> &item_ct1) {
   sycl::sub_group tile32 = item_ct1.get_sub_group();
   sdata[tid] = mySum;
-  item_ct1.get_sub_group().barrier();
+  //item_ct1.get_sub_group().barrier();
 
   const int VEC = 32;
   const int vid = tid & (VEC - 1);
@@ -67,7 +67,7 @@ void reduceBlock(volatile float *sdata, float mySum, const unsigned int tid,
       beta += temp;
       sdata[tid] = beta;
     }
-    item_ct1.get_sub_group().barrier();
+//    item_ct1.get_sub_group().barrier();
   }
   item_ct1.barrier();
 
