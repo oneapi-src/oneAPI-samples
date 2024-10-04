@@ -44,8 +44,8 @@ int main() {
       [](auto lhs, auto rhs) { return get<0>(lhs) < get<0>(rhs); });
 
   // 3.Checking results
-  auto host_keys = keys_buf.get_access<access::mode::read>();
-  auto host_vals = vals_buf.get_access<access::mode::read>();
+  auto host_keys = keys_buf.get_host_access(sycl::read_only);
+  auto host_vals = vals_buf.get_host_access(sycl::read_only);
 
   // expected output:
   // keys: {2, 2, 4, 4, ..., n - 2, n - 2, n, n}
