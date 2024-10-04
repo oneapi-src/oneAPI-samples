@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
     for (pos = 0; pos < N; pos++) {
       ref = getQuasirandomValue63(pos, dim);
       delta = (double)h_OutputGPU[dim * N + pos] - ref;
-      sumDelta += fabs(delta);
-      sumRef += fabs(ref);
+      sumDelta += sycl::fabs(delta);
+      sumRef += sycl::fabs(ref);
     }
 
   printf("L1 norm: %E\n", sumDelta / sumRef);
@@ -173,8 +173,8 @@ int main(int argc, char **argv) {
     unsigned int d = (pos + 1) * distance;
     ref = MoroInvCNDcpu(d);
     delta = (double)h_OutputGPU[pos] - ref;
-    sumDelta += fabs(delta);
-    sumRef += fabs(ref);
+    sumDelta += sycl::fabs(delta);
+    sumRef += sycl::fabs(ref);
   }
 
   printf("L1 norm: %E\n\n", L1norm = sumDelta / sumRef);

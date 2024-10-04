@@ -98,7 +98,7 @@ void JacobiIteration(const float *du0, const float *dv0,
     DPCT1064:30: Migrated min call is used in a macro/template definition and
     may not be valid for all macro/template uses. Adjust the code.
     */
-    x = dpct::min((unsigned int)(bsx + item_ct1.get_local_id(2)), w - 1);
+    x = dpct::min((unsigned int)(bsx + item_ct1.get_local_id(2)), (unsigned int)w - 1);
     // row just below the tile
     y = sycl::max(bsy - 1, 0);
     gmPos = y * s + x;
@@ -127,7 +127,7 @@ void JacobiIteration(const float *du0, const float *dv0,
     DPCT1064:31: Migrated min call is used in a macro/template definition and
     may not be valid for all macro/template uses. Adjust the code.
     */
-    y = dpct::min((unsigned int)(bsy + item_ct1.get_local_id(2)), h - 1);
+    y = dpct::min((unsigned int)(bsy + item_ct1.get_local_id(2)), (unsigned int)h - 1);
     // column to the left
     x = sycl::max(bsx - 1, 0);
     smPos = bx + 2 + item_ct1.get_local_id(2) * (bx + 2);
@@ -211,8 +211,8 @@ static void SolveForUpdate(const float *du0, const float *dv0, const float *Ix,
                      [=](sycl::nd_item<3> item_ct1) {
                        JacobiIteration<32, 6>(du0, dv0, Ix, Iy, Iz, w, h, s,
                                               alpha, du1, dv1, item_ct1,
-                                              du_acc_ct1.get_pointer(),
-                                              dv_acc_ct1.get_pointer());
+					      du_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(),
+					      dv_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());
                      });
   });
 }

@@ -471,7 +471,8 @@ class syclScopedDeviceMemory {
     }
 
     syclScopedDeviceMemory(syclScopedDeviceMemory&& rhs) :
-      _queue{std::move(rhs._queue)}, _data{rhs._data}, _N {rhs._N} {
+       _data{rhs._data}, _N {rhs._N} {
+      _queue = std::move(rhs._queue);
       rhs._data = nullptr;
       rhs._N    = 0;
     }

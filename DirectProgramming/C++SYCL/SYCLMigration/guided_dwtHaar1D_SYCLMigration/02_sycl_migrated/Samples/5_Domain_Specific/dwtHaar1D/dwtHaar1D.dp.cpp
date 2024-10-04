@@ -320,9 +320,9 @@ void runTest(int argc, char **argv) {
 
     // update block and grid size
     grid_size[2] =
-        (num_threads_total_left / 512) + (0 != (num_threads_total_left % 512))
+        (num_threads_total_left / 512) + (0 != ((num_threads_total_left % 512))
             ? 1
-            : 0;
+            : 0);
 
     if (grid_size[2] <= 1) {
       block_size[2] = num_threads_total_left;
@@ -337,7 +337,7 @@ void runTest(int argc, char **argv) {
 
   // post processing
   // write file for regression test
-  if (r_fname == NULL) {
+  if (r_fname[0] == '\0') {
     fprintf(stderr,
             "Cannot write the output file storing the result of the wavelet "
             "decomposition.\n%s",

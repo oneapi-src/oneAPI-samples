@@ -126,7 +126,7 @@ void storeInterval(unsigned int addr, float *s_left, float *s_right,
   float t0 = sycl::fabs(right - left);
   float t1 = sycl::max(sycl::fabs(left), sycl::fabs(right)) * precision;
 
-  if (t0 <= dpct::max(MIN_ABS_INTERVAL, t1)) {
+  if (t0 <= sycl::max(static_cast<float>(MIN_ABS_INTERVAL), t1)) {
     // compute mid point
     float lambda = computeMidpoint(left, right);
 
