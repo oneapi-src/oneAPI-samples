@@ -198,7 +198,13 @@ int main(int argc, char** argv) {
 
   // Printing results
   std::cout << "T-test result with expected mean: " << res0 << "\n";
-  std::cout << "T-test result with two input arrays: " << res1 << "\n\n";
+  std::cout << "T-test result with two input arrays: " << res1 << "\n";
 
+  if(res0 != 1 || res1 != 1) {
+    std::cout << "TEST FAILED" << std::endl;
+    return 1;
+  }
+
+  std::cout << "TEST PASSED" << std::endl;
   return 0;
 }

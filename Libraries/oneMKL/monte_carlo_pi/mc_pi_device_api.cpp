@@ -112,7 +112,7 @@ int main(int argc, char ** argv) {
     } catch (...) {
         // Some other exception detected
         std::cout << "Failure" << std::endl;
-        exit(1);
+        std::terminate();
     }
 
     // Printing results
