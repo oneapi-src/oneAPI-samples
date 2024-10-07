@@ -65,9 +65,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
             sycl::vec<float, 2> r;
             size_t count = 0;
             for(int i = 0; i < count_per_thread; i++) {
-                // r.load(i + item.get_global_linear_id() * count_per_thread, sycl::global_ptr<float>(rng_ptr));
-                r[0] = rng_ptr[2 * (i + item.get_global_linear_id() * count_per_thread)];
-                r[1] = rng_ptr[2 * (i + item.get_global_linear_id() * count_per_thread) + 1];
+                r.load(i + item.get_global_linear_id() * count_per_thread, sycl::global_ptr<float>(rng_ptr));
                 if(sycl::length(r) <= 1.0f) {
                     count += 1;
                 }
