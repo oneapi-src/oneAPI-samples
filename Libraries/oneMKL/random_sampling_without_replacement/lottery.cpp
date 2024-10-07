@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include <iostream>
+#include <unordered_set>
 
 #include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
@@ -59,10 +60,7 @@ void lottery(sycl::queue& q, size_t m, size_t n, size_t num_exp, size_t* result_
                     // Generate random natural number j from {i,...,N-1}
                     auto j = i + (size_t)(rng_buf[id * m + i] * (float)(n - i));
                     // Swap local_buf[i] and local_buf[j]
-                    auto tmp = local_buf[i];
-                    local_buf[i] = local_buf[j];
-
-                    local_buf[j] = tmp;
+                    std::swap(local_buf[i], local_buf[j]);
                 }
                 for (size_t i = 0; i < m; ++i) {
                     // Copy shuffled buffer
@@ -135,6 +133,22 @@ int main(int argc, char ** argv) {
         std::cout << "Failure" << std::endl;
         std::terminate();
     }
+
+    // check correctness whether experiment contains unique numbers or not
+    for(size_t i = 0; i < num_exp; ++i){
+        auto first_iter = result_ptr + m * i;
+        std::unordered_set<size_t> unique_set(first_iter, first_iter + m);
+        if(unique_set.size() != m &&
+            // if all elements are in the [0, n] range
+            std::count_if(unique_set.begin(), unique_set.end(), [n](auto val){return val > n && val >= 0;}) == 0)
+        {
+            std::cout << "TEST FAILED" << std::endl;
+            std::cout << "Error: the experiment "<< i <<" contains duplicates" << std::endl;
+            std::cout << "Number of unique elements in the result: " << unique_set.size() << std::endl;
+            return 1;
+        }
+    }
+    std::cout << "TEST PASSED" << std::endl;
 
     // Print output
     print_results(result_ptr, m, num_exp);
