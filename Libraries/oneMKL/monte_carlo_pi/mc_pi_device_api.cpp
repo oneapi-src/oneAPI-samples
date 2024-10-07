@@ -112,14 +112,25 @@ int main(int argc, char ** argv) {
     } catch (...) {
         // Some other exception detected
         std::cout << "Failure" << std::endl;
-        std::terminate();
+        exit(1);
     }
 
     // Printing results
+    double abs_error = std::fabs(pi - estimated_pi);
+    bool failed = abs_error > 1.0e-4;
+    if(failed) {
+        std::cout << "TEST FAILED" << std::endl;
+    } else {
+        std::cout << "TEST PASSED" << std::endl;
+    }
     std::cout << "Estimated value of Pi = " << estimated_pi << std::endl;
     std::cout << "Exact value of Pi = " << pi << std::endl;
-    std::cout << "Absolute error = " << fabs(pi-estimated_pi) << std::endl;
+    std::cout << "Absolute error = " << abs_error << std::endl;
     std::cout << std::endl;
+
+    if(failed) {
+        return 1;
+    }
 
     return 0;
 }
