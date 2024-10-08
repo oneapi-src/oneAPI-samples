@@ -13,7 +13,7 @@
 *******************************************************************************/
 
 #include <iostream>
-#include <unordered_set>
+#include <algorithm>
 
 #include <sycl/sycl.hpp>
 #include "oneapi/mkl/rng/device.hpp"
