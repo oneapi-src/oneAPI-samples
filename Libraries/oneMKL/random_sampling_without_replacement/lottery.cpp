@@ -150,7 +150,7 @@ int main(int argc, char ** argv) {
             return 1;
         }
     }
-    std::cout << "TEST PASSED" << std::endl;
 
+    std::cout << "TEST PASSED" << std::endl;
     return 0;
 }

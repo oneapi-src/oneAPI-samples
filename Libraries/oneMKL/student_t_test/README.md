@@ -70,6 +70,8 @@ Number of random samples = 1000000 with mean = 0, std_dev = 1
 T-test result with expected mean: 1
 T-test result with two input arrays: 1
 
+TEST PASSED
+
 ./t_test_usm
 
 Student's T-test Simulation
@@ -78,6 +80,8 @@ Unified Shared Memory Api
 Number of random samples = 1000000 with mean = 0, std_dev = 1
 T-test result with expected mean: 1
 T-test result with two input arrays: 1
+
+TEST PASSED
 ```
 
 ### Troubleshooting
