@@ -134,25 +134,24 @@ int main(int argc, char ** argv) {
         std::terminate();
     }
 
-    // check correctness whether experiment contains unique numbers or not
+    // Print output
+    std::cout << "Results with Host API:" << std::endl;
+    print_results(result_ptr, m, num_exp);
+
+    // Check correctness whether experiment contains unique numbers or not
     for(size_t i = 0; i < num_exp; ++i){
         auto first_iter = result_ptr + m * i;
-        std::unordered_set<size_t> unique_set(first_iter, first_iter + m);
-        if(unique_set.size() != m &&
+        std::sort(first_iter, first_iter + m);
+        if(std::adjacent_find(first_iter, first_iter + m) != first_iter + m &&
             // if all elements are in the [0, n] range
-            std::count_if(unique_set.begin(), unique_set.end(), [n](auto val){return val > n && val >= 0;}) == 0)
+            std::count_if(first_iter, first_iter + m, [n](auto val){return val > n && val >= 0;}) == 0)
         {
             std::cout << "TEST FAILED" << std::endl;
             std::cout << "Error: the experiment "<< i <<" contains duplicates" << std::endl;
-            std::cout << "Number of unique elements in the result: " << unique_set.size() << std::endl;
             return 1;
         }
     }
     std::cout << "TEST PASSED" << std::endl;
-
-    // Print output
-    std::cout << "Results with Host API:" << std::endl;
-    print_results(result_ptr, m, num_exp);
 
     return 0;
 }
