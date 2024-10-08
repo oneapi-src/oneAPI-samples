@@ -79,9 +79,11 @@ Monte Carlo pi Calculation Simulation
 Buffer API
 -------------------------------------
 Number of points = 120000000
-Estimated value of Pi = 3.14139
+Estimated value of Pi = 3.14106
 Exact value of Pi = 3.14159
-Absolute error = 0.000207487
+Absolute error = 0.000530387
+
+TEST PASSED
 
 ./mc_pi_usm
 
@@ -89,9 +91,11 @@ Monte Carlo pi Calculation Simulation
 Unified Shared Memory API
 -------------------------------------
 Number of points = 120000000
-Estimated value of Pi = 3.14139
+Estimated value of Pi = 3.14106
 Exact value of Pi = 3.14159
-Absolute error = 0.000207487
+Absolute error = 0.000530387
+
+TEST PASSED
 
 ./mc_pi_device_api
 
@@ -99,9 +103,11 @@ Monte Carlo pi Calculation Simulation
 Device API
 -------------------------------------
 Number of points = 120000000
-Estimated value of Pi = 3.14139
+Estimated value of Pi = 3.14159
 Exact value of Pi = 3.14159
-Absolute error = 0.000207487
+Absolute error = 5.95359e-06
+
+TEST PASSED
 ```
 
 ### Troubleshooting

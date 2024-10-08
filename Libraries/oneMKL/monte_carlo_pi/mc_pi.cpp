@@ -7,7 +7,7 @@
 /*
 *
 *  Content:
-*       This file contains Monte Carlo Pi number evaluation benchmark for DPC++ 
+*       This file contains Monte Carlo Pi number evaluation benchmark for DPC++
 *       interface of random number generators.
 *
 *******************************************************************************/
@@ -126,10 +126,17 @@ int main(int argc, char ** argv) {
     }
 
     // Printing results
+    double abs_error = std::fabs(pi - estimated_pi);
     std::cout << "Estimated value of Pi = " << estimated_pi << std::endl;
     std::cout << "Exact value of Pi = " << pi << std::endl;
-    std::cout << "Absolute error = " << fabs(pi-estimated_pi) << std::endl;
+    std::cout << "Absolute error = " << abs_error << std::endl;
     std::cout << std::endl;
 
+    if(abs_error > 1.0e-3) {
+        std::cout << "TEST FAILED" << std::endl;
+        return 1;
+    }
+
+    std::cout << "TEST PASSED" << std::endl;
     return 0;
 }

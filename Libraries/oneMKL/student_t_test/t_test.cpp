@@ -19,18 +19,17 @@
 
 #include "oneapi/mkl.hpp"
 
-using fp_type = float;
 // Initialization value for random number generator
-static const auto seed = 7777;
+static const int seed = 7777;
 // Quantity of samples to check using Students' T-test
-static const auto n_samples = 1000000;
+static const int n_samples = 1000000;
 // Expected mean value of random samples
-static const auto expected_mean = 0.0f;
+static const float expected_mean = 0.0f;
 // Expected standard deviation of random samples
-static const auto expected_std_dev = 1.0f;
+static const float expected_std_dev = 1.0f;
 // T-test threshold which corresponds to 5% significance level and infinite
 // degrees of freedom
-static const auto threshold = 1.95996f;
+static const float threshold = 1.95996f;
 
 // T-test function with expected mean
 // Returns: -1 if something went wrong, 1 - in case of NULL hypothesis should be
@@ -123,10 +122,11 @@ std::int32_t t_test(sycl::queue &q, sycl::buffer<RealType, 1> &r1,
 }
 
 int main(int argc, char **argv) {
-  std::cout << "\nStudent's T-test Simulation\n";
-  std::cout << "Buffer Api\n";
-  std::cout << "-------------------------------------\n";
+  std::cout << "\nStudent's T-test Simulation" << std::endl;
+  std::cout << "Buffer Api" << std::endl;
+  std::cout << "-------------------------------------" << std::endl;
 
+  using fp_type = float;
   size_t n_points = n_samples;
   fp_type mean = expected_mean;
   fp_type std_dev = expected_std_dev;
@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
   }
 
   std::cout << "Number of random samples = " << n_points
-            << " with mean = " << mean << ", std_dev = " << std_dev << "\n";
+            << " with mean = " << mean << ", std_dev = " << std_dev << std::endl;
 
   // This exception handler with catch async exceptions
   auto exception_handler = [](sycl::exception_list exceptions) {
@@ -189,13 +189,19 @@ int main(int argc, char **argv) {
     res1 = t_test(q, rng_buf0, n_points, rng_buf1, n_points);
   } catch (...) {
     // Some other exception detected
-    std::cout << "Failure\n";
+    std::cout << "Failure" << std::endl;
     std::terminate();
   }
 
   // Printing results
-  std::cout << "T-test result with expected mean: " << res0 << "\n";
-  std::cout << "T-test result with two input arrays: " << res1 << "\n\n";
+  std::cout << "T-test result with expected mean: " << res0 << std::endl;
+  std::cout << "T-test result with two input arrays: " << res1 << std::endl << std::endl;
 
+  if(res0 != 1 || res1 != 1) {
+    std::cout << "TEST FAILED" << std::endl;
+    return 1;
+  }
+
+  std::cout << "TEST PASSED" << std::endl;
   return 0;
 }

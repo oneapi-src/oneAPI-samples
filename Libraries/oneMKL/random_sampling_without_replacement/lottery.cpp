@@ -13,6 +13,7 @@
 *******************************************************************************/
 
 #include <iostream>
+#include <algorithm>
 
 #include <sycl/sycl.hpp>
 #include "oneapi/mkl.hpp"
@@ -59,10 +60,7 @@ void lottery(sycl::queue& q, size_t m, size_t n, size_t num_exp, size_t* result_
                     // Generate random natural number j from {i,...,N-1}
                     auto j = i + (size_t)(rng_buf[id * m + i] * (float)(n - i));
                     // Swap local_buf[i] and local_buf[j]
-                    auto tmp = local_buf[i];
-                    local_buf[i] = local_buf[j];
-
-                    local_buf[j] = tmp;
+                    std::swap(local_buf[i], local_buf[j]);
                 }
                 for (size_t i = 0; i < m; ++i) {
                     // Copy shuffled buffer
@@ -139,5 +137,20 @@ int main(int argc, char ** argv) {
     // Print output
     print_results(result_ptr, m, num_exp);
 
+    // Check correctness whether experiment contains unique numbers or not
+    for(size_t i = 0; i < num_exp; ++i){
+        auto first_iter = result_ptr + m * i;
+        std::sort(first_iter, first_iter + m);
+        if(std::adjacent_find(first_iter, first_iter + m) != first_iter + m &&
+            // if all elements are in the [0, n] range
+            std::count_if(first_iter, first_iter + m, [n](auto val){return val > n && val >= 0;}) == 0)
+        {
+            std::cout << "TEST FAILED" << std::endl;
+            std::cout << "Error: the experiment "<< i <<" contains duplicates" << std::endl;
+            return 1;
+        }
+    }
+
+    std::cout << "TEST PASSED" << std::endl;
     return 0;
 }

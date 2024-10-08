@@ -82,12 +82,14 @@ After building, if everything is working correctly, you will see the step-by-ste
 ./lottery
 
 Multiple Simple Random Sampling without replacement
-Unified Shared Memory API
+Buffer Api
 ---------------------------------------------------
 M = 6, N = 49, Number of experiments = 11969664
 Sample 11969661 of lottery of 11969664: 19, 5, 17, 27, 44, 34,
 Sample 11969662 of lottery of 11969664: 31, 39, 6, 19, 48, 15,
 Sample 11969663 of lottery of 11969664: 24, 11, 29, 44, 2, 20,
+
+TEST PASSED
 
 ./lottery_usm
 
@@ -100,6 +102,8 @@ Sample 11969661 of lottery of 11969664: 19, 5, 17, 27, 44, 34,
 Sample 11969662 of lottery of 11969664: 31, 39, 6, 19, 48, 15,
 Sample 11969663 of lottery of 11969664: 24, 11, 29, 44, 2, 20,
 
+TEST PASSED
+
 ./lottery_device_api
 
 Multiple Simple Random Sampling without replacement
@@ -109,6 +113,8 @@ M = 6, N = 49, Number of experiments = 11969664
 Sample 11969661 of lottery of 11969664: 19, 5, 17, 27, 44, 34,
 Sample 11969662 of lottery of 11969664: 31, 39, 6, 19, 48, 15,
 Sample 11969663 of lottery of 11969664: 24, 11, 29, 44, 2, 20,
+
+TEST PASSED
 ```
 
 ### Troubleshooting
