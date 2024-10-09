@@ -292,6 +292,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
       ```
       make fpga_emu
       ```
+      >**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
    2. Generate the HTML optimization reports. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
       ```
       make report
@@ -327,6 +328,7 @@ In the latter launch-collect test, the entire contents of the `in` vector are wr
       ```
       nmake fpga_emu
       ```
+      >**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
    2. Generate the optimization report. (See [Read the Reports](#read-the-reports) below for information on finding and understanding the reports.)
       ```
       nmake report

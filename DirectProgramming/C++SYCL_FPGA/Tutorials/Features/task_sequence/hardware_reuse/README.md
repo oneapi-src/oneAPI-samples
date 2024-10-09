@@ -213,6 +213,7 @@ Use these commands to run the design, depending on your OS.
       ```
       make fpga_emu
       ```
+      >**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
    2. Generate the HTML optimization reports.
       ```
       make report
@@ -253,6 +254,7 @@ Use these commands to run the design, depending on your OS.
       ```
       nmake fpga_emu
       ```
+      >**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
    2. Generate the optimization report. 
       ```
       nmake report

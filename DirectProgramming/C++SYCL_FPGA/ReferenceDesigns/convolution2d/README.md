@@ -363,6 +363,8 @@ This design uses CMake to generate a build script for GNU/make.
    | FPGA Simulator      | `make fpga_sim`
    | FPGA Hardware       | `nmake fpga`
 
+>**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
+
 ### On a Windows* System
 This design uses CMake to generate a build script for  `nmake`.
 
@@ -395,6 +397,8 @@ This design uses CMake to generate a build script for  `nmake`.
    | FPGA Hardware       | `nmake fpga`
 
    > **Note**: If you encounter any issues with long paths when compiling under Windows*, you may have to create your 'build' directory in a shorter path, for example c:\samples\build.  You can then run cmake from that directory, and provide cmake with the full path to your sample directory, for example:
+  
+   >**Note**: Since this design uses host pipes, make sure that the emulator pipe depth behaviour is as intended. Set the environment variable `CL_CONFIG_CHANNEL_DEPTH_EMULATION_MODE` to `ignore-depth` for this design so that multiple writes can happen to the pipe without first having the contents read.
 >
 >  ```
   > C:\samples\build> cmake -G "NMake Makefiles" C:\long\path\to\code\sample\CMakeLists.txt
