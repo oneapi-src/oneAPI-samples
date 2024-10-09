@@ -41,9 +41,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 >
 >For more information on environment variables, see [Use the setvars Script for Linux or macOS](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
-### Running Samples on the DevCloud
-When running a sample in the Intel DevCloud, remember that you must specify the compute node (CPU, GPU, FPGA) as well as whether to run in batch or interactive mode. For more information see the Intel® oneAPI Base Toolkit Get Started Guide (https://devcloud.intel.com/oneapi/get-started/base-toolkit/).
-
 Run `make` to build and run the sample. Three programs are generated: 
 
 1. `lu_solve`: CPU-only, OpenMP disabled
