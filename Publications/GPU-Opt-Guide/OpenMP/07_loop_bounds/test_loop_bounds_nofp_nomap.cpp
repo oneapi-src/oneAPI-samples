@@ -19,7 +19,7 @@
 #define scaled_rand() ((rand() % MAX) / (1.0 * MAX))
 
 #define IDX2(i, j) (i * P + j)
-#define IDX4(b, i, j, k) (b * P * P * P + i * P * P + j * P + k)
+#define IDX4(b, i, j, k) ((b * P * P * P + i * P * P + j * P + k) % SIZE)
 
 int main(void) {
   double w[SIZE];            /* output */
