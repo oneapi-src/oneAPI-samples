@@ -108,7 +108,7 @@ void writeImages(std::vector<sycl::buffer<uint8_t>>& output_buffers) {
 // - SYCL compiler will automatically deduce the address space for the two
 //   pointers; sycl::multi_ptr specialization for particular address space
 //   can used for more control
-__attribute__((always_inline)) static void ApplyFilter(uint8_t *src_image,
+__attribute__((always_inline)) static void ApplyFilter(multi_ptr<const unsigned char, access::address_space::global_space, (sycl::access::decorated)2> src_image,
                                                        uint8_t *dst_image,
                                                        int i) {
   i *= 3;
