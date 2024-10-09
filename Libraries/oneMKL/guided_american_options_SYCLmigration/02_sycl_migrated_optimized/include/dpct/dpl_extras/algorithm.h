@@ -19,6 +19,35 @@
 
 namespace dpct {
 
+namespace internal {
+// This function is ported from oneDPL with the check for an FPGA policy
+// removed. This function should be used to wrap a provided policy when multiple
+// oneDPL calls are made to ensure unique kernel names.
+template <template <typename> class NewKernelName, typename Policy>
+auto make_wrapped_policy(Policy &&policy)
+    -> decltype(oneapi::dpl::execution::make_device_policy<
+                NewKernelName<typename ::std::decay_t<Policy>::kernel_name>>(
+        ::std::forward<Policy>(policy))) {
+  return oneapi::dpl::execution::make_device_policy<
+      NewKernelName<typename ::std::decay_t<Policy>::kernel_name>>(
+      ::std::forward<Policy>(policy));
+}
+
+template <typename Name> class partition_call1;
+
+template <typename Name> class partition_call2;
+
+template <typename Name> class copy_before_partition;
+
+template <typename Name> class reverse_partition;
+
+template <typename Name> class copy_call1;
+
+template <typename Name> class copy_call2;
+
+}; // namespace internal
+
+
 template <typename Policy, typename Iter1, typename Iter2, typename Pred,
           typename T>
 void replace_if(Policy &&policy, Iter1 first, Iter1 last, Iter2 mask, Pred p,
@@ -213,10 +242,7 @@ Iter partition_point(Policy &&policy, Iter first, Iter last, Pred p) {
       std::is_same<typename std::iterator_traits<Iter>::iterator_category,
                    std::random_access_iterator_tag>::value,
       "Iterators passed to algorithms must be random-access iterators.");
-  if (std::is_partitioned(policy, first, last, p))
-    return std::find_if_not(std::forward<Policy>(policy), first, last, p);
-  else
-    return first;
+  return std::find_if_not(std::forward<Policy>(policy), first, last, p);
 }
 
 template <typename Policy, typename Iter1, typename Iter2, typename Iter3,
@@ -369,7 +395,7 @@ void scatter_if(Policy &&policy, InputIter1 first, InputIter1 last,
               typename std::iterator_traits<OutputIter>::iterator_category,
               std::random_access_iterator_tag>::value,
       "Iterators passed to algorithms must be random-access iterators.");
-  transform_if(
+  dpct::transform_if(
       ::std::forward<Policy>(policy), first, last, mask,
       oneapi::dpl::make_permutation_iterator(result, map),
       [=](auto &&v) { return v; }, [=](auto &&m) { return pred(m); });
@@ -405,7 +431,7 @@ OutputIter gather_if(Policy &&policy, InputIter1 map_first, InputIter1 map_last,
       oneapi::dpl::make_permutation_iterator(input_first, map_first);
   const int n = std::distance(map_first, map_last);
 
-  return transform_if(
+  return dpct::transform_if(
       ::std::forward<Policy>(policy), perm_begin, perm_begin + n, mask, result,
       [=](auto &&v) { return v; }, [=](auto &&m) { return pred(m); });
 }
@@ -524,10 +550,8 @@ void sort(Policy &&policy, Iter1 keys_first, Iter1 keys_last,
           std::is_same<typename std::iterator_traits<Iter2>::iterator_category,
                        std::random_access_iterator_tag>::value,
       "Iterators passed to algorithms must be random-access iterators.");
-  auto first = oneapi::dpl::make_zip_iterator(keys_first, values_first);
-  auto last = first + std::distance(keys_first, keys_last);
-  std::sort(std::forward<Policy>(policy), first, last,
-            internal::compare_key_fun<Comp>(comp));
+  oneapi::dpl::sort_by_key(std::forward<Policy>(policy), keys_first, keys_last,
+                           values_first, comp);
 }
 
 template <class Policy, class Iter1, class Iter2>
@@ -552,12 +576,8 @@ void stable_sort(Policy &&policy, Iter1 keys_first, Iter1 keys_last,
           std::is_same<typename std::iterator_traits<Iter2>::iterator_category,
                        std::random_access_iterator_tag>::value,
       "Iterators passed to algorithms must be random-access iterators.");
-  std::stable_sort(
-      std::forward<Policy>(policy),
-      oneapi::dpl::make_zip_iterator(keys_first, values_first),
-      oneapi::dpl::make_zip_iterator(
-          keys_last, values_first + std::distance(keys_first, keys_last)),
-      internal::compare_key_fun<Comp>(comp));
+  oneapi::dpl::stable_sort_by_key(std::forward<Policy>(policy), keys_first,
+                                  keys_last, values_first, comp);
 }
 
 template <class Policy, class Iter1, class Iter2>
@@ -940,18 +960,30 @@ stable_partition(Policy &&policy, Iter1 first, Iter1 last, Iter2 mask, Pred p) {
                        std::random_access_iterator_tag>::value,
       "Iterators passed to algorithms must be random-access iterators.");
   typedef typename std::decay<Policy>::type policy_type;
-  internal::__buffer<typename std::iterator_traits<Iter1>::value_type> _tmp(
-      std::distance(first, last));
+  auto _partition_call1 =
+      internal::make_wrapped_policy<internal::partition_call1>(policy);
+  auto _copy_call1 =
+      internal::make_wrapped_policy<internal::copy_call1>(policy);
+  auto _copy_call2 = internal::make_wrapped_policy<internal::copy_call2>(
+      std::forward<Policy>(policy));
+  using _IterValueT = typename std::iterator_traits<Iter1>::value_type;
 
-  std::copy(policy, mask, mask + std::distance(first, last), _tmp.get());
+  auto _n = std::distance(first, last);
+  internal::__buffer<_IterValueT> _tmp1(_n);
+  internal::__buffer<_IterValueT> _tmp2(_n);
 
-  auto ret_val =
-      std::stable_partition(std::forward<Policy>(policy),
-                            oneapi::dpl::make_zip_iterator(first, _tmp.get()),
-                            oneapi::dpl::make_zip_iterator(
-                                last, _tmp.get() + std::distance(first, last)),
-                            internal::predicate_key_fun<Pred>(p));
-  return std::get<0>(ret_val.base());
+  auto _tmp1_first = _tmp1.get();
+  auto _tmp2_first = _tmp2.get();
+
+  auto _end_pair =
+      stable_partition_copy(std::move(_partition_call1), first, last, mask,
+                            _tmp1_first, _tmp2_first, p);
+  auto _first_part_end = std::copy(std::move(_copy_call1), _tmp1_first,
+                                   std::get<0>(_end_pair), first);
+  std::copy(std::move(_copy_call2), _tmp2_first, std::get<1>(_end_pair),
+            _first_part_end);
+
+  return _first_part_end;
 }
 
 template <typename Policy, typename Iter1, typename Iter2, typename Pred>
@@ -1151,9 +1183,9 @@ sort_pairs_impl(Policy &&policy, Iter1 keys_in, Iter2 keys_out, Iter3 values_in,
                 int begin_bit, int end_bit) {
   using key_t_value_t = typename ::std::iterator_traits<Iter1>::value_type;
 
-  int clipped_begin_bit = ::std::max(begin_bit, 0);
+  int clipped_begin_bit = (::std::max)(begin_bit, 0);
   int clipped_end_bit =
-      ::std::min((::std::uint64_t)end_bit, sizeof(key_t_value_t) * 8);
+      (::std::min)((::std::uint64_t)end_bit, sizeof(key_t_value_t) * 8);
   int num_bytes = (clipped_end_bit - clipped_begin_bit - 1) / 8 + 1;
 
   auto transform_and_sort_pairs_f = [&](auto x) {
@@ -1217,7 +1249,7 @@ inline void segmented_sort_pairs_by_parallel_sorts(
   for (::std::uint64_t i = 0; i < nsegments; i++) {
     ::std::uint64_t segment_begin = host_accessible_offset_starts[i];
     ::std::uint64_t segment_end =
-        ::std::min(n, (::std::int64_t)host_accessible_offset_ends[i]);
+        (::std::min)(n, (::std::int64_t)host_accessible_offset_ends[i]);
     if (segment_begin < segment_end) {
       ::dpct::sort_pairs(
           policy, keys_in + segment_begin, keys_out + segment_begin,
@@ -1246,7 +1278,7 @@ inline void segmented_sort_keys_by_parallel_sorts(
   for (::std::uint64_t i = 0; i < nsegments; i++) {
     ::std::uint64_t segment_begin = host_accessible_offset_starts[i];
     ::std::uint64_t segment_end =
-        ::std::min(n, (::std::int64_t)host_accessible_offset_ends[i]);
+        (::std::min)(n, (::std::int64_t)host_accessible_offset_ends[i]);
     if (segment_begin < segment_end) {
       ::dpct::sort_keys(policy, keys_in + segment_begin,
                         keys_out + segment_begin, segment_end - segment_begin,
@@ -1268,7 +1300,7 @@ inline void segmented_sort_pairs_by_parallel_for_of_sorts(
     cgh.parallel_for(nsegments, [=](sycl::id<1> i) {
       ::std::uint64_t segment_begin = begin_offsets[i];
       ::std::uint64_t segment_end =
-          ::std::min(n, (::std::int64_t)end_offsets[i]);
+          (::std::min)(n, (::std::int64_t)end_offsets[i]);
       if (segment_begin == segment_end) {
         return;
       }
@@ -1293,7 +1325,7 @@ inline void segmented_sort_keys_by_parallel_for_of_sorts(
     cgh.parallel_for(nsegments, [=](sycl::id<1> i) {
       ::std::uint64_t segment_begin = begin_offsets[i];
       ::std::uint64_t segment_end =
-          ::std::min(n, (::std::int64_t)end_offsets[i]);
+          (::std::min)(n, (::std::int64_t)end_offsets[i]);
       if (segment_begin == segment_end) {
         return;
       }
@@ -1383,70 +1415,6 @@ inline void mark_segments(Policy &&policy, OffsetIteratorT begin_offsets,
         })
         .wait();
   }
-}
-
-template <typename Policy, typename Iter1, typename Iter2, typename Iter3>
-inline void segmented_sort_keys_by_two_pair_sorts(
-    Policy &&policy, Iter1 keys_in, Iter2 keys_out, ::std::int64_t n,
-    ::std::int64_t nsegments, Iter3 begin_offsets, Iter3 end_offsets,
-    bool descending = false, int begin_bit = 0,
-    int end_bit = sizeof(typename ::std::iterator_traits<Iter1>::value_type) *
-                  8) {
-  sycl::buffer<::std::size_t, 1> segments{sycl::range<1>(n)};
-  sycl::buffer<::std::size_t, 1> segments_sorted{sycl::range<1>(n)};
-
-  using key_t_value_t = typename ::std::iterator_traits<Iter1>::value_type;
-  sycl::buffer<key_t_value_t, 1> keys_temp{sycl::range<1>(n)};
-
-  mark_segments(policy, begin_offsets, end_offsets, n, nsegments, segments);
-
-  // Part 1: Sort by keys keeping track of which segment were in
-  dpct::sort_pairs(policy, keys_in, oneapi::dpl::begin(keys_temp),
-                   oneapi::dpl::begin(segments),
-                   oneapi::dpl::begin(segments_sorted), n, descending);
-
-  // Part 2: Sort the segments with a stable sort to get back sorted segments.
-  dpct::sort_pairs(::std::forward<Policy>(policy),
-                   oneapi::dpl::begin(segments_sorted),
-                   oneapi::dpl::begin(segments), oneapi::dpl::begin(keys_temp),
-                   keys_out, n, false);
-}
-
-template <typename Policy, typename Iter1, typename Iter2, typename Iter3,
-          typename Iter4, typename Iter5>
-inline void segmented_sort_pairs_by_two_pair_sorts(
-    Policy &&policy, Iter1 keys_in, Iter2 keys_out, Iter4 values_in,
-    Iter3 values_out, ::std::int64_t n, ::std::int64_t nsegments,
-    Iter5 begin_offsets, Iter5 end_offsets, bool descending = false,
-    int begin_bit = 0,
-    int end_bit = sizeof(typename ::std::iterator_traits<Iter1>::value_type) *
-                  8) {
-  sycl::buffer<::std::size_t, 1> segments{sycl::range<1>(n)};
-  sycl::buffer<::std::size_t, 1> segments_sorted{sycl::range<1>(n)};
-
-  using key_t_value_t = typename ::std::iterator_traits<Iter1>::value_type;
-  sycl::buffer<key_t_value_t, 1> keys_temp{sycl::range<1>(n)};
-
-  using value_t_value_t = typename ::std::iterator_traits<Iter3>::value_type;
-  sycl::buffer<value_t_value_t, 1> values_temp{sycl::range<1>(n)};
-
-  mark_segments(policy, begin_offsets, end_offsets, n, nsegments, segments);
-
-  auto zip_seg_vals =
-      oneapi::dpl::make_zip_iterator(oneapi::dpl::begin(segments), values_in);
-  auto zip_seg_vals_out = oneapi::dpl::make_zip_iterator(
-      oneapi::dpl::begin(segments_sorted), oneapi::dpl::begin(values_temp));
-  // Part 1: Sort by keys keeping track of which segment were in
-  dpct::sort_pairs(policy, keys_in, oneapi::dpl::begin(keys_temp), zip_seg_vals,
-                   zip_seg_vals_out, n, descending);
-
-  auto zip_keys_vals = oneapi::dpl::make_zip_iterator(
-      oneapi::dpl::begin(keys_temp), oneapi::dpl::begin(values_temp));
-  auto zip_keys_vals_out = oneapi::dpl::make_zip_iterator(keys_out, values_out);
-  // Part 2: Sort the segments with a stable sort to get back sorted segments.
-  dpct::sort_pairs(
-      ::std::forward<Policy>(policy), oneapi::dpl::begin(segments_sorted),
-      oneapi::dpl::begin(segments), zip_keys_vals, zip_keys_vals_out, n, false);
 }
 
 // The dpl_histogram namespace contains a temporary preview of an upcoming
@@ -1746,9 +1714,9 @@ inline void __histogram_general_private_global_atomics(
       policy.queue()
           .get_device()
           .template get_info<sycl::info::device::global_mem_size>();
-  const ::std::size_t max_segments =
-      ::std::min(__global_mem_size / (num_bins * sizeof(BinType)),
-                 __ceiling_div(N, work_group_size * __min_iters_per_work_item));
+  const ::std::size_t max_segments = (::std::min)(
+      __global_mem_size / (num_bins * sizeof(BinType)),
+      __ceiling_div(N, work_group_size * __min_iters_per_work_item));
   const ::std::size_t iters_per_work_item =
       __ceiling_div(N, max_segments * work_group_size);
   ::std::size_t segments =
@@ -1839,7 +1807,7 @@ __histogram_general_select_best(Policy &&policy, Iter1 first, Iter1 last,
             .get_device()
             .template get_info<sycl::info::device::max_work_group_size>();
     ::std::size_t work_group_size =
-        ::std::min(max_work_group_size, ::std::size_t(1024));
+        (::std::min)(max_work_group_size, ::std::size_t(1024));
 
     if (num_bins < __max_registers) {
 
@@ -2147,9 +2115,9 @@ sort_keys(Policy &&policy, Iter1 keys_in, Iter2 keys_out, ::std::int64_t n,
           bool descending, int begin_bit, int end_bit) {
   using key_t_value_t = typename ::std::iterator_traits<Iter1>::value_type;
 
-  int clipped_begin_bit = ::std::max(begin_bit, 0);
+  int clipped_begin_bit = (::std::max)(begin_bit, 0);
   int clipped_end_bit =
-      ::std::min((::std::uint64_t)end_bit, sizeof(key_t_value_t) * 8);
+      (::std::min)((::std::uint64_t)end_bit, sizeof(key_t_value_t) * 8);
   int num_bytes = (clipped_end_bit - clipped_begin_bit - 1) / 8 + 1;
 
   auto transform_and_sort_f = [&](auto x) {
@@ -2212,15 +2180,9 @@ segmented_sort_keys(
     dpct::internal::segmented_sort_keys_by_parallel_for_of_sorts(
         ::std::forward<Policy>(policy), keys_in, keys_out, n, nsegments,
         begin_offsets, end_offsets, descending, begin_bit, end_bit);
-  } else if (nsegments < 512) // for loop of parallel sorts when we have a small
-                              // number of total sorts to limit total overhead
+  } else
   {
     dpct::internal::segmented_sort_keys_by_parallel_sorts(
-        ::std::forward<Policy>(policy), keys_in, keys_out, n, nsegments,
-        begin_offsets, end_offsets, descending, begin_bit, end_bit);
-  } else // decent catch all using 2 full sorts
-  {
-    dpct::internal::segmented_sort_keys_by_two_pair_sorts(
         ::std::forward<Policy>(policy), keys_in, keys_out, n, nsegments,
         begin_offsets, end_offsets, descending, begin_bit, end_bit);
   }
@@ -2272,16 +2234,9 @@ segmented_sort_pairs(
         ::std::forward<Policy>(policy), keys_in, keys_out, values_in,
         values_out, n, nsegments, begin_offsets, end_offsets, descending,
         begin_bit, end_bit);
-  } else if (nsegments < 512) // for loop of parallel sorts when we have a small
-                              // number of total sorts to limit total overhead
+  } else
   {
     dpct::internal::segmented_sort_pairs_by_parallel_sorts(
-        ::std::forward<Policy>(policy), keys_in, keys_out, values_in,
-        values_out, n, nsegments, begin_offsets, end_offsets, descending,
-        begin_bit, end_bit);
-  } else // decent catch all using 2 full sorts
-  {
-    dpct::internal::segmented_sort_pairs_by_two_pair_sorts(
         ::std::forward<Policy>(policy), keys_in, keys_out, values_in,
         values_out, n, nsegments, begin_offsets, end_offsets, descending,
         begin_bit, end_bit);
@@ -2489,6 +2444,125 @@ void nontrivial_run_length_encode(ExecutionPolicy &&policy,
       zipped_out_beg, pred, op);
   auto ret_dist = ::std::distance(zipped_out_beg, zipped_out_vals_end);
   ::std::fill(policy, num_runs, num_runs + 1, ret_dist);
+}
+
+template <typename ExecutionPolicy, typename InputIterator,
+          typename OutputIterator, typename CountIterator,
+          typename UnaryPredicate>
+void partition_if(ExecutionPolicy &&policy, InputIterator input,
+                  OutputIterator output, CountIterator num_true, int num_items,
+                  UnaryPredicate pred, bool reverse_last = true) {
+  auto copy_policy =
+      internal::make_wrapped_policy<internal::copy_before_partition>(policy);
+  auto partition_policy =
+      internal::make_wrapped_policy<internal::partition_call1>(policy);
+
+  dpl::copy(::std::move(copy_policy), input, input + num_items, output);
+  auto beg_false = dpl::stable_partition(::std::move(partition_policy), output,
+                                         output + num_items, pred);
+  auto num_true_items = ::std::distance(output, beg_false);
+  if (reverse_last) {
+    auto reverse_policy =
+        internal::make_wrapped_policy<internal::reverse_partition>(policy);
+    dpl::reverse(::std::move(reverse_policy), beg_false, output + num_items);
+  }
+  dpl::fill(::std::forward<ExecutionPolicy>(policy), num_true, num_true + 1,
+            num_true_items);
+}
+
+template <typename ExecutionPolicy, typename InputIterator,
+          typename OutputIterator1, typename OutputIterator2,
+          typename OutputIterator3, typename CountIterator,
+          typename UnaryPredicate1, typename UnaryPredicate2>
+void partition_if(ExecutionPolicy &&policy, InputIterator input,
+                  OutputIterator1 output1, OutputIterator2 output2,
+                  OutputIterator3 output3, CountIterator partition_counts,
+                  int num_items, UnaryPredicate1 pred1, UnaryPredicate2 pred2,
+                  bool reverse_last = true) {
+  using internal::__buffer;
+  using ValueType = typename ::std::iterator_traits<InputIterator>::value_type;
+  using CountType = typename ::std::iterator_traits<CountIterator>::value_type;
+  auto partition1_policy =
+      internal::make_wrapped_policy<internal::partition_call1>(policy);
+  auto partition2_policy =
+      internal::make_wrapped_policy<internal::partition_call2>(policy);
+  __buffer<ValueType> tmp(num_items);
+
+  // Partition the first set (elements that satisfy pred1) and store the
+  // remaining in temporary storage.
+  auto [output1_end, tmp_end] =
+      dpct::stable_partition_copy(::std::move(partition1_policy), input,
+                                  input + num_items, output1, tmp.get(), pred1);
+  // Partition the remaining two sets (elements that satisfy pred2 and
+  // unselected).
+  auto [output2_end, output3_end] =
+      dpct::stable_partition_copy(::std::move(partition2_policy), tmp.get(),
+                                  tmp_end, output2, output3, pred2);
+
+  ::std::vector<CountType> host_counts = {
+      static_cast<CountType>(::std::distance(output1, output1_end)),
+      static_cast<CountType>(::std::distance(output2, output2_end)),
+      static_cast<CountType>(::std::distance(output3, output3_end))};
+  if (reverse_last) {
+    auto reverse_policy =
+        internal::make_wrapped_policy<internal::reverse_partition>(policy);
+    dpl::reverse(::std::move(reverse_policy), output3, output3_end);
+  }
+  dpl::copy(::std::forward<ExecutionPolicy>(policy), host_counts.begin(),
+            host_counts.end(), partition_counts);
+}
+
+template <typename ExecutionPolicy, typename InputIterator,
+          typename OutputIterator, typename FlagsIterator,
+          typename CountIterator>
+void partition_flagged(ExecutionPolicy &&policy, InputIterator input,
+                       FlagsIterator flags, OutputIterator output,
+                       CountIterator num_true, int num_items,
+                       bool reverse_last = true) {
+  auto copy_policy =
+      internal::make_wrapped_policy<internal::copy_before_partition>(policy);
+  auto partition_policy =
+      internal::make_wrapped_policy<internal::partition_call1>(policy);
+
+  dpl::copy(::std::move(copy_policy), input, input + num_items, output);
+  auto beg_false = dpct::stable_partition(::std::move(partition_policy), output,
+                                          output + num_items, flags,
+                                          [](auto flag) { return flag != 0; });
+  auto num_true_items = ::std::distance(output, beg_false);
+  if (reverse_last) {
+    auto reverse_policy =
+        internal::make_wrapped_policy<internal::reverse_partition>(policy);
+    dpl::reverse(::std::move(reverse_policy), beg_false, output + num_items);
+  }
+  dpl::fill(::std::forward<ExecutionPolicy>(policy), num_true, num_true + 1,
+            num_true_items);
+}
+
+template <typename ExecutionPolicy, typename InputIterator, typename BinaryPred>
+typename ::std::iterator_traits<InputIterator>::difference_type
+unique_count(ExecutionPolicy &&policy, InputIterator begin, InputIterator end,
+             BinaryPred binary_pred) {
+  auto n = ::std::distance(begin, end);
+  if (n == 0)
+    return 0;
+  if (n == 1)
+    return 1;
+  auto zip_beg = oneapi::dpl::make_zip_iterator(begin, begin + 1);
+  auto zip_end = zip_beg + n - 1;
+  return 1 + oneapi::dpl::count_if(::std::forward<ExecutionPolicy>(policy),
+                                   zip_beg, zip_end,
+                                   [binary_pred](const auto &e) {
+                                     using ::std::get;
+                                     return !binary_pred(get<0>(e), get<1>(e));
+                                   });
+}
+
+template <typename ExecutionPolicy, typename InputIterator>
+typename ::std::iterator_traits<InputIterator>::difference_type
+unique_count(ExecutionPolicy &&policy, InputIterator begin, InputIterator end) {
+  using T = typename ::std::iterator_traits<InputIterator>::value_type;
+  return dpct::unique_count(::std::forward<ExecutionPolicy>(policy), begin, end,
+                            ::std::equal_to<T>());
 }
 
 } // end namespace dpct

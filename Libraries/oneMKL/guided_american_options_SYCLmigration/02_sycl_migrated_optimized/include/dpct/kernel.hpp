@@ -9,6 +9,7 @@
 #ifndef __DPCT_KERNEL_HPP__
 #define __DPCT_KERNEL_HPP__
 
+#include <cstdint>
 #include <sycl/sycl.hpp>
 #ifdef _WIN32
 #include <unordered_set>
@@ -36,6 +37,10 @@ typedef void (*kernel_functor)(sycl::queue &, const sycl::nd_range<3> &,
 
 struct kernel_function_info {
   int max_work_group_size = 0;
+  int shared_size_bytes = 0;
+  int local_size_bytes = 0;
+  int const_size_bytes = 0;
+  int num_regs = 0;
 };
 
 static inline void get_kernel_function_info(kernel_function_info *kernel_info,
@@ -311,8 +316,8 @@ private:
 
 class kernel_library {
 public:
-  kernel_library() : ptr{nullptr} {}
-  kernel_library(void *ptr) : ptr{ptr} {}
+  constexpr kernel_library() : ptr{nullptr} {}
+  constexpr kernel_library(void *ptr) : ptr{ptr} {}
 
   operator void *() const { return ptr; }
 
@@ -386,8 +391,8 @@ static inline void unload_kernel_library(const kernel_library &library) {
 
 class kernel_function {
 public:
-  kernel_function() : ptr{nullptr} {}
-  kernel_function(dpct::kernel_functor ptr) : ptr{ptr} {}
+  constexpr kernel_function() : ptr{nullptr} {}
+  constexpr kernel_function(dpct::kernel_functor ptr) : ptr{ptr} {}
 
   operator void *() const { return ((void *)ptr); }
 
@@ -395,6 +400,8 @@ public:
                   unsigned int a, void **args, void **extra) {
     ptr(q, range, a, args, extra);
   }
+
+  explicit operator uint64_t() const { return (uint64_t)this; }
 
 private:
   dpct::kernel_functor ptr;

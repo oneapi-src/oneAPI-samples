@@ -9,12 +9,8 @@
 #ifndef __DPCT_LAPACK_UTILS_HPP__
 #define __DPCT_LAPACK_UTILS_HPP__
 
-#include "memory.hpp"
-#include "util.hpp"
+#include "compat_service.hpp"
 #include "lib_common_utils.hpp"
-
-#include <oneapi/mkl.hpp>
-#include <sycl/sycl.hpp>
 
 namespace dpct {
 namespace lapack {
@@ -69,7 +65,7 @@ inline int sygvd(sycl::queue &queue, std::int64_t itype, oneapi::mkl::job jobz,
   }
   queue.submit([&, info_val](sycl::handler &cgh) {
     auto info_acc = info_buf.get_access<sycl::access_mode::write>(cgh);
-    cgh.single_task<dpct_kernel_name<class sygvd_set_info, T>>(
+    cgh.single_task<::dpct::cs::kernel_name<class sygvd_set_info, T>>(
         [=]() { info_acc[0] = info_val; });
   });
   return ret_val;
@@ -121,7 +117,7 @@ template <typename T, typename Tw>
 inline int hegvd(sycl::queue &queue, std::int64_t itype, oneapi::mkl::job jobz,
                  oneapi::mkl::uplo uplo, int n, T *a, int lda, T *b, int ldb,
                  Tw *w, T *scratchpad, int scratchpad_size, int *info) {
-  using Ty = typename DataType<T>::T2;
+  using Ty = typename ::dpct::detail::lib_data_traits_t<T>;
 #ifdef DPCT_USM_LEVEL_NONE
   auto info_buf = get_buffer<int>(info);
   auto a_buffer = get_buffer<Ty>(a);
@@ -148,7 +144,7 @@ inline int hegvd(sycl::queue &queue, std::int64_t itype, oneapi::mkl::job jobz,
   }
   queue.submit([&, info_val](sycl::handler &cgh) {
     auto info_acc = info_buf.get_access<sycl::access_mode::write>(cgh);
-    cgh.single_task<dpct_kernel_name<class hegvd_set_info, T>>(
+    cgh.single_task<::dpct::cs::kernel_name<class hegvd_set_info, T>>(
         [=]() { info_acc[0] = info_val; });
   });
   return ret_val;
@@ -193,7 +189,7 @@ inline int potrf_batch(sycl::queue &queue, oneapi::mkl::uplo uplo, int n,
 #ifdef DPCT_USM_LEVEL_NONE
   throw std::runtime_error("this API is unsupported when USM level is none");
 #else
-  using Ty = typename DataType<T>::T2;
+  using Ty = typename ::dpct::detail::lib_data_traits_t<T>;
   struct matrix_info_t {
     oneapi::mkl::uplo uplo_info;
     std::int64_t n_info;
@@ -206,61 +202,39 @@ inline int potrf_batch(sycl::queue &queue, oneapi::mkl::uplo uplo, int n,
   matrix_info->n_info = n;
   matrix_info->lda_info = lda;
   matrix_info->group_size_info = group_size;
-  std::int64_t scratchpad_size = 0;
-  sycl::event e;
-  Ty *scratchpad = nullptr;
-  try {
-    scratchpad_size = oneapi::mkl::lapack::potrf_batch_scratchpad_size<Ty>(
-        queue, &(matrix_info->uplo_info), &(matrix_info->n_info),
-        &(matrix_info->lda_info), 1, &(matrix_info->group_size_info));
-    scratchpad = sycl::malloc_device<Ty>(scratchpad_size, queue);
-    e = oneapi::mkl::lapack::potrf_batch(
-        queue, &(matrix_info->uplo_info), &(matrix_info->n_info), (Ty **)a,
-        &(matrix_info->lda_info), 1, &(matrix_info->group_size_info),
-        scratchpad, scratchpad_size);
-  } catch (oneapi::mkl::lapack::batch_error const &be) {
-    std::cerr << "Unexpected exception caught during call to LAPACK API: "
-                 "potrf_batch_scratchpad_size/potrf_batch"
-              << std::endl
-              << "reason: " << be.what() << std::endl
-              << "number: " << be.info() << std::endl;
-    int i = 0;
-    auto &ids = be.ids();
-    std::vector<int> info_vec(group_size);
-    for (auto const &e : be.exceptions()) {
-      try {
-        std::rethrow_exception(e);
-      } catch (oneapi::mkl::lapack::exception &e) {
-        std::cerr << "Exception " << ids[i] << std::endl
-                  << "reason: " << e.what() << std::endl
-                  << "info: " << e.info() << std::endl;
-        info_vec[i] = e.info();
-        i++;
-      }
-    }
-    queue.memcpy(info, info_vec.data(), group_size * sizeof(int)).wait();
-    std::free(matrix_info);
-    if (scratchpad)
-      sycl::free(scratchpad, queue);
-    return 1;
-  } catch (sycl::exception const &e) {
-    std::cerr << "Caught synchronous SYCL exception:" << std::endl
-              << "reason: " << e.what() << std::endl;
-    queue.memset(info, 0, group_size * sizeof(int)).wait();
-    std::free(matrix_info);
-    if (scratchpad)
-      sycl::free(scratchpad, queue);
-    return 1;
-  }
+  std::int64_t scratchpad_size =
+      oneapi::mkl::lapack::potrf_batch_scratchpad_size<Ty>(
+          queue, &(matrix_info->uplo_info), &(matrix_info->n_info),
+          &(matrix_info->lda_info), 1, &(matrix_info->group_size_info));
+  Ty *scratchpad = sycl::malloc_device<Ty>(scratchpad_size, queue);
+  int has_execption = 0;
+
+  static const std::vector<sycl::event> empty_events{};
+  static const std::string api_name = "oneapi::mkl::lapack::potrf_batch";
+  if (info)
+    queue.memset(info, 0, group_size * sizeof(int));
+  sycl::event e = ::dpct::detail::catch_batch_error_f<sycl::event>(
+      &has_execption, api_name, queue, nullptr, info,
+      matrix_info->group_size_info, oneapi::mkl::lapack::potrf_batch, queue,
+      &(matrix_info->uplo_info), &(matrix_info->n_info), (Ty **)a,
+      &(matrix_info->lda_info), (std::int64_t)1,
+      &(matrix_info->group_size_info), (Ty *)scratchpad,
+      (std::int64_t)scratchpad_size, empty_events);
+
   queue.submit([&](sycl::handler &cgh) {
-    cgh.depends_on(e);
-    cgh.host_task([=] {
+    cgh.host_task([=]() mutable {
+      ::dpct::detail::catch_batch_error(
+          nullptr, api_name, queue, nullptr, info, matrix_info->group_size_info,
+          [](sycl::event _e) {
+            _e.wait_and_throw();
+            return 0;
+          },
+          e);
       std::free(matrix_info);
       sycl::free(scratchpad, queue);
     });
   });
-  queue.memset(info, 0, group_size * sizeof(int));
-  return 0;
+  return has_execption;
 #endif
 }
 /// Solves a batch of systems of linear equations with a Cholesky-factored
@@ -286,7 +260,7 @@ inline int potrs_batch(sycl::queue &queue, oneapi::mkl::uplo uplo, int n,
 #ifdef DPCT_USM_LEVEL_NONE
   throw std::runtime_error("this API is unsupported when USM level is none");
 #else
-  using Ty = typename DataType<T>::T2;
+  using Ty = typename ::dpct::detail::lib_data_traits_t<T>;
   struct matrix_info_t {
     oneapi::mkl::uplo uplo_info;
     std::int64_t n_info;
@@ -303,63 +277,42 @@ inline int potrs_batch(sycl::queue &queue, oneapi::mkl::uplo uplo, int n,
   matrix_info->lda_info = lda;
   matrix_info->ldb_info = ldb;
   matrix_info->group_size_info = group_size;
-  std::int64_t scratchpad_size = 0;
-  sycl::event e;
-  Ty *scratchpad = nullptr;
-  try {
-    scratchpad_size = oneapi::mkl::lapack::potrs_batch_scratchpad_size<Ty>(
-        queue, &(matrix_info->uplo_info), &(matrix_info->n_info),
-        &(matrix_info->nrhs_info), &(matrix_info->lda_info),
-        &(matrix_info->ldb_info), 1, &(matrix_info->group_size_info));
-    scratchpad = sycl::malloc_device<Ty>(scratchpad_size, queue);
-    e = oneapi::mkl::lapack::potrs_batch(
-        queue, &(matrix_info->uplo_info), &(matrix_info->n_info),
-        &(matrix_info->nrhs_info), (Ty **)a, &(matrix_info->lda_info), (Ty **)b,
-        &(matrix_info->ldb_info), 1, &(matrix_info->group_size_info),
-        scratchpad, scratchpad_size);
-  } catch (oneapi::mkl::lapack::batch_error const &be) {
-    std::cerr << "Unexpected exception caught during call to LAPACK API: "
-                 "potrs_batch_scratchpad_size/potrs_batch"
-              << std::endl
-              << "reason: " << be.what() << std::endl
-              << "number: " << be.info() << std::endl;
-    int i = 0;
-    auto &ids = be.ids();
-    std::vector<int> info_vec(group_size);
-    for (auto const &e : be.exceptions()) {
-      try {
-        std::rethrow_exception(e);
-      } catch (oneapi::mkl::lapack::exception &e) {
-        std::cerr << "Exception " << ids[i] << std::endl
-                  << "reason: " << e.what() << std::endl
-                  << "info: " << e.info() << std::endl;
-        info_vec[i] = e.info();
-        i++;
-      }
-    }
-    queue.memcpy(info, info_vec.data(), group_size * sizeof(int)).wait();
-    std::free(matrix_info);
-    if (scratchpad)
-      sycl::free(scratchpad, queue);
-    return 1;
-  } catch (sycl::exception const &e) {
-    std::cerr << "Caught synchronous SYCL exception:" << std::endl
-              << "reason: " << e.what() << std::endl;
-    queue.memset(info, 0, group_size * sizeof(int)).wait();
-    std::free(matrix_info);
-    if (scratchpad)
-      sycl::free(scratchpad, queue);
-    return 1;
-  }
+  std::int64_t scratchpad_size =
+      oneapi::mkl::lapack::potrs_batch_scratchpad_size<Ty>(
+          queue, &(matrix_info->uplo_info), &(matrix_info->n_info),
+          &(matrix_info->nrhs_info), &(matrix_info->lda_info),
+          &(matrix_info->ldb_info), 1, &(matrix_info->group_size_info));
+  Ty *scratchpad = sycl::malloc_device<Ty>(scratchpad_size, queue);
+  int has_execption = 0;
+
+  if (info)
+    queue.memset(info, 0, group_size * sizeof(int));
+
+  static const std::vector<sycl::event> empty_events{};
+  static const std::string api_name = "oneapi::mkl::lapack::potrs_batch";
+  sycl::event e = ::dpct::detail::catch_batch_error_f<sycl::event>(
+      &has_execption, api_name, queue, nullptr, info,
+      matrix_info->group_size_info, oneapi::mkl::lapack::potrs_batch, queue,
+      &(matrix_info->uplo_info), &(matrix_info->n_info),
+      &(matrix_info->nrhs_info), (const Ty *const *)a, &(matrix_info->lda_info),
+      (Ty **)b, &(matrix_info->ldb_info), (std::int64_t)1,
+      &(matrix_info->group_size_info), (Ty *)scratchpad,
+      (std::int64_t)scratchpad_size, empty_events);
+
   queue.submit([&](sycl::handler &cgh) {
-    cgh.depends_on(e);
-    cgh.host_task([=] {
+    cgh.host_task([=]() mutable {
+      ::dpct::detail::catch_batch_error(
+          nullptr, api_name, queue, nullptr, info, matrix_info->group_size_info,
+          [](sycl::event _e) {
+            _e.wait_and_throw();
+            return 0;
+          },
+          e);
       std::free(matrix_info);
       sycl::free(scratchpad, queue);
     });
   });
-  queue.memset(info, 0, group_size * sizeof(int));
-  return 0;
+  return has_execption;
 #endif
 }
 
@@ -379,8 +332,8 @@ inline int lapack_shim(sycl::queue &q, library_data_t a_type, int *info,
     }
     int info_val = static_cast<int>(e.info());
     if (info)
-      dpct::detail::dpct_memcpy(q, info, &info_val, sizeof(int),
-                                memcpy_direction::host_to_device)
+      ::dpct::cs::memcpy(q, info, &info_val, sizeof(int),
+                         ::dpct::cs::memcpy_direction::host_to_device)
           .wait();
     return 1;
   };
@@ -417,7 +370,7 @@ inline int lapack_shim(sycl::queue &q, library_data_t a_type, int *info,
     std::cerr << "Caught synchronous SYCL exception:" << std::endl
               << "reason: " << e.what() << std::endl;
     if (info)
-      dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int)).wait();
+      ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int)).wait();
     return 1;
   }
   return 0;
@@ -426,18 +379,14 @@ inline int lapack_shim(sycl::queue &q, library_data_t a_type, int *info,
 template <typename T> class working_memory {
 public:
   working_memory(std::size_t element_number, const sycl::queue &q) : _q(q) {
-    _ptr = dpct::detail::dpct_malloc(element_number * sizeof(T), _q);
+    _ptr = ::dpct::cs::malloc(element_number * sizeof(T), _q);
   }
-  auto get_memory() {
-    return dpct::detail::get_memory(reinterpret_cast<T *>(_ptr));
-  }
-  auto get_ptr() {
-    return _ptr;
-  }
+  auto get_memory() { return dpct::detail::get_memory<T>(_ptr); }
+  auto get_ptr() { return _ptr; }
   void set_event(sycl::event e) { _e = e; }
   ~working_memory() {
     if (_ptr) {
-      dpct::async_dpct_free({_ptr}, {_e}, _q);
+      ::dpct::cs::enqueue_free({_ptr}, {_e}, _q);
     }
   }
 
@@ -500,13 +449,12 @@ template <typename T> struct getrf_impl {
                   library_data_t a_type, void *a, std::int64_t lda,
                   std::int64_t *ipiv, void *device_ws,
                   std::size_t device_ws_size, int *info) {
-    auto ipiv_data = dpct::detail::get_memory(ipiv);
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto ipiv_data = dpct::detail::get_memory<std::int64_t>(ipiv);
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::getrf(q, m, n, a_data, lda, ipiv_data, device_ws_data,
                                device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 
@@ -515,16 +463,16 @@ template <typename T> struct getrs_impl {
                   std::int64_t nrhs, library_data_t a_type, void *a,
                   std::int64_t lda, std::int64_t *ipiv, library_data_t b_type,
                   void *b, std::int64_t ldb, int *info) {
-    auto ipiv_data = dpct::detail::get_memory(ipiv);
+    auto ipiv_data = dpct::detail::get_memory<std::int64_t>(ipiv);
     std::int64_t device_ws_size = oneapi::mkl::lapack::getrs_scratchpad_size<T>(
         q, trans, n, nrhs, lda, ldb);
     working_memory<T> device_ws(device_ws_size, q);
     auto device_ws_data = device_ws.get_memory();
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto b_data = dpct::detail::get_memory(reinterpret_cast<T *>(b));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto b_data = dpct::detail::get_memory<T>(b);
     oneapi::mkl::lapack::getrs(q, trans, n, nrhs, a_data, lda, ipiv_data,
                                b_data, ldb, device_ws_data, device_ws_size);
-    sycl::event e = dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    sycl::event e = ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
     device_ws.set_event(e);
   }
 };
@@ -543,13 +491,12 @@ template <typename T> struct geqrf_impl {
                   library_data_t a_type, void *a, std::int64_t lda,
                   library_data_t tau_type, void *tau, void *device_ws,
                   std::size_t device_ws_size, int *info) {
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto tau_data = dpct::detail::get_memory(reinterpret_cast<T *>(tau));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto tau_data = dpct::detail::get_memory<T>(tau);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::geqrf(q, m, n, a_data, lda, tau_data, device_ws_data,
                                device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 
@@ -564,12 +511,11 @@ template <typename T> struct getrfnp_impl {
         "Project does not support this API.");
 #else
     std::int64_t a_stride = m * lda;
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::getrfnp_batch(q, m, n, a_data, lda, a_stride, 1,
                                        device_ws_data, device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
 #endif
   }
 };
@@ -600,17 +546,16 @@ template <typename T> struct gesvd_impl {
                   void *u, std::int64_t ldu, library_data_t vt_type, void *vt,
                   std::int64_t ldvt, void *device_ws,
                   std::size_t device_ws_size, int *info) {
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto s_data = dpct::detail::get_memory(
-        reinterpret_cast<typename ElementType<T>::value_tpye *>(s));
-    auto u_data = dpct::detail::get_memory(reinterpret_cast<T *>(u));
-    auto vt_data = dpct::detail::get_memory(reinterpret_cast<T *>(vt));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto s_data =
+        dpct::detail::get_memory<typename ElementType<T>::value_tpye>(s);
+    auto u_data = dpct::detail::get_memory<T>(u);
+    auto vt_data = dpct::detail::get_memory<T>(vt);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::gesvd(q, jobu, jobvt, m, n, a_data, lda, s_data,
                                u_data, ldu, vt_data, ldvt, device_ws_data,
                                device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 template <typename T> struct gesvd_conj_impl : public gesvd_impl<T> {
@@ -629,10 +574,10 @@ template <typename T> struct gesvd_conj_impl : public gesvd_impl<T> {
     using base = gesvd_impl<T>;
     base::operator()(q, jobu, jobvt, m, n, a_type, a, lda, s_type, s, u_type, u,
                      ldu, vt_type, vt, ldvt, device_ws, device_ws_size, info);
-    auto vt_data = dpct::detail::get_memory(reinterpret_cast<T *>(vt));
+    auto vt_data = dpct::detail::get_memory<T>(vt);
     oneapi::mkl::blas::row_major::imatcopy(q, oneapi::mkl::transpose::conjtrans,
                                            n, n, T(1.0f), vt_data, ldvt, ldvt);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
 #endif
   }
 };
@@ -650,12 +595,11 @@ template <typename T> struct potrf_impl {
   void operator()(sycl::queue &q, oneapi::mkl::uplo uplo, std::int64_t n,
                   library_data_t a_type, void *a, std::int64_t lda,
                   void *device_ws, std::size_t device_ws_size, int *info) {
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::potrf(q, uplo, n, a_data, lda, device_ws_data,
                                device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 
@@ -668,11 +612,11 @@ template <typename T> struct potrs_impl {
         q, uplo, n, nrhs, lda, ldb);
     working_memory<T> device_ws(device_ws_size, q);
     auto device_ws_data = device_ws.get_memory();
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto b_data = dpct::detail::get_memory(reinterpret_cast<T *>(b));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto b_data = dpct::detail::get_memory<T>(b);
     oneapi::mkl::lapack::potrs(q, uplo, n, nrhs, a_data, lda, b_data, ldb,
                                device_ws_data, device_ws_size);
-    sycl::event e = dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    sycl::event e = ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
     device_ws.set_event(e);
   }
 };
@@ -771,22 +715,21 @@ template <typename T> struct syheevx_impl {
     working_memory<std::int64_t> m_device(1, q);
     auto z_data = z.get_memory();
     auto m_device_data = m_device.get_memory();
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     auto vl_value = *reinterpret_cast<value_t *>(vl);
     auto vu_value = *reinterpret_cast<value_t *>(vu);
-    auto w_data = dpct::detail::get_memory(reinterpret_cast<value_t *>(w));
+    auto w_data = dpct::detail::get_memory<value_t>(w);
     auto abstol = 2 * lamch_s<value_t>();
     DISPATCH_FLOAT_FOR_CALCULATION(evx, q, jobz, range, uplo, n, a_data, lda,
                                    vl_value, vu_value, il, iu, abstol,
                                    m_device_data, w_data, z_data, lda,
                                    device_ws_data, device_ws_size);
-    dpct::async_dpct_memcpy(a, z.get_ptr(), n * lda * sizeof(T),
-                            memcpy_direction::device_to_device, q);
-    dpct::async_dpct_memcpy(m, m_device.get_ptr(), sizeof(std::int64_t),
-                            memcpy_direction::device_to_host, q);
-    sycl::event e = dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::memcpy(q, a, z.get_ptr(), n * lda * sizeof(T),
+                       ::dpct::cs::memcpy_direction::device_to_device);
+    ::dpct::cs::memcpy(q, m, m_device.get_ptr(), sizeof(std::int64_t),
+                       ::dpct::cs::memcpy_direction::device_to_host);
+    sycl::event e = ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
     z.set_event(e);
     m_device.set_event(e);
 #endif
@@ -832,23 +775,22 @@ template <typename T> struct syhegvx_impl {
     working_memory<std::int64_t> m_device(1, q);
     auto z_data = z.get_memory();
     auto m_device_data = m_device.get_memory();
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto b_data = dpct::detail::get_memory(reinterpret_cast<T *>(b));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto b_data = dpct::detail::get_memory<T>(b);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     auto vl_value = *reinterpret_cast<value_t *>(vl);
     auto vu_value = *reinterpret_cast<value_t *>(vu);
-    auto w_data = dpct::detail::get_memory(reinterpret_cast<value_t *>(w));
+    auto w_data = dpct::detail::get_memory<value_t>(w);
     auto abstol = 2 * lamch_s<value_t>();
     DISPATCH_FLOAT_FOR_CALCULATION(gvx, q, itype, jobz, range, uplo, n, a_data,
                                    lda, b_data, ldb, vl_value, vu_value, il, iu,
                                    abstol, m_device_data, w_data, z_data, lda,
                                    device_ws_data, device_ws_size);
-    dpct::async_dpct_memcpy(a, z.get_ptr(), n * lda * sizeof(T),
-                            memcpy_direction::device_to_device, q);
-    dpct::async_dpct_memcpy(m, m_device.get_ptr(), sizeof(std::int64_t),
-                            memcpy_direction::device_to_host, q);
-    sycl::event e = dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::memcpy(q, a, z.get_ptr(), n * lda * sizeof(T),
+                       ::dpct::cs::memcpy_direction::device_to_device);
+    ::dpct::cs::memcpy(q, m, m_device.get_ptr(), sizeof(std::int64_t),
+                       ::dpct::cs::memcpy_direction::device_to_host);
+    sycl::event e = ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
     z.set_event(e);
     m_device.set_event(e);
 #endif
@@ -871,15 +813,14 @@ template <typename T> struct syhegvd_impl {
                   void *device_ws, std::size_t device_ws_size,
                   int *info) {
     using value_t = typename value_type_trait<T>::value_type;
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto b_data = dpct::detail::get_memory(reinterpret_cast<T *>(b));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
-    auto w_data = dpct::detail::get_memory(reinterpret_cast<value_t *>(w));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto b_data = dpct::detail::get_memory<T>(b);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
+    auto w_data = dpct::detail::get_memory<value_t>(w);
     DISPATCH_FLOAT_FOR_CALCULATION(gvd, q, itype, jobz, uplo, n, a_data, lda,
                                    b_data, ldb, w_data, device_ws_data,
                                    device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 
@@ -921,13 +862,12 @@ template <typename T> struct syheev_impl {
         "Project does not support this API.");
 #else
     using value_t = typename value_type_trait<T>::value_type;
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
-    auto w_data = dpct::detail::get_memory(reinterpret_cast<value_t *>(w));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
+    auto w_data = dpct::detail::get_memory<value_t>(w);
     DISPATCH_FLOAT_FOR_CALCULATION(ev, q, jobz, uplo, n, a_data, lda, w_data,
                                    device_ws_data, device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
 #endif
   }
 };
@@ -947,13 +887,12 @@ template <typename T> struct syheevd_impl {
                   std::int64_t lda, void *w, void *device_ws,
                   std::size_t device_ws_size, int *info) {
     using value_t = typename value_type_trait<T>::value_type;
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
-    auto w_data = dpct::detail::get_memory(reinterpret_cast<value_t *>(w));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
+    auto w_data = dpct::detail::get_memory<value_t>(w);
     DISPATCH_FLOAT_FOR_CALCULATION(evd, q, jobz, uplo, n, a_data, lda, w_data,
                                    device_ws_data, device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
   }
 };
 
@@ -985,12 +924,11 @@ template <typename T> struct trtri_impl {
         "The oneAPI Math Kernel Library (oneMKL) Interfaces "
         "Project does not support this API.");
 #else
-    auto a_data = dpct::detail::get_memory(reinterpret_cast<T *>(a));
-    auto device_ws_data =
-        dpct::detail::get_memory(reinterpret_cast<T *>(device_ws));
+    auto a_data = dpct::detail::get_memory<T>(a);
+    auto device_ws_data = dpct::detail::get_memory<T>(device_ws);
     oneapi::mkl::lapack::trtri(q, uplo, diag, n, a_data, lda, device_ws_data,
                                device_ws_size);
-    dpct::detail::dpct_memset<unsigned char>(q, info, 0, sizeof(int));
+    ::dpct::cs::fill<unsigned char>(q, info, 0, sizeof(int));
 #endif
   }
 };
