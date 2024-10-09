@@ -9,11 +9,12 @@
 #ifndef __DPCT_FFT_UTILS_HPP__
 #define __DPCT_FFT_UTILS_HPP__
 
-#include <sycl/sycl.hpp>
-#include <oneapi/mkl.hpp>
+#include "compat_service.hpp"
+#include "lib_common_utils.hpp"
+
 #include <optional>
 #include <utility>
-#include "lib_common_utils.hpp"
+
 
 namespace dpct {
 namespace fft {
@@ -423,9 +424,9 @@ public:
                     direction_and_placement = std::nullopt) {
     fft_engine *engine = fft_engine::create();
     engine->_is_estimate_call = true;
-    engine->commit(&dpct::get_default_queue(), dim, n, inembed, istride, idist,
-                   fft_type_to_data_type(type).first, onembed, ostride, odist,
-                   fft_type_to_data_type(type).second, batch,
+    engine->commit(&::dpct::cs::get_default_queue(), dim, n, inembed, istride,
+                   idist, fft_type_to_data_type(type).first, onembed, ostride,
+                   odist, fft_type_to_data_type(type).second, batch,
                    estimated_scratchpad_size, direction_and_placement);
     fft_engine::destroy(engine);
   }
@@ -457,9 +458,9 @@ public:
                     direction_and_placement = std::nullopt) {
     fft_engine *engine = fft_engine::create();
     engine->_is_estimate_call = true;
-    engine->commit(&dpct::get_default_queue(), dim, n, inembed, istride, idist,
-                   fft_type_to_data_type(type).first, onembed, ostride, odist,
-                   fft_type_to_data_type(type).second, batch,
+    engine->commit(&::dpct::cs::get_default_queue(), dim, n, inembed, istride,
+                   idist, fft_type_to_data_type(type).first, onembed, ostride,
+                   odist, fft_type_to_data_type(type).second, batch,
                    estimated_scratchpad_size, direction_and_placement);
     fft_engine::destroy(engine);
   }
@@ -481,7 +482,7 @@ public:
                     direction_and_placement = std::nullopt) {
     fft_engine *engine = fft_engine::create();
     engine->_is_estimate_call = true;
-    engine->commit(&dpct::get_default_queue(), n1, type, batch,
+    engine->commit(&::dpct::cs::get_default_queue(), n1, type, batch,
                    estimated_scratchpad_size, direction_and_placement);
     fft_engine::destroy(engine);
   }
@@ -503,7 +504,7 @@ public:
                     direction_and_placement = std::nullopt) {
     fft_engine *engine = fft_engine::create();
     engine->_is_estimate_call = true;
-    engine->commit(&dpct::get_default_queue(), n2, n1, type,
+    engine->commit(&::dpct::cs::get_default_queue(), n2, n1, type,
                    estimated_scratchpad_size, direction_and_placement);
     fft_engine::destroy(engine);
   }
@@ -526,7 +527,7 @@ public:
                     direction_and_placement = std::nullopt) {
     fft_engine *engine = fft_engine::create();
     engine->_is_estimate_call = true;
-    engine->commit(&dpct::get_default_queue(), n3, n2, n1, type,
+    engine->commit(&::dpct::cs::get_default_queue(), n3, n2, n1, type,
                    estimated_scratchpad_size, direction_and_placement);
     fft_engine::destroy(engine);
   }
@@ -623,13 +624,13 @@ public:
     if (_input_type == library_data_t::complex_float &&
         _output_type == library_data_t::complex_float) {
       if (_q->get_device().is_gpu()) {
-        auto data = dpct::detail::get_memory(reinterpret_cast<float *>(ptr));
+        auto data = dpct::detail::get_memory<float>(ptr);
         _desc_sc->set_workspace(data);
       }
     } else if (_input_type == library_data_t::complex_double &&
                _output_type == library_data_t::complex_double) {
       if (_q->get_device().is_gpu()) {
-        auto data = dpct::detail::get_memory(reinterpret_cast<double *>(ptr));
+        auto data = dpct::detail::get_memory<double>(ptr);
         _desc_dc->set_workspace(data);
       }
     } else if ((_input_type == library_data_t::real_float &&
@@ -637,7 +638,7 @@ public:
                (_input_type == library_data_t::complex_float &&
                 _output_type == library_data_t::real_float)) {
       if (_q->get_device().is_gpu()) {
-        auto data = dpct::detail::get_memory(reinterpret_cast<float *>(ptr));
+        auto data = dpct::detail::get_memory<float>(ptr);
         _desc_sr->set_workspace(data);
       }
     } else if ((_input_type == library_data_t::real_double &&
@@ -645,7 +646,7 @@ public:
                (_input_type == library_data_t::complex_double &&
                 _output_type == library_data_t::real_double)) {
       if (_q->get_device().is_gpu()) {
-        auto data = dpct::detail::get_memory(reinterpret_cast<double *>(ptr));
+        auto data = dpct::detail::get_memory<double>(ptr);
         _desc_dr->set_workspace(data);
       }
     } else {
@@ -1029,12 +1030,14 @@ private:
            _output_type == library_data_t::complex_double)) {
         _fwd_dist = idist;
         _bwd_dist = odist;
+        _direction = fft_direction::forward;
       } else if ((_output_type == library_data_t::real_float &&
                   _input_type == library_data_t::complex_float) ||
                  (_output_type == library_data_t::real_double &&
                   _input_type == library_data_t::complex_double)) {
         _fwd_dist = odist;
         _bwd_dist = idist;
+        _direction = fft_direction::backward;
       } else {
         if (_is_user_specified_dir_and_placement &&
             (_direction == fft_direction::backward)) {
@@ -1059,282 +1062,221 @@ private:
   template <class Desc_t>
   void set_stride_advanced(std::shared_ptr<Desc_t> desc) {
     if (_dim == 1) {
-      std::int64_t input_stride[2] = {0, _istride};
-      std::int64_t output_stride[2] = {0, _ostride};
-      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
-                      input_stride);
-      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
-                      output_stride);
+      _fwd_strides = {0, _istride, 0, 0};
+      _bwd_strides = {0, _ostride, 0, 0};
     } else if (_dim == 2) {
-      std::int64_t input_stride[3] = {0, _inembed[1] * _istride, _istride};
-      std::int64_t output_stride[3] = {0, _onembed[1] * _ostride, _ostride};
-      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
-                      input_stride);
-      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
-                      output_stride);
+      _fwd_strides = {0, _inembed[1] * _istride, _istride, 0};
+      _bwd_strides = {0, _onembed[1] * _ostride, _ostride, 0};
     } else if (_dim == 3) {
-      std::int64_t input_stride[4] = {0, _inembed[2] * _inembed[1] * _istride,
-                                      _inembed[2] * _istride, _istride};
-      std::int64_t output_stride[4] = {0, _onembed[2] * _onembed[1] * _ostride,
-                                       _onembed[2] * _ostride, _ostride};
-      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
-                      input_stride);
-      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
-                      output_stride);
+      _fwd_strides = {0, _inembed[2] * _inembed[1] * _istride,
+                      _inembed[2] * _istride, _istride};
+      _bwd_strides = {0, _onembed[2] * _onembed[1] * _ostride,
+                      _onembed[2] * _ostride, _ostride};
     }
+#ifdef __INTEL_MKL__
+    if (_direction == fft_direction::backward) {
+      std::swap_ranges(_fwd_strides.begin(), _fwd_strides.end(),
+                       _bwd_strides.begin());
+    }
+    desc->set_value(oneapi::mkl::dft::config_param::FWD_STRIDES,
+                    _fwd_strides.data());
+    desc->set_value(oneapi::mkl::dft::config_param::BWD_STRIDES,
+                    _bwd_strides.data());
+#else
+    desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
+                    _fwd_strides.data());
+    desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
+                    _bwd_strides.data());
+#endif
   }
 
   template <class Desc_t> void swap_distance(std::shared_ptr<Desc_t> desc) {
-    desc->set_value(oneapi::mkl::dft::config_param::FWD_DISTANCE, _bwd_dist);
-    desc->set_value(oneapi::mkl::dft::config_param::BWD_DISTANCE, _fwd_dist);
-    std::int64_t temp = _bwd_dist;
-    _bwd_dist = _fwd_dist;
-    _fwd_dist = temp;
+    std::swap(_fwd_dist, _bwd_dist);
+    desc->set_value(oneapi::mkl::dft::config_param::FWD_DISTANCE, _fwd_dist);
+    desc->set_value(oneapi::mkl::dft::config_param::BWD_DISTANCE, _bwd_dist);
   }
+
+#ifdef __INTEL_MKL__
+  template <class Desc_t> void swap_strides(std::shared_ptr<Desc_t> desc) {
+    std::swap_ranges(_fwd_strides.begin(), _fwd_strides.end(),
+                     _bwd_strides.begin());
+    desc->set_value(oneapi::mkl::dft::config_param::FWD_STRIDES,
+                    _fwd_strides.data());
+    desc->set_value(oneapi::mkl::dft::config_param::BWD_STRIDES,
+                    _bwd_strides.data());
+  }
+#endif
 
   template <bool Is_inplace, class Desc_t>
   void set_stride_and_distance_basic(std::shared_ptr<Desc_t> desc) {
     std::int64_t forward_distance = 0;
     std::int64_t backward_distance = 0;
-
-#define SET_STRIDE                                                             \
-  {                                                                            \
-    if (_direction == fft_direction::forward) {                                \
-      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,           \
-                      real_stride);                                            \
-      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,          \
-                      complex_stride);                                         \
-    } else {                                                                   \
-      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,           \
-                      complex_stride);                                         \
-      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,          \
-                      real_stride);                                            \
-    }                                                                          \
-  }
     if (_dim == 1) {
       if constexpr (Is_inplace) {
-        std::int64_t real_stride[2] = {0, 1};
-        std::int64_t complex_stride[2] = {0, 1};
-        SET_STRIDE;
+        _fwd_strides = {0, 1, 0, 0};
+        _bwd_strides = {0, 1, 0, 0};
         forward_distance = 2 * (_n[0] / 2 + 1);
         backward_distance = _n[0] / 2 + 1;
       } else {
-        std::int64_t real_stride[2] = {0, 1};
-        std::int64_t complex_stride[2] = {0, 1};
-        SET_STRIDE;
+        _fwd_strides = {0, 1, 0, 0};
+        _bwd_strides = {0, 1, 0, 0};
         forward_distance = _n[0];
         backward_distance = _n[0] / 2 + 1;
       }
     } else if (_dim == 2) {
       if constexpr (Is_inplace) {
-        std::int64_t complex_stride[3] = {0, _n[1] / 2 + 1, 1};
-        std::int64_t real_stride[3] = {0, 2 * (_n[1] / 2 + 1), 1};
-        SET_STRIDE;
+        _bwd_strides = {0, _n[1] / 2 + 1, 1, 0};
+        _fwd_strides = {0, 2 * (_n[1] / 2 + 1), 1, 0};
         forward_distance = _n[0] * 2 * (_n[1] / 2 + 1);
         backward_distance = _n[0] * (_n[1] / 2 + 1);
       } else {
-        std::int64_t complex_stride[3] = {0, _n[1] / 2 + 1, 1};
-        std::int64_t real_stride[3] = {0, _n[1], 1};
-        SET_STRIDE;
+        _bwd_strides = {0, _n[1] / 2 + 1, 1, 0};
+        _fwd_strides = {0, _n[1], 1, 0};
         forward_distance = _n[0] * _n[1];
         backward_distance = _n[0] * (_n[1] / 2 + 1);
       }
     } else if (_dim == 3) {
       if constexpr (Is_inplace) {
-        std::int64_t complex_stride[4] = {0, _n[1] * (_n[2] / 2 + 1),
-                                          _n[2] / 2 + 1, 1};
-        std::int64_t real_stride[4] = {0, _n[1] * 2 * (_n[2] / 2 + 1),
-                                       2 * (_n[2] / 2 + 1), 1};
-        SET_STRIDE;
+        _bwd_strides = {0, _n[1] * (_n[2] / 2 + 1), _n[2] / 2 + 1, 1};
+        _fwd_strides = {0, _n[1] * 2 * (_n[2] / 2 + 1), 2 * (_n[2] / 2 + 1), 1};
         forward_distance = _n[0] * _n[1] * 2 * (_n[2] / 2 + 1);
         backward_distance = _n[0] * _n[1] * (_n[2] / 2 + 1);
       } else {
-        std::int64_t complex_stride[4] = {0, _n[1] * (_n[2] / 2 + 1),
-                                          _n[2] / 2 + 1, 1};
-        std::int64_t real_stride[4] = {0, _n[1] * _n[2], _n[2], 1};
-        SET_STRIDE;
+        _bwd_strides = {0, _n[1] * (_n[2] / 2 + 1), _n[2] / 2 + 1, 1};
+        _fwd_strides = {0, _n[1] * _n[2], _n[2], 1};
         forward_distance = _n[0] * _n[1] * _n[2];
         backward_distance = _n[0] * _n[1] * (_n[2] / 2 + 1);
       }
     }
-#undef SET_STRIDE
+#ifdef __INTEL_MKL__
+    desc->set_value(oneapi::mkl::dft::config_param::FWD_STRIDES,
+                    _fwd_strides.data());
+    desc->set_value(oneapi::mkl::dft::config_param::BWD_STRIDES,
+                    _bwd_strides.data());
+#else
+    if (_direction == fft_direction::forward) {
+      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
+                      _fwd_strides.data());
+      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
+                      _bwd_strides.data());
+    } else {
+      desc->set_value(oneapi::mkl::dft::config_param::INPUT_STRIDES,
+                      _bwd_strides.data());
+      desc->set_value(oneapi::mkl::dft::config_param::OUTPUT_STRIDES,
+                      _fwd_strides.data());
+    }
+#endif
     desc->set_value(oneapi::mkl::dft::config_param::FWD_DISTANCE,
                     forward_distance);
     desc->set_value(oneapi::mkl::dft::config_param::BWD_DISTANCE,
                     backward_distance);
   }
 
-#define COMPUTE(DESC)                                                          \
-  {                                                                            \
-    if (_is_inplace) {                                                         \
-      auto data_input =                                                        \
-          dpct::detail::get_memory(reinterpret_cast<T *>(input));              \
-      if (_direction == fft_direction::forward) {                              \
-        oneapi::mkl::dft::compute_forward<                                     \
-            std::remove_reference_t<decltype(*DESC)>, T>(*DESC, data_input);   \
-      } else {                                                                 \
-        oneapi::mkl::dft::compute_backward<                                    \
-            std::remove_reference_t<decltype(*DESC)>, T>(*DESC, data_input);   \
-      }                                                                        \
-    } else {                                                                   \
-      auto data_input =                                                        \
-          dpct::detail::get_memory(reinterpret_cast<T *>(input));              \
-      auto data_output =                                                       \
-          dpct::detail::get_memory(reinterpret_cast<T *>(output));             \
-      if (_direction == fft_direction::forward) {                              \
-        oneapi::mkl::dft::compute_forward<                                     \
-            std::remove_reference_t<decltype(*DESC)>, T, T>(*DESC, data_input, \
-                                                            data_output);      \
-      } else {                                                                 \
-        oneapi::mkl::dft::compute_backward<                                    \
-            std::remove_reference_t<decltype(*DESC)>, T, T>(*DESC, data_input, \
-                                                            data_output);      \
-      }                                                                        \
-    }                                                                          \
+  template <class Dest_t, class T>
+  void compute_impl(Dest_t desc, T *input, T *output,
+                    std::optional<fft_direction> direction) {
+    bool is_this_compute_inplace = input == output;
+    constexpr bool is_complex =
+        std::is_same_v<Dest_t, std::shared_ptr<oneapi::mkl::dft::descriptor<
+                                   oneapi::mkl::dft::precision::SINGLE,
+                                   oneapi::mkl::dft::domain::COMPLEX>>> ||
+        std::is_same_v<Dest_t, std::shared_ptr<oneapi::mkl::dft::descriptor<
+                                   oneapi::mkl::dft::precision::DOUBLE,
+                                   oneapi::mkl::dft::domain::COMPLEX>>>;
+
+    if (!_is_user_specified_dir_and_placement) {
+      // The descriptor need different config values if the FFT direction
+      // or placement is different.
+      // Here we check the conditions, and new config values are set and
+      // re-committed if needed.
+      bool need_commit = false;
+      if constexpr (is_complex) {
+        if (direction.value() != _direction) {
+          need_commit = true;
+          swap_distance(desc);
+#ifdef __INTEL_MKL__
+          if (!_is_basic)
+            swap_strides(desc);
+#endif
+          _direction = direction.value();
+        }
+      }
+      if (is_this_compute_inplace != _is_inplace) {
+        need_commit = true;
+        _is_inplace = is_this_compute_inplace;
+#ifdef __INTEL_MKL__
+        if (_is_inplace) {
+          desc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
+                          DFTI_CONFIG_VALUE::DFTI_INPLACE);
+          if constexpr (!is_complex)
+            if (_is_basic)
+              set_stride_and_distance_basic<true>(desc);
+        } else {
+          desc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
+                          DFTI_CONFIG_VALUE::DFTI_NOT_INPLACE);
+          if constexpr (!is_complex)
+            if (_is_basic)
+              set_stride_and_distance_basic<false>(desc);
+        }
+#else
+        if (_is_inplace) {
+          desc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
+                          oneapi::mkl::dft::config_value::INPLACE);
+          if constexpr (!is_complex)
+            if (_is_basic)
+              set_stride_and_distance_basic<true>(desc);
+        } else {
+          desc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
+                          oneapi::mkl::dft::config_value::NOT_INPLACE);
+          if constexpr (!is_complex)
+            if (_is_basic)
+              set_stride_and_distance_basic<false>(desc);
+        }
+#endif
+      }
+      if (need_commit)
+        desc->commit(*_q);
+    }
+
+    if (_is_inplace) {
+      auto data_input = dpct::detail::get_memory<T>(input);
+      if (_direction == fft_direction::forward) {
+        oneapi::mkl::dft::compute_forward<typename Dest_t::element_type, T>(
+            *desc, data_input);
+      } else {
+        oneapi::mkl::dft::compute_backward<typename Dest_t::element_type, T>(
+            *desc, data_input);
+      }
+    } else {
+      auto data_input = dpct::detail::get_memory<T>(input);
+      auto data_output = dpct::detail::get_memory<T>(output);
+      if (_direction == fft_direction::forward) {
+        oneapi::mkl::dft::compute_forward<typename Dest_t::element_type, T, T>(
+            *desc, data_input, data_output);
+      } else {
+        oneapi::mkl::dft::compute_backward<typename Dest_t::element_type, T, T>(
+            *desc, data_input, data_output);
+      }
+    }
   }
 
   template <class T, oneapi::mkl::dft::precision Precision>
   void compute_complex(T *input, T *output, fft_direction direction) {
-    bool is_this_compute_inplace = input == output;
-
-    if (!_is_user_specified_dir_and_placement) {
-      // The complex domain descriptor need different config values if the
-      // FFT direction or placement is different.
-      // Here we check the conditions, and new config values are set and
-      // re-committed if needed.
-      if (direction != _direction || is_this_compute_inplace != _is_inplace) {
-        if constexpr (Precision == oneapi::mkl::dft::precision::SINGLE) {
-          if (direction != _direction) {
-            swap_distance(_desc_sc);
-            _direction = direction;
-          }
-          if (is_this_compute_inplace != _is_inplace) {
-            _is_inplace = is_this_compute_inplace;
-#ifdef __INTEL_MKL__
-            if (_is_inplace) {
-              _desc_sc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  DFTI_CONFIG_VALUE::DFTI_INPLACE);
-            } else {
-              _desc_sc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  DFTI_CONFIG_VALUE::DFTI_NOT_INPLACE);
-            }
-#else
-            if (_is_inplace) {
-              _desc_sc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  oneapi::mkl::dft::config_value::INPLACE);
-            } else {
-              _desc_sc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  oneapi::mkl::dft::config_value::NOT_INPLACE);
-            }
-#endif
-          }
-          _desc_sc->commit(*_q);
-        } else {
-          if (direction != _direction) {
-            swap_distance(_desc_dc);
-            _direction = direction;
-          }
-          if (is_this_compute_inplace != _is_inplace) {
-            _is_inplace = is_this_compute_inplace;
-#ifdef __INTEL_MKL__
-            if (_is_inplace) {
-              _desc_dc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  DFTI_CONFIG_VALUE::DFTI_INPLACE);
-            } else {
-              _desc_dc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  DFTI_CONFIG_VALUE::DFTI_NOT_INPLACE);
-            }
-#else
-            if (_is_inplace) {
-              _desc_dc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  oneapi::mkl::dft::config_value::INPLACE);
-            } else {
-              _desc_dc->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                  oneapi::mkl::dft::config_value::NOT_INPLACE);
-            }
-#endif
-          }
-          _desc_dc->commit(*_q);
-        }
-      }
-    }
-
     if constexpr (Precision == oneapi::mkl::dft::precision::SINGLE) {
-      COMPUTE(_desc_sc);
+      compute_impl(_desc_sc, input, output, direction);
     } else {
-      COMPUTE(_desc_dc);
+      compute_impl(_desc_dc, input, output, direction);
     }
   }
 
   template <class T, oneapi::mkl::dft::precision Precision>
   void compute_real(T *input, T *output) {
-    bool is_this_compute_inplace = input == output;
-
-    if (!_is_user_specified_dir_and_placement) {
-      // The real domain descriptor need different config values if the
-      // FFT placement is different.
-      // Here we check the condition, and new config values are set and
-      // re-committed if needed.
-      if (is_this_compute_inplace != _is_inplace) {
-        if constexpr (Precision == oneapi::mkl::dft::precision::SINGLE) {
-          _is_inplace = is_this_compute_inplace;
-          if (_is_inplace) {
-#ifdef __INTEL_MKL__
-            _desc_sr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                DFTI_CONFIG_VALUE::DFTI_INPLACE);
-#else
-            _desc_sr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                oneapi::mkl::dft::config_value::INPLACE);
-#endif
-            if (_is_basic)
-              set_stride_and_distance_basic<true>(_desc_sr);
-          } else {
-#ifdef __INTEL_MKL__
-            _desc_sr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                DFTI_CONFIG_VALUE::DFTI_NOT_INPLACE);
-#else
-            _desc_sr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                oneapi::mkl::dft::config_value::NOT_INPLACE);
-#endif
-            if (_is_basic)
-              set_stride_and_distance_basic<false>(_desc_sr);
-          }
-          _desc_sr->commit(*_q);
-        } else {
-          _is_inplace = is_this_compute_inplace;
-          if (_is_inplace) {
-#ifdef __INTEL_MKL__
-            _desc_dr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                DFTI_CONFIG_VALUE::DFTI_INPLACE);
-#else
-            _desc_dr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                oneapi::mkl::dft::config_value::INPLACE);
-#endif
-            if (_is_basic)
-              set_stride_and_distance_basic<true>(_desc_dr);
-          } else {
-#ifdef __INTEL_MKL__
-            _desc_dr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                DFTI_CONFIG_VALUE::DFTI_NOT_INPLACE);
-#else
-            _desc_dr->set_value(oneapi::mkl::dft::config_param::PLACEMENT,
-                                oneapi::mkl::dft::config_value::NOT_INPLACE);
-#endif
-            if (_is_basic)
-              set_stride_and_distance_basic<false>(_desc_dr);
-          }
-          _desc_dr->commit(*_q);
-        }
-      }
-    }
-
     if constexpr (Precision == oneapi::mkl::dft::precision::SINGLE) {
-      COMPUTE(_desc_sr);
+      compute_impl(_desc_sr, input, output, std::nullopt);
     } else {
-      COMPUTE(_desc_dr);
+      compute_impl(_desc_dr, input, output, std::nullopt);
     }
   }
-#undef COMPUTE
 
 private:
   sycl::queue *_q = nullptr;
@@ -1370,6 +1312,8 @@ private:
   std::shared_ptr<oneapi::mkl::dft::descriptor<
       oneapi::mkl::dft::precision::DOUBLE, oneapi::mkl::dft::domain::COMPLEX>>
       _desc_dc;
+  std::array<std::int64_t, 4> _fwd_strides = {0, 0, 0, 0};
+  std::array<std::int64_t, 4> _bwd_strides = {0, 0, 0, 0};
 };
 
 using fft_engine_ptr = fft_engine *;
