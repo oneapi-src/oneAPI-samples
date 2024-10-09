@@ -19,7 +19,7 @@ const size_t L = 1;
 
 int main(int argc, char **argv)
 {
-    sycl::queue Q(sycl::default_selector{});
+    sycl::queue Q(sycl::default_selector_v);
 
     const size_t n = 7;
     auto data = sycl::malloc_shared<int>(n, Q);
