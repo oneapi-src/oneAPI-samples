@@ -36,14 +36,10 @@ void test(queue &Q, int M, int N, int K)
     auto A = malloc_device<T>(lda * K, Q);
     auto B = malloc_device<T>(ldb * N, Q);
     auto C = malloc_device<T>(ldc * N, Q);
+    auto flag = malloc_shared<int>(1, Q);
 
-    /* Fill A/B with random data */
     constexpr int rd_size = 1048576;
-    auto random_data = malloc_host<T>(rd_size, Q);
-    generate_random_data(rd_size, random_data);
-
-    replicate_data(Q, A, lda * K, random_data, rd_size);
-    replicate_data(Q, B, ldb * N, random_data, rd_size);
+    auto host_data = malloc_host<T>(rd_size, Q);
 
     /* Measure time for a given number of GEMM calls */
     auto time_gemms = [=, &Q](int runs) -> double {
@@ -57,7 +53,49 @@ void test(queue &Q, int M, int N, int K)
         return duration<double>(end - start).count();
     };
 
-    /* Do a warmup call to initialize MKL and ensure kernels are JIT'ed if needed */
+    /* Fill A/B with all ones to verify correctness */
+    generate_ones(rd_size, host_data);
+    replicate_data(Q, A, lda * K, host_data, rd_size);
+    replicate_data(Q, B, ldb * N, host_data, rd_size);
+
+    /* Verify that the leading entries of C are correct */
+    std::cout << " -> Verification...\n";
+    (void) time_gemms(1);
+    size_t elems = std::min(ldc * N, rd_size);
+    Q.copy(C, host_data, elems);
+    flag[0] = 0;
+    int linear_id = 0;
+    for (size_t j = 0; j < N; j++) {
+        for (size_t i = 0; i < M; i++) {
+            linear_id = j*ldc + i;
+            if (linear_id >= elems) break;
+            if (host_data[linear_id] != T(K)) {
+                flag[0] = 1;
+            }
+        }
+        if (linear_id >= elems) break;
+    }
+    /*
+    for (size_t i = 0; i < elems; i++) {
+        int count = 0;
+        if (host_data[i] != T(K)) {
+            flag[0] = 1;
+            if (count < 10) {
+                sycl::ext::oneapi::experimental::printf("error elem %d expect %f got %f\n",
+                                                        i, T(K), host_data[i]);
+                count++;
+            }
+        }
+    }
+    */
+    std::cout << "     verification " << (flag[0] == 0 ? "passes." : "FAILS!") << std::endl;
+
+    /* Fill A/B with random data */
+    generate_random_data(rd_size, host_data);
+    replicate_data(Q, A, lda * K, host_data, rd_size);
+    replicate_data(Q, B, ldb * N, host_data, rd_size);
+
+    /* Do a warmup call with random data to initialize MKL and ensure kernels are JIT'ed if needed */
     std::cout << " -> Warmup...\n";
     (void) time_gemms(1);
 
@@ -93,7 +131,8 @@ void test(queue &Q, int M, int N, int K)
     free(A, Q);
     free(B, Q);
     free(C, Q);
-    free(random_data, Q);
+    free(flag, Q);
+    free(host_data, Q);
 }
 
 void usage(const char *pname)
