@@ -1,17 +1,17 @@
-# `Jacobi Iterative Solver` Sample
+# `Address Sanitizer` Sample
 
-The `Jacobi Iterative Solver` sample demonstrates how to use Intel® oneAPI Base Toolkit (Base Kit) to target CPU, GPU, and multi-GPU to offload resource intensive computation using SYCL*. The targeted sample code demonstrates optimization and runtime differences for each type of device.
+The `Address Sanitizer` sample demonstrates how to use the AddressSanitizer (ASan) memory detector with the SYCL library.
 
 | Area                   | Description
 |:---                    |:---
-| What you will learn    | How selecting a different target impacts the behavior of a program.
+| What you will learn    | How to use the Address Sanitizer tool
 | Time to complete       | 10 minutes
-| Category               | Code Optimization
+| Category               | Memory Management
 
 
 ## Purpose
 
-The `Jacobi Iterative Solver` sample illustrates how to use the Jacobi Iterative method to solve linear equations. In this case, the sample solves a system of equations represented by two input matrices. The first matrix is the number of unknown variables. The second matrix contains the results. The sample code calculates the results using the Jacobi method and compares the newly calculated results with the old ones.
+The `Address Sanitizer` sample illustrates how to use Address Sanitizer to manage memory errors with the SYCL library. Each of the examples shows a different error and how to 
 
 This sample starts with a CPU-oriented application and shows how to use SYCL and several tools to offload regions of the code to a GPU on the target system.
 
@@ -31,7 +31,7 @@ The sample includes three versions of the `Jacobi Iterative Solver` program.
 
 | Optimized for          | Description
 |:---                    |:---
-| OS                     | Ubuntu* 18.04 (or newer)
+| OS                     | Ubuntu* 20.04 (or newer)
 | Hardware               | GEN9 (or newer)
 | Software               | Intel® oneAPI DPC++/C++ Compiler
 
@@ -39,9 +39,12 @@ The sample includes three versions of the `Jacobi Iterative Solver` program.
 
 The basic SYCL implementation explained in the code includes:
 
-- local buffers and accessors (declare local memory buffers and accessors to be accessed and managed by each workgroup)
-- shared local memory (SLM) optimizations
-- kernels (including parallel_for function and range<1> objects)
+- out-of-bounds
+- use-after-free
+- misalign-access
+- double-free
+- bad-free
+- bad-context
 
 
 ## Set Environment Variables
