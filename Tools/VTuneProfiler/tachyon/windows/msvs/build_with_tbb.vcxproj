@@ -30,14 +30,14 @@
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <UseIntelTBB>true</UseIntelTBB>
-    <PlatformToolset>Intel C++ Compiler 2024</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
     <UseInteloneTBB>true</UseInteloneTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <UseIntelTBB>true</UseIntelTBB>
-    <PlatformToolset>Intel C++ Compiler 2024</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
     <UseInteloneTBB>true</UseInteloneTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -45,14 +45,14 @@
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <UseIntelTBB>true</UseIntelTBB>
-    <PlatformToolset>Intel C++ Compiler 2024</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
     <UseInteloneTBB>true</UseInteloneTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <UseIntelTBB>true</UseIntelTBB>
-    <PlatformToolset>Intel C++ Compiler 2024</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 2025</PlatformToolset>
     <UseInteloneTBB>true</UseInteloneTBB>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
