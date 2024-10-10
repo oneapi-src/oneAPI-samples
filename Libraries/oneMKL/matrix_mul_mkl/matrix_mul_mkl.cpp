@@ -36,7 +36,6 @@ void test(queue &Q, int M, int N, int K)
     auto A = malloc_device<T>(lda * K, Q);
     auto B = malloc_device<T>(ldb * N, Q);
     auto C = malloc_device<T>(ldc * N, Q);
-    auto flag = malloc_shared<int>(1, Q);
 
     constexpr int rd_size = 1048576;
     auto host_data = malloc_host<T>(rd_size, Q);
@@ -59,36 +58,23 @@ void test(queue &Q, int M, int N, int K)
     replicate_data(Q, B, ldb * N, host_data, rd_size);
 
     /* Verify that the leading entries of C are correct */
-    std::cout << " -> Verification...\n";
+    std::cout << " -> Verification...";
     (void) time_gemms(1);
     size_t elems = std::min(ldc * N, rd_size);
-    Q.copy(C, host_data, elems);
-    flag[0] = 0;
+    Q.copy(C, host_data, elems).wait();
+    bool ok = true;
     int linear_id = 0;
     for (size_t j = 0; j < N; j++) {
         for (size_t i = 0; i < M; i++) {
             linear_id = j*ldc + i;
             if (linear_id >= elems) break;
             if (host_data[linear_id] != T(K)) {
-                flag[0] = 1;
+                ok = false;
             }
         }
         if (linear_id >= elems) break;
     }
-    /*
-    for (size_t i = 0; i < elems; i++) {
-        int count = 0;
-        if (host_data[i] != T(K)) {
-            flag[0] = 1;
-            if (count < 10) {
-                sycl::ext::oneapi::experimental::printf("error elem %d expect %f got %f\n",
-                                                        i, T(K), host_data[i]);
-                count++;
-            }
-        }
-    }
-    */
-    std::cout << "     verification " << (flag[0] == 0 ? "passes." : "FAILS!") << std::endl;
+    std::cout << (ok ? " passes." : " FAILS!") << std::endl;
 
     /* Fill A/B with random data */
     generate_random_data(rd_size, host_data);
@@ -131,7 +117,6 @@ void test(queue &Q, int M, int N, int K)
     free(A, Q);
     free(B, Q);
     free(C, Q);
-    free(flag, Q);
     free(host_data, Q);
 }
 
