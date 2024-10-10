@@ -31,7 +31,7 @@ int main() {
   // Check that all outputs match serial execution.
   bool passed = true;
   for (int i = 0; i < N; ++i) {
-    float gold = std::sqrt(input[i]);
+    float gold = sqrt(input[i]);
     if (std::abs(output[i] - gold) >= 1.0E-06) {
       passed = false;
     }

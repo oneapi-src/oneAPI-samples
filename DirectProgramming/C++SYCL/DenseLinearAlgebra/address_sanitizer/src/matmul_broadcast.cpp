@@ -152,9 +152,9 @@ int check_results(const std::vector<T>& matrixC,
 
   float err = 0.f;
   for (int i = 0; i < M * N; ++i) {
-    float localErr = std::fabs(matrixC[i] - referenceC[i]) /
-                     std::max(std::fabs(matrixC[i]),
-                              std::fabs(referenceC[i]));
+    float localErr = fabs(matrixC[i] - referenceC[i]) /
+                     std::max(fabs(matrixC[i]),
+                              fabs(referenceC[i]));
     err = std::max(localErr, err);
     if (localErr >= 0.001f) {
       std::cerr << "Error at index " << i << ": Wanted "

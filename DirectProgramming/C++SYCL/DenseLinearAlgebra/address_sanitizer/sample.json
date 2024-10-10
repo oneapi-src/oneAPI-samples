@@ -1,8 +1,8 @@
 {
-  "guid": "E3626FAB-DCD8-465F-A4E7-BF4A858D6583",
-  "name": "Jacobi Iterative Solver",
+  "guid": "198ADB7C-9E6E-4714-ACD3-E869C86CB174",
+  "name": "Address Sanitizer",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"],
-  "description": "Jacobi Iterative Solver provides step by step instructions for CPU, GPU and multiple GPU offload",
+  "description": "Address Sanitizer sample provides examples of error memory detection in SYCL",
   "toolchain": ["dpcpp"],
   "os": ["linux"],
   "targetDevice": ["CPU", "GPU"],
@@ -17,9 +17,7 @@
           "cd build",
           "cmake ..",
           "make",
-          "make run_1_cpu",
-	  "make run_2_gpu",
-	  "make run_3_multi_gpu"
+          "make run_all"
         ]
       }
     ]

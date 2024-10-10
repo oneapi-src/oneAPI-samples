@@ -9,7 +9,7 @@ if (NOT CMAKE_BUILD_TYPE)
         STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel"
         FORCE)
 endif()
-project(Jacobi_Iterative_Solver)
+project(address_sanitizer)
 
 option(GPU_SELECTOR "Option description" OFF)
 option(CPU_SELECTOR "Option description" OFF)
