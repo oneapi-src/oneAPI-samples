@@ -75,6 +75,9 @@ void test(queue &Q, int M, int N, int K)
         if (linear_id >= elems) break;
     }
     std::cout << (ok ? " passes." : " FAILS!") << std::endl;
+    if (!ok) {
+        exit(1);
+    }
 
     /* Fill A/B with random data */
     generate_random_data(rd_size, host_data);
