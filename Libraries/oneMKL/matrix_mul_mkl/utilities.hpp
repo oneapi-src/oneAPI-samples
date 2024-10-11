@@ -24,6 +24,14 @@ int nice_ld(int x)
     return x;
 }
 
+template <typename T>
+void generate_ones(size_t elems, T *v)
+{
+#pragma omp parallel for
+    for (size_t i = 0; i < elems; i++)
+        v[i] = T(1);
+}
+
 /* Random number generation helpers */
 template <typename T>
 void generate_random_data(size_t elems, T *v)
