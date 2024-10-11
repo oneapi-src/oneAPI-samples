@@ -523,7 +523,7 @@ public:
 
       int ranks[VALUES_PER_THREAD];
       detail::radix_rank<RADIX_BITS, DESCENDING>(_local_memory)
-          .template rank_keys(item, unsigned_keys, ranks, i, pass_bits);
+          . rank_keys(item, unsigned_keys, ranks, i, pass_bits);
 
       item.barrier(sycl::access::fence_space::local_space);
 
