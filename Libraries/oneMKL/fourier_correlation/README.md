@@ -1,34 +1,34 @@
 # Fourier Correlation Sample
-Fourier correlation has many applications, e.g.: measuring the similarity of two 1D signals, finding the best translation to overlay similar images, volumetric medical image segmentation, etc. This sample shows how to implement 1D and 2D Fourier correlation using SYCL, oneMKL, and oneDPL kernel functions.
+The cross-correlation has many applications, *e.g.*, measuring the similarity of two one-dimensional signals, finding the best translation to overlay similar images, volumetric medical image segmentation, etc. This sample shows how to implement one-dimensional and two-dimensional cross-correlations using SYCL, and oneMKL Discrete Fourier Transform (DFT) functions. This samples requires oneMKL 2024.1 (or newer).
 
 For more information on oneMKL, and complete documentation of all oneMKL routines, see https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html.
 
-| Optimized for       | Description
-|:---                 |:---
-| OS                  | Linux* Ubuntu* 18.04; Windows 10*
-| Hardware            | Intel&reg; Skylake with Gen9 or newer
-| Software            | Intel&reg; oneMKL, Intel&reg; oneDPL
-| What you will learn | How to implement the Fourier correlation algorithm using SYCL, oneMKL, and oneDPL functions
-| Time to complete    | 15 minutes
+For more information on supported systems and the corresponding requirements, see https://www.intel.com/content/www/us/en/developer/articles/system-requirements/intel-oneapi-base-toolkit-system-requirements.html.
 
 ## Purpose
-This sample shows how to implement the Fourier correlation algorithm:
+This sample shows how to find the optimal translational shift maximizing the cross-correlation between two real, periodic signals $u$ and $v$ in ${&#8477;}^{n_{1}\times n_{2} \times \ldots \times n_{d}}$, *i.e.*, the (integer) value(s) $s_{i}, \ i \in  \lbrace 1, \ldots, d\rbrace$ maximizing
 
-    corr = MAXLOC(IDFT(DFT(signal1) * CONJG(DFT(signal1))))
+$$ c_{s_{1}, \ldots, s_{d-1}} = \sum_{j_{1} = 0}^{n_{1} - 1} \cdots \sum_{j_{d} = 0}^{n_{d} - 1} u_{j_{1}, \ldots, j_{d}} v_{j_{1} - s_{1}, \ldots, j_{d} - s_{d}}.$$
 
-Where ``DFT`` is the discrete Fourier transform, ``IDFT`` is the inverse DFT, ``CONJG`` is the complex conjugate, and ``MAXLOC`` is the location of the maximum value.
+> **_NOTE:_** Given the periodic nature of $u$, $u_{j_{1} + k_{1} n_{1}, j_{2} + k_{2} n_{2}, \ldots, j_{d} + k_{d} n_{d}}$ and $u_{j_{1}, j_{2}, \ldots, j_{d}}$ are equal $\forall \\lbrace k_{1}, \ldots, k_{d}\rbrace \in {&#8484;}^{d}$; the same remark holds for $v$.
 
-The algorithm can be composed using SYCL, oneMKL, and/or oneDPL. SYCL provides the device offload and host-device memory transfer mechanisms. oneMKL provides optimized forward and backward transforms and complex conjugate multiplication functions. oneDPL provides the MAXLOC function. Therefore, the entire computation can be performed on the accelerator device.
+Discrete Fourier transforms may be used to evaluate the above $c$ efficiently, via
 
-The following articles provide more detailed explanations of the implementations:
+$$ c = \dfrac{1}{\prod_{i = 1}^{d} n_{i}} {&#120021;}^{-1} \left({&#120021;}(u) \odot \left({&#120021;}(v)\right)^{*}\right) $$
 
- - [Efficiently Implementing Fourier Correlation Using oneAPI Math Kernel Library](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-1/efficiently-implementing-fourier-correlation-using.html)
- - [Accelerating the 2D Fourier Correlation Algorithm with ArrayFire and oneAPI](https://www.intel.com/content/www/us/en/developer/articles/technical/accelerate-2d-fourier-correlation-algorithm.html)
+where ${&#120021;}$ (resp. ${&#120021;}^{-1}$) represents the forward (resp. backward) unscaled Discrete Fourier Transform, $\odot$ represents a component-wise product, and $\lambda^{*}$ is the complex conjugate of $\lambda$.
 
-## Key Implementation Details
-In many applications, only the final correlation result matters, so this is all that has to be transferred from the device back to the host. In this example, two artificial signals will be created on the device, transformed in-place, then correlated. The host will retrieve the final result (i.e., the location of the maximum value) and report the optimal translation and correlation score.
+The implementations use SYCL and oneMKL. SYCL provides the device offload and host-device memory transfer mechanisms. oneMKL provides interfaces to compute forward and backward transforms on the device as well as other required functions like the component-wise product of two complex sequences. The result of the operation described above is compared with a naive SYCL implementation and the two are verified to be within numerical tolerance of each other.
 
-Two implementations of the 1D Fourier correlation algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations perform the correlation on the selected device, but the buffered implementation uses the oneDPL max_element function to perform the final MAXLOC reduction while the USM implementation uses the SYCL reduction operator. A 2D Fourier correlation example is also included to show how 2D data layout is handled during the real-to-complex and complex-to-real transforms.
+## Implementation Details
+
+In this sample, two artificial signals are created on the device. Their cross-correlation is evaluate 1) via a naive SYCL implementation and 2) by using the DFT-based procedure described above. The host retrieves the results and verifies that they are within numerical tolerance of each other. The optimal shift maximizing the cross-correlation between the signals is also extracted on the host, and reported as a normalized correlation score
+
+$$ \rho_{u, v} = \dfrac{1}{\sigma_{u}\sigma_{v}} \left( \max_{\lbrace s_{1}, \ldots, s_{d} \rbrace} \dfrac{c_{s_{1}, \ldots, s_{d}}}{\prod_{i = i}^{d}{n_{i}}} - \overline{u}\overline{v} \right)$$
+
+where $\overline{x}$ and $\sigma_{x}$ are the average value and standard deviations of $x$, respectively.
+
+Two implementations of the one-dimensional algorithm are provided: one that uses explicit buffering and one that uses Unified Shared Memory (USM). Both implementations compute the cross-correlation on the selected device. A two-dimensional Fourier correlation example using USM is also included, illustrating how to define and use a two-dimensional data layout compliant with the requirements for in-place real-to-complex and complex-to-real transforms.
 
 ## License
 Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
@@ -68,7 +68,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 >For more information on environment variables, see Use the setvars Script for [Linux or macOS](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-linux-or-macos.html), or [Windows](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-1/use-the-setvars-script-with-windows.html).
 
 ### On a Linux System
-Run `make` to build and run the sample. Two programs are generated: one that uses explicit buffering and one that uses USM.
+Run `make` to build and run the sample. One two-dimensional program (using USM) and two one-dimensional programs (one that uses explicit buffering and one that uses USM) are created.
 
 You can remove all generated files with `make clean`.
 
@@ -78,20 +78,22 @@ Run `nmake` to build and run the sample.
 Note: To remove temporary files, run `nmake clean`.
 
 ### Example of Output
-If everything is working correctly, the program will generate two artificial 1D signals, cross-correlate them, and report the relative shift that gives the maximum correlation score the output should be similar to this:
+The one-dimensional programs generate two artificial one-dimensional signals, computes their cross-correlation, and report the optimal (right-)shift for the second signal maximizing its correlation score with the first. The output should be similar to this:
 ```
 ./fcorr_1d_buff 4096
-Running on: Intel(R) Graphics Gen9 [0x3e96]
-Shift the second signal 2048 elements relative to the first signal to get a maximum, normalized correlation score of 2.99976.
+Running on: Intel(R) Data Center GPU Max 1550
+Right-shift the second signal 2048 elements to get a maximum, normalized correlation score of 1 (treating the signals as periodic).
+Max difference between naive and Fourier-based calculations : 2.38419e-07 (verification threshold: 6.66459e-06).
 ./fcorr_1d_usm 4096
-Running on: Intel(R) Graphics Gen9 [0x3e96]
-Shift the second signal 2048 elements relative to the first signal to get a maximum, normalized correlation score of 2.99975.
+Running on: Intel(R) Data Center GPU Max 1550
+Right-shift the second signal 2048 elements to get a maximum, normalized correlation score of 1 (treating the signals as periodic).
+Max difference between naive and Fourier-based calculations : 2.38419e-07 (verification threshold: 6.66459e-06).
 ```
-If the 2D example is working correctly, two small binary images are cross-correlated and their optimum relative shift and correlation score are reported:
+For the two-dimensional case, the program generates two artificial two-dimensional images, computes their cross-correlation, and report the optimal translational vector for the second image maximizing its correlation score with the first. The output should be similar to this:
+
 ```
 ./fcorr_2d_usm
-Running on: Intel(R) UHD Graphics P630 [0x3e96]
-
+Running on: Intel(R) Data Center GPU Max 1550
 First image:
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
@@ -101,7 +103,6 @@ First image:
 0 0 0 0 0 1 1 0
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
-
 Second image:
 0 0 0 0 0 0 0 0
 0 1 1 0 0 0 0 0
@@ -111,21 +112,10 @@ Second image:
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
-
-Normalized Fourier correlation result:
-0 2.10734e-08 2.98023e-08 -2.10734e-08 -5.96046e-08 -2.10734e-08 2.98023e-08 2.10734e-08
-7.45058e-09 1.58051e-08 2.98023e-08 -1.58051e-08 -6.70552e-08 -1.58051e-08 2.98023e-08 1.58051e-08
-0 0 0 1 2 1 0 0
-0 0 0 2 4 2 0 0
-0 0 0 1 2 1 0 0
-5.21541e-08 2.63418e-08 -2.98023e-08 -2.63418e-08 7.45058e-09 -2.63418e-08 -2.98023e-08 2.63418e-08
-3.72529e-08 1.58051e-08 0 -1.58051e-08 -3.72529e-08 -1.58051e-08 0 1.58051e-08
-1.49012e-08 -1.05367e-08 0 1.05367e-08 -1.49012e-08 1.05367e-08 0 -1.05367e-08
-
-Shift the second image (x, y) = (4, 3) elements relative to the first image to get a maximum,
-normalized correlation score of 4. Treat the images as circularly shifted versions of each other.
+Shift the second signal by translation vector (3, 4) to get a maximum, normalized correlation score of 1 (treating the signals as periodic along both dimensions).
+Max difference between naive and Fourier-based calculations : 1.19209e-07 (verification threshold: 4.91989e-06).
 ```
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2023-1/overview.html)
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)
