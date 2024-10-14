@@ -1,7 +1,0 @@
-matplotlib 
-py-cpuinfo 
-transformers 
-sentencepiece 
-sacremoses
-notebook
-ipykernel
