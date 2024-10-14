@@ -109,12 +109,14 @@ int main(int argc, char **argv) {
   int temp = (argc <= 1) ? 8 : std::stoi(argv[1]);
   // n_rows >= 6 required for the arbitrary signals as defined herein
   if (temp < 6)
-    throw std::invalid_argument("The first argument (n_rows) must be 6 or greater.");
+    throw std::invalid_argument("The number of rows of the images, chosen as "
+                          "first input of the program, must be 6 or greater.");
   const unsigned n_rows = temp;
   temp = (argc <= 2) ? 8 : std::stoi(argv[2]);
   // n_cols >= 7 required for the arbitrary signals as defined herein
   if (temp < 7)
-    throw std::invalid_argument("The second argument (n_cols) must be 7 or greater.");
+    throw std::invalid_argument("The number of columns of the images, chosen as "
+                          "second input of the program, must be 7 or greater.");
   const unsigned n_cols = temp;
   const unsigned num_elem = n_rows * n_cols;
 
@@ -145,6 +147,10 @@ int main(int argc, char **argv) {
   // to store the forward and backward domains' data, consisting of
   // n_rows * n_cols real values and n_rows * (n_cols / 2 + 1) complex values,
   // respectively (for the DFT-based calculations).
+  // Note: 2 * (n_cols / 2 + 1) > n_cols for all n_cols > 0, so
+  //    max(n_rows * n_cols real,
+  //        n_rows * (n_cols / 2 + 1) * 2) == n_rows * (n_cols / 2 + 1) * 2
+  // since n_rows > 0
   auto img1 = sycl::malloc_shared<float>(n_rows * (n_cols / 2 + 1) * 2, Q);
   auto img2 = sycl::malloc_shared<float>(n_rows * (n_cols / 2 + 1) * 2, Q);
   auto corr = sycl::malloc_shared<float>(n_rows * (n_cols / 2 + 1) * 2, Q);
@@ -200,6 +206,8 @@ int main(int argc, char **argv) {
   oneapi::mkl::dft::descriptor<oneapi::mkl::dft::precision::SINGLE,
                                oneapi::mkl::dft::domain::REAL>
     desc({n_rows, n_cols});
+  // oneMKL DFT descriptors use unit scaling factors by default. Explicitly set
+  // the non-default scaling factor for the backward ("inverse") DFT:
   desc.set_value(oneapi::mkl::dft::config_param::BACKWARD_SCALE,
                  1.0f / num_elem);
   desc.commit(Q);

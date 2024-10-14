@@ -50,10 +50,11 @@ naive_cross_correlation(sycl::queue& Q,
 }
 
 int main(int argc, char** argv) {
-  unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);
+  const unsigned int N = (argc > 1) ? std::stoi(argv[1]) : 32;
   // N >= 8 required for the arbitrary signals as defined herein
-  if (N < 8)
-    throw std::invalid_argument("The input value N must be 8 or greater.");
+  if (N < 8 || N > INT_MAX)
+    throw std::invalid_argument("The period of the signal, chosen as input of "
+                                "the program, must be 8 or greater.");
 
   // Let s be an integer s.t. 0 <= s < N and let
   //       corr[s] = \sum_{j = 0}^{N-1} sig1[j] sig2[(j - s + N) mod N]
@@ -72,12 +73,15 @@ int main(int argc, char** argv) {
   // Initialize signal and correlation arrays. The arrays must be large enough
   // to store the forward and backward domains' data, consisting of N real
   // values and (N/2 + 1) complex values, respectively (for the DFT-based
-  // calculations).
+  // calculations). Note: 2 * (N / 2 + 1) > N for all N > 0, since
+  //   2 * (N / 2 + 1) = N + 1 if N is odd
+  //   2 * (N / 2 + 1) = N + 2 if N is even
+  // so max(N, 2 * (N / 2 + 1)) == 2 * (N / 2 + 1)
   auto sig1 = sycl::malloc_shared<float>(2 * (N / 2 + 1), Q);
   auto sig2 = sycl::malloc_shared<float>(2 * (N / 2 + 1), Q);
   auto corr = sycl::malloc_shared<float>(2 * (N / 2 + 1), Q);
   // Array used for calculating corr without Discrete Fourier Transforms
-  // (for comparison purposes):
+  // for comparison purposes (calculations entirely done in forward domain):
   auto naive_corr = sycl::malloc_shared<float>(N, Q);
 
   // Initialize input signals with artificial "noise" data (random values of
@@ -113,6 +117,8 @@ int main(int argc, char** argv) {
   // Initialize DFT descriptor
   oneapi::mkl::dft::descriptor<oneapi::mkl::dft::precision::SINGLE,
                                oneapi::mkl::dft::domain::REAL> desc(N);
+  // oneMKL DFT descriptors use unit scaling factors by default. Explicitly set
+  // the non-default scaling factor for the backward ("inverse") DFT:
   desc.set_value(oneapi::mkl::dft::config_param::BACKWARD_SCALE, 1.0f / N);
   desc.commit(Q);
   // Compute in-place forward transforms of both signals:
