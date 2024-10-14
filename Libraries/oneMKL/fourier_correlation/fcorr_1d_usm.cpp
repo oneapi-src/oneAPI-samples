@@ -142,8 +142,8 @@ int main(int argc, char** argv) {
   // - nrm2(input data) = norm_sig1[0] * norm_sig2[0] * N
   // - O(log(N)) ~ 2 * log(N) [arbitrary choice; implementation-dependent behavior]
   max_err_threshold +=
-    2.0f * logf(N) * std::numeric_limits<float>::epsilon()
-         * norm_sig1[0] * norm_sig2[0];
+    2.0f * std::log(static_cast<float>(N))
+         * std::numeric_limits<float>::epsilon() * norm_sig1[0] * norm_sig2[0];
   // Verify results by comparing DFT-based and naive calculations to each other,
   // and fetch optimal shift maximizing correlation (DFT-based calculation).
   float max_err = 0.0f;
@@ -176,9 +176,9 @@ int main(int argc, char** argv) {
     const float avg_sig1 = sig1[0] / N;
     const float avg_sig2 = sig2[0] / N;
     const float std_dev_sig1 =
-          sqrt((norm_sig1[0] * norm_sig1[0] - N * avg_sig1 * avg_sig1) / N);
+          std::sqrt((norm_sig1[0] * norm_sig1[0] - N * avg_sig1 * avg_sig1) / N);
     const float std_dev_sig2 =
-          sqrt((norm_sig2[0] * norm_sig2[0] - N * avg_sig2 * avg_sig2) / N);
+          std::sqrt((norm_sig2[0] * norm_sig2[0] - N * avg_sig2 * avg_sig2) / N);
     const float normalized_corr =
       (max_corr / N - avg_sig1 * avg_sig2) / (std_dev_sig1 * std_dev_sig2);
     std::cout << "Right-shift the second signal " << optimal_shift
