@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
   // n_rows * n_cols real values and n_rows * (n_cols / 2 + 1) complex values,
   // respectively (for the DFT-based calculations).
   // Note: 2 * (n_cols / 2 + 1) > n_cols for all n_cols > 0, so
-  //    max(n_rows * n_cols real,
+  //    max(n_rows * n_cols,
   //        n_rows * (n_cols / 2 + 1) * 2) == n_rows * (n_cols / 2 + 1) * 2
   // since n_rows > 0
   auto img1 = sycl::malloc_shared<float>(n_rows * (n_cols / 2 + 1) * 2, Q);
