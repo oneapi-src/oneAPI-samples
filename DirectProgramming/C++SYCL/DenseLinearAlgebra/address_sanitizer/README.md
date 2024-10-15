@@ -13,17 +13,17 @@ The `Address Sanitizer` sample demonstrates how to use the AddressSanitizer (ASa
 
 The `Address Sanitizer` sample illustrates how to use Address Sanitizer to manage memory errors with the SYCL library. Each of the examples shows a different error and how to initialize it.
 
-This sample starts with a CPU-oriented application and shows how to use SYCL and several tools to offload regions of the code to a GPU on the target system.
+All samples can be run on a CPU or a PVC GPU.
 
->**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
+>**Note**: The gfx-driver needed to run ASan is version 1.3.28986 for a level zero GPU, 2024.18.3.0.head.prerelease for a CPU and 24.11.028986 for a GPU
 
-The sample includes three versions of the `Jacobi Iterative Solver` program.
+The sample includes nine different mini samples that showcase the usage of ASan.
 
 | File Name                                      | Description
 |:---                                            |:---
-|`1_guided_jacobi_iterative_solver_cpu.cpp`      | Demonstrates a basic, serial CPU implementation.
-|`2_guided_jacobi_iterative_solver_gpu`          | Demonstrates an initial single-GPU offload using SYCL.
-|`3_guided_jacobi_iterative_solver_multi_gpu.cpp`| Demonstrates multi-GPU offload using SYCL. (Preview.)
+|`array_reduction.cpp`  			 | Demonstrates a basic, serial CPU implementation.
+|`bad_free.cpp`          			 | Demonstrates an initial single-GPU offload using SYCL.
+|`device_global.cpp`				 | Demonstrates multi-GPU offload using SYCL.
 
 ## Prerequisites
 
