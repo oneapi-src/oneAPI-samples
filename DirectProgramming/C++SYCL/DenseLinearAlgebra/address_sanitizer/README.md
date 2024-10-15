@@ -11,11 +11,9 @@ The `Address Sanitizer` sample demonstrates how to use the AddressSanitizer (ASa
 
 ## Purpose
 
-The `Address Sanitizer` sample illustrates how to use Address Sanitizer to manage memory errors with the SYCL library. Each of the examples shows a different error and how to 
+The `Address Sanitizer` sample illustrates how to use Address Sanitizer to manage memory errors with the SYCL library. Each of the examples shows a different error and how to initialize it.
 
 This sample starts with a CPU-oriented application and shows how to use SYCL and several tools to offload regions of the code to a GPU on the target system.
-
-The guided instructions, found in the [Guided Builds and Offloads](#guided-builds-and-offloads) section, walk you through using Intel® Advisor for offload modeling to identify code regions that can benefit from GPU offload. After the initial offload, the instructions walk you through developing an optimization strategy by iteratively optimizing the code based on opportunities exposed Intel® Advisor to run roofline analysis.
 
 >**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
 
