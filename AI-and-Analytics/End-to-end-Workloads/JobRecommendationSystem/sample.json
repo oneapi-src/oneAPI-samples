@@ -1,0 +1,29 @@
+{
+  "guid": "80708728-0BD4-435E-961D-178E5ED1450C",
+  "name": "JobRecommendationSystem: End-to-End Deep Learning Workload",
+  "categories": ["Toolkit/oneAPI AI And Analytics/End-to-End Workloads"],
+  "description": "This sample illustrates the use of Intel® Extension for TensorFlow* to build and run an end-to-end AI workload on the example of the job recommendation system",
+  "builder": ["cli"],
+  "toolchain": ["jupyter"],
+  "languages": [{"python":{}}],
+  "os":["linux"],
+  "targetDevice": ["GPU"],
+  "ciTests": {
+  	"linux": [
+      {
+        "env": [],
+        "id": "JobRecommendationSystem_py",
+        "steps": [
+          "source /intel/oneapi/intelpython/bin/activate",
+          "conda env remove -n user_tensorflow-gpu",
+          "conda create --name user_tensorflow-gpu --clone tensorflow-gpu",
+          "conda activate user_tensorflow-gpu",
+          "pip install -r requirements.txt",
+          "python -m ipykernel install --user --name=user_tensorflow-gpu",
+          "python JobRecommendationSystem.py"
+        ]
+      }
+    ]
+},
+"expertise": "Reference Designs and End to End"
+}
