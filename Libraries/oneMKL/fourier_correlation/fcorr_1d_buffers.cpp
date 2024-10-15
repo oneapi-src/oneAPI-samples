@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
   float max_corr = corr_acc[0];
   int optimal_shift = 0;
   for (size_t s = 0; s < N; s++) {
-    const float local_err = fabs(naive_corr_acc[s] - corr_acc[s]);
+    const float local_err = std::fabs(naive_corr_acc[s] - corr_acc[s]);
     if (local_err > max_err)
       max_err = local_err;
     if (max_err > max_err_threshold) {

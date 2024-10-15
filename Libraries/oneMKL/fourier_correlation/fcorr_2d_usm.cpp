@@ -253,7 +253,7 @@ int main(int argc, char **argv) {
     for (size_t p = 0; p < n_cols && return_code == 0; p++) {
       const float naive_val = naive_corr[s * col_stride_fwd_domain + p];
       const float dft_val   = corr[s * col_stride_fwd_domain + p];
-      const float local_err = fabs(naive_val - dft_val);
+      const float local_err = std::fabs(naive_val - dft_val);
       if (local_err > max_err)
         max_err = local_err;
       if (max_err > max_err_threshold) {
