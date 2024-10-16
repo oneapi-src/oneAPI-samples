@@ -34,7 +34,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
     double estimated_pi;         // Estimated value of Pi
     size_t n_under_curve = 0;    // Number of points fallen under the curve
 
-    size_t count_per_thread = 32;
+    constexpr size_t count_per_thread = 32;
 
     constexpr size_t vec_size = 2;
 

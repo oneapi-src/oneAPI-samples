@@ -48,7 +48,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
     mkl::rng::generate(distr, engine, n_points * 2, rng_buf);
 
     // Step 2. Count points under curve (x ^ 2 + y ^ 2 < 1.0f)
-    size_t count_per_thread = 32;
+    constexpr size_t count_per_thread = 32;
 
     {
         sycl::buffer<size_t> count_buf{ &n_under_curve, 1 };

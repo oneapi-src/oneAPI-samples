@@ -33,7 +33,6 @@ static const auto n_samples = 120'000'000;
 
 double estimate_pi(sycl::queue& q, size_t n_points) {
     double estimated_pi;         // Estimated value of Pi
-    size_t n_under_curve = 0;    // Number of points fallen under the curve
 
     // Step 1. Generate n_points * 2 random numbers
     // 1.1. Generator initialization
@@ -42,15 +41,17 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
     // Create an object of distribution (by default float, a = 0.0f, b = 1.0f)
     mkl::rng::uniform distr;
 
-    float* rng_ptr = sycl::malloc_device<float>(n_points * 2, q);
+    float* rng_ptr = sycl::malloc_shared<float>(n_points * 2, q);
 
     // 1.2. Random number generation
     auto event = mkl::rng::generate(distr, engine, n_points * 2, rng_ptr);
 
     // Step 2. Count points under curve (x ^ 2 + y ^ 2 < 1.0f)
-    size_t count_per_thread = 32;
+    constexpr size_t count_per_thread = 32;
+    size_t *n_under_curve = sycl::malloc_host<size_t>(1, q); // Number of points fallen under the curve
+    *n_under_curve = 0;
+    auto reductor = sycl::reduction(n_under_curve, size_t(0), std::plus<size_t>{});
 
-    auto reductor = sycl::reduction(&n_under_curve, size_t(0), std::plus<size_t>{});
     q.parallel_for(sycl::range<1>(n_points / count_per_thread), event, reductor,
                    [=](sycl::item<1> item, auto& sum) {
                         sycl::vec<float, 2> r;
@@ -65,9 +66,10 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
                    }).wait_and_throw();
 
     // Step 3. Calculate approximated value of Pi
-    estimated_pi = n_under_curve / ((double)n_points) * 4.0;
+    estimated_pi = *n_under_curve / ((double)n_points) * 4.0;
 
     sycl::free(rng_ptr, q);
+    sycl::free(n_under_curve, q);
 
     return estimated_pi;
 
