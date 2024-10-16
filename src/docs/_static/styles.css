@@ -146,21 +146,20 @@ body {
   font-family: var(--bs-body-font-family);
   font-weight: normal;
   font-weight: 400;
-  /* margin: 0;
-  padding: 0; */
+  /* margin: 0;*/
   color: rgba(64,64,64,25);
   }
-  
+
   h1{
     font-family: var(--bs-header-font-family);
     font-weight: bold;
     font-weight: 600;
-    font-size: 28px; 
+    font-size: 28px;
     color: rgb(0,84,174);
     align-content: center;
     align-self: center;
   }
-  
+
   h2 {
     font-family: var(--bs-header-font-family);
     font-weight: normal;
@@ -425,15 +424,15 @@ input[type=checkbox] label{
 }
 
 .app-title {
-  font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
+  font-family: "IntelOneText";
+  /* font-family: var(--bs-body-font-family); */
   font-size: 20px;
-  font-weight: normal; 
   font-weight: 400;
   color: rgba(255,255,255,100);
-  padding: 0.25em 0.5em 0.25em 0.5em;
+  /* padding: 0.25em 0.5em 0.25em 0.5em; */
+  padding: 2.15em 0.5em 0.25em 1.5em;
   min-width: 2.5em;
-  display: block;
-  padding: 0.65em 1.5em 0.5em 1.5em;
+  display: inline-block;
 }
 
 input[type=button] > #nobutton {
@@ -445,11 +444,10 @@ input[type=button] > #nobutton {
   color: rgb(0,199,253) !important;
 }
 
-#total-records{  
+#total-records{
   font-family: "IntelOneText"; /*var(--bs-body-font-family);*/
   font-size: 18px;
   color: rgb(0,84,174);
-  font-weight: normal; 
   font-weight: 400;
   /* margin-top: 25px; */
   /* padding-left: 10px; */
@@ -459,6 +457,8 @@ input[type=button] > #nobutton {
 
 .logo {
   background-size: contain;
+  /* padding: 2.25em 0.5em 1.0em 1.5em; */
+  padding: 1.65em 0.5em 0.25em 1.0em;
 }
 
 .grid-row {
@@ -483,6 +483,7 @@ input[type=button] > #nobutton {
   align-items: center;
   text-align: center;
   vertical-align: middle;
+  /* outline: dotted hotpink; */
 }
 
 
@@ -570,6 +571,11 @@ input[type=button] > #nobutton {
   padding-bottom: 0.25em; 
   background-color: #E9E9E9;
   outline: none;
+}
+
+
+.btn.home-button {
+  padding: 2.25em 0.5em 0.25em 1.5em;
 }
 
 .filter-btn {
@@ -987,11 +993,14 @@ img.scaled {
 }
 
 figcaption {
-  font-family:var(--bs-header-font-family);
+  /* font-family:var(--bs-header-font-family); */
+  /* font-family: var(--bs-body-font-family); */
+  font-family: "IntelOneText";
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   border-bottom: none;
   color:rgb(255,255,255);
+  padding-top: 0.0em;
 }
 
 figcaption:hover{
@@ -1286,12 +1295,17 @@ ul.help li {
 a {
   text-decoration: none !important;
   /* color: rgb(255,255,255) !important; */
-  color: rgb(0,84,174) !important;
+  /* color: rgb(0,84,174) !important; */
 }
 
 a:hover {
     color: rgb(0, 199, 253) !important;
 }
+
+.col-nav-left a {
+  color: rgb(0,84,174) !important;
+}
+
 
 .tmb-cookies-privacy{
   color: rgba(0,84,174,68) !important;
@@ -1465,3 +1479,27 @@ a:hover {
 }
 
 a#wap_dns {display: none;}
+
+.col.tech-blogs a {
+  /* font-family: "IntelOneText"; var(--bs-body-font-family); */
+  /* line-height: 5.5em; adjust leading */
+  font-family: "IntelOneText";
+  font-size: 20px;
+  font-weight: 400;
+  color: rgba(255,255,255,100) !important;
+  min-width: 2.5em;
+  /* display: inline-block; */
+  padding: 1.75em 0.5em 0.25em 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+}
+
+.col.tech-blogs a:hover{
+  color: rgb(0,199,253) !important;
+}
+
+figure {
+  /* padding-top: 1.0em; */
+  padding: 1.0em 0.5em 0.25em 3.5em !important;
+}
