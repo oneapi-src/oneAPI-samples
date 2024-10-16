@@ -134,7 +134,7 @@ int main() {
 }
 
 bool ValueSame(float a, float b) {
-  return std::fabs(a - b) < numeric_limits<float>::epsilon();
+  return sycl::fabs(a - b) < numeric_limits<float>::epsilon();
 }
 
 int VerifyResult(float (*c_back)[P]) {
