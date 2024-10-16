@@ -28,7 +28,7 @@ static const auto pi = 3.1415926535897932384626433832795;
 static const auto seed = 7777;
 
 // Default Number of 2D points
-static const auto n_samples = 120000000;
+static const auto n_samples = 120'000'000;
 
 double estimate_pi(sycl::queue& q, size_t n_points) {
     double estimated_pi;         // Estimated value of Pi
@@ -62,7 +62,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
                     r = mkl::rng::device::generate(distr, engine);
                     // Step 2. Increment counter if point is under curve (x ^ 2 + y ^ 2 < 1.0f)
                     if(sycl::length(r) <= 1.0f) {
-                        count += 1;
+                        count++;
                     }
                 }
                 atomic_counter.fetch_add(count);
