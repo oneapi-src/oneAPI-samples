@@ -29,11 +29,10 @@ static const auto pi = 3.1415926535897932384626433832795;
 static const auto seed = 7777;
 
 // Default Number of 2D points
-static const auto n_samples = 120000000;
+static const auto n_samples = 120'000'000;
 
 double estimate_pi(sycl::queue& q, size_t n_points) {
     double estimated_pi;         // Estimated value of Pi
-    size_t n_under_curve = 0;    // Number of points fallen under the curve
 
     // Step 1. Generate n_points * 2 random numbers
     // 1.1. Generator initialization
@@ -42,47 +41,35 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
     // Create an object of distribution (by default float, a = 0.0f, b = 1.0f)
     mkl::rng::uniform distr;
 
-    float* rng_ptr = sycl::malloc_device<float>(n_points * 2, q);
+    float* rng_ptr = sycl::malloc_shared<float>(n_points * 2, q);
 
     // 1.2. Random number generation
     auto event = mkl::rng::generate(distr, engine, n_points * 2, rng_ptr);
 
     // Step 2. Count points under curve (x ^ 2 + y ^ 2 < 1.0f)
-    size_t wg_size = std::min(q.get_device().get_info<sycl::info::device::max_work_group_size>(), n_points);
-    size_t max_compute_units = q.get_device().get_info<sycl::info::device::max_compute_units>();
-    size_t wg_num = (n_points > wg_size * max_compute_units) ? max_compute_units : 1;
+    constexpr size_t count_per_thread = 32;
+    size_t *n_under_curve = sycl::malloc_host<size_t>(1, q); // Number of points fallen under the curve
+    *n_under_curve = 0;
+    auto reductor = sycl::reduction(n_under_curve, size_t(0), std::plus<size_t>{});
 
-    size_t count_per_thread = n_points / (wg_size * wg_num);
-
-    size_t* count_ptr = sycl::malloc_shared<size_t>(wg_num, q);
-
-    // Make sure, that generation is finished
-    event.wait_and_throw();
-
-    event = q.submit([&] (sycl::handler& h) {
-        h.parallel_for(sycl::nd_range<1>(wg_size * wg_num, wg_size),
-            [=](sycl::nd_item<1> item) {
-            sycl::vec<float, 2> r;
-            size_t count = 0;
-            for(int i = 0; i < count_per_thread; i++) {
-                r.load(i + item.get_global_linear_id() * count_per_thread, sycl::global_ptr<float>(rng_ptr));
-                if(sycl::length(r) <= 1.0f) {
-                    count += 1;
-                }
-            }
-            count_ptr[item.get_group_linear_id()] = sycl::reduce_over_group(item.get_group(), count, std::plus<size_t>());
-        });
-    });
-
-    event.wait_and_throw();
-
-    n_under_curve = std::accumulate(count_ptr, count_ptr + wg_num, 0);
+    q.parallel_for(sycl::range<1>(n_points / count_per_thread), event, reductor,
+                   [=](sycl::item<1> item, auto& sum) {
+                        sycl::vec<float, 2> r;
+                        size_t count = 0;
+                        for(int i = 0; i < count_per_thread; i++) {
+                            r.load(i + item.get_id(0) * count_per_thread, sycl::global_ptr<float>(rng_ptr));
+                            if(sycl::length(r) <= 1.0f) {
+                                count++;
+                            }
+                        }
+                        sum += count;
+                   }).wait_and_throw();
 
     // Step 3. Calculate approximated value of Pi
-    estimated_pi = n_under_curve / ((double)n_points) * 4.0;
+    estimated_pi = *n_under_curve / ((double)n_points) * 4.0;
 
     sycl::free(rng_ptr, q);
-    sycl::free(count_ptr, q);
+    sycl::free(n_under_curve, q);
 
     return estimated_pi;
 
@@ -135,7 +122,7 @@ int main(int argc, char ** argv) {
     std::cout << "Absolute error = " << abs_error << std::endl;
     std::cout << std::endl;
 
-    if(abs_error > 1.0e-3) {
+    if(abs_error > 1.0e-4) {
         std::cout << "TEST FAILED" << std::endl;
         return 1;
     }
