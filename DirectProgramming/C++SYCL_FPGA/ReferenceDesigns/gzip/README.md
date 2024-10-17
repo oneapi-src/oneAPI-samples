@@ -89,7 +89,7 @@ To optimize performance, GZIP leverages techniques discussed in the following FP
 | `kernels.hpp`        | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
 | `crc32.hpp`          | Header file for `crc32.cpp`.
 | `gzipkernel.hpp`     | Header file for `gzipkernels.cpp`.
-| `gzipkernel)ll.hpp`  | Header file for `gzipkernels_ll.cpp`.
+| `gzipkernel_ll.hpp`  | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`    | Header file for `CompareGzip.cpp`.
 | `pipe_utils.hpp`     | Header file containing the definition of an array of pipes. This header can be found in the `../include/` directory of FPGA section of the repository.
 | `WriteGzip.hpp`      | Header file for `WriteGzip.cpp`.
