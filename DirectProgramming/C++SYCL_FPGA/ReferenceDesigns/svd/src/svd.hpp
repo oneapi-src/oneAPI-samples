@@ -129,7 +129,6 @@ double SingularValueDecomposition(
   PtrAnn v_matrix_device_ptr(v_matrix_device);
 #endif
 
-
   // Check that the malloc succeeded.
   if (nullptr == input_matrix_device) {
     std::cerr << "Error when allocating the input matrix." << std::endl;
@@ -163,8 +162,7 @@ double SingularValueDecomposition(
         [=]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRTo2PipesByBlocks<
               T, cols, rows, kNumElementsPerDDRBurst, InputMatrixPipe, InputMatrixPipe2>(
-	      input_matrix_device,
-	      matrix_count, repetitions);
+	      input_matrix_device, matrix_count, repetitions);
         });
   });
 
