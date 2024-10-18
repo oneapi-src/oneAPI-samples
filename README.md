@@ -82,24 +82,21 @@ The oneAPI-sample repository is organized by high-level categories.
 
 ## Platform Validation
 
-Samples in this release are validated on the following platforms.
-
 ### Ubuntu 22.04
-12th Gen Intel(R) Core(TM) i9-12900 \
-Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28202] \
+Intel(R) Xeon(R) Platinum 8468V \
+Intel(R) Data Center GPU Max 1100 \
+OpenCL Driver: Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8468V OpenCL 3.0 (Build 0) [2024.18.7.0.11_160000] \
+Level Zero Driver: Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1100 1.3 [1.3.28202] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.634 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.635 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2025.0.0.825
 
 ### Windows 11
-12th Gen Intel(R) Core(TM) i9-12900 Intel(R) UHD Graphics 770 3.0 ; (gen12, AlderLake-S GT1 [8086:4680]) \
-Opencl driver: Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2024.17.3.0.08_160000] \
-Level Zero driver: Intel(R) Level-Zero, Intel(R) UHD Graphics 770 1.3 [1.3.28597] \
+11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz \
+Intel(R) Iris(R) Xe Graphics OpenCL 3.0 NEO \
+OpenCL Driver: Intel(R) OpenCL, 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz OpenCL 3.0 (Build 0) [2024.18.9.0.28_160000] \
+Level Zero Driver: Intel(R) oneAPI Unified Runtime over Level-Zero, Intel(R) Iris(R) Xe Graphics 12.0.0 [1.3.27193] \
 oneAPI package version: \
-&dash; Intel oneAPI Base Toolkit Build Version: 2024.2.0.635 \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2024.2.0.633 \
+&dash; Intel oneAPI HPC Toolkit Build Version: 2025.0.0.822
 
 ## Known Issues and Limitations
 
