@@ -17,6 +17,8 @@
 #include "memory_transfers.hpp"
 #include "usv_from_eigens.hpp"
 
+using namespace sycl::ext::intel::experimental;
+using namespace sycl::ext::oneapi::experimental;
 
 // Forward declare the kernel and pipe names
 // (This prevents unwanted name mangling in the optimization report.)
@@ -118,6 +120,15 @@ double SingularValueDecomposition(
     std::terminate();
   }
 
+#if not defined (IS_BSP)
+  constexpr int BL0 = 0;
+  using PtrAnn = annotated_ptr<T, decltype(properties{buffer_location<BL0>,
+		  				      dwidth<512>})>;
+  PtrAnn u_matrix_device_ptr(u_matrix_device);
+  PtrAnn s_matrix_device_ptr(s_matrix_device);
+  PtrAnn v_matrix_device_ptr(s_matrix_device);
+#endif
+
   // Check that the malloc succeeded.
   if (nullptr == input_matrix_device) {
     std::cerr << "Error when allocating the input matrix." << std::endl;
@@ -207,21 +218,39 @@ double SingularValueDecomposition(
   sycl::event u_matrix_event = q.single_task<IDUMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, rows, kNumElementsPerDDRBurst,
-                            UMatrixPipe>(u_matrix_device, matrix_count, repetitions);
+                            UMatrixPipe>(
+#if defined (IS_BSP)
+		u_matrix_device,
+#else
+		u_matrix_device_ptr,
+#endif	
+		matrix_count, repetitions);
       });
 
   // collecting s matrix from pipe into DDR
   sycl::event s_matrix_event = q.single_task<IDSMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, rows, cols, kNumElementsPerDDRBurst,
-                            SMatrixPipe>(s_matrix_device, matrix_count, repetitions);
+                            SMatrixPipe>(
+#if defined (IS_BSP)
+		s_matrix_device,
+#else
+		s_matrix_device_ptr,
+#endif
+	       	matrix_count, repetitions);
       });
 
   // collecting V matrix from pipe into DDR
   sycl::event v_matrix_event = q.single_task<IDVMatrixFromLocalMemToDDR>(
       [=]() [[intel::kernel_args_restrict]] {
         MatrixReadPipeToDDR<T, cols, cols, kNumElementsPerDDRBurst,
-                            VMatrixPipe>(v_matrix_device, matrix_count, repetitions);
+                            VMatrixPipe>(
+#if defined (IS_BSP)
+		v_matrix_device,
+#else
+		v_matrix_device_ptr,
+#endif
+	       	matrix_count, repetitions);
       });
 
   // Wait for output memory access kernels to finish
