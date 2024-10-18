@@ -126,8 +126,9 @@ double SingularValueDecomposition(
 		  				      dwidth<512>})>;
   PtrAnn u_matrix_device_ptr(u_matrix_device);
   PtrAnn s_matrix_device_ptr(s_matrix_device);
-  PtrAnn v_matrix_device_ptr(s_matrix_device);
+  PtrAnn v_matrix_device_ptr(v_matrix_device);
 #endif
+
 
   // Check that the malloc succeeded.
   if (nullptr == input_matrix_device) {
@@ -162,7 +163,8 @@ double SingularValueDecomposition(
         [=]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRTo2PipesByBlocks<
               T, cols, rows, kNumElementsPerDDRBurst, InputMatrixPipe, InputMatrixPipe2>(
-              input_matrix_device, matrix_count, repetitions);
+	      input_matrix_device,
+	      matrix_count, repetitions);
         });
   });
 
