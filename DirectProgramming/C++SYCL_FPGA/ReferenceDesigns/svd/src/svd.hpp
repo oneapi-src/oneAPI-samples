@@ -126,7 +126,7 @@ double SingularValueDecomposition(
 		  				      dwidth<512>})>;
   PtrAnn u_matrix_device_ptr(u_matrix_device);
   PtrAnn s_matrix_device_ptr(s_matrix_device);
-  PtrAnn v_matrix_device_ptr(s_matrix_device);
+  PtrAnn v_matrix_device_ptr(v_matrix_device);
 #endif
 
   // Check that the malloc succeeded.
