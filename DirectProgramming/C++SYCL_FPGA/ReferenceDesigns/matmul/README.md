@@ -87,12 +87,12 @@ In our FPGA implementation, the multiply-accumulate operations are computed in a
 ```c++
 #pragma unroll
 for (int row = 0; row < m_PE; row++) {
-  #pragma unroll
-  for (int col = 0; col < p_PE; col++) {
-    fed_a[i] = fpga_reg(fed_a[i]);
-    fed_b[j] = fpga_reg(fed_b[j]);
-    accum[i][j] += fed_a[i] * fed_b[j];
-    ...
+   #pragma unroll
+   for (int col = 0; col < p_PE; col++) {
+     fed_a[i] = fpga_reg(fed_a[i]);
+     fed_b[j] = fpga_reg(fed_b[j]);
+     accum[i][j] += fed_a[i] * fed_b[j];
+     ...
   }
 }
 ```
@@ -200,15 +200,17 @@ Additionaly, the cmake build system can be configured using the following parame
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ``` 
-  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
-  > ```
-  > $> aoc -list-boards
-  > Board list:
-  >   <board-variant>
-  >      Board Package: <path/to/board/package>/board-support-package
-  >   <board-variant2>
-  >      Board Package: <path/to/board/package>/board-support-package
-  > ```
+   > The build system will try to infer the FPGA family from the BSP name.
+   > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|Agilex7]` 
+   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+   > ```
+   > $> aoc -list-boards
+   > Board list:
+   >   <board-variant>
+   >      Board Package: <path/to/board/package>/board-support-package
+   >   <board-variant2>
+   >      Board Package: <path/to/board/package>/board-support-package
+   > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -254,6 +256,8 @@ Additionaly, the cmake build system can be configured using the following parame
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ``` 
+  > The build system will try to infer the FPGA family from the BSP name.
+  > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|Agilex7]` 
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
   > $> aoc -list-boards
