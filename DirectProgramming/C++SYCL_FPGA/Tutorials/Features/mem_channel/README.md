@@ -189,6 +189,8 @@ board.
   >  ```
   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
   >  ``` 
+  > The build system will try to infer the FPGA family from the BSP name.
+  > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|CycloneV|Agilex5|Agilex7]` 
   > **Note**: You **must** set `FPGA_DEVICE` to point to a BSP in order to build this sample. You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
   > $> aoc -list-boards
@@ -245,6 +247,8 @@ board.
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
   >  ``` 
+  > The build system will try to infer the FPGA family from the BSP name.
+  > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|CycloneV|Agilex5|Agilex7]` 
   > **Note**: You **must** set `FPGA_DEVICE` to point to a BSP in order to build this sample.You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
   > $> aoc -list-boards

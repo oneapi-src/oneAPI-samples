@@ -45,8 +45,10 @@ else()
       set(DEVICE_FLAG "A10")
     elseif(FPGA_DEVICE_NAME MATCHES ".*s10.*" OR FPGA_DEVICE_NAME MATCHES ".*stratix10.*")
       set(DEVICE_FLAG "S10")
-    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex.*")
+    elseif(FPGA_DEVICE_NAME MATCHES ".*agilex7.*")
       set(DEVICE_FLAG "Agilex7")
+      elseif(FPGA_DEVICE_NAME MATCHES ".*agilex5.*")
+      set(DEVICE_FLAG "Agilex5")
     elseif(FPGA_DEVICE_NAME MATCHES ".*cyclonev.*")
       set(DEVICE_FLAG "CycloneV")
     endif()
@@ -65,8 +67,8 @@ endif()
 
 if(NOT DEFINED DEVICE_FLAG)
     message(FATAL_ERROR "An unrecognized or custom board was passed, but DEVICE_FLAG was not specified. \
-                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10, -DDEVICE_FLAG=CycloneV or \
-                         -DDEVICE_FLAG=Agilex7.")
+                         Please make sure you have set -DDEVICE_FLAG=A10, -DDEVICE_FLAG=S10, -DDEVICE_FLAG=CycloneV, \
+                         -DDEVICE_FLAG=Agilex5 or -DDEVICE_FLAG=Agilex7.")
 endif()
 
 # this tutorial requires USM host allocations. Check the BSP name (which should contain the text 'usm')
@@ -81,7 +83,7 @@ if (USM_HOST_ALLOCATIONS_ENABLED)
 endif()
 
 # Allow disabling of hyper-optimization for S10 and Agilex7
-if((DEVICE_FLAG MATCHES "S10") OR (DEVICE_FLAG MATCHES "Agilex7") OR (DEFINED ${NO_HYPER_OPTIMIZATION}))
+if((DEVICE_FLAG MATCHES "S10") OR (DEVICE_FLAG MATCHES "Agilex") OR (DEFINED ${NO_HYPER_OPTIMIZATION}))
     set(HYPER_FLAG -Xshyper-optimized-handshaking=off)
 endif()
 
@@ -90,7 +92,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};-D${DEVICE_FLAG};${HYPER_FLAG};${BSP_FLAG})
+set(USER_FLAGS ${USER_FLAGS};${HYPER_FLAG};${BSP_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
