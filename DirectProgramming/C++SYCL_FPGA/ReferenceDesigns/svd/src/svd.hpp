@@ -162,7 +162,7 @@ double SingularValueDecomposition(
         [=]() [[intel::kernel_args_restrict]] {
           MatrixReadFromDDRTo2PipesByBlocks<
               T, cols, rows, kNumElementsPerDDRBurst, InputMatrixPipe, InputMatrixPipe2>(
-              input_matrix_device, matrix_count, repetitions);
+	      input_matrix_device, matrix_count, repetitions);
         });
   });
 
