@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 constexpr size_t N = 16;
 typedef unsigned int uint;
@@ -59,7 +59,7 @@ int main() {
             int aj = BLOCK_SIZE * gj;
 
             for (uint k = 0; k < BLOCK_SIZE; k++) {
-              bcol[k] = sg.load(marr.template get_multi_ptr<sycl::access::decorated::yes>() + (ai + k) * N + aj);
+              bcol[k] = sg.load(marr.get_pointer() + (ai + k) * N + aj);
             }
 
             uint tcol[BLOCK_SIZE];
@@ -72,7 +72,7 @@ int main() {
             }
 
             for (uint k = 0; k < BLOCK_SIZE; k++) {
-              sg.store(marr.template get_multi_ptr<sycl::access::decorated::yes>() + (ai + k) * N + aj, tcol[k]);
+              sg.store(marr.get_pointer() + (ai + k) * N + aj, tcol[k]);
             }
           });
     });
