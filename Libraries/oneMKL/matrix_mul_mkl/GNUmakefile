@@ -9,10 +9,9 @@ run: matrix_mul_mkl
 	./matrix_mul_mkl double
 
 INCLUDE_COMMON=../../../common
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
-MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl=sequential -qmkl-sycl-impl=blas
 
-DPCPP_OPTS = -O2 $(MKL_COPTS) $(MKL_LIBS)
+DPCPP_OPTS = -O2 $(MKL_COPTS)
 
 matrix_mul_mkl: matrix_mul_mkl.cpp
 	icpx -fsycl -I$(INCLUDE_COMMON) $< -o $@ $(DPCPP_OPTS)

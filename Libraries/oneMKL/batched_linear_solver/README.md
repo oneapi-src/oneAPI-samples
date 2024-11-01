@@ -65,8 +65,8 @@ If everything is working correctly, the output should be similar to this:
 ```
 u172874@s001-n157:~/oneAPI-samples/Libraries/oneMKL/batched_linear_solver$ make
 ifx lu_solve_omp_offload.F90 -o lu_solve -i8 -free -qmkl
-ifx lu_solve_omp_offload.F90 -o lu_solve_omp_offload -i8 -free -qmkl -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -L/glob/development-tools/versions/oneapi/2023.0.1/oneapi/mkl/2023.0.0/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl
-ifx lu_solve_omp_offload_optimized.F90 -o lu_solve_omp_offload_optimized -i8 -free -qmkl -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -L/glob/development-tools/versions/oneapi/2023.0.1/oneapi/mkl/2023.0.0/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl
+ifx lu_solve_omp_offload.F90 -o lu_solve_omp_offload -i8 -free -qmkl -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -qmkl-sycl-impl="blas,lapack"
+ifx lu_solve_omp_offload_optimized.F90 -o lu_solve_omp_offload_optimized -i8 -free -qmkl -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -qmkl-sycl-impl="blas,lapack"
 ./lu_solve -n 64 -b 8 -r 1 -c 2
  Matrix dimensions:                    64
  Batch size:                     8
