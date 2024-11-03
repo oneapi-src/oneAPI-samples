@@ -269,28 +269,24 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
 
 #### Run for CPU and GPU
 
-1. Change to the output directory.
-
-2. Run the program for Unified Shared Memory (USM) and buffers.
+1. Run the program for Unified Shared Memory (USM) and buffers.
     ```
     ./vector-add-buffers
     ./vector-add-usm
     ```
 #### Run for FPGA
 
-1.  Change to the output directory.
-
-2.  Run for FPGA emulation.
+1.  Run for FPGA emulation.
     ```
     ./vector-add-buffers.fpga_emu
     ./vector-add-usm.fpga_emu
     ```
-3. Run on FPGA simulator.
+2. Run on FPGA simulator.
    ```
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-buffers.fpga_sim
    CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-usm.fpga_sim
    ```
-4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     ./vector-add-buffers.fpga
     ./vector-add-usm.fpga
@@ -300,9 +296,7 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
 
 #### Run for CPU and GPU
 
-1. Change to the output directory.
-
-2. Run the program for Unified Shared Memory (USM) and buffers.
+1. Run the program for Unified Shared Memory (USM) and buffers.
     ```
     vector-add-usm.exe
     vector-add-buffers.exe
@@ -310,21 +304,19 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
 
 #### Run for FPGA
 
-1.  Change to the output directory.
-
-2.  Run for FPGA emulation.
+1.  Run for FPGA emulation.
     ```
     vector-add-buffers.fpga_emu.exe
     vector-add-usm.fpga_emu.exe
     ```
-3. Run on FPGA simulator.
+2. Run on FPGA simulator.
    ```
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
    vector-add-buffers.fpga_sim.exe
    vector-add-usm.fpga_sim.exe
    set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
    ```
-4. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
+3. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
     ```
     vector-add-buffers.fpga.exe
     vector-add-usm.fpga.exe
