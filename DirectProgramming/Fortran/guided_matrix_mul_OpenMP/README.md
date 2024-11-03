@@ -89,7 +89,7 @@ Note that:
 1. Change to the sample directory.
 2. Build the program.
    ```
-   ifx -xhost 01_mm_CPU_sequential.f90
+   ifx -xhost src/01_mm_CPU_sequential.f90
    ```
 3. Run the program.
    ```
@@ -102,7 +102,7 @@ Note that:
 2. Change to the sample directory.
 3. Build the program.
    ```
-   ifx /Qxhost 01_mm_CPU_sequential.f90
+   ifx /Qxhost src/01_mm_CPU_sequential.f90
    ```
 4. Run the program.
    ```
