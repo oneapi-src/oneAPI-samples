@@ -9,7 +9,7 @@ run: mc_pi mc_pi_usm mc_pi_device_api
 	./mc_pi_usm
 	./mc_pi_device_api
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential -qmkl-sycl-impl=rng
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=rng
 
 DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations $(MKL_LIBS)
 

@@ -9,7 +9,7 @@ run: lottery lottery_usm lottery_device_api
 		./lottery_usm
 		./lottery_device_api
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential -qmkl-sycl-impl=rng
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=rng
 
 DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations
 

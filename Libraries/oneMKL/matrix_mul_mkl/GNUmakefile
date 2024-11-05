@@ -9,7 +9,7 @@ run: matrix_mul_mkl
 	./matrix_mul_mkl double
 
 INCLUDE_COMMON=../../../common
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential -qmkl-sycl-impl=blas
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=blas
 
 DPCPP_OPTS = -O2 $(MKL_COPTS)
 

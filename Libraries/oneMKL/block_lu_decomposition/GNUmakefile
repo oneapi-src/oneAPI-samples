@@ -4,7 +4,7 @@ all: factor solve
 	./factor
 	./solve
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential -qmkl-sycl-impl="blas,lapack"
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl="blas,lapack"
 
 factor: factor.cpp dgeblttrf.cpp auxi.cpp
 	icpx $^ -o $@ -fsycl -fsycl-device-code-split=per_kernel $(MKL_COPTS)
