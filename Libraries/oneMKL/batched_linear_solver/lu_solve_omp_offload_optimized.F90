@@ -22,7 +22,7 @@
 !
 ! Compile for GPU:
 !     ifx -i8 -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -free \
-!         -qmkl -qmkl-sycl-impl="blas,lapack" \
+!         -qmkl -qmkl-sycl-impl=lapack \
 !         lu_solve_omp_offload_ex3_timer.F90 -o lu_solve_ex3_omp_timer
 !
 ! Compile with -DSP to use single precision instead of double precision.
