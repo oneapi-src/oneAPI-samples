@@ -15,7 +15,7 @@ all: montecarlo
 DPCPP_OPTS=/I"$(MKLROOT)\include" /DMKL_ILP64 $(GENERATOR) -fsycl $(INIT_ON_HOST) /Qmkl /Qmkl-sycl-impl=rng -lOpenCL
 
 montecarlo: src/montecarlo_main.cpp
-	icpx src/montecarlo_main.cpp /omontecarlo.exe $(DPCPP_OPTS)
+	icx src/montecarlo_main.cpp /omontecarlo.exe $(DPCPP_OPTS)
 
 clean:
 	del /q montecarlo.exe
