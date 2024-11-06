@@ -9,11 +9,11 @@
 #ifndef __DPCT_KERNEL_HPP__
 #define __DPCT_KERNEL_HPP__
 
+#include <cstdint>
 #include <sycl/sycl.hpp>
 #ifdef _WIN32
-#include <windows.h>
-
 #include <unordered_set>
+#include <windows.h>
 #else
 #include <dlfcn.h>
 #endif
@@ -37,6 +37,10 @@ typedef void (*kernel_functor)(sycl::queue &, const sycl::nd_range<3> &,
 
 struct kernel_function_info {
   int max_work_group_size = 0;
+  int shared_size_bytes = 0;
+  int local_size_bytes = 0;
+  int const_size_bytes = 0;
+  int num_regs = 0;
 };
 
 static inline void get_kernel_function_info(kernel_function_info *kernel_info,
@@ -46,8 +50,8 @@ static inline void get_kernel_function_info(kernel_function_info *kernel_info,
           .current_device()
           .get_info<sycl::info::device::max_work_group_size>();
 }
-static inline kernel_function_info get_kernel_function_info(
-    const void *function) {
+static inline kernel_function_info
+get_kernel_function_info(const void *function) {
   kernel_function_info kernel_info;
   kernel_info.max_work_group_size =
       dpct::dev_mgr::instance()
@@ -55,6 +59,7 @@ static inline kernel_function_info get_kernel_function_info(
           .get_info<sycl::info::device::max_work_group_size>();
   return kernel_info;
 }
+
 
 namespace detail {
 
@@ -82,7 +87,8 @@ static inline fs::path write_data_to_file(char const *const data, size_t size) {
 
   // find temporary directory
   auto tmp_dir = fs::temp_directory_path(ec);
-  if (ec) throw std::runtime_error("could not find temporary directory");
+  if (ec)
+    throw std::runtime_error("could not find temporary directory");
 
   // create private directory
   std::stringstream directory;
@@ -97,11 +103,13 @@ static inline fs::path write_data_to_file(char const *const data, size_t size) {
       break;
     }
   }
-  if (i == max_attempts) throw std::runtime_error("could not create directory");
+  if (i == max_attempts)
+    throw std::runtime_error("could not create directory");
 
   // only allow owner permissions to private directory
   fs::permissions(directory_path, fs::perms::owner_all, ec);
-  if (ec) throw std::runtime_error("could not set directory permissions");
+  if (ec)
+    throw std::runtime_error("could not set directory permissions");
 
   // random filename in private directory
   std::stringstream filename;
@@ -117,16 +125,19 @@ static inline fs::path write_data_to_file(char const *const data, size_t size) {
   if (outfile) {
     // only allow program to write file
     fs::permissions(filepath, fs::perms::owner_write, ec);
-    if (ec) throw std::runtime_error("could not set permissions");
+    if (ec)
+      throw std::runtime_error("could not set permissions");
 
     outfile.write(data, size);
-    if (!outfile.good()) throw std::runtime_error("could not write data");
+    if (!outfile.good())
+      throw std::runtime_error("could not write data");
     outfile.close();
 
     // only allow program to read/execute file
     fs::permissions(filepath, fs::perms::owner_read | fs::perms::owner_exec,
                     ec);
-    if (ec) throw std::runtime_error("could not set permissions");
+    if (ec)
+      throw std::runtime_error("could not set permissions");
   } else
     throw std::runtime_error("could not write data");
 
@@ -139,8 +150,10 @@ static inline fs::path write_data_to_file(char const *const data, size_t size) {
     while (1) {
       char c;
       infile.get(c);
-      if (infile.eof()) break;
-      if (c != data[cnt++]) mismatch = true;
+      if (infile.eof())
+        break;
+      if (c != data[cnt++])
+        mismatch = true;
     }
     if (cnt != size || mismatch)
       throw std::runtime_error("file contents not written correctly");
@@ -269,7 +282,7 @@ static inline uint64_t get_lib_size(char const *const blob) {
 
 #ifdef _WIN32
 class path_lib_record {
- public:
+public:
   void operator=(const path_lib_record &) = delete;
   ~path_lib_record() {
     for (auto entry : lib_to_path) {
@@ -294,21 +307,21 @@ class path_lib_record {
     lib_to_path.erase(library);
   }
 
- private:
+private:
   static inline std::unordered_map<void *, fs::path> lib_to_path;
 };
 #endif
 
-}  // namespace detail
+} // namespace detail
 
 class kernel_library {
- public:
-  kernel_library() : ptr{nullptr} {}
-  kernel_library(void *ptr) : ptr{ptr} {}
+public:
+  constexpr kernel_library() : ptr{nullptr} {}
+  constexpr kernel_library(void *ptr) : ptr{ptr} {}
 
   operator void *() const { return ptr; }
 
- private:
+private:
   void *ptr;
 #ifdef _WIN32
   static inline detail::path_lib_record single_instance_to_trigger_destructor;
@@ -325,7 +338,8 @@ static inline kernel_library load_dl_from_data(char const *const data,
 #else
   void *so = dlopen(filename.c_str(), RTLD_LAZY);
 #endif
-  if (so == nullptr) throw std::runtime_error("Failed to load kernel library");
+  if (so == nullptr)
+    throw std::runtime_error("Failed to load kernel library");
 
 #ifdef _WIN32
   detail::path_lib_record::record_lib_path(filename, so);
@@ -341,7 +355,7 @@ static inline kernel_library load_dl_from_data(char const *const data,
   return so;
 }
 
-}  // namespace detail
+} // namespace detail
 
 /// Load kernel library and return a handle to use the library.
 /// \param [in] name The name of the library.
@@ -376,9 +390,9 @@ static inline void unload_kernel_library(const kernel_library &library) {
 }
 
 class kernel_function {
- public:
-  kernel_function() : ptr{nullptr} {}
-  kernel_function(dpct::kernel_functor ptr) : ptr{ptr} {}
+public:
+  constexpr kernel_function() : ptr{nullptr} {}
+  constexpr kernel_function(dpct::kernel_functor ptr) : ptr{ptr} {}
 
   operator void *() const { return ((void *)ptr); }
 
@@ -387,15 +401,17 @@ class kernel_function {
     ptr(q, range, a, args, extra);
   }
 
- private:
+  explicit operator uint64_t() const { return (uint64_t)this; }
+
+private:
   dpct::kernel_functor ptr;
 };
 
 /// Find kernel function in a kernel library and return its address.
 /// \param [in] library Handle to the kernel library.
 /// \param [in] name Name of the kernel function.
-static inline dpct::kernel_function get_kernel_function(
-    kernel_library &library, const std::string &name) {
+static inline dpct::kernel_function
+get_kernel_function(kernel_library &library, const std::string &name) {
 #ifdef _WIN32
   dpct::kernel_functor fn = reinterpret_cast<dpct::kernel_functor>(
       GetProcAddress(static_cast<HMODULE>(static_cast<void *>(library)),
@@ -404,7 +420,8 @@ static inline dpct::kernel_function get_kernel_function(
   dpct::kernel_functor fn = reinterpret_cast<dpct::kernel_functor>(
       dlsym(library, (name + std::string("_wrapper")).c_str()));
 #endif
-  if (fn == nullptr) throw std::runtime_error("Failed to get function");
+  if (fn == nullptr)
+    throw std::runtime_error("Failed to get function");
   return fn;
 }
 
@@ -430,8 +447,8 @@ static inline void invoke_kernel_function(dpct::kernel_function &function,
 /// Find image wrapper in a kernel library and return its address.
 /// \param [in] library Handle to the kernel library.
 /// \param [in] name Name of the target image wrapper.
-static inline dpct::image_wrapper_base_p get_image_wrapper(
-    dpct::kernel_library &library, const std::string &name) {
+static inline dpct::image_wrapper_base_p
+get_image_wrapper(dpct::kernel_library &library, const std::string &name) {
 #ifdef _WIN32
   dpct::image_wrapper_base_p fn =
       reinterpret_cast<dpct::image_wrapper_base_p>(GetProcAddress(
@@ -440,9 +457,10 @@ static inline dpct::image_wrapper_base_p get_image_wrapper(
   dpct::image_wrapper_base_p fn = reinterpret_cast<dpct::image_wrapper_base_p>(
       dlsym(library, name.c_str()));
 #endif
-  if (fn == nullptr) throw std::runtime_error("Failed to get image");
+  if (fn == nullptr)
+    throw std::runtime_error("Failed to get image");
   return fn;
 }
 
-}  // namespace dpct
-#endif  // __DPCT_KERNEL_HPP__
+} // namespace dpct
+#endif // __DPCT_KERNEL_HPP__

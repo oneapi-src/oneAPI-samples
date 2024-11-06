@@ -31,7 +31,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <fstream>
 #include <string>
 
@@ -286,12 +285,12 @@ inline char *sdkFindFilePath(const char *filename,
   // the .exe file, a .bat file launching an .exe, a browser .exe launching the
   // .exe or .bat, etc
   const char *searchPath[] = {
-      "./",       // same dir
-      "./data/",  // same dir
+      "./",                                           // same dir
+      "./data/",                                      // same dir
 
-      "../../../../Samples/<executable_name>/",  // up 4 in tree
-      "../../../Samples/<executable_name>/",     // up 3 in tree
-      "../../Samples/<executable_name>/",        // up 2 in tree
+      "../../../../Samples/<executable_name>/",       // up 4 in tree
+      "../../../Samples/<executable_name>/",          // up 3 in tree
+      "../../Samples/<executable_name>/",             // up 2 in tree
 
       "../../../../Samples/<executable_name>/data/",  // up 4 in tree
       "../../../Samples/<executable_name>/data/",     // up 3 in tree
@@ -305,81 +304,57 @@ inline char *sdkFindFilePath(const char *filename,
       "../../../Samples/1_Utilities/<executable_name>/",     // up 3 in tree
       "../../Samples/1_Utilities/<executable_name>/",        // up 2 in tree
 
-      "../../../../Samples/2_Concepts_and_Techniques/<executable_name>/",  // up
-                                                                           // 4
-                                                                           // in
-                                                                           // tree
-      "../../../Samples/2_Concepts_and_Techniques/<executable_name>/",  // up 3
-                                                                        // in
-                                                                        // tree
-      "../../Samples/2_Concepts_and_Techniques/<executable_name>/",  // up 2 in
-                                                                     // tree
+      "../../../../Samples/2_Concepts_and_Techniques/<executable_name>/",  // up 4 in tree
+      "../../../Samples/2_Concepts_and_Techniques/<executable_name>/",     // up 3 in tree
+      "../../Samples/2_Concepts_and_Techniques/<executable_name>/",        // up 2 in tree
 
       "../../../../Samples/3_CUDA_Features/<executable_name>/",  // up 4 in tree
       "../../../Samples/3_CUDA_Features/<executable_name>/",     // up 3 in tree
       "../../Samples/3_CUDA_Features/<executable_name>/",        // up 2 in tree
 
-      "../../../../Samples/4_CUDA_Libraries/<executable_name>/",  // up 4 in
-                                                                  // tree
-      "../../../Samples/4_CUDA_Libraries/<executable_name>/",  // up 3 in tree
-      "../../Samples/4_CUDA_Libraries/<executable_name>/",     // up 2 in tree
+      "../../../../Samples/4_CUDA_Libraries/<executable_name>/",  // up 4 in tree
+      "../../../Samples/4_CUDA_Libraries/<executable_name>/",     // up 3 in tree
+      "../../Samples/4_CUDA_Libraries/<executable_name>/",        // up 2 in tree
 
-      "../../../../Samples/5_Domain_Specific/<executable_name>/",  // up 4 in
-                                                                   // tree
-      "../../../Samples/5_Domain_Specific/<executable_name>/",  // up 3 in tree
-      "../../Samples/5_Domain_Specific/<executable_name>/",     // up 2 in tree
+      "../../../../Samples/5_Domain_Specific/<executable_name>/",  // up 4 in tree
+      "../../../Samples/5_Domain_Specific/<executable_name>/",     // up 3 in tree
+      "../../Samples/5_Domain_Specific/<executable_name>/",        // up 2 in tree
 
       "../../../../Samples/6_Performance/<executable_name>/",  // up 4 in tree
       "../../../Samples/6_Performance/<executable_name>/",     // up 3 in tree
       "../../Samples/6_Performance/<executable_name>/",        // up 2 in tree
 
-      "../../../../Samples/0_Introduction/<executable_name>/data/",  // up 4 in
-                                                                     // tree
-      "../../../Samples/0_Introduction/<executable_name>/data/",     // up 3 in
-                                                                     // tree
-      "../../Samples/0_Introduction/<executable_name>/data/",  // up 2 in tree
+      "../../../../Samples/0_Introduction/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/0_Introduction/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/0_Introduction/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Samples/1_Utilities/<executable_name>/data/",  // up 4 in
-                                                                  // tree
-      "../../../Samples/1_Utilities/<executable_name>/data/",  // up 3 in tree
-      "../../Samples/1_Utilities/<executable_name>/data/",     // up 2 in tree
+      "../../../../Samples/1_Utilities/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/1_Utilities/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/1_Utilities/<executable_name>/data/",        // up 2 in tree
 
       "../../../../Samples/2_Concepts_and_Techniques/<executable_name>/data/",  // up 4 in tree
-      "../../../Samples/2_Concepts_and_Techniques/<executable_name>/data/",  // up 3 in tree
-      "../../Samples/2_Concepts_and_Techniques/<executable_name>/data/",  // up
-                                                                          // 2
-                                                                          // in
-                                                                          // tree
+      "../../../Samples/2_Concepts_and_Techniques/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/2_Concepts_and_Techniques/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Samples/3_CUDA_Features/<executable_name>/data/",  // up 4 in
-                                                                      // tree
-      "../../../Samples/3_CUDA_Features/<executable_name>/data/",     // up 3 in
-                                                                      // tree
-      "../../Samples/3_CUDA_Features/<executable_name>/data/",  // up 2 in tree
+      "../../../../Samples/3_CUDA_Features/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/3_CUDA_Features/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/3_CUDA_Features/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Samples/4_CUDA_Libraries/<executable_name>/data/",  // up 4
-                                                                       // in
-                                                                       // tree
-      "../../../Samples/4_CUDA_Libraries/<executable_name>/data/",  // up 3 in
-                                                                    // tree
-      "../../Samples/4_CUDA_Libraries/<executable_name>/data/",  // up 2 in tree
+      "../../../../Samples/4_CUDA_Libraries/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/4_CUDA_Libraries/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/4_CUDA_Libraries/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Samples/5_Domain_Specific/<executable_name>/data/",  // up 4
-                                                                        // in
-                                                                        // tree
-      "../../../Samples/5_Domain_Specific/<executable_name>/data/",  // up 3 in
-                                                                     // tree
-      "../../Samples/5_Domain_Specific/<executable_name>/data/",     // up 2 in
-                                                                     // tree
+      "../../../../Samples/5_Domain_Specific/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/5_Domain_Specific/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/5_Domain_Specific/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Samples/6_Performance/<executable_name>/data/",  // up 4 in
-                                                                    // tree
-      "../../../Samples/6_Performance/<executable_name>/data/",  // up 3 in tree
-      "../../Samples/6_Performance/<executable_name>/data/",     // up 2 in tree
+      "../../../../Samples/6_Performance/<executable_name>/data/",  // up 4 in tree
+      "../../../Samples/6_Performance/<executable_name>/data/",     // up 3 in tree
+      "../../Samples/6_Performance/<executable_name>/data/",        // up 2 in tree
 
-      "../../../../Common/data/",  // up 4 in tree
-      "../../../Common/data/",     // up 3 in tree
-      "../../Common/data/"         // up 2 in tree
+      "../../../../Common/data/",                     // up 4 in tree
+      "../../../Common/data/",                        // up 3 in tree
+      "../../Common/data/"                            // up 2 in tree
   };
 
   // Extract the executable name
