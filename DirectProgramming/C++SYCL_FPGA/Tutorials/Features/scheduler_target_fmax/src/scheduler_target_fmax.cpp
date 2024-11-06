@@ -28,11 +28,14 @@ constexpr int kDefaultFmax = 200;
 #elif defined(S10)
 constexpr int kHighFmax = 540;
 constexpr int kDefaultFmax = 480;
+#elif defined(Agilex5)
+constexpr int kHighFmax = 540;
+constexpr int kDefaultFmax = 480;
 #elif defined(Agilex7)
 constexpr int kHighFmax = 540;
 constexpr int kDefaultFmax = 480;
 #else
-  std::static_assert(false, "Invalid FPGA board macro");
+  static_assert(false, "Invalid FPGA board macro");
 #endif
 
 
