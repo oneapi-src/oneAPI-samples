@@ -27,6 +27,6 @@ T inner_product(Policy &&policy, InputIt1 first1, InputIt1 last1,
                                first2, init, op1, op2);
 }
 
-}  // end namespace dpct
+} // end namespace dpct
 
 #endif
