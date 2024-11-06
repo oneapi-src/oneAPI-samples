@@ -7,7 +7,7 @@ all: run
 run: sparse_cg.exe
 	.\sparse_cg
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
+DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /Qmkl-sycl-impl="blas,sparse" /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
 sparse_cg.exe: sparse_cg.cpp
 	icx-cl -fsycl sparse_cg.cpp /Fesparse_cg.exe $(DPCPP_OPTS)

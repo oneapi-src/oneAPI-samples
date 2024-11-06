@@ -7,10 +7,9 @@ all: run
 run: sparse_cg
 	./sparse_cg
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
-MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl="blas,sparse"
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
+DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel
 
 sparse_cg: sparse_cg.cpp
 	icpx $< -fsycl -o $@ $(DPCPP_OPTS)

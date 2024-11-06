@@ -8,7 +8,7 @@ run: matrix_mul_mkl.exe
 	.\matrix_mul_mkl.exe single
 	.\matrix_mul_mkl.exe double
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
+DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /Qmkl-sycl-impl=blas /EHsc -fsycl-device-code-split=per_kernel OpenCL.lib
 
 matrix_mul_mkl.exe: matrix_mul_mkl.cpp
 	icx-cl -fsycl matrix_mul_mkl.cpp /Fematrix_mul_mkl.exe $(DPCPP_OPTS)
