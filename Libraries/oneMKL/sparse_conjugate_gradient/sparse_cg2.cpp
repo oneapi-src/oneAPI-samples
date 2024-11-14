@@ -407,17 +407,17 @@ int run_sparse_pcg_example(const sycl::device &dev)
     const intType nnz = ia_h[n]; // assumes zero indexing
 
     // create arrays for help
-    intType *ia_d    = sycl::malloc_device<intType>(n+1, q);
-    intType *ja_d    = sycl::malloc_device<intType>(nnz, q);
-    dataType *a_d    = sycl::malloc_device<dataType>(nnz, q);
-    dataType *x_d    = sycl::malloc_device<dataType>(n, q);
-    dataType *b_d    = sycl::malloc_device<dataType>(n, q);
-    dataType *r_d    = sycl::malloc_device<dataType>(n, q); // r = b - A*x
-    dataType *z_d    = sycl::malloc_device<dataType>(n, q); // z = M^{-1} * r
-    dataType *p_d    = sycl::malloc_device<dataType>(n, q); // p = ?? z
-    dataType *t_d    = sycl::malloc_device<dataType>(n, q); // helper array
-    dataType *d_d    = sycl::malloc_device<dataType>(n, q); // diag(A)
-    dataType *invd_d = sycl::malloc_device<dataType>(n, q); // inv(diag(A))
+    intType *ia_d    = sycl::malloc_device<intType>(n+1, q);  // matrix rowptr
+    intType *ja_d    = sycl::malloc_device<intType>(nnz, q);  // matrix columns
+    dataType *a_d    = sycl::malloc_device<dataType>(nnz, q); // matrix values
+    dataType *x_d    = sycl::malloc_device<dataType>(n, q);   // solution
+    dataType *b_d    = sycl::malloc_device<dataType>(n, q);   // right hand side
+    dataType *r_d    = sycl::malloc_device<dataType>(n, q);   // residual
+    dataType *z_d    = sycl::malloc_device<dataType>(n, q);   // preconditioned residualr
+    dataType *p_d    = sycl::malloc_device<dataType>(n, q);   // search direction
+    dataType *t_d    = sycl::malloc_device<dataType>(n, q);   // helper array
+    dataType *d_d    = sycl::malloc_device<dataType>(n, q);   // matrix diagonals
+    dataType *invd_d = sycl::malloc_device<dataType>(n, q);   // matrix reciprocal of diagonals
 
     const intType width = 8; // width * sizeof(dataType) >= cacheline size (64 Bytes)
     dataType *temp_d = sycl::malloc_device<dataType>(4*width, q);
@@ -430,11 +430,8 @@ int run_sparse_pcg_example(const sycl::device &dev)
     // device side aliases scattered by width elements each
     dataType *normr_h  = temp_h;
     dataType *normr_d  = temp_d;
-    //dataType *rtz_h    = temp_h+1*width;
     dataType *rtz_d    = temp_d+1*width;
-    //dataType *oldrtz_h = temp_h+2*width;
     dataType *oldrtz_d = temp_d+2*width;
-    //dataType *pAp_h    = temp_h+3*width;
     dataType *pAp_d    = temp_d+3*width;
 
     // copy data from host to device arrays
@@ -446,6 +443,7 @@ int run_sparse_pcg_example(const sycl::device &dev)
 
     extract_diagonal<dataType, intType>(q,n, ia_d, ja_d, a_d, d_d, invd_d, {}).wait();
 
+    // make the matrix diagonally dominant
     modify_diagonal<dataType, intType>(q, dataType(52.0), n, ia_d, ja_d, a_d, d_d, invd_d, {}).wait();
 
     // create and initialize handle for a Sparse Matrix in CSR format
