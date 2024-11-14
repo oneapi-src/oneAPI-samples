@@ -1,0 +1,1 @@
+clang++ -O2 -Xcuda-ptxas -v -fsycl -fsycl-targets=nvidia_gpu_sm_80 --cuda-path=/opt/hpc_software/compilers/nvidia/cuda-12.0 main.cpp -o exec_cuda.out

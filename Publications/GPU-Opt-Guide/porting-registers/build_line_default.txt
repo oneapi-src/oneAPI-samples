@@ -1,0 +1,2 @@
+icpx -fsycl -fsycl-targets=spir64_gen -Xsycl-target-backend "-device pvc"
+main.cpp -o exec_jit.out

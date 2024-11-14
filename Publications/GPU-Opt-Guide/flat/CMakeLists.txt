@@ -1,0 +1,3 @@
+add_subdirectory(flat_openmp_01)
+add_subdirectory(flat_sycl_vec_add)
+add_subdirectory(flat_sycl_vec_add_single_device)

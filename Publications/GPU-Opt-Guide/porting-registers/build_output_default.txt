@@ -1,0 +1,1 @@
+warning: kernel _ZTSZ4mainEUlT_E0_  compiled SIMD32 allocated 128 regs and spilled around 396
