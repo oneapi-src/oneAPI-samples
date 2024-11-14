@@ -28,7 +28,7 @@
         subroutine init_d (c, m, n)
         implicit none
         real :: c(m, n)
-        integer m, n, i, j
+        integer m, k, n, i, j
 
         !$omp target teams distribute parallel do
         do i = 1, m
@@ -74,7 +74,7 @@
         beta  = 1.0
         total = 0.0
         call init (a, b, m, k, n)
-        call init_d (c, m, n)
+        call init_d (c, m, k, n)
 
         ! Compute sgemm on the device.
 

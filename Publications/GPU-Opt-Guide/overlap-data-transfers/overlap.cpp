@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // Snippet begin
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #define NITERS 10
 #define KERNEL_ITERS 10000

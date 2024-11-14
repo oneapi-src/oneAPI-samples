@@ -12,6 +12,10 @@
 constexpr size_t N = 16;
 typedef unsigned int uint;
 
+template <typename AccT> auto get_accessor_pointer(const AccT &acc) {
+  return acc.template get_multi_ptr<sycl::access::decorated::no>().get();
+}
+
 int main() {
   sycl::queue q{sycl::gpu_selector_v,
                 sycl::property::queue::enable_profiling{}};
@@ -59,7 +63,7 @@ int main() {
             int aj = BLOCK_SIZE * gj;
 
             for (uint k = 0; k < BLOCK_SIZE; k++) {
-              bcol[k] = sg.load(marr.get_pointer() + (ai + k) * N + aj);
+              bcol[k] = sg.load(get_accessor_pointer(marr) + (ai + k) * N + aj);
             }
 
             uint tcol[BLOCK_SIZE];
@@ -72,7 +76,7 @@ int main() {
             }
 
             for (uint k = 0; k < BLOCK_SIZE; k++) {
-              sg.store(marr.get_pointer() + (ai + k) * N + aj, tcol[k]);
+              sg.store(get_accessor_pointer(marr) + (ai + k) * N + aj, tcol[k]);
             }
           });
     });

@@ -121,11 +121,11 @@ int main(int argc, char **argv) {
   queue dq;
   device dev = dq.get_device();
   size_t max_compute_units = dev.get_info<info::device::max_compute_units>();
-  auto BE = dq.get_device()
-                    .template get_info<sycl::info::device::opencl_c_version>()
-                    .empty()
+  const auto &sycl_be = dq.get_device().get_backend();
+  auto BE = (sycl_be == sycl::backend::ext_oneapi_level_zero)
                 ? "L0"
-                : "OpenCL";
+                : (sycl_be == sycl::backend::opencl) ? "OpenCL"
+                                                     : "Unknown";
   if (verbose)
     std::cout << "Device name " << dev.get_info<info::device::name>() << " "
               << "max_compute units"
@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
       printf("SYCL USM API (%s)\n", BE);
     for (size_t s = transfer_lower_limit; s <= transfer_upper_limit; s <<= 1) {
       auto start_time = std::chrono::steady_clock::now();
-      for (int i = 0; i < ntimes; ++i) {
+      for (size_t i = 0; i < ntimes; ++i) {
         dq.submit([&](handler &cgh) { cgh.memcpy(destp, hostp, s); });
         dq.wait();
       }
@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
       printf("SYCL USM API (%s)\n", BE);
     for (size_t s = transfer_lower_limit; s <= transfer_upper_limit; s <<= 1) {
       auto start_time = std::chrono::steady_clock::now();
-      for (int i = 0; i < ntimes; ++i) {
+      for (size_t i = 0; i < ntimes; ++i) {
         dq.submit([&](handler &cgh) { cgh.memcpy(hostp, destp, s); });
         dq.wait();
       }

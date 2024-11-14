@@ -193,7 +193,10 @@ int main(int argc, char **argv) {
          "beta = %f, iterations = %d, verify? = %d\n",
          HA, WA, WB, ldA, ldB, ldC, alpha, beta, niter, verify);
 
-  double start_t, end_t, tot_t = 0.0, best_t = DBL_MAX;
+#if defined(USE_MKL)
+  double start_t, end_t;
+#endif
+  double tot_t = 0.0, best_t = DBL_MAX;
 
   /*ALLOCATE HOST ARRAYS*/
   FLOAT *A = (FLOAT *)MALLOC(ldA * WA * sizeof(FLOAT));
