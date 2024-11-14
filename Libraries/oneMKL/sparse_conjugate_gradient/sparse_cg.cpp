@@ -358,8 +358,8 @@ int run_sparse_pcg_example(const sycl::device &dev)
     dataType *normr_d  = temp_d;
     dataType *rtz_h    = temp_h+1*width;
     dataType *rtz_d    = temp_d+1*width;
-    dataType *oldrtz_h = temp_h+2*width;
-    dataType *oldrtz_d = temp_d+2*width;
+    //dataType *oldrtz_h = temp_h+2*width;
+    //dataType *oldrtz_d = temp_d+2*width;
     dataType *pAp_h    = temp_h+3*width;
     dataType *pAp_d    = temp_d+3*width;
 
