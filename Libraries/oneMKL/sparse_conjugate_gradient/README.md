@@ -17,7 +17,7 @@ Sparse Conjugate Gradient uses oneMKL sparse linear algebra routines to solve a 
 This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_TYPE` environment variable to `cpu` or `gpu` to select the device to use.
 
 ## Key Implementation Details
-oneMKL sparse routines use a two-stage method where the sparse matrix is analyzed to prepare subsequent calculations (the _optimize_ step). Sparse matrix-vector multiplication and triangular solves (`gemv` and `trsv`) are used to implement the main loop, along with vector routines from BLAS.
+oneMKL sparse routines use a two-stage method where the sparse matrix is analyzed to prepare subsequent calculations (the _optimize_ step). Sparse matrix-vector multiplication and triangular solves (`gemv` and `trsv`) are used to implement the main loop, along with vector routines from BLAS. Two implementations are provided: The first implementation, in `sparse_cg.cpp`, has several places where a device to host copy and wait are initiated to allow the alpha and beta coefficients to be initiated in the BLAS vector routines as host scalars.  The second implementation, in `sparse_cg2.cpp`, keeps the coefficients for alpha and beta on the device, which require that custom axpby2 and axpy3 fucntions are written to handle the construction of alpha and beta coefficients on-the-fly from the device. This removes some of the synchronization points that are seen in the first implementation.
 
 ## Using Visual Studio Code* (Optional)
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
@@ -62,12 +62,13 @@ Run `nmake` to build and run the sample. `nmake clean` removes temporary files.
 ## Running the Sparse Conjugate Gradient Sample
 
 ### Example of Output
-If everything is working correctly, the example program will rapidly converge to a solution and display the solution vector's first few entries. The test will run in both single and double precision (if available on the selected device).
+If everything is working correctly, the example programs will rapidly converge to a solution. Each test will run in both single and double precision (if available on the selected device).
 
+The first PCG implementation with host side coefficients:
 ```
 ./sparse_cg
 ########################################################################
-# Sparse Conjugate Gradient Solver
+# Sparse Preconditioned Conjugate Gradient Solver with USM
 #
 # Uses the preconditioned conjugate gradient algorithm to
 # iteratively solve the symmetric linear system
@@ -79,36 +80,118 @@ If everything is working correctly, the example program will rapidly converge to
 #
 # Uses the symmetric Gauss-Seidel preconditioner.
 #
+# alpha and beta constants in PCG algorithm are host side.
+#
 ########################################################################
 
-Running tests on Intel(R) Gen9 HD Graphics NEO.
+Running tests on Intel(R) Data Center GPU Max 1550.
         Running with single precision real data type:
-                relative norm of residual on 1 iteration: 0.0856119
-                relative norm of residual on 2 iteration: 0.00204826
-                relative norm of residual on 3 iterations: 6.68015e-05
 
-                Preconditioned CG process has successfully converged, and
-                the following solution has been obtained:
+                sparse PCG parameters:
+                        A size: (4096, 4096)
+                        Preconditioner = Symmetric Gauss-Seidel
+                        max iterations = 500
+                        relative tolerance limit = 1e-05
+                        absolute tolerance limit = 0.0005
+                                relative norm of residual on    1 iteration: 0.178532
+                                relative norm of residual on    2 iteration: 0.0280123
+                                relative norm of residual on    3 iteration: 0.0048948
+                                relative norm of residual on    4 iteration: 0.000796108
+                                relative norm of residual on    5 iteration: 0.000119025
+                                relative norm of residual on    6 iteration: 1.86945e-05
+                                absolute norm of residual on    6 iteration: 0.000149556
 
-                x[0] = 0.0666633
-                x[1] = 0.0835483
-                x[2] = 0.0835491
-                x[3] = 0.0666627
-                ...
+                Preconditioned CG process has successfully converged in absolute error in    6 steps with
+                 relative error ||r||_2 / ||r_0||_2 = 1.86945e-05 > 1e-05
+                 absolute error ||r||_2             = 0.000149556 < 0.0005
+
         Running with double precision real data type:
-                relative norm of residual on 1 iteration: 0.0856119
-                relative norm of residual on 2 iteration: 0.00204827
-                relative norm of residual on 3 iteration: 6.68017e-05
 
-                Preconditioned CG process has successfully converged, and
-                the following solution has been obtained:
+                sparse PCG parameters:
+                        A size: (4096, 4096)
+                        Preconditioner = Symmetric Gauss-Seidel
+                        max iterations = 500
+                        relative tolerance limit = 1e-05
+                        absolute tolerance limit = 0.0005
+                                relative norm of residual on    1 iteration: 0.178532
+                                relative norm of residual on    2 iteration: 0.0280123
+                                relative norm of residual on    3 iteration: 0.0048948
+                                relative norm of residual on    4 iteration: 0.000796108
+                                relative norm of residual on    5 iteration: 0.000119025
+                                relative norm of residual on    6 iteration: 1.86945e-05
+                                absolute norm of residual on    6 iteration: 0.000149556
 
-                x[0] = 0.0666633
-                x[1] = 0.0835483
-                x[2] = 0.0835491
-                x[3] = 0.0666627
-                ...
+                Preconditioned CG process has successfully converged in absolute error in    6 steps with
+                 relative error ||r||_2 / ||r_0||_2 = 1.86945e-05 > 1e-05
+                 absolute error ||r||_2             = 0.000149556 < 0.0005
+
 ```
+
+and the second PCG implementation with device side coefficients:
+```
+./sparse_cg2
+########################################################################
+# Sparse Preconditioned Conjugate Gradient Solver with USM 2
+#
+# Uses the preconditioned conjugate gradient algorithm to
+# iteratively solve the symmetric linear system
+#
+#     A * x = b
+#
+# where A is a symmetric sparse matrix in CSR format, and
+#       x and b are dense vectors.
+#
+# Uses the symmetric Gauss-Seidel preconditioner.
+#
+# alpha and beta constants in PCG algorithm are kept
+# device side.
+#
+########################################################################
+
+Running tests on Intel(R) Data Center GPU Max 1550.
+        Running with single precision real data type:
+
+                sparse PCG parameters:
+                        A size: (4096, 4096)
+                        Preconditioner = Symmetric Gauss-Seidel
+                        max iterations = 500
+                        relative tolerance limit = 1e-05
+                        absolute tolerance limit = 0.0005
+                                relative norm of residual on    1 iteration: 0.178532
+                                relative norm of residual on    2 iteration: 0.0280123
+                                relative norm of residual on    3 iteration: 0.0048948
+                                relative norm of residual on    4 iteration: 0.000796109
+                                relative norm of residual on    5 iteration: 0.000119025
+                                relative norm of residual on    6 iteration: 1.86945e-05
+                                absolute norm of residual on    6 iteration: 0.000149556
+
+                Preconditioned CG process has successfully converged in absolute error in    6 steps with
+                 relative error ||r||_2 / ||r_0||_2 = 1.86945e-05 > 1e-05
+                 absolute error ||r||_2             = 0.000149556 < 0.0005
+
+        Running with double precision real data type:
+
+                sparse PCG parameters:
+                        A size: (4096, 4096)
+                        Preconditioner = Symmetric Gauss-Seidel
+                        max iterations = 500
+                        relative tolerance limit = 1e-05
+                        absolute tolerance limit = 0.0005
+                                relative norm of residual on    1 iteration: 0.178532
+                                relative norm of residual on    2 iteration: 0.0280123
+                                relative norm of residual on    3 iteration: 0.0048948
+                                relative norm of residual on    4 iteration: 0.000796108
+                                relative norm of residual on    5 iteration: 0.000119025
+                                relative norm of residual on    6 iteration: 1.86945e-05
+                                absolute norm of residual on    6 iteration: 0.000149556
+
+                Preconditioned CG process has successfully converged in absolute error in    6 steps with
+                 relative error ||r||_2 / ||r_0||_2 = 1.86945e-05 > 1e-05
+                 absolute error ||r||_2             = 0.000149556 < 0.0005
+
+```
+
+
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
