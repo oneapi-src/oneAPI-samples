@@ -11,6 +11,7 @@
 #include <getopt.h>
 #include <ctime>
 #include <chrono>
+#include <cmath>
 
 using namespace sycl;
 
@@ -20,9 +21,9 @@ void mm_kernel(queue &q, std::vector<float> &matrix_a, std::vector<float> &matri
 //# floating point error verification function
 bool almost_equal(float a, float b){
     float tolerance = 1e-6;
-    float diff = fabs(a - b);
-    a = fabs(a);
-    b = fabs(b);
+    float diff = std::fabs(a - b);
+    a = std::fabs(a);
+    b = std::fabs(b);
     float bigger = (b > a) ? b : a;
     if(diff <= bigger * tolerance) return true;
     return false;

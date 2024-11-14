@@ -41,6 +41,29 @@ inline T1 atomic_fetch_add(T1 *addr, T2 operand) {
   return atm.fetch_add(operand);
 }
 
+template <sycl::access::address_space addressSpace =
+              sycl::access::address_space::global_space,
+          sycl::memory_order memoryOrder = sycl::memory_order::relaxed,
+          sycl::memory_scope memoryScope = sycl::memory_scope::device>
+inline sycl::half2 atomic_fetch_add(sycl::half2 *addr, sycl::half2 operand) {
+  auto atm = sycl::atomic_ref<unsigned, memoryOrder, memoryScope, addressSpace>(
+      *reinterpret_cast<unsigned *>(addr));
+
+  union {
+    unsigned i;
+    sycl::half2 h;
+  } old{0}, output{0};
+
+  while (true) {
+    old.i = atm.load();
+    output.h = old.h + operand;
+    if (atm.compare_exchange_strong(old.i, output.i))
+      break;
+  }
+
+  return output.h;
+}
+
 /// Atomically add the value operand to the value at the addr and assign the
 /// result to the value at addr.
 /// \param [in, out] addr The pointer to the data.
@@ -695,10 +718,14 @@ template <typename T> struct IsValidAtomicType {
 
 template <typename T,
           sycl::memory_scope DefaultScope = sycl::memory_scope::system,
+#ifdef __AMDGPU__
+          sycl::memory_order DefaultOrder = sycl::memory_order::acq_rel,
+#else
           sycl::memory_order DefaultOrder = sycl::memory_order::seq_cst,
+#endif
           sycl::access::address_space Space =
               sycl::access::address_space::generic_space>
-class atomic{
+class atomic {
   static_assert(
     detail::IsValidAtomicType<T>::value,
     "Invalid atomic type.  Valid types are int, unsigned int, long, "

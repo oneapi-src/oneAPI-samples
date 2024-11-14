@@ -89,7 +89,7 @@ To optimize performance, GZIP leverages techniques discussed in the following FP
 | `kernels.hpp`        | Contains miscellaneous defines and structure definitions required by the LZReduction and Static Huffman kernels.
 | `crc32.hpp`          | Header file for `crc32.cpp`.
 | `gzipkernel.hpp`     | Header file for `gzipkernels.cpp`.
-| `gzipkernel)ll.hpp`  | Header file for `gzipkernels_ll.cpp`.
+| `gzipkernel_ll.hpp`  | Header file for `gzipkernels_ll.cpp`.
 | `CompareGzip.hpp`    | Header file for `CompareGzip.cpp`.
 | `pipe_utils.hpp`     | Header file containing the definition of an array of pipes. This header can be found in the `../include/` directory of FPGA section of the repository.
 | `WriteGzip.hpp`      | Header file for `WriteGzip.cpp`.
@@ -160,15 +160,17 @@ Performance results are based on testing as of May 14, 2024.
    >  ```
    >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
    >  ```
-  > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
-  > ```
-  > $> aoc -list-boards
-  > Board list:
-  >   <board-variant>
-  >      Board Package: <path/to/board/package>/board-support-package
-  >   <board-variant2>
-  >      Board Package: <path/to/board/package>/board-support-package
-  > ```
+   > The build system will try to infer the FPGA family from the BSP name.
+   > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|Agilex7]` 
+   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
+   > ```
+   > $> aoc -list-boards
+   > Board list:
+   >   <board-variant>
+   >      Board Package: <path/to/board/package>/board-support-package
+   >   <board-variant2>
+   >      Board Package: <path/to/board/package>/board-support-package
+   > ```
    >
    > You will only be able to run an executable on the FPGA if you specified a BSP.
 
@@ -215,6 +217,8 @@ Performance results are based on testing as of May 14, 2024.
   >  ```
   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant> -DIS_BSP=1
   >  ```
+  > The build system will try to infer the FPGA family from the BSP name.
+  > If it can't, an extra option needs to be passed to `cmake`: `-DDEVICE_FLAG=[A10|S10|Agilex7]` 
   > **Note**: You can poll your system for available BSPs using the `aoc -list-boards` command. The board list that is printed out will be of the form
   > ```
   > $> aoc -list-boards

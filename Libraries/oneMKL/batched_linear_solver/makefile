@@ -10,7 +10,7 @@ run_all: lu_solve lu_solve_omp_offload lu_solve_omp_offload_optimized
 	./lu_solve_omp_offload_optimized -n 64 -b 8 -r 1 -c 2
 
 IFX_OPTS = -i8 -free -qmkl
-IFX_OPTS_OFFLOAD = -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl
+IFX_OPTS_OFFLOAD = -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -qmkl-sycl-impl=lapack
 
 lu_solve: lu_solve_omp_offload.F90
 	ifx $< -o $@ $(IFX_OPTS)

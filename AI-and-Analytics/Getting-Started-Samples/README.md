@@ -27,5 +27,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 |Classical Machine Learning| Scikit-learn (OneDAL) | [Intel_Extension_For_SKLearn_GettingStarted](Intel_Extension_For_SKLearn_GettingStarted) | Speed up a scikit-learn application using Intel oneDAL.
 |Deep Learning <br/> Inference Optimization|Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | Guides users how to run a TensorFlow inference workload on both GPU and CPU.
 |Deep Learning Inference Optimization|oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | Guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU. |
+|Inference Optimization|JAX Getting Started Sample | [IntelJAX GettingStarted](https://github.com/oneapi-src/oneAPI-samples/tree/development/AI-and-Analytics/Getting-Started-Samples/IntelJAX_GettingStarted)  | The JAX Getting Started sample demonstrates how to train a JAX model and run inference on Intel® hardware. |
 
 *Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)

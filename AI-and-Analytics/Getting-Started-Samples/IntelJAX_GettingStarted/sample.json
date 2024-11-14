@@ -1,0 +1,24 @@
+{
+	"guid": "9A6A140B-FBD0-4CB2-849A-9CAF15A6F3B1",
+	"name": "Getting Started example for JAX CPU",
+	"categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
+	"description": "This sample illustrates how to train a JAX model and run inference",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"targetDevice": ["CPU"],
+	"ciTests": {
+		"linux": [{
+			"id": "JAX CPU example",
+			"steps": [
+				"git clone https://github.com/google/jax.git",
+				"cd jax",
+				"conda activate jax",
+				"python examples/spmd_mnist_classifier_fromscratch.py"
+			]
+		}]
+	},
+	"expertise": "Getting Started"
+}

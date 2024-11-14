@@ -9,26 +9,22 @@
 #ifndef __DPCT_RNG_UTILS_HPP__
 #define __DPCT_RNG_UTILS_HPP__
 
-#include <oneapi/mkl.hpp>
-#include <sycl/sycl.hpp>
-#ifdef __INTEL_MKL__  // The oneMKL Interfaces Project does not support this.
-#include <oneapi/mkl/rng/device.hpp>
-#endif
-#include "device.hpp"
+#include "compat_service.hpp"
 #include "lib_common_utils.hpp"
+
+#include <oneapi/mkl/rng/device.hpp>
 
 namespace dpct {
 namespace rng {
-#ifdef __INTEL_MKL__  // The oneMKL Interfaces Project does not support this.
 namespace device {
 /// The random number generator on device.
 /// \tparam engine_t The device random number generator engine. It can only be
 /// oneapi::mkl::rng::device::mrg32k3a<1> or
 /// oneapi::mkl::rng::device::mrg32k3a<4> or
 /// oneapi::mkl::rng::device::philox4x32x10<1> or
-/// oneapi::mkl::rng::device::philox4x32x10<4>.
-template <typename engine_t>
-class rng_generator {
+/// oneapi::mkl::rng::device::philox4x32x10<4> or "
+/// oneapi::mkl::rng::device::mcg59<1>.
+template <typename engine_t> class rng_generator {
   static_assert(
       std::disjunction_v<
           std::is_same<engine_t, oneapi::mkl::rng::device::mrg32k3a<1>>,
@@ -57,7 +53,7 @@ class rng_generator {
   oneapi::mkl::rng::device::uniform<double> _distr_uniform_double;
   engine_t _engine;
 
- public:
+public:
   /// Default constructor of rng_generator
   rng_generator() { _engine = engine_t(default_seed); }
   /// Constructor of rng_generator if engine type is not mcg59
@@ -117,6 +113,12 @@ class rng_generator {
             std::is_same<distr_t, oneapi::mkl::rng::device::uniform<float>>,
             std::is_same<distr_t, oneapi::mkl::rng::device::uniform<double>>>,
         "distribution is not supported.");
+#ifndef __INTEL_MKL__
+    static_assert(
+        vec_size == 4 || _is_engine_vec_size_one,
+        "When using the oneMKL Interfaces Project, this function only support "
+        "vec_size == 4 or _is_engine_vec_size_one is true.");
+#endif
 
     if constexpr (std::is_same_v<
                       distr_t, oneapi::mkl::rng::device::bits<std::uint32_t>>) {
@@ -163,7 +165,18 @@ class rng_generator {
   /// \return The reference of the internal random number generator engine.
   engine_t &get_engine() { return _engine; }
 
- private:
+private:
+  template <typename distr_t> auto generate_single(distr_t &distr) {
+    if constexpr (_is_engine_vec_size_one) {
+      return oneapi::mkl::rng::device::generate(distr, _engine);
+    }
+#ifdef __INTEL_MKL__
+    else {
+      return oneapi::mkl::rng::device::generate_single(distr, _engine);
+    }
+#endif
+  }
+
   template <int vec_size, typename distr_t, class... distr_params_t>
   auto generate_vec(distr_t &distr, distr_params_t... distr_params) {
     if constexpr (sizeof...(distr_params_t)) {
@@ -182,34 +195,30 @@ class rng_generator {
         return oneapi::mkl::rng::device::generate(distr, _engine);
       }
     } else if constexpr (vec_size == 1) {
-      if constexpr (_is_engine_vec_size_one) {
-        return oneapi::mkl::rng::device::generate(distr, _engine);
-      } else {
-        return oneapi::mkl::rng::device::generate_single(distr, _engine);
-      }
+      return generate_single(distr);
     } else if constexpr (vec_size == 2) {
-      if constexpr (_is_engine_vec_size_one) {
-        sycl::vec<typename distr_t::result_type, 2> res;
-        res.x() = oneapi::mkl::rng::device::generate(distr, _engine);
-        res.y() = oneapi::mkl::rng::device::generate(distr, _engine);
-        return res;
-      } else {
-        sycl::vec<typename distr_t::result_type, 2> res;
-        res.x() = oneapi::mkl::rng::device::generate_single(distr, _engine);
-        res.y() = oneapi::mkl::rng::device::generate_single(distr, _engine);
-        return res;
-      }
+      sycl::vec<typename distr_t::result_type, 2> res;
+      res.x() = generate_single(distr);
+      res.y() = generate_single(distr);
+      return res;
     }
   }
 };
+} // namespace device
 
-}  // namespace device
-#endif
+enum class random_mode {
+  best,
+  legacy,
+  optimal,
+};
 
 namespace host {
 namespace detail {
+static const std::string OneMKLNotSupport =
+    "The oneAPI Math Kernel Library (oneMKL) Interfaces Project does not "
+    "support this API.";
 class rng_generator_base {
- public:
+public:
   /// Set the seed of host rng_generator.
   /// \param seed The engine seed.
   virtual void set_seed(const std::uint64_t seed) = 0;
@@ -221,6 +230,10 @@ class rng_generator_base {
   /// Set the queue of host rng_generator.
   /// \param queue The engine queue.
   virtual void set_queue(sycl::queue *queue) = 0;
+
+  /// Set the mode of host rng_generator.
+  /// \param mode The engine mode.
+  virtual void set_mode(const random_mode mode) = 0;
 
   /// Generate unsigned int random number(s) with 'uniform_bits' distribution.
   /// \param output The pointer of the first random number.
@@ -288,18 +301,39 @@ class rng_generator_base {
   /// \param num_to_skip The number of random numbers to be skipped.
   virtual void skip_ahead(const std::uint64_t num_to_skip) = 0;
 
- protected:
-  sycl::queue *_queue{&dpct::get_default_queue()};
+  /// Set the direction numbers of host rng_generator. Only Sobol engine
+  /// supports this method.
+  /// \param direction_numbers The engine direction numbers.
+  virtual void set_direction_numbers(
+      const std::vector<std::uint32_t> &direction_numbers) = 0;
+
+  /// Set the engine index of host rng_generator. Only MT2203 engine
+  /// supports this method.
+  /// \param engine_idx The engine index.
+  virtual void set_engine_idx(std::uint32_t engine_idx) = 0;
+
+protected:
+  /// Construct the host rng_generator.
+  /// \param queue The queue where the generator should be executed.
+  rng_generator_base(sycl::queue *queue) : _queue(queue) {}
+
+  sycl::queue *_queue = nullptr;
   std::uint64_t _seed{0};
   std::uint32_t _dimensions{1};
+  random_mode _mode{random_mode::best};
+  std::vector<std::uint32_t> _direction_numbers;
+  std::uint32_t _engine_idx{0};
 };
 
 /// The random number generator on host.
 template <typename engine_t = oneapi::mkl::rng::philox4x32x10>
 class rng_generator : public rng_generator_base {
- public:
+public:
   /// Constructor of rng_generator.
-  rng_generator() : _engine(create_engine(_queue, _seed, _dimensions)) {}
+  /// \param q The queue where the generator should be executed.
+  rng_generator(sycl::queue &q = ::dpct::cs::get_default_queue())
+      : rng_generator_base(&q),
+        _engine(create_engine(&q, _seed, _dimensions, _mode)) {}
 
   /// Set the seed of host rng_generator.
   /// \param seed The engine seed.
@@ -308,7 +342,7 @@ class rng_generator : public rng_generator_base {
       return;
     }
     _seed = seed;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = create_engine(_queue, _seed, _dimensions, _mode);
   }
 
   /// Set the dimensions of host rng_generator.
@@ -318,7 +352,7 @@ class rng_generator : public rng_generator_base {
       return;
     }
     _dimensions = dimensions;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = create_engine(_queue, _seed, _dimensions, _mode);
   }
 
   /// Set the queue of host rng_generator.
@@ -328,7 +362,62 @@ class rng_generator : public rng_generator_base {
       return;
     }
     _queue = queue;
-    _engine = create_engine(_queue, _seed, _dimensions);
+    _engine = create_engine(_queue, _seed, _dimensions, _mode);
+  }
+
+  /// Set the mode of host rng_generator.
+  /// \param mode The engine mode.
+  void set_mode(const random_mode mode) {
+#ifndef __INTEL_MKL__
+    throw std::runtime_error(OneMKLNotSupport);
+#else
+    if constexpr (!std::is_same_v<engine_t, oneapi::mkl::rng::mrg32k3a>) {
+      throw std::runtime_error("Only mrg32k3a engine support this method.");
+    }
+    if (mode == _mode) {
+      return;
+    }
+    _mode = mode;
+    _engine = create_engine(_queue, _seed, _dimensions, _mode);
+#endif
+  }
+
+  /// Set the direction numbers of Sobol host rng_generator.
+  /// \param direction_numbers The user-defined direction numbers.
+  void
+  set_direction_numbers(const std::vector<std::uint32_t> &direction_numbers) {
+#ifndef __INTEL_MKL__
+    throw std::runtime_error(OneMKLNotSupport);
+#else
+    if constexpr (std::is_same_v<engine_t, oneapi::mkl::rng::sobol>) {
+      if (direction_numbers == _direction_numbers) {
+        return;
+      }
+      _direction_numbers = direction_numbers;
+      _engine = oneapi::mkl::rng::sobol(*_queue, _direction_numbers);
+    } else {
+      throw std::runtime_error("Only Sobol engine supports this method.");
+    }
+#endif
+  }
+
+  /// Set the engine index of MT2203 host rng_generator.
+  /// \param engine_idx The user-defined engine index.
+  void set_engine_idx(std::uint32_t engine_idx) {
+#ifndef __INTEL_MKL__
+    throw std::runtime_error("The oneAPI Math Kernel Library (oneMKL) "
+                             "Interfaces Project does not support this API.");
+#else
+    if constexpr (std::is_same_v<engine_t, oneapi::mkl::rng::mt2203>) {
+      if (engine_idx == _engine_idx) {
+        return;
+      }
+      _engine_idx = engine_idx;
+      _engine = oneapi::mkl::rng::mt2203(*_queue, _seed, _engine_idx);
+    } else {
+      throw std::runtime_error("Only MT2203 engine supports this method.");
+    }
+#endif
   }
 
   /// Generate unsigned int random number(s) with 'uniform_bits' distribution.
@@ -336,9 +425,7 @@ class rng_generator : public rng_generator_base {
   /// \param n The number of random numbers.
   inline void generate_uniform_bits(unsigned int *output, std::int64_t n) {
 #ifndef __INTEL_MKL__
-    throw std::runtime_error(
-        "The oneAPI Math Kernel Library (oneMKL) "
-        "Interfaces Project does not support this API.");
+    throw std::runtime_error(OneMKLNotSupport);
 #else
     static_assert(sizeof(unsigned int) == sizeof(std::uint32_t));
     generate<oneapi::mkl::rng::uniform_bits<std::uint32_t>>(
@@ -353,9 +440,7 @@ class rng_generator : public rng_generator_base {
   inline void generate_uniform_bits(unsigned long long *output,
                                     std::int64_t n) {
 #ifndef __INTEL_MKL__
-    throw std::runtime_error(
-        "The oneAPI Math Kernel Library (oneMKL) "
-        "Interfaces Project does not support this API.");
+    throw std::runtime_error(OneMKLNotSupport);
 #else
     static_assert(sizeof(unsigned long long) == sizeof(std::uint64_t));
     generate<oneapi::mkl::rng::uniform_bits<std::uint64_t>>(
@@ -439,11 +524,29 @@ class rng_generator : public rng_generator_base {
 #endif
   }
 
- private:
+private:
   static inline engine_t create_engine(sycl::queue *queue,
                                        const std::uint64_t seed,
-                                       const std::uint32_t dimensions) {
+                                       const std::uint32_t dimensions,
+                                       const random_mode mode) {
 #ifdef __INTEL_MKL__
+    if constexpr (std::is_same_v<engine_t, oneapi::mkl::rng::mrg32k3a>) {
+      // oneapi::mkl::rng::mrg32k3a_mode is only supported for GPU device. For
+      // other devices, this argument will be ignored.
+      if (queue->get_device().is_gpu()) {
+        switch (mode) {
+        case random_mode::best:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::custom{81920});
+        case random_mode::legacy:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::custom{4096});
+        case random_mode::optimal:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::optimal_v);
+        }
+      }
+    }
     return std::is_same_v<engine_t, oneapi::mkl::rng::sobol>
                ? engine_t(*queue, dimensions)
                : engine_t(*queue, seed);
@@ -455,14 +558,14 @@ class rng_generator : public rng_generator_base {
   template <typename distr_t, typename buffer_t, class... distr_params_t>
   void generate(buffer_t *output, const std::int64_t n,
                 const distr_params_t... distr_params) {
-    auto output_buf = dpct::detail::get_memory(output);
+    auto output_buf = dpct::detail::get_memory<buffer_t>(output);
     oneapi::mkl::rng::generate(distr_t(distr_params...), _engine, n,
                                output_buf);
   }
   engine_t _engine{};
 };
-}  // namespace detail
-}  // namespace host
+} // namespace detail
+} // namespace host
 
 enum class random_engine_type {
   philox4x32x10,
@@ -476,37 +579,39 @@ enum class random_engine_type {
 typedef std::shared_ptr<rng::host::detail::rng_generator_base> host_rng_ptr;
 
 /// Create a host random number generator.
+/// \tparam work_on_cpu Whether the work is offloaded to CPU.
 /// \param type The random engine type.
+/// \param q The queue where the generator should be executed.
 /// \return The pointer of random number generator.
-inline host_rng_ptr create_host_rng(const random_engine_type type) {
+inline host_rng_ptr
+create_host_rng(const random_engine_type type,
+                sycl::queue &q = ::dpct::cs::get_default_queue()) {
   switch (type) {
-    case random_engine_type::philox4x32x10:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::philox4x32x10>>();
-    case random_engine_type::mrg32k3a:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::mrg32k3a>>();
+  case random_engine_type::philox4x32x10:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::philox4x32x10>>(q);
+  case random_engine_type::mrg32k3a:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::mrg32k3a>>(q);
 #ifndef __INTEL_MKL__
-      throw std::runtime_error(
-          "The oneAPI Math Kernel Library (oneMKL) "
-          "Interfaces Project does not support this API.");
+    throw std::runtime_error(host::detail::OneMKLNotSupport);
 #else
-    case random_engine_type::mt2203:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::mt2203>>();
-    case random_engine_type::mt19937:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::mt19937>>();
-    case random_engine_type::sobol:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::sobol>>();
-    case random_engine_type::mcg59:
-      return std::make_shared<
-          rng::host::detail::rng_generator<oneapi::mkl::rng::mcg59>>();
+  case random_engine_type::mt2203:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::mt2203>>(q);
+  case random_engine_type::mt19937:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::mt19937>>(q);
+  case random_engine_type::sobol:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::sobol>>(q);
+  case random_engine_type::mcg59:
+    return std::make_shared<
+        rng::host::detail::rng_generator<oneapi::mkl::rng::mcg59>>(q);
 #endif
   }
 }
-}  // namespace rng
-}  // namespace dpct
+} // namespace rng
+} // namespace dpct
 
-#endif  // __DPCT_RNG_UTILS_HPP__
+#endif // __DPCT_RNG_UTILS_HPP__

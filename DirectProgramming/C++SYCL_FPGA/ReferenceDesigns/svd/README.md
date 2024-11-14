@@ -67,11 +67,11 @@ Performance results are based on testing as of September 12, 2024 with fixed 55 
 
 > **Note**: Refer to the [Performance Disclaimers](/DirectProgramming/C++SYCL_FPGA/README.md#performance-disclaimers) section for important performance information.
 
-| Device                      | Input size (Rows x Cols) | Throughput     |
-|-----------------------------|--------------------------|----------------|
-| Silicom FPGA SmartNIC N6011 | 32 x 32                  | 987 matrices/s |
-| Silicom FPGA SmartNIC N6011 | 128 x 32                 | 560 matrices/s |
-| Silicom FPGA SmartNIC N6011 | 128 x 16                 | 1531 matrices/s|
+| Device                        | Input size (Rows x Cols) | Throughput     |
+|-------------------------------|--------------------------|----------------|
+| Intel® FPGA SmartNIC N6001-PL | 32 x 32                  | 987 matrices/s |
+| Intel® FPGA SmartNIC N6001-PL | 128 x 32                 | 560 matrices/s |
+| Intel® FPGA SmartNIC N6001-PL | 128 x 16                 | 1531 matrices/s|
 
 ## Key Implementation Details
 This SVD design consists of 4 computation kernels, as well as several memory access kernels to handle input and output. These kernels are connected through inter-kernel pipes and input/output through unified shared memory (USM).
@@ -342,7 +342,7 @@ Since the singular vectors in $U$ and $V$ are non-unique, their correctness are 
 
 ## Example Output
 
-Example Output when running on the **Silicom FPGA SmartNIC N6011**.
+Example Output when running on the **Intel® FPGA SmartNIC N6001-PL**.
 
 ```
 Running on device: ofs_n6001 : Intel OFS Platform (ofs_ee00000)

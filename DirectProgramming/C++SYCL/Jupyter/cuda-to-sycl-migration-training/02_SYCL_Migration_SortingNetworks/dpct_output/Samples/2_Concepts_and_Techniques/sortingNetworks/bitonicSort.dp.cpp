@@ -320,14 +320,14 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     */
     dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:34: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:30: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:35: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:31: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
@@ -356,14 +356,14 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
     */
     dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:36: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:32: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
       sycl::local_accessor<uint, 1> s_key_acc_ct1(
           sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
       /*
-      DPCT1101:37: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
+      DPCT1101:33: 'SHARED_SIZE_LIMIT' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
@@ -405,14 +405,14 @@ extern "C" uint bitonicSort(uint *d_DstKey, uint *d_DstVal, uint *d_SrcKey,
           */
           dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
             /*
-            DPCT1101:38: 'SHARED_SIZE_LIMIT' expression was replaced with a
+            DPCT1101:34: 'SHARED_SIZE_LIMIT' expression was replaced with a
             value. Modify the code to use the original expression, provided in
             comments, if it is correct.
             */
             sycl::local_accessor<uint, 1> s_key_acc_ct1(
                 sycl::range<1>(1024 /*SHARED_SIZE_LIMIT*/), cgh);
             /*
-            DPCT1101:39: 'SHARED_SIZE_LIMIT' expression was replaced with a
+            DPCT1101:35: 'SHARED_SIZE_LIMIT' expression was replaced with a
             value. Modify the code to use the original expression, provided in
             comments, if it is correct.
             */
