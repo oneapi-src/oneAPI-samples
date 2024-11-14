@@ -276,7 +276,7 @@ sycl::event precon_gauss_seidel(sycl::queue q,
 //
 // where beta1 and beta2 are device side arrays with scalar value in 0th element
 //
-template <typename dataType,typename intType>
+template <typename dataType, typename intType>
 sycl::event axpby2(sycl::queue q,
                    const intType n,
                    const dataType alpha,
@@ -306,7 +306,7 @@ sycl::event axpby2(sycl::queue q,
 //
 // where alpha1 and alpha2 may be device side arrays with scalar value in 0th element
 //
-template <typename dataType,typename intType>
+template <typename dataType, typename intType>
 sycl::event axpy3(sycl::queue q,
                   const intType n,
                   const dataType scale,
