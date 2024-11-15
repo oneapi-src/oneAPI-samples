@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2020 Intel Corporation
+// Copyright © 2024 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
@@ -413,7 +413,7 @@ int run_sparse_pcg_example(const sycl::device &dev)
     dataType *x_d    = sycl::malloc_device<dataType>(n, q);   // solution
     dataType *b_d    = sycl::malloc_device<dataType>(n, q);   // right hand side
     dataType *r_d    = sycl::malloc_device<dataType>(n, q);   // residual
-    dataType *z_d    = sycl::malloc_device<dataType>(n, q);   // preconditioned residualr
+    dataType *z_d    = sycl::malloc_device<dataType>(n, q);   // preconditioned residual
     dataType *p_d    = sycl::malloc_device<dataType>(n, q);   // search direction
     dataType *t_d    = sycl::malloc_device<dataType>(n, q);   // helper array
     dataType *d_d    = sycl::malloc_device<dataType>(n, q);   // matrix diagonals
@@ -583,13 +583,19 @@ int run_sparse_pcg_example(const sycl::device &dev)
     sycl::free(ia_h, q);
     sycl::free(ja_h, q);
     sycl::free(a_h, q);
+    sycl::free(x_h, q);
+    sycl::free(b_h, q);
     sycl::free(ia_d, q);
     sycl::free(ja_d, q);
     sycl::free(a_d, q);
     sycl::free(x_d, q);
     sycl::free(b_d, q);
+    sycl::free(r_d, q);
+    sycl::free(z_d, q);
+    sycl::free(p_d, q);
     sycl::free(t_d, q);
     sycl::free(d_d, q);
+    sycl::free(invd_d, q);
     sycl::free(temp_d, q);
     sycl::free(temp_h, q);
 
