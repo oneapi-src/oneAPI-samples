@@ -46,8 +46,13 @@
 *         z is the preconditioned residual
 *         p is the search direction
 *
-*       and we are using ||r||_2 for stopping criteria and alpha/beta scalars are 
-*       provided as constants from host side.
+*       and we are using ||r||_2 for stopping criteria and alpha/beta scalars are
+*       kept on device side to avoid unnecessary synchronization points.
+*
+*       Note, this example differs from the solver_cg2.cpp sample in that we define
+*       our own custom axpby and axpy that can take in mulitple device side scalars for
+*       construction of alpha/beta from device side on-the-fly to avoid unnecessary synch
+*       points on host for alpha/beta construction.
 *
 *
 *       The supported floating point data types for gemm matrix data are:
@@ -88,6 +93,13 @@ class noPreconClass;
 
 template <typename dataType, typename intType>
 class jacobiPreconClass;
+
+template <typename dataType, typename intType>
+class axpby2Class;
+
+template <typename dataType, typename intType>
+class axpy3Class;
+
 
 
 //
@@ -257,6 +269,68 @@ sycl::event precon_gauss_seidel(sycl::queue q,
 }
 
 
+// 
+// AXPBY2: 
+//
+// Calculate y = alpha * x + beta1 / beta2 * y
+//
+// where beta1 and beta2 are device side arrays with scalar value in 0th element
+//
+template <typename dataType, typename intType>
+sycl::event axpby2(sycl::queue q,
+                   const intType n,
+                   const dataType alpha,
+                   const dataType *x,
+                   const dataType *beta1_d,
+                   const dataType *beta2_d,
+                         dataType *y,
+                   const std::vector<sycl::event> &deps = {})
+{
+    return q.submit([&](sycl::handler &cgh) {
+        cgh.depends_on(deps);
+        auto kernel = [=](sycl::item<1> item) {
+            const int row = item.get_id(0);
+
+            const dataType beta = beta1_d[0] / beta2_d[0];
+            y[row] = alpha * x[row] + beta * y[row];
+        };
+        cgh.parallel_for<class axpby2Class<dataType, intType>>(sycl::range<1>(n), kernel);
+    });
+
+}
+                   
+// 
+// AXPY3: 
+//
+// Calculate y = scale * alpha1 / alpha2 * x + y
+//
+// where alpha1 and alpha2 may be device side arrays with scalar value in 0th element
+//
+template <typename dataType, typename intType>
+sycl::event axpy3(sycl::queue q,
+                  const intType n,
+                  const dataType scale,
+                  const dataType *alpha1_d,
+                  const dataType *alpha2_d,
+                  const dataType *x,
+                        dataType *y,
+                  const std::vector<sycl::event> &deps = {})
+{
+    return q.submit([&](sycl::handler &cgh) {
+        cgh.depends_on(deps);
+        auto kernel = [=](sycl::item<1> item) {
+            const int row = item.get_id(0);
+            const dataType alpha = scale * alpha1_d[0] / alpha2_d[0];
+            y[row] = alpha * x[row] + y[row];
+        };
+        cgh.parallel_for<class axpy3Class<dataType, intType>>(sycl::range<1>(n), kernel);
+    });
+
+}
+ 
+
+
+
 
 template <typename dataType, typename intType>
 int run_sparse_pcg_example(const sycl::device &dev)
@@ -346,8 +420,8 @@ int run_sparse_pcg_example(const sycl::device &dev)
     dataType *invd_d = sycl::malloc_device<dataType>(n, q);   // matrix reciprocal of diagonals
 
     const intType width = 8; // width * sizeof(dataType) >= cacheline size (64 Bytes)
-    dataType *temp_d = sycl::malloc_device<dataType>(3*width, q);
-    dataType *temp_h = sycl::malloc_host<dataType>(3*width, q);
+    dataType *temp_d = sycl::malloc_device<dataType>(4*width, q);
+    dataType *temp_h = sycl::malloc_host<dataType>(4*width, q);
 
     if ( !ia_d || !ja_d || !a_d || !x_d || !b_d || !z_d || !p_d || !t_d || !d_d || !invd_d || !temp_d || !temp_h) {
         throw std::runtime_error("Failed to allocate device side USM memory");
@@ -355,11 +429,10 @@ int run_sparse_pcg_example(const sycl::device &dev)
 
     // device side aliases scattered by width elements each
     dataType *normr_h  = temp_h;
-    dataType *rtz_h    = temp_h+1*width;
-    dataType *pAp_h    = temp_h+2*width;
     dataType *normr_d  = temp_d;
     dataType *rtz_d    = temp_d+1*width;
-    dataType *pAp_d    = temp_d+2*width;
+    dataType *oldrtz_d = temp_d+2*width;
+    dataType *pAp_d    = temp_d+3*width;
 
     // copy data from host to device arrays
     q.copy(ia_h, ia_d, n+1).wait();
@@ -403,7 +476,7 @@ int run_sparse_pcg_example(const sycl::device &dev)
         ev_r = oneapi::mkl::blas::axpby(q, n, 1.0, b_d, 1, -1.0, r_d, 1, {ev_r}); // r := 1 * b + -1 * r
 
         auto ev_normr = oneapi::mkl::blas::nrm2(q, n, r_d, 1, normr_d, {ev_r});
-        dataType oldrTz = 0.0, rTz = 0.0, pAp = 0.0, normr = 0.0, normr_0 = 0.0;
+        dataType normr = 0.0, normr_0 = 0.0;
         {
             q.copy(normr_d, normr_h, 12, {ev_normr}).wait();
             normr = std::sqrt(normr_h[0]);
@@ -422,25 +495,18 @@ int run_sparse_pcg_example(const sycl::device &dev)
  
             if (k == 0 ) {
                 ev_rtz = oneapi::mkl::blas::dot(q, n, r_d, 1, z_d, 1, rtz_d, {ev_r, ev_z});
-                {
-                    q.copy(rtz_d, rtz_h, 1, {ev_rtz}).wait(); // synch point
-                    rTz = rtz_h[0];
-                }
 
                 // copy D2D: p_1 = z_0
                 ev_p = oneapi::mkl::blas::copy(q, n, z_d, 1, p_d, 1, {ev_z, ev_rtz});
             }
             else {
+                auto ev_oldrtz = q.copy(rtz_d, oldrtz_d, 1, {ev_z});
+
                 // beta_{k+1} = dot(r_k, z_k) / dot(r_{k-1}, z_{k-1})
-                ev_rtz = oneapi::mkl::blas::dot(q, n, r_d, 1, z_d, 1, rtz_d, {ev_r, ev_z});
-                {
-                    q.copy(rtz_d, rtz_h, 1, {ev_rtz}).wait(); // synch point
-                    oldrTz = rTz;
-                    rTz = rtz_h[0];
-                }
+                ev_rtz = oneapi::mkl::blas::dot(q, n, r_d, 1, z_d, 1, rtz_d, {ev_r, ev_z, ev_oldrtz});
 
                 // Calculate p_{k+1} = z_{k+1} + beta_{k+1} * p_k
-                ev_p = oneapi::mkl::blas::axpby(q, n, 1.0, z_d, 1, rTz / oldrTz, p_d, 1, {ev_rtz});
+                ev_p = axpby2(q, n, dataType(1.0), z_d, rtz_d, oldrtz_d, p_d, {ev_rtz});
 
             }
 
@@ -450,16 +516,12 @@ int run_sparse_pcg_example(const sycl::device &dev)
 
             // alpha_{k+1} = dot(r_k, z_k) / dot(p_{k+1}, Ap_{k+1})
             ev_pAp = oneapi::mkl::blas::dot(q, n, p_d, 1, t_d, 1, pAp_d, {ev_Ap}); 
-            {
-                q.copy(pAp_d, pAp_h, 1, {ev_pAp}).wait(); // synch point
-                pAp = pAp_h[0];
-            }
 
             // Calculate x_{k+1} = x_k + alpha_{k+1}*p_{k+1}
-            ev_x = oneapi::mkl::blas::axpy(q, n, rTz / pAp, p_d, 1, x_d, 1, {});
+            ev_x = axpy3(q, n, dataType(1.0), rtz_d, pAp_d, p_d, x_d, {ev_pAp});
 
             // Calculate r_{k+1} = r_k - alpha_{k+1}*Ap_{k+1} (note that t = A*p_{k+1} right now so it can be reused here)
-            ev_r = oneapi::mkl::blas::axpy(q, n, -rTz / pAp, t_d, 1, r_d, 1, {});
+            ev_r = axpy3(q, n, dataType(-1.0), rtz_d, pAp_d, t_d, r_d, {ev_pAp});
 
             // temp_d = ||r_{k+1}||^2
             ev_normr = oneapi::mkl::blas::nrm2(q, n, z_d, 1, normr_d, {ev_r});
@@ -551,7 +613,7 @@ void print_banner()
 
     std::cout << "###############################################################"
                  "#########\n"
-                 "# Sparse Preconditioned Conjugate Gradient Solver with USM\n"
+                 "# Sparse Preconditioned Conjugate Gradient Solver with USM 2\n"
                  "# \n"
                  "# Uses the preconditioned conjugate gradient algorithm to\n"
                  "# iteratively solve the symmetric linear system\n"
@@ -563,7 +625,8 @@ void print_banner()
                  "# \n"
                  "# Uses the symmetric Gauss-Seidel preconditioner.\n"
                  "# \n"
-                 "# alpha and beta constants in PCG algorithm are host side.\n"
+                 "# alpha and beta constants in PCG algorithm are kept\n"
+                 "# device side.\n"
                  "# \n"
                  "###############################################################"
                  "#########\n\n";
