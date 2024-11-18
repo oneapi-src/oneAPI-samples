@@ -1,30 +1,28 @@
---- train_ecapa.yaml.orig	2023-02-09 17:17:34.849537612 +0000
-+++ train_ecapa.yaml	2023-02-09 17:19:42.936542193 +0000
-@@ -4,19 +4,19 @@
+--- train_ecapa.yaml	2024-11-13 18:08:40.313000000 -0800
++++ train_ecapa_modified.yaml	2024-11-14 14:52:31.232000000 -0800
+@@ -4,17 +4,17 @@
  # ################################
  
  # Basic parameters
 -seed: 1988
 +seed: 1987
- __set_seed: !apply:torch.manual_seed [!ref <seed>]
+ __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
  output_folder: !ref results/epaca/<seed>
  save_folder: !ref <output_folder>/save
  train_log: !ref <output_folder>/train_log.txt
 -data_folder: !PLACEHOLDER
 +data_folder: ./
- rir_folder: !ref <data_folder>
- # skip_prep: False
  
 -shards_url: /data/voxlingua107_shards
-+shards_url: /data/commonVoice_shards
++shards_url: /data/commonVoice/processed_data/commonVoice_shards
  train_meta: !ref <shards_url>/train/meta.json
  val_meta: !ref <shards_url>/dev/meta.json
 -train_shards: !ref <shards_url>/train/shard-{000000..000507}.tar
 +train_shards: !ref <shards_url>/train/shard-{000000..000000}.tar
  val_shards: !ref <shards_url>/dev/shard-000000.tar
  
- # Set to directory on a large disk if you are training on Webdataset shards hosted on the web
-@@ -25,7 +25,7 @@
+ # Data for augmentation
+@@ -32,7 +32,7 @@
  ckpt_interval_minutes: 5
  
  # Training parameters
@@ -33,28 +31,25 @@
  lr: 0.001
  lr_final: 0.0001
  sample_rate: 16000
-@@ -38,11 +38,11 @@
+@@ -45,10 +45,10 @@
  deltas: False
  
  # Number of languages
 -out_n_neurons: 107
 +out_n_neurons: 2
  
+-num_workers: 4
+-batch_size: 128
++num_workers: 1
++batch_size: 64
+ batch_size_val: 32
  train_dataloader_options:
--    num_workers: 4
--    batch_size: 128
-+    num_workers: 1
-+    batch_size: 64
+     num_workers: !ref <num_workers>
+@@ -60,6 +60,21 @@
  
- val_dataloader_options:
-     num_workers: 1
-@@ -138,3 +138,20 @@
-         classifier: !ref <classifier>
-         normalizer: !ref <mean_var_norm>
-         counter: !ref <epoch_counter>
-+
-+# Below most relevant for inference using self-trained model:
-+
+ ############################## Augmentations ###################################
+ 
++# Changes for code sample to work with CommonVoice dataset
 +pretrained_path: lang_id_commonvoice_model
 +
 +label_encoder: !new:speechbrain.dataio.encoder.CategoricalEncoder
@@ -69,3 +64,6 @@
 +        classifier: !ref <pretrained_path>/classifier.ckpt
 +        label_encoder: !ref <pretrained_path>/label_encoder.txt
 +
+ # Download and prepare the dataset of noisy sequences for augmentation
+ prepare_noise_data: !name:speechbrain.augment.preparation.prepare_dataset_from_URL
+     URL: !ref <NOISE_DATASET_URL>

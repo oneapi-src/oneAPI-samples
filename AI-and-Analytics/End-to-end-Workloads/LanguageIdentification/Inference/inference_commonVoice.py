@@ -29,7 +29,7 @@ class datafile:
         self.sampleRate = 0
         self.waveData = ''
         self.wavesize = 0
-        self.waveduriation = 0
+        self.waveduration = 0
         if filename.endswith(".wav") or filename.endswith(".wmv"):
             self.wavefile = filename
             self.wavepath = dirpath + os.sep + filename
