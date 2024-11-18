@@ -53,7 +53,7 @@ For this sample, you will need to download the following languages: **Japanese**
 4. Paste this link into a text editor and copy the first part of the URL up to ".tar.gz".
 5. Use **GNU wget** on the URL to download the data to `/data/commonVoice`.
 
-   Alternatively, you can use a directory on your local drive (due to the large amount of data). If you opt to do so, you must change the `COMMON_VOICE_PATH` environment in `launch_docker.sh` before running the script.
+   Alternatively, you can use a directory on your local drive due to the large amount of data. 
 
 6. Extract the compressed folder, and rename the folder with the language (for example, English).
 
