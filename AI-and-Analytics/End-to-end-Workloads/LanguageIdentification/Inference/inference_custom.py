@@ -195,13 +195,13 @@ def main(argv):
         with open(OUTPUT_SUMMARY_CSV_FILE, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(["Audio File", 
-                             "Input Frequency", 
+                             "Input Frequency (Hz)", 
                              "Expected Language", 
                              "Top Consensus", 
                              "Top Consensus %", 
                              "Second Consensus", 
                              "Second Consensus %", 
-                             "Average Latency", 
+                             "Average Latency (s)", 
                              "Result"])
 
         total_samples = 0
@@ -273,12 +273,12 @@ def main(argv):
                 predict_list = []
                 use_entire_audio_file = False
                 latency_sum = 0.0
-                if data.waveduration < sample_dur:
+                if int(data.waveduration) <= sample_dur:
                     # Use entire audio file if the duration is less than the sampling duration
                     use_entire_audio_file = True
                     sample_list = [0 for _ in range(sample_size)]
                 else:
-                    start_time_list = list(range(sample_size - int(data.waveduration) + 1))
+                    start_time_list = list(range(int(data.waveduration) - sample_dur))
                     sample_list = []
                     for i in range(sample_size):
                         sample_list.append(random.sample(start_time_list, 1)[0])
@@ -346,11 +346,28 @@ def main(argv):
                             avg_latency, 
                             result
                         ])
+                else:
+                    # Write results to a .csv file
+                    with open(OUTPUT_SUMMARY_CSV_FILE, 'a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow([
+                            filename, 
+                            sample_rate_for_csv, 
+                            "N/A", 
+                            top_occurance,
+                            str(topPercentage) + "%",
+                            sec_occurance, 
+                            str(secPercentage) + "%", 
+                            avg_latency, 
+                            "N/A"
+                        ])
+
 
         if ground_truth_compare:
             # Summary of results
             print("\n\n Correctly predicted %d/%d\n" %(correct_predictions, total_samples))
-            print("\n See %s for summary\n" %(OUTPUT_SUMMARY_CSV_FILE))
+        
+        print("\n See %s for summary\n" %(OUTPUT_SUMMARY_CSV_FILE))
  
     elif os.path.isfile(path):  
         print("\nIt is a normal file", path)  
