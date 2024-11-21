@@ -132,7 +132,7 @@ Elapsed Time: 0.42209s
 
 ## Running an Intel&reg; VTune&trade; Profiler analysis
 ```
-vtune -collect gpu-hotspots -- ./matrix.dpcpp
+vtune -collect gpu-hotspots -- ./matrix_multiply
 ```
 
 ## License
