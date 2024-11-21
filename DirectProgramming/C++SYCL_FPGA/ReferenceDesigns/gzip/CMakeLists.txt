@@ -135,7 +135,7 @@ message(STATUS "NUM_REORDER=${NUM_REORDER}")
 
 # Use cmake -DUSER_FPGA_FLAGS=<flags> to set extra flags for FPGA backend
 # compilation. 
-set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};-Xsopt-arg=\"-nocaching\";${NUM_REORDER})
+set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};${NUM_REORDER})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
 set(USER_FLAGS ${USER_FLAGS};-DNUM_ENGINES=${NUM_ENGINES})
