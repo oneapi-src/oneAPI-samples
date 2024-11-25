@@ -7,7 +7,7 @@
   "description": "oneAPI GPU Optimization Guide Examples",
   "toolchain": [
     "dpcpp",
-    "ifort"
+    "ifx"
   ],
   "languages": [
     {
@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make test-SharedMem test-Map-UpdateTo test-HostMem-DeviceMem-Map-UpdateTo",
+          "make flat_sycl_vec_add",
           "make clean"
         ]
       }

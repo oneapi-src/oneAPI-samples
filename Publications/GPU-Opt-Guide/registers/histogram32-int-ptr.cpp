@@ -56,9 +56,10 @@ int main() {
             histogram[k] = 0;
           }
           for (int k = 0; k < BLOCK_SIZE; k++) {
-            unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * BLOCK_SIZE +
-                        sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
+            unsigned long x = sg.load(
+                macc.template get_multi_ptr<sycl::access::decorated::yes>() +
+                group * gSize * BLOCK_SIZE + sgGroup * sgSize * BLOCK_SIZE +
+                sgSize * k);
             unsigned long *p = &x;
 #pragma unroll
             for (int i = 0; i < 8; i++) {

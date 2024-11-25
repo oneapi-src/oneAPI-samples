@@ -1,4 +1,4 @@
-add_example(sycl_prepare_bench)
-add_fortran_example_with_mkl(openmp_system_mem)
-add_fortran_example_with_mkl(openmp_host_usm)
-add_fortran_example_with_mkl(openmp_register_mem)
+add_subdirectory(sycl-prepare)
+add_subdirectory(omp-system-mem)
+add_subdirectory(omp-host-usm)
+add_subdirectory(omp-register-mem)

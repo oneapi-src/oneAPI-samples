@@ -11,8 +11,6 @@
 
 #include "align.hpp"
 
-sycl::default_selector d_selector;
-
 template <typename T> using VectorAllocator = AlignedAllocator<T>;
 
 template <typename T> using AlignedVector = std::vector<T, VectorAllocator<T>>;
@@ -34,14 +32,13 @@ private:
 };
 
 int check_res(AlignedVector<int> &v) {
-  for (int i = 0; i < v.size(); i += 2)
+  for (size_t i = 0; i < v.size(); i += 2)
     if (v[i] != 24 || v[i + 1] != 2)
       return 0;
   return 1;
 }
 
 double myFunc1(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
-               AlignedVector<int> &c, AlignedVector<int> &d,
                AlignedVector<int> &res, int iter) {
   sycl::range num_items{a.size()};
   VectorAllocator<int> alloc;
@@ -71,7 +68,7 @@ double myFunc1(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
 
     {
       sycl::host_accessor h_acc(sum_buf);
-      for (int j = 0; j < a.size(); j++)
+      for (size_t j = 0; j < a.size(); j++)
         if (h_acc[j] > 10)
           h_acc[j] = 1;
         else
@@ -98,7 +95,6 @@ double myFunc1(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
 } // end myFunc1
 
 double myFunc2(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
-               AlignedVector<int> &c, AlignedVector<int> &d,
                AlignedVector<int> &res, int iter) {
   sycl::range num_items{a.size()};
   VectorAllocator<int> alloc;
@@ -157,7 +153,6 @@ double myFunc2(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
 } // end myFunc2
 
 double myFunc3(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
-               AlignedVector<int> &c, AlignedVector<int> &d,
                AlignedVector<int> &res, int iter) {
   sycl::range num_items{a.size()};
   VectorAllocator<int> alloc;
@@ -210,7 +205,6 @@ double myFunc3(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
 } // end myFunc3
 
 double myFunc4(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
-               AlignedVector<int> &c, AlignedVector<int> &d,
                AlignedVector<int> &res, int iter) {
   sycl::range num_items{a.size()};
   VectorAllocator<int> alloc;
@@ -262,7 +256,7 @@ void Initialize(AlignedVector<int> &a) {
 
 int main() {
 
-  sycl::queue q(d_selector);
+  sycl::queue q{sycl::gpu_selector_v};
   VectorAllocator<int> alloc;
   AlignedVector<int> a(array_size, alloc);
   AlignedVector<int> b(array_size, alloc);
@@ -280,25 +274,25 @@ int main() {
   std::cout << "Vector size: " << a.size() << "\n";
 
   // jit the code
-  myFunc1(q, a, b, c, d, res, 1);
+  myFunc1(q, a, b, res, 1);
   // check results
   Initialize(res);
-  double elapsed = myFunc1(q, a, b, c, d, res, 1);
+  double elapsed = myFunc1(q, a, b, res, 1);
   if (check_res(res))
     std::cout << "SUCCESS: Time myFunc1   = " << elapsed << "s\n";
   else
     std::cout << "ERROR: myFunc1 result did not match expected result\n";
-  elapsed = myFunc2(q, a, b, c, d, res, 1);
+  elapsed = myFunc2(q, a, b, res, 1);
   if (check_res(res))
     std::cout << "SUCCESS: Time myFunc2   = " << elapsed << "s\n";
   else
     std::cout << "ERROR: myFunc1 result did not match expected result\n";
-  elapsed = myFunc3(q, a, b, c, d, res, 1);
+  elapsed = myFunc3(q, a, b, res, 1);
   if (check_res(res))
     std::cout << "SUCCESS: Time myFunc3   = " << elapsed << "s\n";
   else
     std::cout << "ERROR: myFunc1 result did not match expected result\n";
-  elapsed = myFunc4(q, a, b, c, d, res, 1);
+  elapsed = myFunc4(q, a, b, res, 1);
   if (check_res(res))
     std::cout << "SUCCESS: Time myFunc4   = " << elapsed << "s\n";
   else

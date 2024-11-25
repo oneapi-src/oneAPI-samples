@@ -1,1 +1,0 @@
-ptxas info    : Used 168 registers, 380 bytes cmem[0]

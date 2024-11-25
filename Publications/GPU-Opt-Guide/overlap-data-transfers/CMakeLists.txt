@@ -2,4 +2,4 @@
 # add_test(NAME vec-add-restrict COMMAND vec-add-restrict)
 
 add_example(reduction)
-add_example(overlap)
+add_example(overlap_transfer)

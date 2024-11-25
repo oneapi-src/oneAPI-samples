@@ -108,11 +108,11 @@ float ComputeParallel2(sycl::queue &q, std::vector<float> &data) {
             .get_info<sycl::info::device::native_vector_width_float>();
     int num_processing_elements = num_EUs * vec_size;
     int BATCH = (N + num_processing_elements - 1) / num_processing_elements;
+    if (!accum)
+      accum = new float[num_processing_elements];
     sycl::buffer<float> buf(data.data(), data.size(), props);
     sycl::buffer<float> accum_buf(accum, num_processing_elements, props);
     sycl::buffer<float> res_buf(&sum, 1, props);
-    if (!accum)
-      accum = new float[num_processing_elements];
 
     q.submit([&](auto &h) {
       sycl::accessor buf_acc(buf, h, sycl::read_only);
@@ -131,11 +131,11 @@ float ComputeParallel2(sycl::queue &q, std::vector<float> &data) {
     });
 
     q.submit([&](auto &h) {
-      sycl::accessor accum_acc(accum, h, sycl::read_only);
+      sycl::accessor accum_acc(accum_buf, h, sycl::read_only);
       sycl::accessor res_acc(res_buf, h, sycl::write_only, sycl::no_init);
       h.parallel_for(1, [=](auto index) {
         res_acc[index] = 0;
-        for (size_t i = 0; i < num_processing_elements; i++)
+        for (int i = 0; i < num_processing_elements; i++)
           res_acc[index] += accum_acc[i];
       });
     });
@@ -144,9 +144,9 @@ float ComputeParallel2(sycl::queue &q, std::vector<float> &data) {
   return sum;
 } // end ComputeParallel2
 
-int main(int argc, char *argv[]) {
+int main() {
 
-  sycl::queue q{default_selector{}, exception_handler};
+  sycl::queue q{sycl::gpu_selector_v, exception_handler};
   std::vector<float> data(N, 1.0f);
   std::vector<float> extra(4 * N, 1.0f);
 

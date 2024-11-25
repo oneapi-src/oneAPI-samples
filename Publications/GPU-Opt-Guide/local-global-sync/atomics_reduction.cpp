@@ -13,8 +13,6 @@
 // Summation of 256k 'one' values
 constexpr size_t N = 1024 * 256;
 
-// Number of repetitions
-constexpr int repetitions = 10000;
 // expected vlaue of sum
 int sum_expected = N;
 
@@ -68,7 +66,7 @@ int reductionIntSerial(sycl::queue &q, std::vector<int> &data, int iter) {
 
       h.parallel_for(1, [=](auto index) {
         size_t glob_id = index[0];
-        sum_acc[0] = 0;
+        sum_acc[glob_id] = 0;
       });
     });
 
@@ -81,7 +79,7 @@ int reductionIntSerial(sycl::queue &q, std::vector<int> &data, int iter) {
         int glob_id = index[0];
         if (glob_id == 0) {
           int sum = 0;
-          for (int i = 0; i < N; i++)
+          for (size_t i = 0; i < N; i++)
             sum += buf_acc[i];
           sum_acc[0] = sum;
         }
@@ -109,8 +107,6 @@ int reductionIntBarrier(sycl::queue &q, std::vector<int> &data, int iter) {
 
   int work_group_size = 512;
   int num_work_items = work_group_size;
-  int num_work_groups = num_work_items / work_group_size;
-
   const sycl::property_list props = {sycl::property::buffer::use_host_ptr()};
 
   sycl::buffer<int> buf(data.data(), data_size, props);
@@ -134,10 +130,11 @@ int reductionIntBarrier(sycl::queue &q, std::vector<int> &data, int iter) {
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
                        int sum = 0;
-                       for (int i = loc_id; i < data_size; i += num_work_items)
+                       for (size_t i = loc_id; i < data_size;
+                            i += num_work_items)
                          sum += buf_acc[i];
                        scratch[loc_id] = sum;
-                       for (int i = work_group_size / 2; i > 0; i >>= 1) {
+                       for (size_t i = work_group_size / 2; i > 0; i >>= 1) {
                          item.barrier(sycl::access::fence_space::local_space);
                          if (loc_id < i)
                            scratch[loc_id] += scratch[loc_id + i];
@@ -215,7 +212,7 @@ int reductionIntAtomic(sycl::queue &q, std::vector<int> &data, int iter) {
   return sum;
 } // end reductionIntAtomic
 
-int main(int argc, char *argv[]) {
+int main() {
 
   sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";

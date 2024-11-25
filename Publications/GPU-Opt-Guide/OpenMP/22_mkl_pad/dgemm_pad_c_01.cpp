@@ -128,7 +128,7 @@ static inline int getld(int x) { return x; }
 int main(int argc, char **argv) {
   int i, j;
 
-  if ((argc < 4) || (argc > 4 && argc < 8)) {
+  if ((argc > 1 && argc < 4) || (argc > 4 && argc < 8)) {
     printf("Performs a DGEMM test C = alpha*A*B + beta*C\n");
     printf("A matrix is MxK and B matrix is KxN\n");
     printf("All matrices are stored in column-major format\n");
@@ -148,11 +148,23 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  int HA;
+  int WA;
+  int WB;
+
+  if (argc == 1) {
+    HA = 4096;
+    WA = 4096;
+    WB = 4096;
+  }
+  else {
+    HA = atoi(argv[1]);
+    WA = atoi(argv[2]);
+    WB = atoi(argv[3]);
+  }
+
   FLOAT alpha, beta;
   int niter, verify;
-  int HA = atoi(argv[1]);
-  int WA = atoi(argv[2]);
-  int WB = atoi(argv[3]);
 
   if ((HA == 0) || (WA == 0) || (WB == 0))
     exit(1);

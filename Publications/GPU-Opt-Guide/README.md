@@ -1,6 +1,6 @@
 # oneAPI GPU Optimization Guide Examples
 This repository accompanies the
-[*oneAPI GPU Optimization Guide* Developer Guide](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-gpu-optimization-guide/top.html).
+[*oneAPI GPU Optimization Guide* Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/overview.html).
 
 ### Get the Examples
 You can get the examples in either of two methods:
@@ -15,11 +15,11 @@ In tandem with the information found in the guide, the examples in the repositor
 ## Prerequisites
 To build and use these examples, you will need to one or more of the following toolkits:
 
-- [Intel® oneAPI Base Toolkit (Base Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/base-toolkit.html)
+- [Intel® oneAPI Base Toolkit (Base Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html)
 
-- [Intel® oneAPI HPC Toolkit (HPC Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/hpc-toolkit.html)
+- [Intel® oneAPI HPC Toolkit (HPC Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html)
 
-- [Intel® oneAPI IoT Toolkit (IoT Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/iot-toolkit.html)
+- [Intel® oneAPI IoT Toolkit (IoT Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/iot-toolkit.html)
 
 > **Note**: You will need the HPC Kit to build the Fortran examples in this repository. The Intel® Fortran Compiler is included in the HPC Kit.
 
@@ -34,9 +34,9 @@ Alternatively, you can build most of the toolchain from the sources in the [Inte
 ## Set Environment Variables
 When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
-> **Note**: You can use [Modulefiles scripts](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
+> **Note**: You can [Use Environment Modulefiles with Linux*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2025-0/use-environment-modulefiles-with-linux.html) to set up your development environment. The modulefiles scripts work with all Linux shells.
 
-> **Note**: If you want to select specific components or the version of those components, use a [setvars config file](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos/use-a-config-file-for-setvars-sh-on-linux-or-macos.html) to set up your development environment.
+> **Note**: If you want to select specific components or the version of those components, [Use a Config file for setvars.sh on Linux](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2025-0/use-a-config-file-for-setvars-sh-on-linux.html) to set up your development environment.
 
 ## Build the Examples
 > **Note**: If you have not already done so, set up your CLI
@@ -47,7 +47,7 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> For more information on configuring environment variables, see [Use the setvars and oneapi-vars Scripts with Linux*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2025-0/use-the-setvars-and-oneapi-vars-scripts-with-linux.html).
 
 ### Include Files
 After installing the toolkits, the include folder is at `%ONEAPI_ROOT%/dev-utilities/latest/include` on your development system. You might need to use some of the resources from this location to build the examples.

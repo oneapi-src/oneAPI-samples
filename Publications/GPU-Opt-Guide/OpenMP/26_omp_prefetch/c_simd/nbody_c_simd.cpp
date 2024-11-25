@@ -37,8 +37,8 @@ void nbody_1d_gpu(float *c, float *a, float *b, int n1, int n2) {
         for (int v = 0; v < VECLEN; ++v)
           bb[u + v] = b[j + u + v];
 #ifdef PREFETCH
-        int next_tile = j + TILE_SIZE + u;
-#pragma ompx prefetch data(PREFETCH_HINT : b[next_tile]) if (next_tile < n2)
+#pragma ompx prefetch data(                                                    \
+    PREFETCH_HINT : b[j + TILE_SIZE + u]) if ((j + TILE_SIZE + u) < n2)
 #endif
       }
 // compute current tile
