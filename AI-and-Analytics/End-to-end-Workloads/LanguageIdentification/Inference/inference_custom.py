@@ -61,41 +61,47 @@ class speechbrain_inference:
             self.model_int8 = load(source_model_int8_path, self.language_id)
             self.model_int8.eval()
         elif ipex_op:
+            self.language_id.eval()
+
             # Optimize for inference with IPEX
             print("Optimizing inference with IPEX")
-            self.language_id.eval()
-            sampleInput = (torch.load("./sample_input_features.pt"), torch.load("./sample_input_wav_lens.pt"))
             if bf16:
                 print("BF16 enabled")
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"], dtype=torch.bfloat16)
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"], dtype=torch.bfloat16)
-                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], dtype=torch.bfloat16)
+                #self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], dtype=torch.bfloat16)
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"], dtype=torch.bfloat16)
             else:
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"])
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"])
-                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"])
+                #self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"])
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"])
             
             # Torchscript to resolve performance issues with reorder operations
+            print("Applying Torchscript")
+            sampleWavs = torch.load("./sample_wavs.pt")
+            sampleWavLens = torch.ones(sampleWavs.shape[0])
             with torch.no_grad():
-                I2 = self.language_id.mods["embedding_model"](*sampleInput)
+                I1 = self.language_id.mods["compute_features"](sampleWavs)
+                I2 = self.language_id.mods["mean_var_norm"](I1, sampleWavLens)
+                I3 = self.language_id.mods["embedding_model"](I2, sampleWavLens)
+
                 if bf16:
                     with torch.cpu.amp.autocast():
-                        self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
-                        self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
-                        self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
-                        self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                        self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=sampleWavs)
+                        self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=(I1, sampleWavLens))
+                        self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=(I2, sampleWavLens))
+                        self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I3)
                         
                         self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
                         self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
                         self.language_id.mods["embedding_model"] = torch.jit.freeze(self.language_id.mods["embedding_model"])
                         self.language_id.mods["classifier"] = torch.jit.freeze( self.language_id.mods["classifier"])
                 else:
-                    self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
-                    self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
-                    self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
-                    self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                    self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=sampleWavs)
+                    self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=(I1, sampleWavLens))
+                    self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=(I2, sampleWavLens))
+                    self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I3)
                     
                     self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
                     self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
@@ -114,11 +120,11 @@ class speechbrain_inference:
             with torch.no_grad():
                 if bf16:
                     with torch.cpu.amp.autocast():
-                        prediction =  self.language_id.classify_batch(signal)
+                        prediction = self.language_id.classify_batch(signal)
                 else:
-                    prediction =  self.language_id.classify_batch(signal)
+                    prediction = self.language_id.classify_batch(signal)
         else: # default
-            prediction =  self.language_id.classify_batch(signal)
+            prediction = self.language_id.classify_batch(signal)
 
         inference_end_time = time()
         inference_latency = inference_end_time - inference_start_time

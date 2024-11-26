@@ -17,7 +17,7 @@ Spoken audio comes in different languages and this sample uses a model to identi
 
 | Optimized for        | Description
 |:---                  |:---
-| OS                   | Ubuntu* 18.04 or newer
+| OS                   | Ubuntu* 22.04 or newer
 | Hardware             | Intel® Xeon® processor family
 | Software             | Intel® OneAPI AI Analytics Toolkit <br> Hugging Face SpeechBrain
 
@@ -51,7 +51,7 @@ For this sample, you will need to download the following languages: **Japanese**
 2. Enter your email.
 3. Check the boxes, and right-click on the download button to copy the link address.
 4. Paste this link into a text editor and copy the first part of the URL up to ".tar.gz".
-5. Use **GNU wget** on the URL to download the data to `/data/commonVoice`.
+5. Use **GNU wget** on the URL to download the data to `/data/commonVoice` or a folder of your choice.
 
    Alternatively, you can use a directory on your local drive due to the large amount of data. 
 
@@ -93,7 +93,7 @@ Then activate your environment:
 conda activate <your-env-name>
 ```
 
-2. Set the environment variable `COMMON_VOICE_PATH`
+2. Set the environment variable `COMMON_VOICE_PATH`. This needs to match with where you downloaded your dataset.
 ```bash
 export COMMON_VOICE_PATH=/data/commonVoice
 ```
@@ -263,10 +263,6 @@ To run inference, you must have already run all of the training scripts, generat
    ```
    cd /Inference
    ```
-2. Patch SpeechBrain's `interfaces.py`. This patch is required for PyTorch* TorchScript to work because the output of the model must contain only tensors.
-   ```
-   patch ../speechbrain/speechbrain/pretrained/interfaces.py < interfaces.patch
-   ```
 
 ### Run in Jupyter Notebook
 
@@ -328,7 +324,7 @@ Both scripts support input options; however, some options can be use on `inferen
 To run inference on custom data, you must specify a folder with **.wav** files and pass the path in as an argument. You can do so by creating a folder named `data_custom` and then copy 1 or 2 **.wav** files from your test dataset into it. **.mp3** files will NOT work. 
 
 Run the inference_ script.
-```
+```bash
 python inference_custom.py -p <path_to_folder>
 ```
 
@@ -337,13 +333,13 @@ The following examples describe how to use the scripts to produce specific outco
 **Default: Random Selections**
 
 1. To randomly select audio clips from audio files for prediction, enter commands similar to the following:
-   ```
+   ```bash
    python inference_custom.py -p data_custom -d 3 -s 50
    ```
    This picks 50 3-second samples from each **.wav** file in the `data_custom` folder. The `output_summary.csv` file summarizes the results.
 
 2. To randomly select audio clips from audio files after applying **Voice Activity Detection (VAD)**, use the `--vad` option:
-   ```
+   ```bash
    python inference_custom.py -p data_custom -d 3 -s 50 --vad
    ```
    Again, the `output_summary.csv` file summarizes the results. 
@@ -353,18 +349,20 @@ The following examples describe how to use the scripts to produce specific outco
 **Optimization with Intel® Extension for PyTorch (IPEX)**
 
 1. To optimize user-defined data, enter commands similar to the following:
-   ```
+   ```bash
    python inference_custom.py -p data_custom -d 3 -s 50 --vad --ipex --verbose
    ```
+   This will apply `ipex.optimize` to the model(s) and TorchScript. You can also add the `--bf16` option along with `--ipex` to run in the BF16 data type, supported on 4th Gen Intel® Xeon® Scalable processors and newer.
+   
    >**Note**: The `--verbose` option is required to view the latency measurements.
 
 **Quantization with Intel® Neural Compressor (INC)**
 
 1. To improve inference latency, you can use the Intel® Neural Compressor (INC) to quantize the trained model from FP32 to INT8 by running `quantize_model.py`.
-   ```
+   ```bash
    python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/dev
    ```
-   Use the `-datapath` argument to specify a custom evaluation dataset. By default, the datapath is set to the `/data/commonVoice/dev` folder that was generated from the data preprocessing scripts in the `Training` folder.
+   Use the `-datapath` argument to specify a custom evaluation dataset. By default, the datapath is set to the `$COMMON_VOICE_PATH/dev` folder that was generated from the data preprocessing scripts in the `Training` folder.
 
    After quantization, the model will be stored in `lang_id_commonvoice_model_INT8` and `neural_compressor.utils.pytorch.load` will have to be used to load the quantized model for inference. If `self.language_id` is the original model and `data_path` is the path to the audio file:
    ```
