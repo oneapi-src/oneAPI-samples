@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install speechbrain
-git clone --depth 1 --branch 1.0.2 https://github.com/speechbrain/speechbrain.git
+git clone --depth 1 --branch v1.0.2 https://github.com/speechbrain/speechbrain.git
 cd speechbrain
 pip install -r requirements.txt
 pip install --editable .
