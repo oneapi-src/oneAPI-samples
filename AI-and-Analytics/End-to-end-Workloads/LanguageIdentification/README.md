@@ -123,7 +123,7 @@ First, change to the `Training` directory.
 cd /Training
 ```
 
-### Run in Jupyter Notebook
+### Option 1: Run in Jupyter Notebook
 
 1. Install Jupyter Notebook.
    ```
@@ -141,7 +141,7 @@ cd /Training
 5. Follow the instructions in the Notebook.
 
 
-### Run in a Console
+### Option 2: Run in a Console
 
 If you cannot or do not want to use Jupyter Notebook, use these procedures to run the sample and scripts locally.
 
@@ -264,7 +264,7 @@ To run inference, you must have already run all of the training scripts, generat
    cd /Inference
    ```
 
-### Run in Jupyter Notebook
+### Option 1: Run in Jupyter Notebook
 
 1. If you have not already done so, install Jupyter Notebook.
    ```
@@ -281,7 +281,7 @@ To run inference, you must have already run all of the training scripts, generat
    ```
 5. Follow the instructions in the Notebook.
 
-### Run in a Console
+### Option 2: Run in a Console
 
 If you cannot or do not want to use Jupyter Notebook, use these procedures to run the sample and scripts locally.
 
