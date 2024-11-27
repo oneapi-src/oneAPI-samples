@@ -360,9 +360,9 @@ The following examples describe how to use the scripts to produce specific outco
 
 1. To improve inference latency, you can use the Intel® Neural Compressor (INC) to quantize the trained model from FP32 to INT8 by running `quantize_model.py`.
    ```bash
-   python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/dev
+   python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/processed_data/dev
    ```
-   Use the `-datapath` argument to specify a custom evaluation dataset. By default, the datapath is set to the `$COMMON_VOICE_PATH/dev` folder that was generated from the data preprocessing scripts in the `Training` folder.
+   Use the `-datapath` argument to specify a custom evaluation dataset. By default, the datapath is set to the `$COMMON_VOICE_PATH/processed_data/dev` folder that was generated from the data preprocessing scripts in the `Training` folder.
 
    After quantization, the model will be stored in `lang_id_commonvoice_model_INT8` and `neural_compressor.utils.pytorch.load` will have to be used to load the quantized model for inference. If `self.language_id` is the original model and `data_path` is the path to the audio file:
    ```
@@ -372,13 +372,16 @@ The following examples describe how to use the scripts to produce specific outco
    prediction = self.model_int8(signal)
    ```
 
+   The code above is integrated into `inference_custom.py`. You can now run inference on your data using this INT8 model:
+   ```bash
+   python inference_custom.py -p data_custom -d 3 -s 50 --vad --int8_model --verbose
+   ```
+
+   >**Note**: The `--verbose` option is required to view the latency measurements.
+
 **(Optional) Comparing Predictions with Ground Truth**
 
 You can choose to modify `audio_ground_truth_labels.csv` to include the name of the audio file and expected audio label (like, `en` for English), then run `inference_custom.py` with the `--ground_truth_compare` option. By default, this is disabled.  
-
-### Troubleshooting
-
-If the model appears to be giving the same output regardless of input, try running `clean.sh` to remove the `RIR_NOISES` and `speechbrain` folders. Redownload that data after cleaning by running `initialize.sh` and either `inference_commonVoice.py` or `inference_custom.py`.
 
 ## License
 
