@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // Snippet begin
-#include <CL/sycl.hpp>
 #include <stdio.h>
+#include <sycl/sycl.hpp>
 
 constexpr int N = 100;
 constexpr int iters = 100;
