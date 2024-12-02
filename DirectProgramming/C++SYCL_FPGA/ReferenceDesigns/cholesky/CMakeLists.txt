@@ -66,8 +66,6 @@ endif()
 # Prevent ignoring NaN values
 if(WIN32)
     set(EMULATOR_PLATFORM_FLAGS -fp:precise)
-else()
-    set(EXTRA_COMPILE_FLAG -fno-finite-math-only)
 endif()
 
 if(DEVICE_FLAG MATCHES "A10")
@@ -120,7 +118,7 @@ message(STATUS "FIXED_ITERATIONS=${FIXED_ITERATIONS}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DCOMPLEX=${COMPLEX};-DMATRIX_DIMENSION=${MATRIX_DIMENSION};-fbracket-depth=512;${EXTRA_COMPILE_FLAG})
+set(USER_FLAGS ${USER_FLAGS};${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DCOMPLEX=${COMPLEX};-DMATRIX_DIMENSION=${MATRIX_DIMENSION};-fbracket-depth=512)
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

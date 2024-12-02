@@ -69,9 +69,6 @@ endif()
 if(WIN32)
     set(EXTRA_EMULATOR_COMPILE_FLAGS "-fp:precise")
     set(STACK_FLAG "-F 12582912")
-else()
-    # Prevent ignoring NaN values
-    set(EXTRA_COMPILE_FLAG "-fno-finite-math-only")
 endif()
 
 if(DEVICE_FLAG MATCHES "A10")
@@ -133,7 +130,7 @@ message(STATUS "SEED=${SEED}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAG};-fbracket-depth=512;${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX};-DROWS_COMPONENT=${ROWS_COMPONENT};-DCOLS_COMPONENT=${COLS_COMPONENT})
+set(USER_FLAGS ${USER_FLAGS};-fbracket-depth=512;${BSP_FLAG};-DFIXED_ITERATIONS=${FIXED_ITERATIONS} -DCOMPLEX=${COMPLEX};-DROWS_COMPONENT=${ROWS_COMPONENT};-DCOLS_COMPONENT=${COLS_COMPONENT})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
