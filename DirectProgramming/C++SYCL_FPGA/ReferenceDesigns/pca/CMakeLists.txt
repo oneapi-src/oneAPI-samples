@@ -70,8 +70,6 @@ if(WIN32)
     set(PRECISE_FLAG "-fp:precise")
 else()
     set(PRECISE_FLAG "-fp-model=precise")
-    # Prevent ignoring NaN values
-    set(EXTRA_COMPILE_FLAG -fno-finite-math-only)
 endif()
 
 set(BENCHMARK 1)
@@ -119,7 +117,7 @@ endif()
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${PRECISE_FLAG};${EXTRA_COMPILE_FLAG};-fbracket-depth=512;-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DFEATURES_COUNT=${FEATURES_COUNT};-DSAMPLES_COUNT=${SAMPLES_COUNT};-DBENCHMARK=${BENCHMARK};${BSP_FLAG})
+set(USER_FLAGS ${USER_FLAGS};${PRECISE_FLAG};-fbracket-depth=512;-DFIXED_ITERATIONS=${FIXED_ITERATIONS};-DFEATURES_COUNT=${FEATURES_COUNT};-DSAMPLES_COUNT=${SAMPLES_COUNT};-DBENCHMARK=${BENCHMARK};${BSP_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.

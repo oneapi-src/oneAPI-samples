@@ -68,8 +68,6 @@ endif()
 # Prevent ignoring NaN values
 if(WIN32)
     set(EMULATOR_PLATFORM_FLAGS -fp:precise)
-else()
-    set(EXTRA_COMPILE_FLAG -fno-finite-math-only)
 endif()
 
 # Set design parameters according to the selected board
@@ -136,7 +134,7 @@ message(STATUS "SEED=${SEED}")
 set(USER_FPGA_FLAGS ${USER_FPGA_FLAGS};${SEED};-Xsclock=${CLOCK_TARGET})
 
 # Use cmake -DUSER_FLAGS=<flags> to set extra flags for general compilation.
-set(USER_FLAGS ${USER_FLAGS};${EXTRA_COMPILE_FLAG};-DROWS_A=${ROWS_A};-DCOMMON=${COMMON};-DCOLS_B=${COLS_B};-DTILE_A=${TILE_A};-DTILE_B=${TILE_B};${BSP_FLAG})
+set(USER_FLAGS ${USER_FLAGS};-DROWS_A=${ROWS_A};-DCOMMON=${COMMON};-DCOLS_B=${COLS_B};-DTILE_A=${TILE_A};-DTILE_B=${TILE_B};${BSP_FLAG})
 
 # Use cmake -DUSER_INCLUDE_PATHS=<paths> to set extra paths for general
 # compilation.
