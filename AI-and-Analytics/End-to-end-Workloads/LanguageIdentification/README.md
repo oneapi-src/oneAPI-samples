@@ -51,8 +51,9 @@ Then activate your environment:
 conda activate <your-env-name>
 ```
 
-2. Set the environment variable `COMMON_VOICE_PATH`. This needs to match with where you downloaded your dataset.
+2. Create your dataset folder and set the environment variable `COMMON_VOICE_PATH`. This needs to match with where you downloaded your dataset.
 ```bash
+mkdir -p /data/commonVoice
 export COMMON_VOICE_PATH=/data/commonVoice
 ```
 
