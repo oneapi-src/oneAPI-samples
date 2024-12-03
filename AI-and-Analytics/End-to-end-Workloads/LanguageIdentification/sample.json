@@ -12,36 +12,17 @@
       {
         "id": "Language_Identification_E2E",
         "env": [
+          "export COMMON_VOICE_PATH=/data/commonVoice"
         ],
         "steps": [
-          "export COMMON_VOICE_PATH=/data/commonVoice",
-          "sudo apt-get update && apt-get install ffmpeg libgl1",
-          "git clone https://github.com/oneapi-src/oneAPI-samples.git",
-          "cd oneAPI-samples/AI-and-Analytics/End-to-end-Workloads/LanguageIdentification",
+          "apt-get update && apt-get install ffmpeg libgl1 -y",
           "source initialize.sh",
-          "cd /Training",
-          "cp speechbrain/recipes/VoxLingua107/lang_id/create_wds_shards.py create_wds_shards.py",
-          "cp speechbrain/recipes/VoxLingua107/lang_id/train.py train.py",
-          "cp speechbrain/recipes/VoxLingua107/lang_id/hparams/train_ecapa.yaml train_ecapa.yaml",
-          "patch < create_wds_shards.patch",
-          "patch < train_ecapa.patch",
-          "python prepareAllCommonVoice.py -path $COMMON_VOICE_PATH -max_samples 2000 --createCsv --train --dev --test",
-          "python create_wds_shards.py ${COMMON_VOICE_PATH}/processed_data/train ${COMMON_VOICE_PATH}/processed_data/commonVoice_shards/train",
-          "python create_wds_shards.py ${COMMON_VOICE_PATH}/processed_data/dev ${COMMON_VOICE_PATH}/processed_data/commonVoice_shards/dev",
-          "python train.py train_ecapa.yaml --device cpu",
-          "cp -R results/epaca/1987 ../Inference/lang_id_commonvoice_model",
-          "cd ../Inference/lang_id_commonvoice_model/save",
-          "cp label_encoder.txt ../.",
-          "cd CKPT<DATE_OF_RUN>",
-          "cp classifier.ckpt ../../.",
-          "cp embedding_model.ckpt ../../",
-          "cd ../..",
-          "cd /Inference",
-          "python inference_commonVoice.py -p ${COMMON_VOICE_PATH}/processed_data/test",
-          "python inference_custom.py -p data_custom -d 3 -s 50 --vad",
-          "python inference_custom.py -p data_custom -d 3 -s 50 --vad --ipex --verbose",
-          "python quantize_model.py -p ./lang_id_commonvoice_model -datapath $COMMON_VOICE_PATH/processed_data/dev",
-          "python inference_custom.py -p data_custom -d 3 -s 50 --vad --int8_model --verbose"
+          "cd ./Dataset",
+          "python get_dataset.py --output_dir ${COMMON_VOICE_PATH}",
+          "cd ../Training",
+          "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_training.ipynb",
+          "cd ../Inference",
+          "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_inference.ipynb"
         ]
       }
     ]

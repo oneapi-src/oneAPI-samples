@@ -112,20 +112,16 @@ cd ./Training
 
 ### Option 1: Run in Jupyter Notebook
 
-1. Install Jupyter Notebook.
-   ```
-   pip install notebook
-   ```
-2. Launch Jupyter Notebook.
+1. Launch Jupyter Notebook.
    ```
    jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
    ```
-3. Follow the instructions to open the URL with the token in your browser.
-4. Locate and select the Training Notebook.
+2. Follow the instructions to open the URL with the token in your browser.
+3. Locate and select the Training Notebook.
    ```
    lang_id_training.ipynb
    ```
-5. Follow the instructions in the Notebook.
+4. Follow the instructions in the Notebook.
 
 
 ### Option 2: Run in a Console
@@ -217,10 +213,10 @@ After training, the output should be inside the `results/epaca/1987` folder. By 
    cp label_encoder.txt ../.
    ```
 
-4. Change to the latest `CKPT` folder, and copy the classifier.ckpt and embedding_model.ckpt files into the `/Inference/lang_id_commonvoice_model/` folder which is two directories up.
+4. Change to the latest `CKPT` folder, and copy the classifier.ckpt and embedding_model.ckpt files into the `/Inference/lang_id_commonvoice_model/` folder which is two directories up. By default, the command below will navigate into the single CKPT folder that is present, but you can change it to the specific folder name. 
    ```bash
    # Navigate into the CKPT folder
-   cd CKPT<DATE_OF_RUN>
+   cd CKPT*
 
    cp classifier.ckpt ../../.
    cp embedding_model.ckpt ../../
@@ -253,20 +249,16 @@ To run inference, you must have already run all of the training scripts, generat
 
 ### Option 1: Run in Jupyter Notebook
 
-1. If you have not already done so, install Jupyter Notebook.
-   ```
-   pip install notebook
-   ```
-2. Launch Jupyter Notebook.
+1. Launch Jupyter Notebook.
    ```
    jupyter notebook --ip 0.0.0.0 --port 8889 --allow-root
    ```
-3. Follow the instructions to open the URL with the token in your browser.
-4. Locate and select the inference Notebook.
+2. Follow the instructions to open the URL with the token in your browser.
+3. Locate and select the inference Notebook.
    ```
    lang_id_inference.ipynb
    ```
-5. Follow the instructions in the Notebook.
+4. Follow the instructions in the Notebook.
 
 ### Option 2: Run in a Console
 

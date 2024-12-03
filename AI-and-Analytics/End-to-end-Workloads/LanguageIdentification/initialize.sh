@@ -11,10 +11,13 @@ cd ..
 export PYTHONPATH=$PYTHONPATH:$(pwd)/speechbrain
 
 # Install huggingface datasets and other requirements
-conda install -y datasets tqdm librosa
+conda install -y datasets tqdm librosa jupyter ipykernel ipywidgets
 
 # Install webdataset
 python -m pip install webdataset==0.2.100
 
 # Install libraries for MP3 to WAV conversion
 python -m pip install pydub
+
+# Install notebook to run Jupyter notebooks
+python -m pip install notebook

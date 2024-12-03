@@ -69,12 +69,10 @@ class speechbrain_inference:
                 print("BF16 enabled")
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"], dtype=torch.bfloat16)
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"], dtype=torch.bfloat16)
-                #self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], dtype=torch.bfloat16)
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"], dtype=torch.bfloat16)
             else:
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"])
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"])
-                #self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"])
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"])
             
             # Torchscript to resolve performance issues with reorder operations
