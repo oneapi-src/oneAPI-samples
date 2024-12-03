@@ -100,7 +100,7 @@ export COMMON_VOICE_PATH=/data/commonVoice
 
 3. Install packages needed for MP3 to WAV conversion
 ```bash
-sudo apt-get update && apt-get install ffmpeg libgl1
+sudo apt-get update && apt-get install -y ffmpeg libgl1
 ```
 
 4. Navigate to your working directory, clone the `oneapi-src` repository, and navigate to this code sample.
@@ -120,7 +120,7 @@ This section explains how to train a model for language identification using the
 
 First, change to the `Training` directory.
 ```
-cd /Training
+cd ./Training
 ```
 
 ### Option 1: Run in Jupyter Notebook
@@ -149,9 +149,9 @@ If you cannot or do not want to use Jupyter Notebook, use these procedures to ru
 
 1. Acquire copies of the training scripts. (The command retrieves copies of the required VoxLingua107 training scripts from SpeechBrain.)
    ```
-   cp speechbrain/recipes/VoxLingua107/lang_id/create_wds_shards.py create_wds_shards.py
-   cp speechbrain/recipes/VoxLingua107/lang_id/train.py train.py
-   cp speechbrain/recipes/VoxLingua107/lang_id/hparams/train_ecapa.yaml train_ecapa.yaml
+   cp ../speechbrain/recipes/VoxLingua107/lang_id/create_wds_shards.py create_wds_shards.py
+   cp ../speechbrain/recipes/VoxLingua107/lang_id/train.py train.py
+   cp ../speechbrain/recipes/VoxLingua107/lang_id/hparams/train_ecapa.yaml train_ecapa.yaml
    ```
 
 2. From the `Training` directory, apply patches to modify these files to work with the CommonVoice dataset.
