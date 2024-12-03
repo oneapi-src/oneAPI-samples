@@ -10,6 +10,9 @@ cd ..
 # Add speechbrain to environment variable PYTHONPATH
 export PYTHONPATH=$PYTHONPATH:$(pwd)/speechbrain
 
+# Install huggingface datasets and other requirements
+conda install -y datasets tqdm librosa
+
 # Install webdataset
 python -m pip install webdataset==0.2.100
 
