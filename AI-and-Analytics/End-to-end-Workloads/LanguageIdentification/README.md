@@ -25,8 +25,6 @@ Spoken audio comes in different languages and this sample uses a model to identi
 
 The [CommonVoice](https://commonvoice.mozilla.org/) dataset is used to train an Emphasized Channel Attention, Propagation and Aggregation Time Delay Neural Network (ECAPA-TDNN). This is implemented in the [Hugging Face SpeechBrain](https://huggingface.co/SpeechBrain) library. Additionally, a small Convolutional Recurrent Deep Neural Network (CRDNN) pretrained on the LibriParty dataset is used to process audio samples and output the segments where speech activity is detected.
 
-After you have downloaded the CommonVoice dataset, the data must be preprocessed by converting the MP3 files into WAV format and separated into training, validation, and testing sets.
-
 The model is then trained from scratch using the Hugging Face SpeechBrain library. This model is then used for inference on the testing dataset or a user-specified dataset. There is an option to utilize SpeechBrain's Voice Activity Detection (VAD) where only the speech segments from the audio files are extracted and combined before samples are randomly selected as input into the model. To improve performance, the user may quantize the trained model to INT8 using Intel® Neural Compressor (INC) to decrease latency.
 
 The sample contains three discreet phases:
@@ -38,46 +36,6 @@ For both training and inference, you can run the sample and scripts in Jupyter N
 
 
 ## Prepare the Environment
-
-### Download the CommonVoice Dataset
-
->**Note**: You can skip downloading the dataset if you already have a pretrained model and only want to run inference on custom data samples that you provide.
-
-Download the CommonVoice dataset for languages of interest from [https://commonvoice.mozilla.org/en/datasets](https://commonvoice.mozilla.org/en/datasets). 
-
-For this sample, you will need to download the following languages: **Japanese** and **Swedish**. Follow Steps 1-6 below or you can execute the code.  
-
-1. On the CommonVoice website, select the Version and Language.
-2. Enter your email.
-3. Check the boxes, and right-click on the download button to copy the link address.
-4. Paste this link into a text editor and copy the first part of the URL up to ".tar.gz".
-5. Use **GNU wget** on the URL to download the data to `/data/commonVoice` or a folder of your choice.
-
-   Alternatively, you can use a directory on your local drive due to the large amount of data. 
-
-6. Extract the compressed folder, and rename the folder with the language (for example, English).
-
-   The file structure **must match** the `LANGUAGE_PATHS` defined in `prepareAllCommonVoice.py` in the `Training` folder for the script to run properly.
-
-These commands illustrate Steps 1-6. Notice that it downloads Japanese and Swedish from CommonVoice version 11.0.  
-```
-# Create the commonVoice directory under 'data'
-sudo chmod 777 -R /data
-cd /data
-mkdir commonVoice
-cd commonVoice
-
-# Download the CommonVoice data
-wget \
-https://mozilla-common-voice-datasets.s3.dualstack.us-west-2.amazonaws.com/cv-corpus-11.0-2022-09-21/cv-corpus-11.0-2022-09-21-ja.tar.gz \
-https://mozilla-common-voice-datasets.s3.dualstack.us-west-2.amazonaws.com/cv-corpus-11.0-2022-09-21/cv-corpus-11.0-2022-09-21-sv-SE.tar.gz
-
-# Extract and organize the CommonVoice data into respective folders by language 
-tar -xf cv-corpus-11.0-2022-09-21-ja.tar.gz
-mv cv-corpus-11.0-2022-09-21 japanese
-tar -xf cv-corpus-11.0-2022-09-21-sv-SE.tar.gz
-mv cv-corpus-11.0-2022-09-21 swedish
-```
 
 ### Create and Set Up Environment
 
@@ -112,6 +70,35 @@ cd oneAPI-samples/AI-and-Analytics/End-to-end-Workloads/LanguageIdentification
 5. Run the bash script to install additional necessary libraries, including SpeechBrain.
 ```bash
 source initialize.sh
+```
+
+### Download the CommonVoice Dataset
+
+>**Note**: You can skip downloading the dataset if you already have a pretrained model and only want to run inference on custom data samples that you provide.
+
+First, change to the `Dataset` directory.
+```
+cd ./Dataset
+```
+
+The `get_dataset.py` script downloads the Common Voice dataset by doing the following:
+
+- Gets the train set of the [Common Voice dataset from Huggingface](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) for Japanese and Swedish
+- Downloads each mp3 and moves them to the `output_dir` folder
+
+1. If you want to add additional languages, then modify the `language_to_code` dictionary in the file to reflect the languages to be included in the model.
+
+3. Run the script with options.
+   ```bash
+   python get_dataset.py --output_dir ${COMMON_VOICE_PATH}
+   ```
+   | Parameters      | Description
+   |:---             |:---
+   | `--output_dir`  | Base output directory for saving the files. Default is /data/commonVoice
+
+Once the dataset is downloaded, navigate back to the parent directory
+```
+cd ..
 ```
 
 ## Train the Model with Languages
