@@ -203,7 +203,7 @@ The YAML file `train_ecapa.yaml` with the training configurations is passed as a
    | `seed`              | The seed value, which should be set to a different value for subsequent runs. Defaults to 1987.
    | `out_n_neurons`     | Must be equal to the number of languages of interest.
    | `number_of_epochs`  | Default is **10**. Adjust as needed.
-   | `batch_size`        | In the trainloader_options, decrease this value if your CPU or GPU runs out of memory while running the training script.
+   | `batch_size`        | In the trainloader_options, decrease this value if your CPU or GPU runs out of memory while running the training script. If you see a "Killed" error message, then the training script has run out of memory. 
 
 2. Run the script to train the model.
    ```
