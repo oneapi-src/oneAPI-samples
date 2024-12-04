@@ -14,7 +14,7 @@ def download_dataset(output_dir):
         print(f"Processing dataset for language: {lang_code}")
 
         # Load the dataset for the specific language
-        dataset = load_dataset("mozilla-foundation/common_voice_11_0", lang_code, split="train")
+        dataset = load_dataset("mozilla-foundation/common_voice_11_0", lang_code, split="train", trust_remote_code=True)
 
         # Create a language-specific output folder
         output_folder = os.path.join(output_dir, lang, lang_code, "clips")
