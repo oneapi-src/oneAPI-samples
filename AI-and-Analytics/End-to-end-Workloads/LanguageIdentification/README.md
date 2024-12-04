@@ -6,7 +6,7 @@ Languages are selected from the CommonVoice dataset for training, validation, an
 
 | Area                  | Description
 |:---                   |:---
-| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch (IPEX) inference, Intel® Neural Compressor (INC) quantization, and a oneapi-aikit container
+| What you will learn   | How to use training and inference with SpeechBrain, Intel® Extension for PyTorch* (IPEX) inference, Intel® Neural Compressor (INC) quantization
 | Time to complete      | 60 minutes
 
 ## Purpose
@@ -18,8 +18,8 @@ Spoken audio comes in different languages and this sample uses a model to identi
 | Optimized for        | Description
 |:---                  |:---
 | OS                   | Ubuntu* 22.04 or newer
-| Hardware             | Intel® Xeon® processor family
-| Software             | Intel® OneAPI AI Analytics Toolkit <br> Hugging Face SpeechBrain
+| Hardware             | Intel® Xeon® and Core® processor families
+| Software             | Intel® AI Tools <br> Hugging Face SpeechBrain
 
 ## Key Implementation Details
 
@@ -41,15 +41,14 @@ For both training and inference, you can run the sample and scripts in Jupyter N
 
 1. Create your conda environment by following the instructions on the Intel [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). You can follow these settings:
 
-* AI Tools
-* Preset: Inference Optimization
-* Distribution Type: conda*
+* Tool: AI Tools
+* Preset or customize: Customize
+* Distribution Type: conda* or pip
 * Python Versions: Python* 3.9 or 3.10
+* PyTorch* Framework Optimizations: Intel® Extension for PyTorch* (CPU)
+* Intel®-Optimized Tools & Libraries: Intel® Neural Compressor
 
-Then activate your environment:
-```bash
-conda activate <your-env-name>
-```
+>**Note**: Be sure to activate your environment before installing the packages. If using pip, install using `python -m pip` instead of just `pip`.
 
 2. Create your dataset folder and set the environment variable `COMMON_VOICE_PATH`. This needs to match with where you downloaded your dataset.
 ```bash
@@ -221,7 +220,7 @@ After training, the output should be inside the `results/epaca/1987` folder. By 
 
    cp classifier.ckpt ../../.
    cp embedding_model.ckpt ../../
-   cd ../..
+   cd ../../../..
    ```
 
    You may need to modify the permissions of these files to be executable i.e. `sudo chmod 755` before you run the inference scripts to consume them.

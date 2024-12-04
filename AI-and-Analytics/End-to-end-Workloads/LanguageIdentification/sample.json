@@ -15,6 +15,7 @@
           "export COMMON_VOICE_PATH=/data/commonVoice"
         ],
         "steps": [
+          "mkdir -p /data/commonVoice",
           "apt-get update && apt-get install ffmpeg libgl1 -y",
           "source initialize.sh",
           "cd ./Dataset",
