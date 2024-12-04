@@ -18,8 +18,6 @@ from neural_compressor.experimental import Quantization, common
 from neural_compressor.utils.pytorch import load
 from speechbrain.pretrained import EncoderClassifier 
 
-DEFAULT_EVAL_DATA_PATH = "/data/commonVoice/dev"
-
 def prepare_dataset(path):
     data_list = []
     for dir_name in os.listdir(path):
@@ -33,7 +31,7 @@ def main(argv):
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', type=str, required=True, help="Path to the model to be optimized")
-    parser.add_argument('-datapath', type=str, default=DEFAULT_EVAL_DATA_PATH, help="Path to evaluation dataset")
+    parser.add_argument('-datapath', type=str, required=True, help="Path to evaluation dataset")
     args = parser.parse_args()
 
     model_path = args.p

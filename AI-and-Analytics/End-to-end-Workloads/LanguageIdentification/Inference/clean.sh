@@ -1,7 +1,5 @@
 #!/bin/bash
 
-rm -R RIRS_NOISES
-rm -R tmp
-rm -R speechbrain
-rm -f rirs_noises.zip noise.csv reverb.csv vad_file.txt
+echo "Deleting .wav files, tmp"
 rm -f ./*.wav
+rm -R tmp
