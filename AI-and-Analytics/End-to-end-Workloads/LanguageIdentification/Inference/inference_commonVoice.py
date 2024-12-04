@@ -29,7 +29,7 @@ class datafile:
         self.sampleRate = 0
         self.waveData = ''
         self.wavesize = 0
-        self.waveduriation = 0
+        self.waveduration = 0
         if filename.endswith(".wav") or filename.endswith(".wmv"):
             self.wavefile = filename
             self.wavepath = dirpath + os.sep + filename
@@ -173,12 +173,12 @@ def main(argv):
                 data = datafile(testDataDirectory, filename)
                 predict_list = []
                 use_entire_audio_file = False
-                if data.waveduration < sample_dur:
+                if int(data.waveduration) <= sample_dur:
                     # Use entire audio file if the duration is less than the sampling duration
                     use_entire_audio_file = True
                     sample_list = [0 for _ in range(sample_size)]
                 else:
-                    start_time_list = list(range(sample_size - int(data.waveduration) + 1))
+                    start_time_list = list(range(0, int(data.waveduration) - sample_dur))
                     sample_list = []
                     for i in range(sample_size):
                         sample_list.append(random.sample(start_time_list, 1)[0])
@@ -197,10 +197,6 @@ def main(argv):
                         print("Error generating prediction")
                         predict_list.append(' ')
                         pass
-
-                # Clean up
-                if use_entire_audio_file:
-                    os.remove("./" + data.filename)
 
                 # Pick the top rated prediction result
                 occurence_count = Counter(predict_list)
