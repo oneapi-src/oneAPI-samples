@@ -1,25 +1,41 @@
 {
-  "guid": "329AD1BF-844C-4DA1-8C76-3BC3942F25AB",
-  "name": "quasirandomGenerator",
-  "categories": ["Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
-  "description": "Implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions.",
-  "toolchain": [ "dpcpp" ],
-  "languages": [ { "cpp": {} } ],
-  "targetDevice": [ "CPU", "GPU" ],
-  "os": [ "linux" ],
-  "builder": [ "cmake" ],
-  "ciTests": {
-        "linux": [{
+    "guid": "329AD1BF-844C-4DA1-8C76-3BC3942F25AB",
+    "name": "quasirandomGenerator",
+    "categories": [
+        "Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/SYCLMigration"
+    ],
+    "description": "Implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions.",
+    "toolchain": [
+        "dpcpp"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
+    "os": [
+        "linux"
+    ],
+    "builder": [
+        "cmake"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "test",
                 "steps": [
-                        "mkdir build",
-                        "cd build",
-                        "cmake ..",
-                        "make",
-                        "make run"
-                 
-                 ]
-        }]
-
-  },
-  "expertise": "Code Optimization"
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make",
+                    "make run"
+                ]
+            }
+        ]
+    },
+    "expertise": "Code Optimization"
 }
