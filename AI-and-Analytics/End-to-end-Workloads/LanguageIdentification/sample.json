@@ -20,9 +20,10 @@
           "source initialize.sh",
           "cd ./Dataset",
           "python get_dataset.py --output_dir ${COMMON_VOICE_PATH}",
-          "cd ../Training",
+          "cd ..",
+          "cd ./Training",
           "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_training.ipynb",
-          "cd ../Inference",
+          "cd ./Inference",
           "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_inference.ipynb"
         ]
       }

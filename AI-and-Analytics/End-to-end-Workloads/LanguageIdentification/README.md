@@ -244,7 +244,7 @@ To run inference, you must have already run all of the training scripts, generat
 
 1. Change to the `Inference` directory.
    ```
-   cd /Inference
+   cd ./Inference
    ```
 
 ### Option 1: Run in Jupyter Notebook
