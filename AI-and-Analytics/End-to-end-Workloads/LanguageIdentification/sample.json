@@ -12,8 +12,19 @@
       {
         "id": "Language_Identification_E2E",
         "env": [
+          "export COMMON_VOICE_PATH=/data/commonVoice"
         ],
         "steps": [
+          "mkdir -p /data/commonVoice",
+          "apt-get update && apt-get install ffmpeg libgl1 -y",
+          "source initialize.sh",
+          "cd ./Dataset",
+          "python get_dataset.py --output_dir ${COMMON_VOICE_PATH}",
+          "cd ..",
+          "cd ./Training",
+          "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_training.ipynb",
+          "cd ./Inference",
+          "jupyter nbconvert --execute --to notebook --inplace --debug lang_id_inference.ipynb"
         ]
       }
     ]
