@@ -1,71 +1,87 @@
 {
-  "guid": "2E9E5474-3C85-4A2D-82D2-AD1F92460AAF",
-  "name": "Banked Memory System",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"],
-  "description": "Intel® FPGA tutorial on efficient banked memory system design pattern",
-  "toolchain": ["icpx"],
-  "os": ["linux", "windows"],
-  "targetDevice": ["FPGA"],
-  "builder": ["ide", "cmake"],
-  "languages": [{"cpp":{}}],
-  "commonFolder": {
-    "base": "../../..",
-    "include": [
-      "README.md",
-      "Tutorials/DesignPatterns/banked_memory_system",
-      "include"
+    "guid": "2E9E5474-3C85-4A2D-82D2-AD1F92460AAF",
+    "name": "Banked Memory System",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL FPGA/Tutorials/Design Patterns"
     ],
-    "exclude": []
-  },
-  "ciTests": {
-    "linux": [
-      {
-        "id": "fpga_emu",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make fpga_emu",
-          "./banked_mem.fpga_emu"
-        ]
-      },
-      {
-        "id": "report",
-        "steps": [
-          "icpx --version",
-          "mkdir build",
-          "cd build",
-          "cmake ..",
-          "make report"
-        ]
-      }
+    "description": "Intel\u00ae FPGA tutorial on efficient banked memory system design pattern",
+    "toolchain": [
+        "icpx"
     ],
-    "windows": [
-      {
-        "id": "fpga_emu",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
-          "nmake fpga_emu",
-          "banked_mem.fpga_emu.exe"
+    "os": [
+        "linux",
+        "windows"
+    ],
+    "targetDevice": [
+        "FPGA"
+    ],
+    "builder": [
+        "ide",
+        "cmake"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "commonFolder": {
+        "base": "../../..",
+        "include": [
+            "README.md",
+            "Tutorials/DesignPatterns/banked_memory_system",
+            "include"
+        ],
+        "exclude": []
+    },
+    "ciTests": {
+        "linux": [
+            {
+                "id": "fpga_emu",
+                "steps": [
+                    "icpx --version",
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make fpga_emu",
+                    "./banked_mem.fpga_emu"
+                ]
+            },
+            {
+                "id": "report",
+                "steps": [
+                    "icpx --version",
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make report"
+                ]
+            }
+        ],
+        "windows": [
+            {
+                "id": "fpga_emu",
+                "steps": [
+                    "icpx --version",
+                    "cd ../../..",
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
+                    "nmake fpga_emu",
+                    "banked_mem.fpga_emu.exe"
+                ]
+            },
+            {
+                "id": "report",
+                "steps": [
+                    "icpx --version",
+                    "cd ../../..",
+                    "mkdir build",
+                    "cd build",
+                    "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
+                    "nmake report"
+                ]
+            }
         ]
-      },
-      {
-        "id": "report",
-        "steps": [
-          "icpx --version",
-          "cd ../../..",
-          "mkdir build",
-          "cd build",
-          "cmake -G \"NMake Makefiles\" ../Tutorials/DesignPatterns/banked_memory_system",
-          "nmake report"
-        ]
-      }
-    ]
-  },
-  "expertise": "Code Optimization"
+    },
+    "expertise": "Code Optimization"
 }

@@ -1,17 +1,48 @@
 {
     "name": "MergeSort OMP",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++/Graph Traversal"],
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++/Graph Traversal"
+    ],
     "description": "Classic OpenMP* (OMP) Mergesort algorithm",
-    "os": ["linux"],
-    "builder": ["make"],
-    "languages": [{"cpp":{}}],
-    "toolchain": ["icc"],
+    "os": [
+        "linux"
+    ],
+    "builder": [
+        "make"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "toolchain": [
+        "icc"
+    ],
     "guid": "5AFED65F-F725-411D-B21C-B59008D1166D",
-    "targetDevice": [ "CPU" ],
+    "targetDevice": [
+        "CPU"
+    ],
     "ciTests": {
-        "linux": [ 
-            { "id": "standard", "steps": [ "make", "./release/MergeSort 0", "make clean" ] },
-            { "id": "perf_num", "env": [ "export perf_num=1" ], "steps": [ "make", "./release/MergeSort 0", "make clean" ] }
+        "linux": [
+            {
+                "id": "standard",
+                "steps": [
+                    "make",
+                    "./release/MergeSort 0",
+                    "make clean"
+                ]
+            },
+            {
+                "id": "perf_num",
+                "env": [
+                    "export perf_num=1"
+                ],
+                "steps": [
+                    "make",
+                    "./release/MergeSort 0",
+                    "make clean"
+                ]
+            }
         ]
     },
     "expertise": "Concepts and Functionality"
