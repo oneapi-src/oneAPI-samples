@@ -1,45 +1,27 @@
 {
-    "guid": "DA09E38F-2DCC-40C9-B312-588F59AF9A60",
+    "guid": "92E535C7-1E6D-4F56-AD7C-DECDDD09EF96",
     "name": "guided_radixSortThrust_SYCLMigration",
-    "categories": [
-        "Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"
-    ],
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "Radix Sort Thrust Migrated demonstrates a fast and efficient parallel radix sort that uses the SYCL version of the THRUST library",
-    "toolchain": [
-        "dpcpp"
-    ],
-    "os": [
-        "linux"
-    ],
-    "targetDevice": [
-        "CPU",
-        "GPU"
-    ],
-    "gpuRequired": [
-        "gen9",
-        "pvc"
-    ],
-    "builder": [
-        "cmake"
-    ],
-    "languages": [
-        {
-            "cpp": {}
-        }
-    ],
+    "toolchain": ["dpcpp"],
+    "os": ["linux"],
+    "targetDevice": ["CPU", "GPU"],
+    "gpuRequired": ["gen9","pvc"],
+    "builder": ["cmake"],
+    "languages": [{"cpp":{}}],
     "ciTests": {
-        "linux": [
-            {
-                "id": "test",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "make",
-                    "make run_radixSortMigrated"
-                ]
-            }
-        ]
+      "linux": [
+        {
+          "steps": [
+            "mkdir build",
+            "cd build",
+            "cmake ..",
+            "make",
+            "make run_radixSortMigrated"
+          ]
+        }
+      ]
     },
     "expertise": "Code Optimization"
-}
+  }
+  

@@ -9,7 +9,8 @@ CC_LIBS=
 
 
 # Include header file diretory:
-INC_DIR=-I ../dpct_output/include/
+#INC_DIR=-I ../dpct_output/include/
+INC_DIR=
 COMMON_DIR=-I Common
 TARGET= inlinePTX_cuda
 OBJS= Samples/2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu

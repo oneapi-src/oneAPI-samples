@@ -95,7 +95,7 @@ void bisectKernelLarge_OneIntervals(
   }
 
   /*
-  DPCT1065:42: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:32: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -118,7 +118,7 @@ void bisectKernelLarge_OneIntervals(
         converged, cta, item_ct1);
 
     /*
-    DPCT1065:44: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:34: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -150,7 +150,7 @@ void bisectKernelLarge_OneIntervals(
     }
 
     /*
-    DPCT1065:45: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:35: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -161,7 +161,7 @@ void bisectKernelLarge_OneIntervals(
     }
 
     /*
-    DPCT1065:46: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:36: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -170,7 +170,7 @@ void bisectKernelLarge_OneIntervals(
 
   // write data back to global memory
   /*
-  DPCT1065:43: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:33: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */

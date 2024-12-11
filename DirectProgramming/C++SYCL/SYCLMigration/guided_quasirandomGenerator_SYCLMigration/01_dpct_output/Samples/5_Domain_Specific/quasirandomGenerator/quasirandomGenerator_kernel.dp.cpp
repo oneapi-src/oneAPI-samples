@@ -53,7 +53,8 @@ static void quasirandomGeneratorKernel(float *d_Output,
                                                   unsigned int N,
                                                   const sycl::nd_item<3> &item_ct1,
                                                   dpct::accessor<unsigned int, dpct::constant, 2> c_Table) {
-  unsigned int *dimBase = &c_Table[item_ct1.get_local_id(1)][0];
+  unsigned int *dimBase =
+      const_cast<unsigned int *>(&c_Table[item_ct1.get_local_id(1)][0]);
   unsigned int tid = MUL(item_ct1.get_local_range(2), item_ct1.get_group(2)) +
                      item_ct1.get_local_id(2);
   unsigned int threadN =
@@ -77,7 +78,7 @@ static void quasirandomGeneratorKernel(float *d_Output,
 extern "C" void initTableGPU(
     unsigned int tableCPU[QRNG_DIMENSIONS][QRNG_RESOLUTION]) {
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memcpy(c_Table.get_ptr(), tableCPU,
                   QRNG_DIMENSIONS * QRNG_RESOLUTION * sizeof(unsigned int))
           .wait()));
@@ -86,24 +87,26 @@ extern "C" void initTableGPU(
 // Host-side interface
 extern "C" void quasirandomGeneratorGPU(float *d_Output, unsigned int seed,
                                         unsigned int N) {
-  sycl::range<3> threads(1, QRNG_DIMENSIONS, 128);
+  dpct::dim3 threads(128, QRNG_DIMENSIONS);
   /*
   DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
-  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+  {
     c_Table.init();
 
-    auto c_Table_acc_ct1 = c_Table.get_access(cgh);
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
+      auto c_Table_acc_ct1 = c_Table.get_access(cgh);
 
-    cgh.parallel_for(
-        sycl::nd_range<3>(sycl::range<3>(1, 1, 128) * threads, threads),
-        [=](sycl::nd_item<3> item_ct1) {
-          quasirandomGeneratorKernel(d_Output, seed, N, item_ct1,
-                                     c_Table_acc_ct1);
-        });
-  });
+      cgh.parallel_for(
+          sycl::nd_range<3>(sycl::range<3>(1, 1, 128) * threads, threads),
+          [=](sycl::nd_item<3> item_ct1) {
+            quasirandomGeneratorKernel(d_Output, seed, N, item_ct1,
+                                       c_Table_acc_ct1);
+          });
+    });
+  }
   getLastCudaError("quasirandomGeneratorKernel() execution failed.\n");
 }
 
@@ -204,7 +207,7 @@ static void inverseCNDKernel(float *d_Output, unsigned int *d_Input,
 
 extern "C" void inverseCNDgpu(float *d_Output, unsigned int *d_Input,
                               unsigned int N) {
-  dpct::get_default_queue().parallel_for(
+  dpct::get_in_order_queue().parallel_for(
       sycl::nd_range<3>(sycl::range<3>(1, 1, 128) * sycl::range<3>(1, 1, 128),
                         sycl::range<3>(1, 1, 128)),
       [=](sycl::nd_item<3> item_ct1) {

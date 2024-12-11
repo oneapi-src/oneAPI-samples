@@ -131,7 +131,7 @@ void storeNonEmptyIntervalsLarge(
 //! @param  epsilon  desired accuracy of eigenvalues to compute
 ////////////////////////////////////////////////////////////////////////////////
 /*
-DPCT1110:17: The total declared local variable size in device function
+DPCT1110:7: The total declared local variable size in device function
 bisectKernelLarge exceeds 128 bytes and may cause high register pressure.
 Consult with your hardware vendor to find the total register size available and
 adjust the code, or use smaller sub-group size to avoid high register pressure.
@@ -197,7 +197,7 @@ void bisectKernelLarge(
   s_right_count[tid] = 0;
 
   /*
-  DPCT1065:18: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:8: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -219,7 +219,7 @@ void bisectKernelLarge(
   }
 
   /*
-  DPCT1065:19: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:9: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -233,7 +233,7 @@ void bisectKernelLarge(
                             right_count, mid, all_threads_converged);
 
     /*
-    DPCT1065:27: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:17: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -254,7 +254,7 @@ void bisectKernelLarge(
         s_right, (left == right), cta, item_ct1);
 
     /*
-    DPCT1065:28: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:18: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -293,7 +293,7 @@ void bisectKernelLarge(
 
     // necessary so that compact_second_chunk is up-to-date
     /*
-    DPCT1065:29: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:19: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -313,7 +313,7 @@ void bisectKernelLarge(
     }
 
     /*
-    DPCT1065:30: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:20: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -330,7 +330,7 @@ void bisectKernelLarge(
     }
 
     /*
-    DPCT1065:31: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:21: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -342,7 +342,7 @@ void bisectKernelLarge(
   }
 
   /*
-  DPCT1065:20: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:10: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -387,7 +387,7 @@ void bisectKernelLarge(
   }
 
   /*
-  DPCT1065:21: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:11: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -432,7 +432,7 @@ void bisectKernelLarge(
 
   // end down sweep of scan
   /*
-  DPCT1065:22: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:12: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -463,7 +463,7 @@ void bisectKernelLarge(
 
   // finished second scan for s_cl_blocking
   /*
-  DPCT1065:23: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:13: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -481,7 +481,7 @@ void bisectKernelLarge(
   }
 
   /*
-  DPCT1065:24: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:14: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -499,7 +499,7 @@ void bisectKernelLarge(
       c_sum_block, c_block_iend_2, c_sum_block_2, cta, item_ct1);
 
   /*
-  DPCT1065:25: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:15: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -512,7 +512,7 @@ void bisectKernelLarge(
   }
 
   /*
-  DPCT1065:26: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:16: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -605,7 +605,7 @@ void compactStreamsFinal(
   }
 
   /*
-  DPCT1065:32: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:22: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -635,7 +635,7 @@ void compactStreamsFinal(
   }
 
   /*
-  DPCT1065:33: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:23: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -685,7 +685,7 @@ void scanCompactBlocksStartAddress(const unsigned int tid,
   }
 
   /*
-  DPCT1065:34: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:24: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -701,7 +701,7 @@ void scanCompactBlocksStartAddress(const unsigned int tid,
   // build scan tree
   for (int d = (num_threads_compaction >> 1); d > 0; d >>= 1) {
     /*
-    DPCT1065:35: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:25: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -720,7 +720,7 @@ void scanCompactBlocksStartAddress(const unsigned int tid,
   for (int d = 2; d < num_threads_compaction; d <<= 1) {
     offset >>= 1;
     /*
-    DPCT1065:36: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:26: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -749,7 +749,7 @@ void scanSumBlocks(const unsigned int tid, const unsigned int tid_2,
   // build up tree
   for (int d = num_threads_compaction >> 1; d > 0; d >>= 1) {
     /*
-    DPCT1065:38: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:28: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -770,7 +770,7 @@ void scanSumBlocks(const unsigned int tid, const unsigned int tid_2,
   for (int d = 2; d < (num_threads_compaction - 1); d <<= 1) {
     offset >>= 1;
     /*
-    DPCT1065:39: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:29: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -785,7 +785,7 @@ void scanSumBlocks(const unsigned int tid, const unsigned int tid_2,
   }
 
   /*
-  DPCT1065:37: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:27: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -822,7 +822,7 @@ void scanInitial(const unsigned int tid, const unsigned int tid_2,
   // build scan tree
   for (int d = (num_threads_compaction >> 1); d > 0; d >>= 1) {
     /*
-    DPCT1065:40: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:30: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -874,7 +874,7 @@ void scanInitial(const unsigned int tid, const unsigned int tid_2,
   for (int d = 2; d < num_threads_compaction; d <<= 1) {
     offset >>= 1;
     /*
-    DPCT1065:41: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:31: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */

@@ -54,11 +54,11 @@
 #ifdef __DPCT_HPP__
 static const char *_cudaGetErrorEnum(dpct::err0 error) {
   /*
-  DPCT1009:1: SYCL uses exceptions to report errors and does not use the error
-  codes. The original code was commented out and a warning string was inserted.
-  You need to rewrite this code.
+  DPCT1009:1: SYCL reports errors using exceptions and does not use error codes.
+  Please replace the "get_error_string_dummy(...)" with a real error-handling
+  function.
   */
-  return "cudaGetErrorName is not supported" /*cudaGetErrorName(error)*/;
+  return dpct::get_error_string_dummy(error);
 }
 #endif
 
@@ -245,43 +245,43 @@ static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
 // cuRAND API errors
 static const char *_cudaGetErrorEnum(int error) {
   switch (error) {
-    case 0:
+    case CURAND_STATUS_SUCCESS:
       return "CURAND_STATUS_SUCCESS";
 
-    case 100:
+    case CURAND_STATUS_VERSION_MISMATCH:
       return "CURAND_STATUS_VERSION_MISMATCH";
 
-    case 101:
+    case CURAND_STATUS_NOT_INITIALIZED:
       return "CURAND_STATUS_NOT_INITIALIZED";
 
-    case 102:
+    case CURAND_STATUS_ALLOCATION_FAILED:
       return "CURAND_STATUS_ALLOCATION_FAILED";
 
-    case 103:
+    case CURAND_STATUS_TYPE_ERROR:
       return "CURAND_STATUS_TYPE_ERROR";
 
-    case 104:
+    case CURAND_STATUS_OUT_OF_RANGE:
       return "CURAND_STATUS_OUT_OF_RANGE";
 
-    case 105:
+    case CURAND_STATUS_LENGTH_NOT_MULTIPLE:
       return "CURAND_STATUS_LENGTH_NOT_MULTIPLE";
 
-    case 106:
+    case CURAND_STATUS_DOUBLE_PRECISION_REQUIRED:
       return "CURAND_STATUS_DOUBLE_PRECISION_REQUIRED";
 
-    case 201:
+    case CURAND_STATUS_LAUNCH_FAILURE:
       return "CURAND_STATUS_LAUNCH_FAILURE";
 
-    case 202:
+    case CURAND_STATUS_PREEXISTING_FAILURE:
       return "CURAND_STATUS_PREEXISTING_FAILURE";
 
-    case 203:
+    case CURAND_STATUS_INITIALIZATION_FAILED:
       return "CURAND_STATUS_INITIALIZATION_FAILED";
 
-    case 204:
+    case CURAND_STATUS_ARCH_MISMATCH:
       return "CURAND_STATUS_ARCH_MISMATCH";
 
-    case 999:
+    case CURAND_STATUS_INTERNAL_ERROR:
       return "CURAND_STATUS_INTERNAL_ERROR";
   }
 
@@ -636,7 +636,7 @@ inline int ftoi(float value) {
 inline int _ConvertSMVer2Cores(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the # of cores per SM
-  typedef struct dpct_type_175225 {
+  typedef struct dpct_type_133627 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
     int Cores;
@@ -685,7 +685,7 @@ inline int _ConvertSMVer2Cores(int major, int minor) {
 inline const char* _ConvertSMVer2ArchName(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the GPU Arch name)
-  typedef struct dpct_type_319217 {
+  typedef struct dpct_type_138373 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
     const char* name;
@@ -736,8 +736,7 @@ inline const char* _ConvertSMVer2ArchName(int major, int minor) {
 // General GPU Device CUDA Initialization
 inline int gpuDeviceInit(int devID) {
   int device_count;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -768,10 +767,10 @@ inline int gpuDeviceInit(int devID) {
   need to adjust this code.
   */
   checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      major = dpct::dev_mgr::instance().get_device(devID).get_major_version()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version()));
   /*
   DPCT1035:7: All SYCL devices can be used by the host to submit tasks. You may
   need to adjust this code.
@@ -806,8 +805,7 @@ inline int gpuGetMaxGflopsDeviceId() try {
   int devices_prohibited = 0;
 
   uint64_t max_compute_perf = 0;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -826,12 +824,10 @@ inline int gpuGetMaxGflopsDeviceId() try {
     may need to adjust this code.
     */
     checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-    checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
-                                                 .get_device(current_device)
-                                                 .get_major_version()));
-    checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
-                                                 .get_device(current_device)
-                                                 .get_minor_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        major = dpct::get_device(current_device).get_major_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        minor = dpct::get_device(current_device).get_minor_version()));
 
     // If this GPU is not running on Compute Mode prohibited,
     // then we can add it to the list
@@ -847,14 +843,12 @@ inline int gpuGetMaxGflopsDeviceId() try {
             _ConvertSMVer2Cores(major,  minor);
       }
       int multiProcessorCount = 0, clockRate = 0;
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(multiProcessorCount = dpct::dev_mgr::instance()
-                                                     .get_device(current_device)
-                                                     .get_max_compute_units()));
-      dpct::err0 result =
-          DPCT_CHECK_ERROR(clockRate = dpct::dev_mgr::instance()
-                                           .get_device(current_device)
-                                           .get_max_clock_frequency());
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          multiProcessorCount =
+              dpct::get_device(current_device).get_max_compute_units()));
+      dpct::err0 result = DPCT_CHECK_ERROR(
+          clockRate =
+              dpct::get_device(current_device).get_max_clock_frequency());
 
       uint64_t compute_perf = (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
 
@@ -912,12 +906,10 @@ inline int findCudaDevice(int argc, const char **argv) {
     */
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(devID)));
     int major = 0, minor = 0;
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        major =
-            dpct::dev_mgr::instance().get_device(devID).get_major_version()));
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        minor =
-            dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version()));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version()));
     printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
            devID, _ConvertSMVer2ArchName(major, minor), major, minor);
 
@@ -931,8 +923,7 @@ inline int findIntegratedGPU() {
   int device_count = 0;
   int devices_prohibited = 0;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr, "CUDA error: no devices supporting CUDA.\n");
@@ -947,10 +938,8 @@ inline int findIntegratedGPU() {
     may need to adjust this code.
     */
     checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-    checkCudaErrors(
-        DPCT_CHECK_ERROR(integrated = dpct::dev_mgr::instance()
-                                          .get_device(current_device)
-                                          .get_integrated()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        integrated = dpct::get_device(current_device).get_integrated()));
     // If GPU is integrated and is not running on Compute Mode prohibited,
     // then cuda can map to GLES resource
     /*
@@ -965,12 +954,10 @@ inline int findIntegratedGPU() {
       checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(current_device)));
 
       int major = 0, minor = 0;
-      checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
-                                                   .get_device(current_device)
-                                                   .get_major_version()));
-      checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
-                                                   .get_device(current_device)
-                                                   .get_minor_version()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          major = dpct::get_device(current_device).get_major_version()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          minor = dpct::get_device(current_device).get_minor_version()));
       printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
              current_device, _ConvertSMVer2ArchName(major, minor), major, minor);
 
@@ -997,11 +984,11 @@ inline bool checkCudaCapabilities(int major_version, int minor_version) {
   int dev;
   int major = 0, minor = 0;
 
-  checkCudaErrors(dev = dpct::dev_mgr::instance().current_device_id());
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      major = dpct::dev_mgr::instance().get_device(dev).get_major_version()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version()));
+  checkCudaErrors(DPCT_CHECK_ERROR(dev = dpct::get_current_device_id()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(major = dpct::get_device(dev).get_major_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(minor = dpct::get_device(dev).get_minor_version()));
 
   if ((major > major_version) ||
       (major == major_version &&

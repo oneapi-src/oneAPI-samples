@@ -1,46 +1,27 @@
 {
-    "guid": "225B484F-632E-4B4C-9D4C-C88158EAA2CB",
+    "guid": "D0F3E73E-B0EE-4CF5-A30E-6C23800E99BD",
     "name": "Simple Cuda Graphs Sample",
-    "categories": [
-        "Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"
-    ],
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "Migration of simpleCudaGraphs from CUDA to SYCL, demonstrates usage of Taskflow programming model and SYCL Graph extension in place of CUDA Graph APIs",
-    "toolchain": [
-        "dpcpp"
-    ],
-    "languages": [
-        {
-            "cpp": {}
-        }
-    ],
-    "targetDevice": [
-        "CPU",
-        "GPU"
-    ],
-    "gpuRequired": [
-        "pvc"
-    ],
-    "os": [
-        "linux"
-    ],
-    "builder": [
-        "cmake"
-    ],
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
     "ciTests": {
-        "linux": [
-            {
-                "id": "test",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "cmake -D INTEL_MAX_GPU=1 ..",
-                    "make",
-                    "make run_op1",
-                    "make run_op2"
-                ]
-            }
-        ]
+          "linux": [{
+                  "steps": [
+                          "mkdir build",
+                          "cd build",
+                          "cmake ..",
+                          "cmake -D INTEL_MAX_GPU=1 ..",
+                          "make",
+                          "make run_op1",
+                          "make run_op2"
+                   ]
+          }]
+  
     },
     "expertise": "Concept and Functionality"
-}
+  }

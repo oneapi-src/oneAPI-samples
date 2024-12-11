@@ -9,7 +9,7 @@ CC_LIBS=
 
 
 # Include header file diretory:
-INC_DIR=-I ../dpct_output/include/
+INC_DIR=-I include
 COMMON_DIR=-I Common
 
 TARGET= inlinePTX_sycl
