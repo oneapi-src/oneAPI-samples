@@ -22,6 +22,11 @@ enum class image_channel_data_type {
   fp,
 };
 
+enum class image_type {
+  standard,
+  array,
+};
+
 class image_channel;
 class image_wrapper_base;
 namespace detail {
@@ -139,6 +144,15 @@ static image_wrapper_base *create_image_wrapper(image_channel channel, int dims)
 
 } // namespace detail
 
+struct image_matrix_desc {
+  size_t width = 0;
+  size_t height = 0;
+  size_t depth = 0;
+  sycl::image_channel_type channel_type =
+      sycl::image_channel_type::signed_int32;
+  unsigned num_channels = 0;
+};
+
 /// Image channel info, include channel number, order, data width and type
 class image_channel {
   image_channel_data_type _type = image_channel_data_type::signed_int;
@@ -165,9 +179,9 @@ public:
   image_channel_data_type get_channel_data_type() { return _type; }
   void set_channel_data_type(image_channel_data_type type) { _type = type; }
 
-  unsigned get_total_size() { return _total_size; }
+  unsigned get_total_size() const { return _total_size; }
 
-  unsigned get_channel_num() { return _channel_num; }
+  unsigned get_channel_num() const { return _channel_num; }
   void set_channel_num(unsigned channel_num) {
     _channel_num = channel_num;
     _total_size = _channel_size * _channel_num;
@@ -314,8 +328,13 @@ class image_matrix {
 public:
   /// Constructor with channel info and dimension size info.
   template <int dimensions>
-  image_matrix(image_channel channel, sycl::range<dimensions> range)
+  image_matrix(image_channel channel, sycl::range<dimensions> range,
+               image_type type = image_type::standard)
       : _channel(channel) {
+    if (type == image_type::array && range[1] == 0) {
+      range[1] = range[2];
+      range[2] = 0;
+    }
     set_range(range);
     _host_data = std::malloc(range.size() * _channel.get_total_size());
   }
@@ -331,6 +350,9 @@ public:
     }
     _host_data = std::malloc(_range[0] * _range[1] * _channel.get_total_size());
   }
+  image_matrix(const image_matrix_desc *desc)
+      : image_matrix(desc->channel_type, desc->num_channels, desc->width,
+                     desc->height) {}
 
   /// Construct a new image class with the matrix data.
   template <int dimensions> sycl::image<dimensions> *create_image() {
@@ -355,7 +377,8 @@ public:
   inline int get_dims() { return _dims; }
   /// Convert to pitched data.
   pitched_data to_pitched_data() {
-    return pitched_data(_host_data, _range[0], _range[0], _range[1]);
+    return pitched_data(_host_data, _range[0] * _channel.get_total_size(),
+                        _range[0], _range[1]);
   }
 
   ~image_matrix() {
@@ -367,6 +390,12 @@ public:
 using image_matrix_p = image_matrix *;
 
 enum class image_data_type { matrix, linear, pitch, unsupport };
+
+#ifdef SYCL_EXT_ONEAPI_BINDLESS_IMAGES
+namespace experimental {
+class image_mem_wrapper;
+}
+#endif
 
 /// Image data info.
 class image_data {
@@ -385,6 +414,12 @@ public:
     _data = matrix_data;
     _channel = matrix_data->get_channel();
   }
+#ifdef SYCL_EXT_ONEAPI_BINDLESS_IMAGES
+  void set_data(experimental::image_mem_wrapper *image_mem) {
+    _type = image_data_type::matrix;
+    _data = image_mem;
+  }
+#endif
   void set_data(void *data_ptr, size_t x_size, image_channel channel) {
     _type = image_data_type::linear;
     _data = data_ptr;
@@ -458,48 +493,128 @@ class sampling_info {
   sycl::filtering_mode _filtering_mode = sycl::filtering_mode::nearest;
   sycl::coordinate_normalization_mode _coordinate_normalization_mode =
       sycl::coordinate_normalization_mode::unnormalized;
+  // Dictates the method in which sampling between mipmap levels is performed.
+  sycl::filtering_mode _mipmap_filtering = sycl::filtering_mode::nearest;
+  // Defines the minimum mipmap level from which we can sample, with the minimum
+  // value being 0.
+  float _min_mipmap_level_clamp = 0.f;
+  // Defines the maximum mipmap level from which we can sample. This value
+  // cannot be higher than the number of allocated levels.
+  float _max_mipmap_level_clamp = 0.f;
+  // Dictates the anisotropic ratio used when sampling the mipmap with
+  // anisotropic filtering.
+  float _max_anisotropy = 0.f;
 
 public:
-  sycl::addressing_mode get_addressing_mode() { return _addressing_mode; }
-  void set(sycl::addressing_mode addressing_mode) { _addressing_mode = addressing_mode; }
+  sycl::addressing_mode get_addressing_mode() const noexcept {
+    // Make sure the return value is legal addressing_mode when using memset.
+    if ((unsigned)_addressing_mode == 0)
+      return sycl::addressing_mode::clamp_to_edge;
+    return _addressing_mode;
+  }
+  void set(sycl::addressing_mode addressing_mode) noexcept {
+    _addressing_mode = addressing_mode;
+  }
 
-  sycl::filtering_mode get_filtering_mode() { return _filtering_mode; }
-  void set(sycl::filtering_mode filtering_mode) { _filtering_mode = filtering_mode; }
+  sycl::filtering_mode get_filtering_mode() const noexcept {
+    // Make sure the return value is legal filtering_mode when using memset.
+    return _filtering_mode == sycl::filtering_mode::linear
+               ? sycl::filtering_mode::linear
+               : sycl::filtering_mode::nearest;
+  }
+  void set(sycl::filtering_mode filtering_mode) noexcept {
+    _filtering_mode = filtering_mode;
+  }
 
-  sycl::coordinate_normalization_mode get_coordinate_normalization_mode() {
+  sycl::coordinate_normalization_mode
+  get_coordinate_normalization_mode() const noexcept {
     return _coordinate_normalization_mode;
   }
-  void set(sycl::coordinate_normalization_mode coordinate_normalization_mode) {
+  void set(sycl::coordinate_normalization_mode
+               coordinate_normalization_mode) noexcept {
     _coordinate_normalization_mode = coordinate_normalization_mode;
   }
 
-  bool is_coordinate_normalized() {
+  bool is_coordinate_normalized() const noexcept {
     return _coordinate_normalization_mode ==
            sycl::coordinate_normalization_mode::normalized;
   }
-  void set_coordinate_normalization_mode(int is_normalized) {
+  void set_coordinate_normalization_mode(int is_normalized) noexcept {
     _coordinate_normalization_mode =
         is_normalized ? sycl::coordinate_normalization_mode::normalized
                       : sycl::coordinate_normalization_mode::unnormalized;
   }
-  void
-  set(sycl::addressing_mode addressing_mode,
-      sycl::filtering_mode filtering_mode,
-      sycl::coordinate_normalization_mode coordinate_normalization_mode) {
+
+  /// Get the method in which sampling between mipmap levels is performed.
+  /// \returns The method in which sampling between mipmap levels is performed.
+  sycl::filtering_mode get_mipmap_filtering() const noexcept {
+    // Make sure the return value is legal filtering_mode when using memset.
+    return _mipmap_filtering == sycl::filtering_mode::linear
+               ? sycl::filtering_mode::linear
+               : sycl::filtering_mode::nearest;
+  }
+  /// Set the method in which sampling between mipmap levels is performed.
+  /// \param [in] filtering_mode The method in which sampling between mipmap
+  /// levels is performed.
+  void set_mipmap_filtering(sycl::filtering_mode filtering_mode) noexcept {
+    _mipmap_filtering = filtering_mode;
+  }
+
+  /// Get the minimum mipmap level from which we can sample
+  /// \returns The minimum mipmap level from which we can sample.
+  float get_min_mipmap_level_clamp() const noexcept {
+    return _min_mipmap_level_clamp;
+  }
+  /// Set the minimum mipmap level from which we can sample
+  /// \param [in] min_mipmap_level_clamp The minimum mipmap level from which we
+  /// can sample.
+  void set_min_mipmap_level_clamp(float min_mipmap_level_clamp) noexcept {
+    _min_mipmap_level_clamp = min_mipmap_level_clamp;
+  }
+
+  /// Get the maximum mipmap level from which we can sample.
+  /// \returns The maximum mipmap level from which we can sample.
+  float get_max_mipmap_level_clamp() const noexcept {
+    return _max_mipmap_level_clamp;
+  }
+  /// Set the maximum mipmap level from which we can sample.
+  /// \param [in] max_mipmap_level_clamp The maximum mipmap level from which we
+  /// can sample.
+  void set_max_mipmap_level_clamp(float max_mipmap_level_clamp) noexcept {
+    _max_mipmap_level_clamp = max_mipmap_level_clamp;
+  }
+
+  /// Get the anisotropic ratio used when sampling the mipmap with
+  // anisotropic filtering.
+  /// \returns The anisotropic ratio used when sampling the mipmap with
+  // anisotropic filtering.
+  float get_max_anisotropy() const noexcept { return _max_anisotropy; }
+  /// Set the anisotropic ratio used when sampling the mipmap with
+  // anisotropic filtering.
+  /// \param [in] max_anisotropy The anisotropic ratio used when sampling the
+  /// mipmap with anisotropic filtering.
+  void set_max_anisotropy(float max_anisotropy) noexcept {
+    _max_anisotropy = max_anisotropy;
+  }
+
+  void set(sycl::addressing_mode addressing_mode,
+           sycl::filtering_mode filtering_mode,
+           sycl::coordinate_normalization_mode
+               coordinate_normalization_mode) noexcept {
     set(addressing_mode);
     set(filtering_mode);
     set(coordinate_normalization_mode);
   }
   void set(sycl::addressing_mode addressing_mode,
-           sycl::filtering_mode filtering_mode, int is_normalized) {
+           sycl::filtering_mode filtering_mode, int is_normalized) noexcept {
     set(addressing_mode);
     set(filtering_mode);
     set_coordinate_normalization_mode(is_normalized);
   }
 
-  sycl::sampler get_sampler() {
+  sycl::sampler get_sampler() const {
     return sycl::sampler(_coordinate_normalization_mode, _addressing_mode,
-                             _filtering_mode);
+                         _filtering_mode);
   }
 };
 
@@ -541,6 +656,15 @@ public:
     detach();
     image_wrapper_base::set_data(
         image_data(const_cast<void *>(data), x, y, pitch, channel));
+  }
+  /// Attach device_ptr data to this class.
+  void attach(const image_matrix_desc *desc, device_ptr ptr, size_t pitch) {
+    detach();
+    image_channel channel;
+    channel.set_channel_num(desc->num_channels);
+    channel.set_channel_type(desc->channel_type);
+    image_wrapper_base::set_data(
+        image_data(ptr, desc->width, desc->height, pitch, channel));
   }
   /// Detach data.
   virtual void detach() {}
@@ -622,7 +746,16 @@ public:
     return _data.set_channel_type(type);
   }
 
-  sycl::sampler get_sampler() { return _sampling_info.get_sampler(); }
+  sycl::sampler get_sampler() {
+    sycl::sampler smp = _sampling_info.get_sampler();
+    /// linear memory only used for sycl::filtering_mode::nearest.
+    if (_data.get_data_type() == image_data_type::linear) {
+      smp = sycl::sampler(smp.get_coordinate_normalization_mode(),
+                          smp.get_addressing_mode(),
+                          sycl::filtering_mode::nearest);
+    }
+    return smp;
+  }
 };
 inline image_wrapper_base::~image_wrapper_base() {}
 using image_wrapper_base_p = image_wrapper_base *;
@@ -637,7 +770,10 @@ template <class T, int dimensions, bool IsImageArray = false> class image_wrappe
   std::vector<char> _host_buffer;
 #endif
 
-  void create_image(sycl::queue q) {
+public:
+  void create_image(sycl::queue &q = get_default_queue()) {
+    if (_image)
+      return;
     auto &data = get_data();
     if (data.get_data_type() == image_data_type::matrix) {
       _image = static_cast<image_matrix_p>(data.get_data_ptr())
@@ -649,15 +785,13 @@ template <class T, int dimensions, bool IsImageArray = false> class image_wrappe
 
     if (detail::get_pointer_attribute(q, ptr) == detail::pointer_access_attribute::device_only) {
 #ifdef DPCT_USM_LEVEL_NONE
-      ptr = get_buffer(ptr)
-                .template get_access<sycl::access_mode::read_write>()
-                .get_pointer();
+      ptr = get_buffer(ptr).get_host_access().get_pointer();
 #else
       auto sz = data.get_x();
       if (data.get_data_type() == image_data_type::pitch)
         sz *= channel.get_total_size() * data.get_y();
       _host_buffer.resize(sz);
-      q.memcpy(_host_buffer.data(), ptr, sz).wait();
+      q.memcpy(_host_buffer.data(), ptr, sz);
       ptr = _host_buffer.data();
 #endif
     }
@@ -679,19 +813,17 @@ template <class T, int dimensions, bool IsImageArray = false> class image_wrappe
     return;
   }
 
-public:
   using acc_data_t = typename detail::image_trait<T>::acc_data_t;
   using accessor_t =
       typename image_accessor_ext<T, IsImageArray ? (dimensions - 1) : dimensions,
                               IsImageArray>::accessor_t;
 
   image_wrapper() { set_channel(image_channel::create<T>()); }
-  ~image_wrapper() { detach(); }
+  ~image_wrapper() override { detach(); }
 
   /// Get image accessor.
-  accessor_t get_access(sycl::handler &cgh, sycl::queue &q = get_default_queue()) {
-    if (!_image)
-      create_image(q);
+  accessor_t get_access(sycl::handler &cgh) {
+    assert(_image != nullptr && "Image not created");
     return accessor_t(*_image, cgh);
   }
 
@@ -831,6 +963,10 @@ static inline image_wrapper_base *create_image_wrapper(image_data data,
 }
 
 namespace detail {
+static inline pitched_data to_pitched_data(image_matrix *image) {
+  return image->to_pitched_data();
+}
+
 /// Create image according with given type \p T and \p dims.
 template <class T> static image_wrapper_base *create_image_wrapper(int dims) {
   switch (dims) {

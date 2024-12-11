@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/dpct_output/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/dpct_output/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
 Replacements:
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          1619
     Length:          0
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          1640
     Length:          0
     ReplacementText: "\n#include <dpct/rng_utils.hpp>\n"
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          1641
     Length:          27
     ReplacementText: ''
@@ -28,43 +28,43 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          1861
     Length:          0
-    ReplacementText: ' dpct_type_495057'
+    ReplacementText: ' dpct_type_106637'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2005
     Length:          0
-    ReplacementText: ' dpct_type_363787'
+    ReplacementText: ' dpct_type_820854'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2122
     Length:          0
-    ReplacementText: ' dpct_type_118506'
+    ReplacementText: ' dpct_type_873278'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2194
     Length:          0
-    ReplacementText: ' dpct_type_258576'
+    ReplacementText: ' dpct_type_146184'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2740
     Length:          0
     ReplacementText: "  /*\n  DPCT1032:19: A different random number generator is used. You may need to adjust the code.\n  */\n"
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2742
     Length:          11
     ReplacementText: 'dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          2979
     Length:          12
     ReplacementText: 'dpct::queue_ptr'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
     Offset:          3001
     Length:          1
     ReplacementText: '&dpct::get_in_order_queue()'
@@ -101,8 +101,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU/MonteCarlo_common.h'
-    Digest:          e19573b376fecbdcca3d0b07ac837fa7
+  - MainSourceFile:  ''
+    Digest:          ''
+    HasCUDASyntax:   false
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -110,7 +111,7 @@ FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Avijit/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -125,7 +126,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/5_Domain_Specific/MonteCarloMultiGPU'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -164,6 +165,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

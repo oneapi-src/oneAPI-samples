@@ -103,10 +103,11 @@ int main(int argc, char **argv) {
   //cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-  DPCT_CHECK_ERROR(cuda_device = dpct::dev_mgr::instance().current_device_id());
+  
+  DPCT_CHECK_ERROR(cuda_device = dpct::get_current_device_id());
 
-  DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(cuda_device)));
+  DPCT_CHECK_ERROR(
+      dpct::get_device(cuda_device).get_device_info(deviceProp));
 
   if ((true == 0)) {
     printf("> GPU does not support concurrent kernel execution\n");

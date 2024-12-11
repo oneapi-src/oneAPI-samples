@@ -95,17 +95,17 @@ int main(int argc, char **argv) {
   printf("Allocating and initializing CUDA arrays...\n");
   checkCudaErrors(
       DPCT_CHECK_ERROR(d_Input = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_default_queue())));
+                           imageW * imageH, dpct::get_in_order_queue())));
   checkCudaErrors(
       DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_default_queue())));
+                           imageW * imageH, dpct::get_in_order_queue())));
   checkCudaErrors(
       DPCT_CHECK_ERROR(d_Buffer = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_default_queue())));
+                           imageW * imageH, dpct::get_in_order_queue())));
 
   setConvolutionKernel(h_Kernel);
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memcpy(d_Input, h_Input, imageW * imageH * sizeof(float))
           .wait()));
 
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
 
   printf("\nReading back GPU results...\n\n");
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memcpy(h_OutputGPU, d_Output, imageW * imageH * sizeof(float))
           .wait()));
 
@@ -164,11 +164,11 @@ int main(int argc, char **argv) {
   printf("Shutting down...\n");
 
   checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Buffer, dpct::get_default_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Buffer, dpct::get_in_order_queue())));
   checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Output, dpct::get_default_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Output, dpct::get_in_order_queue())));
   checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Input, dpct::get_default_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Input, dpct::get_in_order_queue())));
   free(h_OutputGPU);
   free(h_OutputCPU);
   free(h_Buffer);

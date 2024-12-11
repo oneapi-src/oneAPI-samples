@@ -1,4 +1,4 @@
-#define DPCT_COMPAT_RT_VERSION 12020
+#define DPCT_COMPAT_RT_VERSION 12040
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -205,8 +205,7 @@ int runTest(const int argc, const char **argv) try {
 
   if (getCmdLineArgumentString(argc, argv, "device", &device)) {
     int deviceCount;
-    dpct::err0 error_id = DPCT_CHECK_ERROR(
-        deviceCount = dpct::dev_mgr::instance().device_count());
+    dpct::err0 error_id = DPCT_CHECK_ERROR(deviceCount = dpct::device_count());
 
     if (deviceCount == 0) {
       printf("!!!!!No devices found!!!!!\n");
@@ -237,8 +236,8 @@ int runTest(const int argc, const char **argv) try {
   for (int currentDevice = startDevice; currentDevice <= endDevice;
        currentDevice++) {
     dpct::device_info deviceProp;
-    dpct::err0 error_id = DPCT_CHECK_ERROR(dpct::get_device_info(
-        deviceProp, dpct::dev_mgr::instance().get_device(currentDevice)));
+    dpct::err0 error_id = DPCT_CHECK_ERROR(
+        dpct::get_device(currentDevice).get_device_info(deviceProp));
 
     if (error_id == 0) {
       printf(" Device %d: %s\n", currentDevice, deviceProp.get_name());
@@ -262,11 +261,11 @@ int runTest(const int argc, const char **argv) try {
     } else {
       printf("cudaGetDeviceProperties returned %d\n-> %s\n", (int)error_id,
              /*
-             DPCT1009:21: SYCL uses exceptions to report errors and does not use
-             the error codes. The call was replaced by a placeholder string. You
-             need to rewrite this code.
+             DPCT1009:21: SYCL reports errors using exceptions and does not use
+             error codes. Please replace the "get_error_string_dummy(...)" with
+             a real error-handling function.
              */
-             "<Placeholder string>");
+             dpct::get_error_string_dummy(error_id));
       /*
       DPCT1093:22: The "currentDevice" device may be not the one intended for
       use. Adjust the selected device if needed.
@@ -672,11 +671,17 @@ float testDeviceToHostTransfer(unsigned int memSize, memoryMode memMode,
     checkCudaErrors(DPCT_CHECK_ERROR(
         dpct::sync_barrier(start, &dpct::get_in_order_queue())));
     for (unsigned int i = 0; i < MEMCOPY_ITERATIONS; i++) {
+      /*
+      DPCT1124:27: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
+      */
       checkCudaErrors(DPCT_CHECK_ERROR(
           dpct::get_in_order_queue().memcpy(h_odata, d_idata, memSize)));
     }
     /*
-    DPCT1024:27: The original code returned the error code that was further
+    DPCT1024:28: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
@@ -797,18 +802,24 @@ float testHostToDeviceTransfer(unsigned int memSize, memoryMode memMode,
   if (PINNED == memMode) {
     if (bDontUseGPUTiming) sdkStartTimer(&timer);
     /*
-    DPCT1024:28: The original code returned the error code that was further
+    DPCT1024:29: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
     checkCudaErrors(DPCT_CHECK_ERROR(
         dpct::sync_barrier(start, &dpct::get_in_order_queue())));
     for (unsigned int i = 0; i < MEMCOPY_ITERATIONS; i++) {
+      /*
+      DPCT1124:30: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
+      */
       checkCudaErrors(DPCT_CHECK_ERROR(
           dpct::get_in_order_queue().memcpy(d_idata, h_odata, memSize)));
     }
     /*
-    DPCT1024:29: The original code returned the error code that was further
+    DPCT1024:31: The original code returned the error code that was further
     consumed by the program logic. This original code was replaced with 0. You
     may need to rewrite the program logic consuming the error code.
     */
@@ -907,7 +918,7 @@ float testDeviceToDeviceTransfer(unsigned int memSize) {
   // run the memcopy
   sdkStartTimer(&timer);
   /*
-  DPCT1024:30: The original code returned the error code that was further
+  DPCT1024:32: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
@@ -920,7 +931,7 @@ float testDeviceToDeviceTransfer(unsigned int memSize) {
   }
 
   /*
-  DPCT1024:31: The original code returned the error code that was further
+  DPCT1024:33: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */

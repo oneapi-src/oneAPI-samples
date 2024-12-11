@@ -1,41 +1,25 @@
 {
-    "guid": "812DF492-F61E-4440-B9B5-D7F96CBF0951",
-    "name": "threadFenceReduction",
-    "categories": [
-        "Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/SYCLMigration"
-    ],
-    "description": "Implements a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel.",
-    "toolchain": [
-        "dpcpp"
-    ],
-    "languages": [
-        {
-            "cpp": {}
-        }
-    ],
-    "targetDevice": [
-        "CPU",
-        "GPU"
-    ],
-    "os": [
-        "linux"
-    ],
-    "builder": [
-        "cmake"
-    ],
-    "ciTests": {
-        "linux": [
-            {
-                "id": "test",
+  "guid": "5D35E5EB-68F2-460A-A1A4-8E32F0ED1728",
+  "name": "threadFenceReduction",
+  "categories": ["Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
+  "description": "Implements a reduction operation on an array of values using the sycl::atomic_fence function to produce a single value in a single kernel.",
+  "toolchain": [ "dpcpp" ],
+  "languages": [ { "cpp": {} } ],
+  "targetDevice": [ "CPU", "GPU" ],
+  "os": [ "linux" ],
+  "builder": [ "cmake" ],
+  "ciTests": {
+        "linux": [{
                 "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "make",
-                    "make run"
-                ]
-            }
-        ]
-    },
-    "expertise": "Concepts and Functionality"
+                        "mkdir build",
+                        "cd build",
+                        "cmake ..",
+                        "make",
+                        "make run"
+                 
+                 ]
+        }]
+
+  },
+  "expertise": "Concepts and Functionality"
 }

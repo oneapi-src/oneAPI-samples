@@ -1,45 +1,25 @@
 {
-    "guid": "6D162CA2-2948-40C9-8634-A8E802473A70",
+    "guid": "7AC2C489-F608-4228-86DA-B30E3949FC63",	
     "name": "guided_bandwidthTest_SYCLMigration",
-    "categories": [
-        "Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"
-    ],
+    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample shows the demonstrates how to measure the memcopy bandwidth of the GPU.",
-    "toolchain": [
-        "dpcpp"
-    ],
-    "languages": [
-        {
-            "cpp": {}
-        }
-    ],
-    "targetDevice": [
-        "CPU",
-        "GPU"
-    ],
-    "gpuRequired": [
-        "pvc"
-    ],
-    "os": [
-        "linux"
-    ],
-    "builder": [
-        "cmake"
-    ],
+    "toolchain": [ "dpcpp" ],
+    "languages": [ { "cpp": {} } ],
+    "targetDevice": [ "CPU", "GPU" ],
+    "gpuRequired": ["pvc"],
+    "os": [ "linux" ],
+    "builder": [ "cmake" ],
     "ciTests": {
-        "linux": [
-            {
-                "id": "test",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "cmake -D INTEL_MAX_GPU=1 ..",
-                    "make",
-                    "make run_sm"
-                ]
-            }
-        ]
-    },
+      "linux": [{
+          "steps": [
+              "mkdir build",
+              "cd build",
+              "cmake ..",
+              "cmake -D INTEL_MAX_GPU=1 ..",
+              "make",
+              "make run_sm"
+           ]
+      }]
+     },
     "expertise": "Concepts and Functionality"
-}
+  }
