@@ -124,9 +124,9 @@ def main(argv):
     createCsv = args.createCsv
     
     # Data paths
-    TRAIN_PATH = commonVoicePath + "/commonVoice/train"
-    TEST_PATH = commonVoicePath + "/commonVoice/test"
-    DEV_PATH = commonVoicePath + "/commonVoice/dev"
+    TRAIN_PATH = commonVoicePath + "/processed_data/train"
+    TEST_PATH = commonVoicePath + "/processed_data/test"
+    DEV_PATH = commonVoicePath + "/processed_data/dev"
 
     # Prepare the csv files for the Common Voice dataset
     if createCsv:

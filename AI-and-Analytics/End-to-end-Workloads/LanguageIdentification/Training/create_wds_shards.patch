@@ -1,5 +1,5 @@
---- create_wds_shards.py	2022-09-20 14:55:48.732386718 -0700
-+++ create_wds_shards_commonvoice.py	2022-09-20 14:53:56.554637629 -0700
+--- create_wds_shards.py	2024-11-13 18:08:07.440000000 -0800
++++ create_wds_shards_modified.py	2024-11-14 14:09:36.225000000 -0800
 @@ -27,7 +27,10 @@
      t, sr = torchaudio.load(audio_file_path)
  
@@ -12,7 +12,7 @@
  
      return t
  
-@@ -61,27 +64,20 @@
+@@ -66,27 +69,22 @@
      sample_keys_per_language = defaultdict(list)
  
      for f in audio_files:
@@ -23,7 +23,9 @@
 -            f.as_posix(),
 -        )
 +        # Common Voice format
-+        # commonVoice_folder_path/common_voice_<LANG_ID>_00000000.wav'
++        # commonVoice_folder_path/processed_data/<DATASET_TYPE>/common_voice_<LANG_ID>_00000000.wav'
++        # DATASET_TYPE: dev, test, train
++        # LANG_ID: the label for the language
 +        m = re.match(r"((.*)(common_voice_)(.+)(_)(\d+).wav)", f.as_posix())
 +
          if m:

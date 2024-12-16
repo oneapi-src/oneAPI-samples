@@ -30,7 +30,7 @@ class datafile:
         self.sampleRate = 0
         self.waveData = ''
         self.wavesize = 0
-        self.waveduriation = 0
+        self.waveduration = 0
         if filename.endswith(".wav") or filename.endswith(".wmv"):
             self.wavefile = filename
             self.wavepath = dirpath + os.sep + filename
@@ -61,41 +61,45 @@ class speechbrain_inference:
             self.model_int8 = load(source_model_int8_path, self.language_id)
             self.model_int8.eval()
         elif ipex_op:
+            self.language_id.eval()
+
             # Optimize for inference with IPEX
             print("Optimizing inference with IPEX")
-            self.language_id.eval()
-            sampleInput = (torch.load("./sample_input_features.pt"), torch.load("./sample_input_wav_lens.pt"))
             if bf16:
                 print("BF16 enabled")
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"], dtype=torch.bfloat16)
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"], dtype=torch.bfloat16)
-                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"], dtype=torch.bfloat16)
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"], dtype=torch.bfloat16)
             else:
                 self.language_id.mods["compute_features"] = ipex.optimize(self.language_id.mods["compute_features"])
                 self.language_id.mods["mean_var_norm"] = ipex.optimize(self.language_id.mods["mean_var_norm"])
-                self.language_id.mods["embedding_model"] = ipex.optimize(self.language_id.mods["embedding_model"])
                 self.language_id.mods["classifier"] = ipex.optimize(self.language_id.mods["classifier"])
             
             # Torchscript to resolve performance issues with reorder operations
+            print("Applying Torchscript")
+            sampleWavs = torch.load("./sample_wavs.pt")
+            sampleWavLens = torch.ones(sampleWavs.shape[0])
             with torch.no_grad():
-                I2 = self.language_id.mods["embedding_model"](*sampleInput)
+                I1 = self.language_id.mods["compute_features"](sampleWavs)
+                I2 = self.language_id.mods["mean_var_norm"](I1, sampleWavLens)
+                I3 = self.language_id.mods["embedding_model"](I2, sampleWavLens)
+
                 if bf16:
                     with torch.cpu.amp.autocast():
-                        self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
-                        self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
-                        self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
-                        self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                        self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=sampleWavs)
+                        self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=(I1, sampleWavLens))
+                        self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=(I2, sampleWavLens))
+                        self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I3)
                         
                         self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
                         self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
                         self.language_id.mods["embedding_model"] = torch.jit.freeze(self.language_id.mods["embedding_model"])
                         self.language_id.mods["classifier"] = torch.jit.freeze( self.language_id.mods["classifier"])
                 else:
-                    self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=(torch.rand(1,32000)))
-                    self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=sampleInput)
-                    self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=sampleInput)
-                    self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I2)
+                    self.language_id.mods["compute_features"] = torch.jit.trace( self.language_id.mods["compute_features"] , example_inputs=sampleWavs)
+                    self.language_id.mods["mean_var_norm"] = torch.jit.trace(self.language_id.mods["mean_var_norm"], example_inputs=(I1, sampleWavLens))
+                    self.language_id.mods["embedding_model"] = torch.jit.trace(self.language_id.mods["embedding_model"], example_inputs=(I2, sampleWavLens))
+                    self.language_id.mods["classifier"] = torch.jit.trace(self.language_id.mods["classifier"], example_inputs=I3)
                     
                     self.language_id.mods["compute_features"] = torch.jit.freeze(self.language_id.mods["compute_features"])
                     self.language_id.mods["mean_var_norm"] = torch.jit.freeze(self.language_id.mods["mean_var_norm"])
@@ -114,11 +118,11 @@ class speechbrain_inference:
             with torch.no_grad():
                 if bf16:
                     with torch.cpu.amp.autocast():
-                        prediction =  self.language_id.classify_batch(signal)
+                        prediction = self.language_id.classify_batch(signal)
                 else:
-                    prediction =  self.language_id.classify_batch(signal)
+                    prediction = self.language_id.classify_batch(signal)
         else: # default
-            prediction =  self.language_id.classify_batch(signal)
+            prediction = self.language_id.classify_batch(signal)
 
         inference_end_time = time()
         inference_latency = inference_end_time - inference_start_time
@@ -195,13 +199,13 @@ def main(argv):
         with open(OUTPUT_SUMMARY_CSV_FILE, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(["Audio File", 
-                             "Input Frequency", 
+                             "Input Frequency (Hz)", 
                              "Expected Language", 
                              "Top Consensus", 
                              "Top Consensus %", 
                              "Second Consensus", 
                              "Second Consensus %", 
-                             "Average Latency", 
+                             "Average Latency (s)", 
                              "Result"])
 
         total_samples = 0
@@ -273,12 +277,12 @@ def main(argv):
                 predict_list = []
                 use_entire_audio_file = False
                 latency_sum = 0.0
-                if data.waveduration < sample_dur:
+                if int(data.waveduration) <= sample_dur:
                     # Use entire audio file if the duration is less than the sampling duration
                     use_entire_audio_file = True
                     sample_list = [0 for _ in range(sample_size)]
                 else:
-                    start_time_list = list(range(sample_size - int(data.waveduration) + 1))
+                    start_time_list = list(range(int(data.waveduration) - sample_dur))
                     sample_list = []
                     for i in range(sample_size):
                         sample_list.append(random.sample(start_time_list, 1)[0])
@@ -346,16 +350,35 @@ def main(argv):
                             avg_latency, 
                             result
                         ])
+                else:
+                    # Write results to a .csv file
+                    with open(OUTPUT_SUMMARY_CSV_FILE, 'a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow([
+                            filename, 
+                            sample_rate_for_csv, 
+                            "N/A", 
+                            top_occurance,
+                            str(topPercentage) + "%",
+                            sec_occurance, 
+                            str(secPercentage) + "%", 
+                            avg_latency, 
+                            "N/A"
+                        ])
+
 
         if ground_truth_compare:
             # Summary of results
             print("\n\n Correctly predicted %d/%d\n" %(correct_predictions, total_samples))
-            print("\n See %s for summary\n" %(OUTPUT_SUMMARY_CSV_FILE))
+        
+        print("\n See %s for summary\n" %(OUTPUT_SUMMARY_CSV_FILE))
  
     elif os.path.isfile(path):  
         print("\nIt is a normal file", path)  
     else:  
         print("It is a special file (socket, FIFO, device file)" , path)
+
+    print("Done.\n")
 
 if __name__ == "__main__":
     import sys
