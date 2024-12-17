@@ -25,7 +25,8 @@ The sample first generates a portfolio within given constraints using a uniform
 distribution and a Philox-type generator provided by the oneMKL RNG API.
 
 This sample performs its computations on the default SYCL* device. You can set
-the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
+the `ONEAPI_DEVICE_SELECTOR` environment variable to `"*:cpu"` or `"*:gpu"`
+to select the device to use.
 
 ## Key Implementation Details
 

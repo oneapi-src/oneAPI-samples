@@ -16,7 +16,9 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 Matrix Multiplication uses oneMKL to multiply two large matrices and measure device performance.
 
-This sample performs its computations on the default SYCL* device. You can set the `SYCL_DEVICE_FILTER` environment variable to `cpu` or `gpu` to select the device to use.
+This sample performs its computations on the default SYCL* device. You can set
+the `ONEAPI_DEVICE_SELECTOR` environment variable to `"*:cpu"` or `"*:gpu"`
+to select the device to use.
 
 ## Key Implementation Details
 
