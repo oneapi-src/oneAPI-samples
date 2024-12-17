@@ -11,9 +11,9 @@
 # =============================================================
 
 
-# # Genetic Algorithms on GPU using Intel Distribution of Python numba-dpex
+# # Genetic Algorithms on GPU using Intel Distribution of Python 
 # 
-# This code sample shows how to implement a basic genetic algorithm with Data Parallel Python using numba-dpex.
+# This code sample shows how to implement a basic genetic algorithm with Data Parallel Python using Data Parallel Extension of NumPy.
 # 
 # ## Genetic algorithms
 # 
@@ -67,7 +67,7 @@ for i in range(pop_size):
 # 
 # ### Simple evaluation method
 # 
-# We are starting with a simple genome evaluation function. This will be our baseline and comparison for numba-dpex.
+# We are starting with a simple genome evaluation function. This will be our baseline and comparison for dpnp.
 # In this example, the fitness of an individual is computed by an arbitrary set of algebraic operations on the chromosome.
 
 # In[ ]:
@@ -150,7 +150,6 @@ def mutation(child_sequence, chance=0.01):
 # It allows fitness proportional selection - the bigger the fitness value, the bigger the chance that a given chromosome will be selected.
 # 
 # The result of all the operations is returned as chromosomes.
-# 
 
 # In[ ]:
 
@@ -239,9 +238,9 @@ print("time elapsed: " + str((time_cpu)))
 print("First chromosome: " + str(chromosomes[0]))
 
 
-# ## GPU execution using numba-dpex
+# ## GPU execution using dpnp
 # 
-# We need to start with new population initialization, as we want to perform the same operations but now on GPU using numba-dpex implementation.
+# We need to start with new population initialization, as we want to perform the same operations but now on GPU using dpnpx implementation.
 # 
 # We are setting random seed the same as before to reproduce the results. 
 
@@ -256,40 +255,36 @@ for i in range(pop_size):
     chromosomes[i][j] = random.uniform(0,1)
 
 
-# ### Evaluation function using numba-dpex
+# ### Evaluation function using Data Parallel Extension for NumPy
 # 
-# The only par that differs form the standard implementation is the evaluation function.
+# The only part that differs form the standard implementation is the evaluation function.
 # 
-# The most important part is to specify the index of the computation. This is the current index of the computed chromosomes. This serves as a loop function across all chromosomes.
+# In this implementation we are taking benefit from vectorized operations. DPNP will automatically vectorize addition, substraction, multiplication operations, making them efficient and suitable for GPU acceleration.
 
 # In[ ]:
 
 
-import numba_dpex
-from numba_dpex import kernel_api
+import dpnp as dpnp
 
-@numba_dpex.kernel
-def eval_genomes_sycl_kernel(item: kernel_api.Item, chromosomes, fitnesses, chrom_length):
-  pos = item.get_id(0)
+def eval_genomes_dpnp(chromosomes_list, fitnesses):
   num_loops = 3000
-  for i in range(num_loops):
-    fitnesses[pos] += chromosomes[pos*chrom_length + 1]
-  for i in range(num_loops):
-    fitnesses[pos] -= chromosomes[pos*chrom_length + 2]
-  for i in range(num_loops):
-    fitnesses[pos] += chromosomes[pos*chrom_length + 3]
 
-  if (fitnesses[pos] < 0):
-    fitnesses[pos] = 0
+  # Calculate fitnesses using vectorized operations
+  fitnesses += chromosomes_list[:, 1] * num_loops
+  fitnesses -= chromosomes_list[:, 2] * num_loops
+  fitnesses += chromosomes_list[:, 3] * num_loops
 
-# Now, we can measure the time to perform some generations of the Genetic Algorithm with Data Parallel Python Numba dpex. 
+  # Clip negative fitness values to zero
+  fitnesses = np.where(fitnesses < 0, 0, fitnesses)
+  return fitnesses
+
+
+# Now, we can measure the time to perform some generations of the Genetic Algorithm with Data Parallel Python Extension for NumPy. 
 # 
-# Similarly like before, the time of the evaluation, creation of new generation and fitness wipe are measured for GPU execution. But first, we need to send all the chromosomes and fitnesses container to the chosen device. 
+# Similarly like before, the time of the evaluation, creation of new generation and fitness wipe are measured for GPU execution. But first, we need to send all the chromosomes and fitnesses container to the chosen device - GPU. 
 
 # In[ ]:
 
-
-import dpnp
 
 print("SYCL:")
 start = time.time()
@@ -297,16 +292,19 @@ start = time.time()
 # Genetic Algorithm on GPU
 for i in range(num_generations):
   print("Gen " + str(i+1) + "/" + str(num_generations))
-  chromosomes_flat = chromosomes.flatten()
-  chromosomes_flat_dpctl = dpnp.asarray(chromosomes_flat, device="gpu")
-  fitnesses_dpctl = dpnp.asarray(fitnesses, device="gpu")
-
-  exec_range = kernel_api.Range(pop_size)
-  numba_dpex.call_kernel(eval_genomes_sycl_kernel, exec_range, chromosomes_flat_dpctl, fitnesses_dpctl, chrom_size)
+  chromosomes_dpctl = chromosomes
+  fitnesses_dpctl = fitnesses
+  try:
+    chromosomes_dpctl = dpnp.asarray(chromosomes, device="gpu")
+    fitnesses_dpctl = dpnp.asarray(fitnesses, device="gpu")
+  except Exception:
+    print("GPU device is not available")
+  
+  fitnesses = eval_genomes_dpnp(chromosomes, fitnesses)
+  
   fitnesses = dpnp.asnumpy(fitnesses_dpctl)
   chromosomes = next_generation(chromosomes, fitnesses)
   fitnesses = np.zeros(pop_size, dtype=np.float32)
-
 
 end = time.time()
 time_sycl = end-start
@@ -331,7 +329,7 @@ from matplotlib import pyplot as plt
 
 plt.figure()
 plt.title("Time comparison")
-plt.bar(["Numba_dpex", "without optimization"], [time_sycl, time_cpu])
+plt.bar(["DPNP", "without optimization"], [time_sycl, time_cpu])
 
 plt.show()
 
@@ -400,16 +398,16 @@ for i in range(pop_size):
 # 
 # The evaluate created generation we are calculating the full distance of the given path (chromosome). In this example, the lower the fitness value is, the better the chromosome. That's different from the general GA that we implemented.
 # 
-# As in this example we are also using numba-dpex, we are using an index like before.
+# As in the previous example dpnp will vectorize basic mathematical operations to take benefit from optimizations.
 
 # In[ ]:
 
 
-@numba_dpex.kernel
-def eval_genomes_plain_TSP_SYCL(item: kernel_api.Item, chromosomes, fitnesses, distances, pop_length):
-  pos = item.get_id(1)
-  for j in range(pop_length-1):
-    fitnesses[pos] += distances[int(chromosomes[pos, j]), int(chromosomes[pos, j+1])]
+def eval_genomes_plain_TSP_SYCL(chromosomes, fitnesses, distances, pop_length):
+  for pos in range(pop_length):
+    for j in range(chromosomes.shape[1]-1):
+      fitnesses[pos] += distances[int(chromosomes[pos, j]), int(chromosomes[pos, j+1])]
+  return fitnesses
 
 
 # ### Crossover
@@ -521,22 +519,26 @@ def next_generation_TSP(chromosomes, fitnesses):
 
 print("Traveling Salesman Problem:")
 
-distances_dpctl = dpnp.asarray(distances, device="gpu")
+distances_dpnp = distances
+try:
+  distances_dpnp = dpnp.asarray(distances, device="gpu")
+except Exception:
+  print("GPU device is not available")
+
 # Genetic Algorithm on GPU
 for i in range(num_generations):
   print("Gen " + str(i+1) + "/" + str(num_generations))
-  chromosomes_flat_dpctl = dpnp.asarray(chromosomes, device="gpu")
-  fitnesses_dpctl = dpnp.asarray(fitnesses.copy(), device="gpu")
 
-  exec_range = kernel_api.Range(pop_size)
-  numba_dpex.call_kernel(eval_genomes_plain_TSP_SYCL, exec_range, chromosomes_flat_dpctl, fitnesses_dpctl, distances_dpctl, pop_size)
-  fitnesses = dpnp.asnumpy(fitnesses_dpctl)
-  chromosomes = next_generation_TSP(chromosomes, fitnesses)
+  chromosomes_dpnp = chromosomes
+  try:
+    chromosomes_dpnp = dpnp.asarray(chromosomes, device="gpu")
+  except Exception:
+    print("GPU device is not available")
+
   fitnesses = np.zeros(pop_size, dtype=np.float32)
 
-for i in range(len(chromosomes)):
-  for j in range(11):
-    fitnesses[i] += distances[int(chromosomes[i][j])][int(chromosomes[i][j+1])]
+  fitnesses = eval_genomes_plain_TSP_SYCL(chromosomes_dpnp, fitnesses, distances_dpnp, pop_size)
+  chromosomes = next_generation_TSP(chromosomes, fitnesses)
 
 fitness_pairs = []
 
@@ -550,9 +552,10 @@ print("Best path: ", sorted_pairs[0][0], " distance: ", sorted_pairs[0][1])
 print("Worst path: ", sorted_pairs[-1][0], " distance: ", sorted_pairs[-1][1])
 
 
-# In this code sample, there was a general purpose Genetic Algorithm created and optimized using numba-dpex to run on GPU. Then the same approach was applied to the Traveling Salesman Problem.
+# In this code sample, there was a general purpose Genetic Algorithm created and optimized using dpnp to run on GPU. Then the same approach was applied to the Traveling Salesman Problem.
 
 # In[ ]:
 
 
 print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+
