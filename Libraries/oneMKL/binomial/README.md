@@ -27,6 +27,8 @@ distribution and a Philox-type generator provided by the oneMKL RNG API.
 This sample performs its computations on the default SYCL* device. You can set
 the `ONEAPI_DEVICE_SELECTOR` environment variable to `"*:cpu"` or `"*:gpu"`
 to select the device to use.
+To find more information about the variable follow the link:
+[ONEAPI_DEVICE_SELECTOR](https://github.com/intel/llvm/blob/sycl/sycl/doc/EnvironmentVariables.md#oneapi_device_selector).
 
 ## Key Implementation Details
 
