@@ -1,30 +1,30 @@
-# `Intel® Python: NumPy vs numba-dpex` Sample
+# `Genetic Algorithms on GPU using Intel® Distribution for Python* dpnp` Sample
 
-The `Intel® Python: NumPy vs numba-dpex` sample shows how to achieve the same accuracy of the k-NN model classification while using NumPy*, Numba*, and Data Parallel Extension for Numba* (numba-dpex).
+The `Genetic Algorithms on GPU using Intel® Distribution for Python* dpnp` sample shows how to implement a general genetic algorithm (GA) and offload computation to a GPU using dpnp.
 
-| Property                | Description
+| Property                    | Description
 | :---                    | :---
 | Category                | Code Optimization
-| What you will learn     | How to program using the Data Parallel Extension for Numba* (numba-dpex)
-| Time to complete        | 5 minutes
+| What you will learn     | How to implement the genetic algorithm using the Data-parallel Extension for NumPy* (dpnp)?
+| Time to complete        | 8 minutes
 
 >**Note**: This sample is validated on Intel® Distribution for Python* Offline Installer and AI Tools Offline Installer. For the full list of validated platforms refer to [Platform Validation](https://github.com/oneapi-src/oneAPI-samples/tree/master?tab=readme-ov-file#platform-validation).
 
 ## Purpose
 
-In this sample, you will run a k-nearest neighbors algorithm using 3 different Intel® Distribution for Python* libraries: NumPy, Numba, and numba-dpex. You will learn how to use k-NN model and how to optimize it by numba-dpex operations without sacrificing accuracy.
+In this sample, you will create and run the general genetic algorithm and optimize it to run on GPU using the Intel® Distribution for Python* dpnp. You will learn what are selection, crossover, and mutation, and how to adjust those methods from general genetic algorithm to a specific optimization problem which is the Traveling Salesman Problem.
 
 ## Prerequisites
 
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
-| Hardware                | CPU
+| Hardware                | GPU
 | Software                | Intel® Distribution for Python*
 
 ## Key Implementation Details
 
-This sample code is implemented for the CPU using Python. The sample assumes you have numba-dpex installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
+This sample code is implemented for GPUs using Python. The sample assumes you have dpnp installed inside a Conda environment, similar to what is installed with the Intel® Distribution for Python*.
 
 The sample tutorial contains one Jupyter Notebook and one Python script. You can use either.
 
@@ -53,7 +53,7 @@ cd oneAPI-samples/AI-and-Analytics/<samples-folder>/<individual-sample-folder> -
 <!-- for migrated samples - provide git clone command for individual repo and cd to sample dir --> 
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_Numpy_Numba_dpex_kNN
+cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_dpnp_Genetic_Algorithm
 ```
 
 **4. Install dependencies**
@@ -61,13 +61,13 @@ cd oneAPI-samples/AI-and-Analytics/Features-and-Functionality/IntelPython_Numpy_
 >**Note**: Before running the following commands, make sure your Conda environment is activated
 
 ```
-pip install ipykernel
+pip install -r requirements.txt
 pip install notebook
 ``` 
 For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
 
 ## Run the Sample
->**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_Numpy_Numba_dpex_kNN#environment-setup) is completed.
+>**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_dpnp_Genetic_Algorithm#environment-setup) is completed.
 
 ### Intel® Distribution for Python* Offline Installer (Validated)
 
@@ -91,7 +91,7 @@ jupyter notebook --ip=0.0.0.0
 **4. Select the Notebook**
 <!-- add sample file name -->
 ```
-IntelPython_Numpy_Numba_dpex_kNN.ipynb
+IntelPython_GPU_dpnp_Genetic_Algorithm.ipynb
 ```
 **5. Change the kernel to `base`**
   <!-- specify relevant kernel name(s), for example `pytorch` -->
@@ -99,20 +99,12 @@ IntelPython_Numpy_Numba_dpex_kNN.ipynb
 
 ## Example Output
 
-```
-Numpy accuracy: 0.7222222222222222
-
-Numba accuracy: 0.7222222222222222
-
-Numba_dpex accuracy 0.7222222222222222
-
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
-```
+If successful, the sample displays `[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]` at the end of execution. The sample will print out the runtimes and charts of relative performance with dpnp and without any optimizations as the baseline. Additionally, sample will print the best and worst path found in the Traveling Salesman Problem.
 
 ## Related Samples
 
 * [Get Started with the Intel® Distribution for Python*](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
-* [`Genetic Algorithms on GPU using Intel® Distribution for Python* numba-dpex` Sample](https://github.com/oneapi-src/AI-and-Analytics/Features-and-Functionality/IntelPython_GPU_numba-dpex_Genetic_Algorithm/README.md)
+
 ## License
 
 Code samples are licensed under the MIT license. See
