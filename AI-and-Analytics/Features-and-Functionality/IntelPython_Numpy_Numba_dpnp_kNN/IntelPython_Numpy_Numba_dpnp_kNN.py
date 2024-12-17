@@ -11,10 +11,10 @@
 # =============================================================
 
 
-# # Simple k-NN classification with numba_dpex IDP optimization
-#
-# This sample shows how to receive the same accuracy of the k-NN model classification by using numpy, numba and numba_dpex. The computation are performed using wine dataset.
-#
+# # Simple k-NN classification with Data Parallel Extension for NumPy IDP optimization
+# 
+# This sample shows how to receive the same accuracy of the k-NN model classification by using numpy, numba and dpnp. The computation are performed using wine dataset.
+# 
 # Let's start with general imports used in the whole sample.
 
 # In[ ]:
@@ -27,11 +27,11 @@ import pandas as pd
 
 
 # ## Data preparation
-#
+# 
 # Then, let's download the dataset and prepare it for future computations.
-#
+# 
 # We are using the wine dataset available in the sci-kit learn library. For our purposes, we will be using only 2 features: alcohol and malic_acid.
-#
+# 
 # So first we need to load the dataset and create DataFrame from it. Later we will limit the DataFrame to just target and 2 classes we choose for this problem.
 
 # In[ ]:
@@ -51,7 +51,7 @@ df = df[["target", "alcohol", "malic_acid"]]
 df.head()
 
 
-# We are planning to compare the results of the numpy, namba and IDP numba_dpex so we need to make sure that the results are reproducible. We can do this through the use of a random seed function that initializes a random number generator.
+# We are planning to compare the results of the numpy, namba and IDP dpnp so we need to make sure that the results are reproducible. We can do this through the use of a random seed function that initializes a random number generator.
 
 # In[ ]:
 
@@ -60,7 +60,7 @@ np.random.seed(42)
 
 
 # The next step is to prepare the dataset for training and testing. To do this, we randomly divided the downloaded wine dataset into a training set (containing 90% of the data) and a test set (containing 10% of the data).
-#
+# 
 # In addition, we take from both sets (training and test) data *X* (features) and label *y* (target).
 
 # In[ ]:
@@ -78,9 +78,9 @@ X_test, y_test = test_data.drop("target", axis=1), test_data["target"]
 
 
 # ## NumPy k-NN
-#
+# 
 # Now, it's time to implement the first version of k-NN function using NumPy.
-#
+# 
 # First, let's create simple euclidean distance function. We are taking positions form the provided vectors, counting the squares of the individual differences between the positions, and then drawing the root of their sum for the whole vectors (remember that the vectors must be of equal length).
 
 # In[ ]:
@@ -93,7 +93,7 @@ def distance(vector1, vector2):
 
 
 # Then, the k-nearest neighbors algorithm itself.
-#
+# 
 # 1. We are starting by defining a container for predictions the same size as a test set.
 # 2. Then, for each row in the test set, we calculate distances between then and every training record.
 # 3. We are sorting training datasets based on calculated distances
@@ -145,18 +145,17 @@ print("Numpy accuracy:", accuracy)
 
 
 # ## Numba k-NN
-#
+# 
 # Now, let's move to the numba implementation of the k-NN algorithm. We will start the same, by defining the distance function and importing the necessary packages.
-#
+# 
 # For numba implementation, we are using the core functionality which is `numba.jit()` decorator.
-#
+# 
 # We are starting with defining the distance function. Like before it is a euclidean distance. For additional optimization we are using `np.linalg.norm`.
 
 # In[ ]:
 
 
 import numba
-
 
 @numba.jit(nopython=True)
 def euclidean_distance_numba(vector1, vector2):
@@ -174,6 +173,7 @@ def knn_numba(X_train, y_train, X_test, k):
     # 1. Prepare container for predictions
     predictions = np.zeros(X_test.shape[0])
     for x in np.arange(X_test.shape[0]):
+
         # 2. Calculate distances
         inputs = X_train.copy()
         distances = np.zeros((inputs.shape[0], 1))
@@ -198,7 +198,7 @@ def knn_numba(X_train, y_train, X_test, k):
         counter = {}
         for item in neighbor_classes:
             if item in counter:
-                counter[item] = counter.get(item) + 1
+                counter[item] += 1
             else:
                 counter[item] = 1
         counter_sorted = sorted(counter)
@@ -208,8 +208,8 @@ def knn_numba(X_train, y_train, X_test, k):
     return predictions
 
 
-# Similarly, as in the NumPy example, we are testing implemented method for the `k = 3`.
-#
+# Similarly, as in the NumPy example, we are testing implemented method for the `k = 3`. 
+# 
 # The accuracy of the method is the same as in the NumPy implementation.
 
 # In[ ]:
@@ -222,132 +222,49 @@ accuracy = np.mean(predictions == true_values)
 print("Numba accuracy:", accuracy)
 
 
-# ## Numba_dpex k-NN
-#
-# Numba_dpex implementation use `numba_dpex.kernel()` decorator. For more information about programming, SYCL kernels go to: https://intelpython.github.io/numba-dpex/latest/user_guides/kernel_programming_guide/index.html.
-#
-# Calculating distance is like in the NumPy example. We are using Euclidean distance. Later, we create the queue of the neighbors by the calculated distance and count in provided *k* votes for dedicated classes of neighbors.
-#
-# In the end, we are taking a class that achieves the maximum value of votes and setting it for the current global iteration.
+# ## Data Parallel Extension for NumPy k-NN
+# 
+# To take benefit of DPNP, we can leverage its vectorized operations and efficient algorithms to implement a k-NN algorithm. We will use optimized operations like `sum`, `sqrt` or `argsort`.
+# 
+# Calculating distance is like in the NumPy example. We are using Euclidean distance. The next step is to find the indexes of k-nearest neighbours for each test poin, and get tehir labels. At the end, we neet to determine the most frequent label among k-nearest.
 
 # In[ ]:
 
 
-import numba_dpex
+import dpnp as dpnp
 
+def knn_dpnp(train, train_labels, test, k):
+  # 1. Calculate pairwise distances between test and train points
+  distances = dpnp.sqrt(dpnp.sum((test[:, None, :] - train[None, :, :])**2, axis=-1))
 
-@numba_dpex.kernel
-def knn_numba_dpex(
-    item: numba_dpex.kernel_api.Item,
-    train,
-    train_labels,
-    test,
-    k,
-    predictions,
-    votes_to_classes_lst,
-):
-    dtype = train.dtype
-    i = item.get_id(0)
-    queue_neighbors = numba_dpex.kernel_api.PrivateArray(shape=(3, 2), dtype=dtype)
+  # 2. Find the indices of the k nearest neighbors for each test point
+  nearest_neighbors = dpnp.argsort(distances, axis=1)[:, :k]
 
-    for j in range(k):
-        x1 = train[j, 0]
-        x2 = test[i, 0]
+  # 3. Get the labels of the nearest neighbors
+  nearest_labels = train_labels[nearest_neighbors]
 
-        distance = dtype.type(0.0)
-        diff = x1 - x2
-        distance += diff * diff
-        dist = math.sqrt(distance)
+  # 4. Determine the most frequent label among the k nearest neighbors
+  unique_labels, counts = np.unique(nearest_labels, return_counts=True)
+  predicted_labels = nearest_labels[np.argmax(counts)]
 
-        queue_neighbors[j, 0] = dist
-        queue_neighbors[j, 1] = train_labels[j]
-
-    for j in range(k):
-        new_distance = queue_neighbors[j, 0]
-        new_neighbor_label = queue_neighbors[j, 1]
-        index = j
-
-        while index > 0 and new_distance < queue_neighbors[index - 1, 0]:
-            queue_neighbors[index, 0] = queue_neighbors[index - 1, 0]
-            queue_neighbors[index, 1] = queue_neighbors[index - 1, 1]
-
-            index = index - 1
-
-            queue_neighbors[index, 0] = new_distance
-            queue_neighbors[index, 1] = new_neighbor_label
-
-    for j in range(k, len(train)):
-        x1 = train[j, 0]
-        x2 = test[i, 0]
-
-        distance = dtype.type(0.0)
-        diff = x1 - x2
-        distance += diff * diff
-        dist = math.sqrt(distance)
-
-        if dist < queue_neighbors[k - 1, 0]:
-            queue_neighbors[k - 1, 0] = dist
-            queue_neighbors[k - 1, 1] = train_labels[j]
-            new_distance = queue_neighbors[k - 1, 0]
-            new_neighbor_label = queue_neighbors[k - 1, 1]
-            index = k - 1
-
-            while index > 0 and new_distance < queue_neighbors[index - 1, 0]:
-                queue_neighbors[index, 0] = queue_neighbors[index - 1, 0]
-                queue_neighbors[index, 1] = queue_neighbors[index - 1, 1]
-
-                index = index - 1
-
-                queue_neighbors[index, 0] = new_distance
-                queue_neighbors[index, 1] = new_neighbor_label
-
-    votes_to_classes = votes_to_classes_lst[i]
-
-    for j in range(len(queue_neighbors)):
-        votes_to_classes[int(queue_neighbors[j, 1])] += 1
-
-    max_ind = 0
-    max_value = dtype.type(0)
-
-    for j in range(3):
-        if votes_to_classes[j] > max_value:
-            max_value = votes_to_classes[j]
-            max_ind = j
-
-    predictions[i] = max_ind
+  return predicted_labels
 
 
 # Next, like before, let's test the prepared k-NN function.
-#
-# In this case, we will need to provide the container for predictions: `predictions` and the container for votes per class: `votes_to_classes_lst` (the container size is 3, as we have 3 classes in our dataset).
-#
-# We are running a prepared k-NN function on a CPU device as the input data was allocated on the CPU. Numba-dpex will infer the execution queue based on where the input arguments to the kernel were allocated. Refer: https://intelpython.github.io/oneAPI-for-SciPy/details/programming_model/#compute-follows-data
+# 
+# We are running a prepared k-NN function on a CPU device as the input data was allocated on the CPU using DPNP.
+
 # In[ ]:
 
-
-import dpnp
-
-predictions = dpnp.empty(len(X_test.values), device="cpu")
-# we have 3 classes
-votes_to_classes_lst = dpnp.zeros((len(X_test.values), 3), device="cpu")
 
 X_train_dpt = dpnp.asarray(X_train.values, device="cpu")
 y_train_dpt = dpnp.asarray(y_train.values, device="cpu")
 X_test_dpt = dpnp.asarray(X_test.values, device="cpu")
 
-numba_dpex.call_kernel(
-    knn_numba_dpex,
-    numba_dpex.Range(len(X_test.values)),
-    X_train_dpt,
-    y_train_dpt,
-    X_test_dpt,
-    3,
-    predictions,
-    votes_to_classes_lst,
-)
+pred = knn_dpnp(X_train_dpt, y_train_dpt, X_test_dpt, 3)
 
 
-# Like before, let's measure the accuracy of the prepared implementation. It is measured as the number of well-assigned classes for the test set. The final result is the same for all: NumPy, numba and numba-dpex implementations.
+# Like before, let's measure the accuracy of the prepared implementation. It is measured as the number of well-assigned classes for the test set. The final result is the same for all: NumPy, numba and dpnp implementations.
 
 # In[ ]:
 
@@ -355,10 +272,11 @@ numba_dpex.call_kernel(
 predictions_numba = dpnp.asnumpy(predictions)
 true_values = y_test.to_numpy()
 accuracy = np.mean(predictions_numba == true_values)
-print("Numba_dpex accuracy:", accuracy)
+print("Data Parallel Extension for NumPy accuracy:", accuracy)
 
 
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+
