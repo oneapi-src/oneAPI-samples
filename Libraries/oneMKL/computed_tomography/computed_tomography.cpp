@@ -7,40 +7,62 @@
 /*
 *  Content:
 *      Reconstruct the original image from the Computed Tomography (CT)
-*      data using oneMKL DPC++ fast Fourier transform (FFT) functions.
+*      data using oneMKL DPC++ Discrete Fourier Transforms (DFTs).
 ************************************************************************
-* Usage:
-* ======
-*      program.out p q input.bmp radon.bmp restored.bmp
-*      Input:
-*      p, q - parameters of Radon transform
-*      input.bmp - must be a 24-bit uncompressed input bitmap
-*      Output:
-*      radon.bmp - p-by-(2q+1) result of Radon transform of input.bmp
-*      restored.bmp - 2q-by-2q result of FFT-based reconstruction
-*
-* Steps:
-* ======
-*      - Acquire Radon transforms from the original image - perform
-*        line integrals for the original image in 'p' directions onto
-*        '2q+1' points for each direction to obtain a sinogram.
-*      Reconstruction phase -
-*      1) Perform 'p' 1-D FFT's using oneMKL DFT DPC++ asynchronous USM API,
-*         constructing full fourier representation of the object using 'p'
-*         projections.
-*      2) Interpolate from radial grid(fourier representation from step2)
-*         onto Cartesian grid.
-*      3) Perform one 2-D inverse FFT to obtain the reconstructed
-*         image using oneMKL DFT DPCPP asynchronous USM API.
 */
+#include <string>
+constexpr int default_p = 400;
+constexpr int default_q = 400;
+constexpr double default_S_to_D = 1.0;
+static const std::string default_original_bmpname = "input.bmp";
+static const std::string default_radon_bmpname = "radon.bmp";
+static const std::string default_restored_bmpname = "restored.bmp";
+#ifdef _WIN64
+static const std::string program_name = "compute_tomography.exe";
+#else
+static const std::string program_name = "compute_tomography";
+#endif
+static const std::string usage_info =
+"\n\
+  Usage:\n\
+  ======\n\
+    " + program_name + " p q S_to_D in radon_out restored_out\n\
+  Inputs:\n\
+  -------\n\
+  p             - number of projection directions considered for the Radon\n\
+                  transform (number of angles spanning a range of M_PI).\n\
+                  p must be a strictly positive integer (default value is " +
+                  std::to_string(default_p) + ").\n\
+  q             - number of samples of the Radon transform for every\n\
+                  projection direction.\n\
+                  q must be a strictly positive integer (default value is " +
+                  std::to_string(default_q) + ").\n\
+  S_to_D        - ratio of the scanning width used for sampling the Radon\n\
+                  transform (for any projection direction) to the diagonal of\n\
+                  the input image.\n\
+                  S_to_D must be a floating-point value larger than or equal\n\
+                  to 1.0 (default value is " +
+                  std::to_string(default_S_to_D) + ").\n\
+  in            - name of the input image used to generate Radon transform data.\n\
+                  The file must be a 24-bit uncompressed bitmap file.\n\
+                  \"" + default_original_bmpname + "\" is considered by default.\n\
+  Outputs:\n\
+  --------\n\
+  radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the generated Radon\n\
+                  transform data points.\n\
+                  \"" + default_radon_bmpname + "\" is used by default.\n\
+  restored_out  - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the image reconstructed\n\
+                  from the Radon transform data points.\n\
+                  \"" + default_restored_bmpname + "\" is used by default.\n\
+";
 
 #include <cmath>
 #include <complex>
-#include <cstdarg>
-#include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <fstream>
-#include <string>
 #include <vector>
 
 #include <sycl/sycl.hpp>
@@ -50,256 +72,45 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-#if !defined(REAL_DATA)
-#define REAL_DATA double
-#endif
+namespace dft_ns = oneapi::mkl::dft;
+using real_descriptor_t =
+    dft_ns::descriptor<dft_ns::precision::DOUBLE, dft_ns::domain::REAL>;
+using complex_t = std::complex<double>;
+// This sample takes the side length of the input image's pixels as unit length
+constexpr double in_pix_len = 1.0;
 
-typedef std::complex<REAL_DATA> complex;
-
-typedef oneapi::mkl::dft::descriptor<oneapi::mkl::dft::precision::DOUBLE,
-                                     oneapi::mkl::dft::domain::REAL>
-        descriptor_real;
-typedef oneapi::mkl::dft::descriptor<oneapi::mkl::dft::precision::DOUBLE,
-                                     oneapi::mkl::dft::domain::COMPLEX>
-        descriptor_complex;
-
-// A simple transparent matrix class, row-major layout
-template <typename T>
-struct matrix {
+// A transparent matrix structure accouting for minimal padding as required for
+// - either a batch of h real 1D in-place DFTs of length w;
+// - or one real 2D in-place DFT of lengths {h, w}.
+// For such operations (real in-place DFTs), data padding is required to store
+// all the backward domain's elements.
+struct padded_matrix {
     sycl::queue q;
-    T *data;
-    int h, w, ldw;
-    matrix(sycl::queue &main_queue) : q{main_queue}, data{NULL} {}
-    matrix(const matrix &);
-    matrix &operator=(const matrix &);
-    void deallocate()
-    {
+    double *data;
+    int h, w;
+    padded_matrix(sycl::queue &main_queue) :
+        q{main_queue}, data{nullptr}, h(0), w(0) {}
+    padded_matrix(const padded_matrix &) = delete;
+    padded_matrix &operator=(const padded_matrix &) = delete;
+    void deallocate() {
         if (data)
-            free(data, q.get_context());
+            sycl::free(data, q);
+        data = nullptr;
+        h = w = 0;
     }
-    void allocate(int _h, int _w, int _ldw)
-    {
+    inline int ldw() const {
+        return 2 * (w / 2 + 1);
+    }
+    void allocate(int _h, int _w) {
+        deallocate();
         h   = _h;
         w   = _w;
-        ldw = _ldw; // leading dimension for w
+        data = (double *)sycl::malloc_shared(sizeof(double) * h * ldw(), q);
+    }
+    ~padded_matrix() {
         deallocate();
-        data = (T *)malloc_shared(sizeof(T) * h * ldw, q.get_device(), q.get_context());
     }
-    ~matrix() { deallocate(); }
 };
-typedef matrix<REAL_DATA> matrix_r;
-typedef matrix<complex> matrix_c;
-
-// Computational functions
-sycl::event step1_fft_1d(matrix_r &radon_image,
-                         descriptor_real &fft1d,
-                         sycl::queue &main_queue,
-                         const std::vector<sycl::event> &deps = {});
-sycl::event step2_interpolation(matrix_r &result,
-                                matrix_r &radon_image,
-                                sycl::queue &main_queue,
-                                const std::vector<sycl::event> &deps = {});
-sycl::event step3_ifft_2d(matrix_r &fhat,
-                          descriptor_complex &ifft2d,
-                          sycl::queue &main_queue,
-                          const std::vector<sycl::event> &deps = {});
-
-// Support functions
-void bmp_read(matrix_r &image, std::string fname);
-void bmp_write(std::string fname, const matrix_r &image, bool isComplex);
-sycl::event acquire_radon(matrix_r &result, matrix_r &input, sycl::queue &main_queue);
-template <typename T>
-inline int is_odd(const T &n)
-{
-    return n & 1;
-}
-template <typename T>
-void die(std::string err, T param);
-void die(std::string err);
-
-// Main function carrying out the steps mentioned above
-int main(int argc, char **argv)
-{
-    int p = argc > 1 ? atoi(argv[1]) : 200; // # of projections in range 0..PI
-    int q = argc > 2 ? atoi(argv[2]) : 100; // # of density points per projection is 2q+1
-
-    std::string original_bmpname = argc > 3 ? argv[3] : "input.bmp";
-    std::string radon_bmpname    = argc > 4 ? argv[4] : "radon.bmp";
-    std::string restored_bmpname = argc > 5 ? argv[5] : "restored.bmp";
-
-    // Create execution queue.
-    // This sample requires double precision, so look for a device that supports it.
-    sycl::queue main_queue;
-
-    try {
-        main_queue = sycl::queue(sycl::aspect_selector({sycl::aspect::fp64}));
-    } catch (sycl::exception &e) {
-        std::cerr << "Could not find any device with double precision support. Exiting.\n";
-        return 0;
-    }
-
-    std::cout << "Reading original image from " << original_bmpname << std::endl;
-    matrix_r original_image(main_queue);
-    bmp_read(original_image, original_bmpname);
-
-    std::cout << "Allocating radonImage for backprojection" << std::endl;
-    matrix_r radon_image(main_queue);
-    // space for p-by-(2q+2) reals, or for p-by-(q+1) complex numbers
-    radon_image.allocate(p, 2 * q + 1, 2 * q + 2);
-    if (!radon_image.data)
-        die("cannot allocate memory for radonImage\n");
-
-    std::cout << "Performing backprojection" << std::endl;
-    auto ev = acquire_radon(radon_image, original_image, main_queue);
-    ev.wait(); // wait here for bmpWrite
-    bmp_write(radon_bmpname, radon_image, false);
-
-    std::cout << "Restoring original: step1 - fft_1d in-place" << std::endl;
-    descriptor_real fft1d((radon_image.w) - 1); // 2*q
-    auto step1 = step1_fft_1d(radon_image, fft1d, main_queue);
-
-    std::cout << "Allocating array for radial->cartesian interpolation" << std::endl;
-    matrix_r fhat(main_queue);
-    fhat.allocate(2 * q, 2 * 2 * q, 2 * 2 * q);
-    if (!fhat.data)
-        die("cannot allocate memory for fhat\n");
-
-    std::cout << "Restoring original: step2 - interpolation" << std::endl;
-    auto step2 = step2_interpolation(fhat, radon_image, main_queue, {step1});
-    // step2.wait(); //wait here for bmpWrite
-    // bmpWrite( "check-after-interpolation.bmp", fhat , true); //For debugging purpose
-
-    std::cout << "Restoring original: step3 - ifft_2d in-place" << std::endl;
-    descriptor_complex ifft2d({fhat.h, (fhat.w) / 2}); // fhat.w/2 in complex'es
-    auto step3 = step3_ifft_2d(fhat, ifft2d, main_queue, {step2});
-
-    std::cout << "Saving restored image to " << restored_bmpname << std::endl;
-    step3.wait(); // Wait for the reconstructed image
-    bmp_write(restored_bmpname, fhat, true);
-
-    return 0;
-}
-
-// Step 1: batch of 1d r2c fft.
-// ghat[j, lambda] <-- scale * FFT_1D( g[j,l] )
-sycl::event step1_fft_1d(matrix_r &radon,
-                         descriptor_real &fft1d,
-                         sycl::queue &main_queue,
-                         const std::vector<sycl::event> &deps)
-{
-    std::int64_t p   = radon.h;
-    std::int64_t q2  = radon.w - 1; // w = 2*q + 1
-    std::int64_t ldw = radon.ldw;
-    REAL_DATA scale  = 1.0 / sqrt(0.0 + q2);
-
-    // Make sure we can do in-place r2c
-    if (is_odd(ldw))
-        die("c-domain needs even ldw at line %i\n", __LINE__);
-    if (q2 / 2 + 1 > ldw / 2)
-        die("no space for in-place r2c, line %i\n", __LINE__);
-
-    // Configure descriptor
-    fft1d.set_value(oneapi::mkl::dft::config_param::NUMBER_OF_TRANSFORMS, p);
-    fft1d.set_value(oneapi::mkl::dft::config_param::FWD_DISTANCE, ldw);     // in REAL_DATA's
-    fft1d.set_value(oneapi::mkl::dft::config_param::BWD_DISTANCE, ldw / 2); // in complex'es
-    fft1d.set_value(oneapi::mkl::dft::config_param::FORWARD_SCALE, scale);
-
-    fft1d.commit(main_queue);
-
-    auto fft1d_ev = oneapi::mkl::dft::compute_forward(fft1d, radon.data, deps);
-    return fft1d_ev;
-}
-
-// Step 2: interpolation to Cartesian grid.
-// ifreq_dom[x, y] <-- interpolation( freq_dom[theta, ksi] )
-sycl::event step2_interpolation(matrix_r &fhat,
-                                matrix_r &radon_image,
-                                sycl::queue &main_queue,
-                                const std::vector<sycl::event> &deps)
-{
-    // radonImage is the result of r2c FFT
-    // rt(pp,:) contains frequencies 0...q
-    complex *rt = (complex *)radon_image.data;
-    complex *ft = (complex *)fhat.data;
-
-    int q   = (radon_image.w - 1) / 2; // w = 2q + 1
-    int ldq = radon_image.ldw / 2;
-    int p   = radon_image.h;
-
-    int h   = fhat.h;
-    int w   = fhat.w / 2;   // fhat.w/2 in complex'es
-    int ldw = fhat.ldw / 2; // fhat.ldw/2 in complex'es
-
-    auto ev = main_queue.submit([&](sycl::handler &cgh) {
-
-        cgh.depends_on(deps);
-
-        auto interpolateKernel = [=](sycl::item<1> item) {
-            const int i = item.get_id(0);
-
-            for (int j = 0; j < w; ++j) {
-                REAL_DATA yy    = 2.0 * i / h - 1; // yy = [-1...1]
-                REAL_DATA xx    = 2.0 * j / w - 1; // xx = [-1...1]
-                REAL_DATA r     = sycl::sqrt(xx * xx + yy * yy);
-                REAL_DATA phi   = sycl::atan2(yy, xx);
-                complex fhat_ij = complex(0.);
-                if (r <= 1) {
-                    if (phi < 0) {
-                        r = -r;
-                        phi += M_PI;
-                    }
-
-                    int qq = sycl::floor(REAL_DATA(q + r * q + 0.5)) - q; // qq = [-q...q)
-                    if (qq >= q)
-                        qq = q - 1;
-
-                    int pp = sycl::floor(REAL_DATA(phi / M_PI * p + 0.5)); // pp = [0...p)
-                    if (pp >= p)
-                        pp = p - 1;
-
-                    if (qq >= 0)
-                        fhat_ij = rt[pp * ldq + qq];
-                    else
-                        fhat_ij = std::conj(rt[pp * ldq - qq]);
-
-                    if (is_odd(qq))
-                        fhat_ij = -fhat_ij;
-                    if (is_odd(i))
-                        fhat_ij = -fhat_ij;
-                    if (is_odd(j))
-                        fhat_ij = -fhat_ij;
-                }
-                ft[i * ldw + j] = fhat_ij;
-            }
-
-        };
-
-        cgh.parallel_for<class interpolateKernelClass>(sycl::range<1>(h), interpolateKernel);
-    });
-
-    return ev;
-}
-
-// Step 3: inverse FFT
-// ifreq_dom[x, y] <-- IFFT_2D( ifreq_dom[x, y] )
-sycl::event step3_ifft_2d(matrix_r &fhat,
-                          descriptor_complex &ifft2d,
-                          sycl::queue &main_queue,
-                          const std::vector<sycl::event> &deps)
-{
-    // Configure descriptor
-    std::vector<std::int64_t> strides = {0, (fhat.ldw) / 2, 1}; // fhat.ldw/2, in complex'es
-    // Strides must be identical in forward and backward domain for in-place
-    // complex transforms
-    ifft2d.set_value(oneapi::mkl::dft::config_param::FWD_STRIDES, strides);
-    ifft2d.set_value(oneapi::mkl::dft::config_param::BWD_STRIDES, strides);
-    ifft2d.commit(main_queue);
-
-    sycl::event ifft2d_ev = oneapi::mkl::dft::compute_backward(ifft2d, fhat.data, deps);
-
-    return ifft2d_ev;
-}
-
 // Simplified BMP structure.
 // See http://msdn.microsoft.com/en-us/library/dd183392(v=vs.85).aspx
 #pragma pack(push, 1)
@@ -322,79 +133,88 @@ struct bmp_header {
     unsigned int bi_clr_important;
 };
 #pragma pack(pop)
-
-// Read image from fname and convert it to gray-scale REAL.
-void bmp_read(matrix_r &image, std::string fname)
-{
+struct pixel {
+    unsigned char b, g, r;
+};
+// Routine terminating the application and reporting ad-hoc information.
+void die(const std::string& err) {
+    std::cerr << "Fatal error: " << err << " " << std::endl
+              << std::flush;
+    std::exit(EXIT_FAILURE);
+}
+// Routine reading a 24-bit uncompressed bitmap image file and converting it to
+// a gray-scale padded_matrix (~array of doubles in [0, 1], 0 is white, 1 is
+// black). The maximum such gray-scale value is returned.
+double bmp_read(padded_matrix &image, const std::string& fname) {
     std::fstream fp;
     fp.open(fname, std::fstream::in | std::fstream::binary);
     if (fp.fail())
-        die("cannot open the file %s\n", fname);
+        die("cannot open the file " + fname);
 
     bmp_header header;
 
     fp.read((char *)(&header), sizeof(header));
-    if (header.bi_bit_count != 24)
-        die("not a 24-bit image in %s\n", fname);
-    if (header.bi_compression)
-        die("%s is compressed bmp\n", fname);
+    if (header.bi_bit_count != 24) {
+        fp.close();
+        die("not a 24-bit image in " + fname);
+    }
+    if (header.bi_compression) {
+        fp.close();
+        die(fname + " is compressed bmp");
+    }
+    if (header.bi_height <= 0 || header.bi_width <= 0) {
+        fp.close();
+        die("image " + fname + " has zero size");
+    }
+    if (header.bi_height > 65536 || header.bi_width > 65536) {
+        fp.close();
+        die("image " + fname + " is too large");
+    }
 
-    if (header.bi_height <= 0 || header.bi_width <= 0)
-        die("image %s has zero size\n", fname);
-
-    if (header.bi_height > 65536 || header.bi_width > 65536)
-        die("image %s too large\n", fname);
-
-    image.allocate(header.bi_height, header.bi_width, header.bi_width);
+    image.allocate(header.bi_height, header.bi_width);
     if (!image.data)
-        die("no memory to read %s\n", fname);
+        die("no memory to read " + fname);
 
     fp.seekg(sizeof(header), std::ios_base::beg);
-
-    REAL_DATA *image_data = (REAL_DATA *)image.data;
-
+    pixel pix;
+    double max_gray_scale = std::numeric_limits<double>::lowest();
     for (int i = 0; i < image.h; ++i) {
         for (int j = 0; j < image.w; ++j) {
-            struct {
-                unsigned char b, g, r;
-            } pixel;
-
-            fp.read((char *)(&pixel), 3);
-
-            REAL_DATA gray = (255 * 3.0 - pixel.r - pixel.g - pixel.b) / 255;
-            image_data[i * image.ldw + j] = gray;
+            fp.read((char *)(&pix), 3);
+            double gray_scale = (255.0 - (pix.r + pix.g + pix.b) / 3.0) / 255.0;
+            image.data[i * image.ldw() + j] = gray_scale;
+            max_gray_scale = std::max(max_gray_scale, gray_scale);
         }
-        fp.seekg((4 - 3 * image.w % 4) % 4, std::ios_base::cur);
+        // rows are rounded up to a multiple of 4 bytes in BMP format
+        fp.seekg((4 - (3 * image.w) % 4) % 4, std::ios_base::cur);
     }
 
     if (!fp)
-        die("error reading %s\n", fname);
+        die("error reading " + fname);
 
     fp.close();
+    return max_gray_scale;
 }
-
-inline REAL_DATA to_real(const REAL_DATA &x)
-{
-    return x;
-}
-inline REAL_DATA to_real(const complex &x)
-{
-    return std::abs(x);
-}
-
-template <typename T>
-void bmp_write_templ(std::string fname, int h, int w, int ldw, T *data)
-{
-    unsigned sizeof_line  = (w * 3 + 3) / 4 * 4;
-    unsigned sizeof_image = h * sizeof_line;
+// Routine exporting a padded_matrix (~array of doubles) as a gray-scale 24-bit
+// uncompressed bitmap image file.
+// For every entry v of the matrix, a gray scale (max(v, 0.0) / max_abs) is
+// calculated and the corresponding pixel's color code is generated.
+// Note: negative values are ignored (considered white) by this routine. While
+// negative values may be found in the reconstructed image, they should be
+// considered artifacts (e.g., due to Gibbs phenomenon) and/or local errors of
+// the reconstruction procedure (e.g., due to the rudimentary spectrum
+// interpolation).
+void bmp_write(const std::string& fname, const padded_matrix &image) {
+    unsigned sizeof_line  = (image.w * 3 + 3) / 4 * 4;
+    unsigned sizeof_image = image.h * sizeof_line;
 
     bmp_header header = {{'B', 'M'},
                         unsigned(sizeof(header) + sizeof_image),
                         0,
                         sizeof(header),
                         sizeof(header) - offsetof(bmp_header, bi_size),
-                        unsigned(w),
-                        unsigned(h),
+                        unsigned(image.w),
+                        unsigned(image.h),
                         1,
                         24,
                         0,
@@ -407,181 +227,493 @@ void bmp_write_templ(std::string fname, int h, int w, int ldw, T *data)
     std::fstream fp;
     fp.open(fname, std::fstream::out | std::fstream::binary);
     if (fp.fail())
-        die("failed to save the image, cannot open file", fname);
+        die("failed to save the image, cannot open file " + fname);
 
     fp.write((char *)(&header), sizeof(header));
+    double v_max = std::numeric_limits<double>::lowest();
+    for (int i = 0; i < image.h; ++i)
+        for (int j = 0; j < image.w; ++j)
+            v_max = std::max(image.data[i * image.ldw() + j], v_max);
 
-    REAL_DATA minabs = 1e38, maxabs = 0;
-    for (int i = 0; i < h; ++i)
-        for (int j = 0; j < w; ++j) {
-            REAL_DATA ijabs = to_real(data[i * ldw + j]);
-            if (!(ijabs > minabs))
-                minabs = ijabs;
-            if (!(ijabs < maxabs))
-                maxabs = ijabs;
+    if (v_max <= 0.0) {
+        fp.close();
+        die("inconsistent data range to consider for exporting " + fname);
+    }
+    pixel pix;
+    for (int i = 0; i < image.h; ++i) {
+        for (int j = 0; j < image.w; ++j) {
+            const double gray =
+                std::max(image.data[i * image.ldw() + j], 0.0)/v_max;
+            pix.b = pix.g = pix.r =
+                static_cast<unsigned char>(std::round(255.0*(1.0 - gray)));
+            fp.write((char *)(&pix), 3);
         }
-
-    for (int i = 0; i < h; ++i) {
-        for (int j = 0; j < w; ++j) {
-            REAL_DATA ijabs = to_real(data[i * ldw + j]);
-            REAL_DATA gray  = 255 * (ijabs - maxabs) / (minabs - maxabs);
-
-            struct {
-                unsigned char b, g, r;
-            } pixel;
-            pixel.b = pixel.g = pixel.r = (unsigned char)(gray + 0.5);
-            fp.write((char *)(&pixel), 3);
-        }
-        for (int j = 3 * w; j % 4; ++j)
+        // rows are rounded up to a multiple of 4 bytes in BMP format
+        for (int j = 3 * image.w; j % 4; ++j)
             fp.put(0);
     }
     fp.close();
 }
 
-void bmp_write(std::string fname, const matrix_r &image, bool isComplex)
-{
-    if (isComplex)
-        bmp_write_templ(fname, image.h, image.w / 2, image.ldw / 2, (complex *)image.data);
-    else
-        bmp_write_templ(fname, image.h, image.w, image.ldw, image.data);
-}
+// For a given 2D function f(y, x), the radon transform of f is defined as
+//               radon[f](theta, v) := integral of f along line L
+// where L is the set of points (y, x) such that
+//                    x*cos(theta) + y*sin(theta) = v
+// in a given orthonormal frame.
+// Let p = radon_projection.h, q = radon_projection.q, and
+// radon_ldw = radon_projection.ldw(). For all integers i in [0, p-1] and j in
+// [0, q-1], this routine sets
+//    radon_projection.data[i*radon_ldw + j] = radon[f_input](theta(i), v(j))
+// where
+//   theta(i)   = -0.5*M_PI + i*M_PI/p,
+//   v(j)       = (-1.0 + (2.0*j + 1.0)/q)*0.5*S,
+// considering the function f_input defined as
+//                      f_input(y, x) = 0
+// if max(|y|/hh, |x|/ww) > 0.5, and
+//            f_input(y, x) = input.data[ii*input.ldw() + jj]
+// where integers ii and jj are such that
+//              ii*in_pix_len <= y + 0.5*hh < (ii + 1)*in_pix_len,
+//              jj*in_pix_len <= x + 0.5*ww < (jj + 1)*in_pix_len,
+// using hh = input.h*in_pix_len and ww = input.w*in_pix_len.
+//
+// Inputs:
+// -------
+// S:                   scanning width used for sampling the Radon transform
+//                      for every projection angle theta (see above);
+// input:               padded_matrix defining the function f_input to consider
+//                      when computing Radon transform values (see above).
+// Output:
+// -------
+// radon_projection:    padded_matrix containing the desired samples of the
+//                      radon transform described above.
+//                      The calculations are enqueued to the queue encapsulated
+//                      this object.
+// Returns:
+// --------
+// a sycl::event object tracking the completion of the task.
+sycl::event acquire_radon(padded_matrix &radon_projection,
+                          double S, const padded_matrix &input) {
 
-sycl::event acquire_radon(matrix_r &result, matrix_r &input, sycl::queue &main_queue)
-{
-
-    int h_r = result.h, w_r = result.w, ldw_r = result.ldw;
-    int h_i = input.h, w_i = input.w, ldw_i = input.ldw;
-
-    // Integrate image along line [(x,y),(cos theta, sin theta)] = R*s
-    auto integrate_along_line = [=](REAL_DATA theta, REAL_DATA s, int h, int w, int ldw,
-                                  REAL_DATA *data) {
-        REAL_DATA R = 0.5 * sycl::sqrt(REAL_DATA(h * h + w * w));
-        REAL_DATA S = s * R, B = sycl::sqrt(1 - s * s) * R;
-        REAL_DATA cs = sycl::cos(theta), sn = sycl::sin(theta);
-        REAL_DATA dl = 1, dx = -dl * sn, dy = dl * cs; // integration step
-        // unadjusted start of integration
-        REAL_DATA x0 = 0.5 * w + S * cs + B * sn;
-        REAL_DATA y0 = 0.5 * h + S * sn - B * cs; // unadjusted end of integration
-        REAL_DATA x1 = 0.5 * w + S * cs - B * sn;
-        REAL_DATA y1 = 0.5 * h + S * sn + B * cs;
-
-        int N = 0; // number of sampling points on the interval
-        do {
-            // Adjust start-end of the integration interval
-            if (x0 < 0) {
-                if (x1 < 0)
-                    break;
-                else {
-                    y0 -= (0 - x0) * cs / sn;
-                    x0 = 0;
-                }
+    const double hh = input.h*in_pix_len;
+    const double ww = input.w*in_pix_len;
+    if (S < std::hypot(hh, ww)) {
+        die("invalid scanning width for acquire_radon");
+    }
+    // helper computing the length from "origin" to the closest point on one of
+    // the lines that define a rectangular box (determined by its "center" and
+    // its "side_lengths") in the direction of vector "+dir_v".
+    // std::numeric_limits<double>::max() is returned if no intersection is
+    // found.
+    auto compute_length_to_closest_edge =
+        [=](const double origin[2], const double dir_v[2],
+            const double center[2], const double side_lengths[2]) {
+        double lambda = std::numeric_limits<double>::max();
+        const double abs_v = sycl::hypot(dir_v[0], dir_v[1]);
+        for (int dim = 0; dim < 2; dim++) {
+            if (dir_v[dim] == 0.0)
+                continue;
+            for (double bound : {center[dim] - 0.5*side_lengths[dim],
+                                 center[dim] + 0.5*side_lengths[dim]}) {
+                double candidate = abs_v * (bound - origin[dim]) / dir_v[dim];
+                if (0.0 < candidate && candidate < lambda)
+                    lambda = candidate;
             }
-            if (y0 < 0) {
-                if (y1 < 0)
-                    break;
-                else {
-                    x0 -= (0 - y0) * sn / cs;
-                    y0 = 0;
-                }
-            }
-            if (x1 < 0) {
-                if (x0 < 0)
-                    break;
-                else {
-                    y1 -= (0 - x1) * cs / sn;
-                    x1 = 0;
-                }
-            }
-            if (y1 < 0) {
-                if (y0 < 0)
-                    break;
-                else {
-                    x1 -= (0 - y1) * sn / cs;
-                    y1 = 0;
-                }
-            }
-            if (x0 > w) {
-                if (x1 > w)
-                    break;
-                else {
-                    y0 -= (w - x0) * cs / sn;
-                    x0 = w;
-                }
-            }
-            if (y0 > h) {
-                if (y1 > h)
-                    break;
-                else {
-                    x0 -= (h - y0) * sn / cs;
-                    y0 = h;
-                }
-            }
-            if (x1 > w) {
-                if (x0 > w)
-                    break;
-                else {
-                    y1 -= (w - x1) * cs / sn;
-                    x1 = w;
-                }
-            }
-            if (y1 > h) {
-                if (y0 > h)
-                    break;
-                else {
-                    x1 -= (h - y1) * sn / cs;
-                    y1 = h;
-                }
-            }
-            // Compute number of steps
-            N = int(sycl::fabs(dx) > sycl::fabs(dy) ? ((x1 - x0) / dx) : ((y1 - y0) / dy));
-        } while (0);
-
-        // Integrate
-        REAL_DATA sum = 0;
-        for (int n = 0; n < N; ++n) {
-            int i = sycl::floor(y0 + n * dy + 0.5 * dy);
-            int j = sycl::floor(x0 + n * dx + 0.5 * dx);
-            sum += data[i * ldw + j];
         }
-        sum *= dl;
+        return lambda;
+    };
+    const int input_ldw = input.ldw();
+    const double *input_data = input.data;
+    auto integrate_along_line = [=](double theta, double v) {
+        /*
+        Let's consider an orthonormal reference frame centered at the center of
+        the image (say O), using axes aligned with the edges of the image, as
+        shown below.
+        */
+        double box_center[2] = {0.0, 0.0};
+        double box_edges[2] = {hh, ww};
+        /*
+         line L (defined by theta and v)                            ^ (y-axis)
+           \                                                        |
+            \                    ww                                 |
+            _\_______________________________________________       |
+           |  \                                              |      |
+           |   \                                             |      |
+           |    \                                            |      |
+           |     \                                           |      |
+       hh  |      \               O                          |      - 0
+           |       \                                         |      |
+           |        \                                        |      |
+           |         \                                       |      |
+           |__________\______________________________________|      |
+                       \                                            |
+                        \         0                                 |
+        --------------------------|------------------------------------>
+        (x-axis)
 
-        return sum;
+        Using the following parameters,
+        */
+        const double cs = sycl::cos(theta), sn = sycl::sin(theta);
+        const double unit_vector[2] = {+cs, -sn};
+        const double half_chord = sycl::sqrt(0.25*S*S - v*v);
+        /*
+        the coordinates (y, x) of any point lying on the chord that L makes in
+        the circle of center O and radius 0.5*S may be parameterized as
+               y(alpha) = v*sn + (-half_chord + alpha)*unit_vector[0];
+               x(alpha) = v*cs + (-half_chord + alpha)*unit_vector[1];
+        where 0 <= alpha <= 2*half_chord is a curvilinear abscissa along L.
+        The integral of the (piecewise constant) input signal for the range of
+        alpha s.t. max(|y(alpha)/hh|, |x(alpha)/ww|) <= 0.5 is computed below
+        */
+        // cursor point on L (alpha = 0.0)
+        double cursor[2] = {v * sn - half_chord * unit_vector[0],
+                            v * cs - half_chord * unit_vector[1]};
+        // Move the cursor along L (alpha += dalpha, dalpha > 0.0) into the
+        // first pixel crossed by L. When moving the cursor, "a little more" is
+        // added to dalpha to place it _into_ the first/next pixel of the image
+        // crossed by L (avoiding ambiguous cases of pixel corners lying exactly
+        // on L).
+        constexpr double a_little_more = in_pix_len*1.0e-4;
+        double dalpha = 0.0;
+        while (sycl::fabs(cursor[0]) > 0.5*hh ||
+               sycl::fabs(cursor[1]) > 0.5*ww) {
+            dalpha = compute_length_to_closest_edge(cursor, unit_vector,
+                                                    box_center, box_edges);
+            if (dalpha > 2.0*half_chord) {
+                // no intersection between L and the image was found
+                return 0.0;
+            }
+            for (int dim = 0; dim < 2; dim++)
+                cursor[dim] += (dalpha + a_little_more)*unit_vector[dim];
+        }
+        // parse the image pixels of indices (ii, jj) visited by the cursor as
+        // alpha increases, i.e., as the cursor moves along L within the image
+        int ii = static_cast<int>(sycl::floor((cursor[0] + 0.5*hh)/in_pix_len));
+        int jj = static_cast<int>(sycl::floor((cursor[1] + 0.5*ww)/in_pix_len));
+        // reset the box_edges to the size of individual pixels
+        box_edges[0] = box_edges[1] = in_pix_len;
+        // set box_center to the pixel's center
+        box_center[0] = -0.5*hh + (ii + 0.5)*in_pix_len;
+        box_center[1] = -0.5*ww + (jj + 0.5)*in_pix_len;
+        // compute integral
+        double integral = 0.0;
+        while (sycl::fabs(box_center[0]) < 0.5*hh &&
+               sycl::fabs(box_center[1]) < 0.5*ww) {
+            // find smallest value of dalpha > 0 that brings the cursor to the
+            // closest edge of the current pixel crossed by L.
+            // There is always one dalpha s.t.
+            //                0 < dalpha <= sqrt(2)*in_pix_len
+            // for any pixel inside the input image, crossed by L.
+            dalpha = compute_length_to_closest_edge(cursor, unit_vector,
+                                                    box_center, box_edges);
+            // Note: cursor was moved "a little more" into the pixel, previously
+            integral += input_data[ii * input_ldw + jj]*(dalpha + a_little_more);
+            // move the cursor into the following pixel
+            for (int dim = 0; dim < 2; dim++)
+                cursor[dim] += (dalpha + a_little_more)*unit_vector[dim];
+            // set the new pixel indices
+            ii = static_cast<int>(sycl::floor((cursor[0] + 0.5*hh)/in_pix_len));
+            jj = static_cast<int>(sycl::floor((cursor[1] + 0.5*ww)/in_pix_len));
+            box_center[0] = -0.5*hh + (ii + 0.5)*in_pix_len;
+            box_center[1] = -0.5*ww + (jj + 0.5)*in_pix_len;
+        }
+        return integral;
     };
 
-    REAL_DATA *input_data  = (REAL_DATA *)input.data;
-    REAL_DATA *result_data = (REAL_DATA *)result.data;
-
-    sycl::event ev = main_queue.submit([&](sycl::handler &cgh) {
-
-        auto acquire_radon_kernel = [=](sycl::item<1> item) {
-            const int i = item.get_id(0);
-
-            REAL_DATA theta = i * M_PI / h_r; // theta=[0,...,M_PI)
-            for (int j = 0; j < w_r; ++j) {
-                REAL_DATA s          = -1. + (2.0 * j + 1) / w_r; // s=(-1,...,1)
-                REAL_DATA projection = integrate_along_line(theta, s, h_i, w_i, ldw_i, input_data);
-                result_data[i * ldw_r + j] = projection;
+    sycl::event ev = radon_projection.q.submit([&](sycl::handler &cgh) {
+        const int p = radon_projection.h;
+        const int q = radon_projection.w;
+        const int radon_ldw = radon_projection.ldw();
+        double *radon_data  = radon_projection.data;
+        cgh.parallel_for<class acquire_radon_class>(
+            sycl::range<2>(p, q),
+            [=](sycl::item<2> item) {
+                const int i = item.get_id(0);
+                const int j = item.get_id(1);
+                // -0.5*M_PI <= theta < 0.5*M_PI
+                const double theta = -0.5*M_PI + i * M_PI / p;
+                // -0.5*S < v < 0.5*S
+                const double v = (-1.0 + (2.0 * j + 1.0) / q)*0.5*S;
+                radon_data[i * radon_ldw + j] = integrate_along_line(theta, v);
             }
-
-        };
-
-        cgh.parallel_for<class acquire_radon_class>(sycl::range<1>(h_r), acquire_radon_kernel);
+        );
     });
 
     return ev;
 }
 
-template <typename T>
-void die(std::string err, T param)
-{
-    std::cout << "Fatal error: " << err << " " << param << std::endl;
-    fflush(0);
-    exit(1);
+// Routine reconstructing an S-by-S image of q x q pixels from p x q samples of
+// its Radon transform (q samples spanning a scanning width S for every of the p
+// projection directions).
+//
+// Inputs:
+// -------
+// R:     padded_matrix of height p and width q storing the samples of the radon
+//        transform. Note that R is modified by this routine;
+// S:     scanning width used when sampling the Radon transform;
+// dep:   sycl::event object capturing the dependency to be honored before
+//        accessing elements of R.
+// Output:
+// -------
+// image: padded_matrix of height q and width q representing gray-scale pixel
+//        values of the reconstructed image (square image of side length S).
+void reconstruction_from_radon(padded_matrix& image,
+                               padded_matrix& R, double S, sycl::event& dep) {
+    if (S <= 0.0)
+        die("invalid scanning width");
+    const int p = R.h;
+    const int q = R.w;
+    image.allocate(q, q);
+    if (!image.data)
+        die("cannot allocate memory for reconstruction");
+    std::cout << "Reconstructing image from the Radon projection data"
+              << std::endl;
+/*
+    Note: in the explanatory comments below, arithmetic operations are to be
+          understood as similar C++ instructions would, i.e., "x/2" represents
+          the integer division of x by 2 if x is an integer itself, which is
+          different from the value of 0.5*x if x%2 == 1.
+
+    The input R to this routine is interpreted as
+             R.data[i * R.ldw() + j] == radon[f](theta(i), v(j))
+                                     := "R[i][j]"
+    where
+               theta(i) = -0.5*M_PI + i * M_PI / p;
+               v(j)     = (-1.0 + (2.0*j + 1.0) / q) * 0.5 * S;
+    for 0 <= i < p and 0 <= j < q.
+
+    For a given value of theta, let radon_hat(theta, ksi) be the (continuous)
+    1D Fourier transform of radon[f](theta, v), i.e., using "1i" := sqrt(-1),
+        radon_hat(theta, ksi) :=
+            integral (radon[f](theta, v)*exp(-1i*2*M_PI*v*ksi)) dv.
+             v real
+    By the Fourier slice theorem,
+            radon_hat(theta, ksi) = f_hat(ksi*sin(theta), ksi*cos(theta))
+    where f_hat is the (continuous) 2D Fourier transform of f, i.e.,
+       f_hat(k_y, k_x) :=
+           integral integral (f(y,x)*exp(-1i*2*M_PI*(k_y*y + k_x*x))) dx dy.
+            y real   x real
+
+    Considering ksi = r / S for integers r in [0, q/2], one has
+        radon_hat(theta(i), r / S)
+            =  integral (radon[f](theta(i), v)*exp(-1i*2*M_PI*(r/S)*v)) dv.
+              |v| < S/2
+    which may be approximated as (midpoint rule)
+    radon_hat(theta(i), r / S)
+        ~ \sum_j (R[i][j]*exp(-1i*2*M_PI*(r/S)*v(j))) * (S/q), for j=0,...,q-1
+        = exp(1i*M_PI*r*(1.0 - 1.0/q)) * (S/q) * DFT(R[i][0:q[ ; r),    (eq. 1a)
+    where DFT(R[i][0:q[; r) represents the r-th value of the forward DFT of
+    the i-th row of q discrete values in R.
+    Note: radon_hat(theta(i) + M_PI, r / S) = conj(radon_hat(theta(i), r / S))
+*/
+    std::cout << "\tStep 1 - Batch of " << p
+              << " real 1D in-place forward DFTs of length " << q << std::endl;
+    // Descriptor to compute the DFTs involved in the RHS of eq. 1a, scaled by
+    // S/q
+    real_descriptor_t radon_dft(q);
+    // p values of theta
+    radon_dft.set_value(dft_ns::config_param::NUMBER_OF_TRANSFORMS, p);
+    // Distances must be set for batched transforms. For real in-place DFTs with
+    // unit stride, the distance in forward domain (wherein elements are real)
+    // must be twice the distance in backward domain (wherein elements are
+    // complex). Therefore, padding is requied in forward domain (as accounted
+    // for by the padded_matrix structure)
+    radon_dft.set_value(dft_ns::config_param::FWD_DISTANCE, R.ldw());
+    radon_dft.set_value(dft_ns::config_param::BWD_DISTANCE, R.ldw() / 2);
+    // Scaling factor for forward DFT (see eq. 1a above)
+    radon_dft.set_value(dft_ns::config_param::FORWARD_SCALE, S / q);
+    // oneMKL DFT descriptor operate in-place by default
+    radon_dft.commit(R.q);
+    auto compute_radon_hat = dft_ns::compute_forward(radon_dft, R.data, {dep});
+/*
+    Using R_data_c = reinterpret_cast<complex_t*>(R.data), one has
+         f_hat((r/S)*sin(theta(i)), (r/S)*cos(theta(i)))                (eq. 1b)
+                 ~ exp(1i*M_PI*r*(1.0 - 1.0/q)) * R_data_c[i * R.ldw()/2 + r]
+    for 0 <= i < p and 0 <= r <= q/2 (upon completion of compute_radon_hat).
+    Note that values of i in [p, 2*p) are known too, as the complex conjugates
+    of their (i-p) counterparts (albeit not stored explicitly).
+
+    The reconstructed image is based off a version of the spectrum f_hat that
+    is truncated to wave vectors no larger than 0.5*q/S in magnitude, e.g.,
+      g_hat(ksi_y, ksi_x) =
+              f_hat(ksi_y, ksi_x)*heaviside(0.5*q/S - sqrt(ksi_y^2 + ksi_x^2)),
+    where heaviside(x) := {0, 0.5, 1} if {x < 0.0, x == 0, x > 0.0},
+    respectively.
+
+    While g(y, x) is not strictly equal to f(y, x) pointwise in general, g
+    converges towards f in a weaker sense (e.g., in L2 norm) as q gets large if
+    f is bounded and has compact support. Since samples of g are desired at
+    specific points, i.e., the (centers of the) q x q pixels of the
+    reconstructed S-by-S image, let
+                  g_s(y, x) = g(y, x) * 2d_dirac_comb(y, x; S/q),
+    where 2d_dirac_comb(y, x; alpha) is defined as
+      \sum_j \sum_i 2d_dirac(y-alpha*j, x-alpha*i), {i,j} = -infty,...,+infty.
+
+    By the convolution theorem, the spectrum of g_s is
+        g_s_hat(ksi_y, ksi_x) =                                          (eq. 2)
+     (q^2/S^2)*convolution[g_hat(., .), 2d_dirac_comb(., .; q/S)](ksi_y, ksi_x),
+    which is periodic with period q/S along ksi_y and ksi_x. Sampling g_s_hat at
+    wave vectors of components multiple of 1.0/S, i.e., considering
+        f_tilde_hat(ksi_y, ksi_x) =                                      (eq. 3)
+            g_s_hat(ksi_y, ksi_x) * 2d_dirac_comb(ksi_y, ksi_x; 1.0/S)
+    effectively corresponds to f_tilde(y, x) being a periodic replication of
+    (S^2)*g_s(y, x) with period S along y and x (assuming that values of
+    g_s(y, x) may be ignored for {(y, x): max(|y|, |x|) > 0.5*S}).
+
+    Developing the (continuous) 2D inverse Fourier transform of f_tilde_hat
+    (see eq. 3), one has
+      f_tilde(y, x) = \sum_i \sum_j 2d_dirac(y-i*(S/q), x-j*(S/q)) G[i%q][j%q],
+                                                      {i,j} = -infty,...,+infty
+    where G[i][j] (0 <= i < q. 0 <= j < q) is the (i,j) value of the 2D backward
+    DFT of
+           G_S_HAT[m][n] = g_s_hat(mm(m)/S, nn(n)/S), 0 <= m < q, 0 <= n < q
+    where 0 <= |xx(x)| <= q/2 and mod(x, q) == mod(xx(x), q) with 'x' being
+    either 'm' or 'n'. Explicitly, for 0 <= m < q, 0 <= n < q, let
+        abs_S_ksi   = sycl::hypot(mm(n), nn(n));
+        theta       = sycl::atan2(mm(n), nn(n));
+    then (see eq. 2)
+        G_S_HAT[m][n]=0.0,                                 if abs_S_ksi > 0.5*q;
+        G_S_HAT[m][n]=f_hat(mm(m)/S, nn(n)/S),      if round(abs_S_ksi) < 0.5*q;
+        G_S_HAT[m][n]=0.5*f_hat(mm(m)/S, nn(n)/S),  if round(abs_S_ksi) = 0.5*q,
+                                               and fmod(theta, 0.5*M_PI) != 0.0;
+        G_S_HAT[m][n]=real_part(f_hat(mm(m)/S, nn(n)/S)),
+                                                    if round(abs_S_ksi) = 0.5*q,
+                                                and fmod(theta, 0.5*M_PI) = 0.0.
+
+    Identifying f_tilde(y, x) as the periodic replication of (S^2)*g_s(y, x)
+    with period S along y and x, one concludes that
+                 g(i*(S/q), j*(S/q)) = G[i%q][j%q] / S^2                 (eq. 4)
+    for integers i and j s.t. |i| <= q/2 and |j| <= q/2 (assuming that values of
+    g_s(y, x) may be ignored for {(y, x): max(|y|, |x|) > 0.5*S}).
+
+    The required values of G_S_HAT[m][n] are interpolated below from the known
+    values stored in R (using eq. 1b).
+    Note that G_S_HAT[q - m][q - n] = conj(G_S_HAT[m][n]) given that
+    f_hat(-ksi_y, -ksi_x) = conj(f_hat(ksi_y, ksi_x)). This is consistent with
+    the requirements for a well-defined backward real 2D DFT, and the values of
+    G_S_HAT[m][n] do not need to be set explicitly for n > q/2.
+*/
+    std::cout << "\tStep 2 - Interpolating spectrum from polar to "
+              << "cartesian grid" << std::endl;
+    auto interp_ev = image.q.submit([&](sycl::handler &cgh) {
+        cgh.depends_on(compute_radon_hat);
+        const complex_t *R_data_c = reinterpret_cast<complex_t*>(R.data);
+        complex_t *G_S_HAT = reinterpret_cast<complex_t*>(image.data);
+        const int R_data_c_ldw  = R.ldw()/2;        // in complex values
+        const int G_S_HAT_ldw   = image.ldw()/2;    // in complex values
+        cgh.parallel_for<class interpolateKernelClass>(
+            sycl::range<2>(q, q/2 + 1),
+            [=](sycl::item<2> item) {
+                const int m = item.get_id(0);
+                const int n = item.get_id(1);
+                const int mm = m - (2*m > q ? q : 0);
+                const int nn = n; // nn(n) == n since n never exceeds q/2
+                const double abs_S_ksi = sycl::hypot(double(mm), double(nn));
+                const double theta = (mm == 0 && nn == 0) ?
+                        0.0 : sycl::atan2(double(mm), double(nn));
+                // theta in [-0.5*M_PI, +0.5*M_PI]
+                complex_t G_S_HAT_mn = complex_t(0.0, 0.0);
+                if (abs_S_ksi <= 0.5*q) {
+                    const int r = static_cast<int>(sycl::round(abs_S_ksi));
+                    const int i =
+                        static_cast<int>(sycl::round(((theta + 0.5*M_PI)/M_PI)*p));
+                    // if i < 0 or i >= p (e.g., theta = 0.5*M_PI corresponds to
+                    // i == p), the value is mapped to the complex conjugate of
+                    // R_data_c[(i%p) * R_data_c_ldw + r] (e.g.,
+                    // theta = -0.5*M_PI if i == p).
+                    complex_t f_hat_mm_nn =
+                        R_data_c[(i% p) * R_data_c_ldw + r]*
+                        complex_t(sycl::cos(M_PI*r*(1.0 - 1.0/q)),
+                                  sycl::sin(M_PI*r*(1.0 - 1.0/q))); // see eq. 1b
+                    if (i%(2*p) >= p)
+                        f_hat_mm_nn = std::conj(f_hat_mm_nn);
+
+                    G_S_HAT_mn = f_hat_mm_nn;
+                    if (2*r == q) {
+                        if (nn == 0 || mm == 0) // |theta| = 0.0 or 0.5*M_PI
+                            G_S_HAT_mn.imag(0.0);
+                        else
+                            G_S_HAT_mn *= 0.5;
+                    }
+                    // For a more convenient representation of the reconstructed
+                    // image, shift the target reference frame so that the
+                    // center of the reconstructed image is located at pixel
+                    // of indices (q/2, q/2):
+                    G_S_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*m*(q/2)/q),
+                                            sycl::sin(-2.0*M_PI*m*(q/2)/q));
+                    // RHS is ((-1)^m, 0) is q is even
+                    G_S_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*n*(q/2)/q),
+                                            sycl::sin(-2.0*M_PI*n*(q/2)/q));
+                    // RHS is ((-1)^n, 0) is q is even
+                }
+                G_S_HAT[m * G_S_HAT_ldw + n] = G_S_HAT_mn;
+        });
+    });
+    std::cout << "\tStep 3 - In-place backward real 2D DFT of size "
+              << q << "x" << q << std::endl;
+    real_descriptor_t q_by_q_real_dft({q, q});
+    // Default strides are set by default for in-place DFTs (consistently with
+    // the implementation of padded_matrix)
+    // Scaling factor for backward DFT (see eq. 4)
+    q_by_q_real_dft.set_value(dft_ns::config_param::BACKWARD_SCALE, 1.0 / (S*S));
+    q_by_q_real_dft.commit(image.q);
+    auto compute_g_values =
+        dft_ns::compute_backward(q_by_q_real_dft, image.data, {interp_ev});
+    compute_g_values.wait();
 }
 
-void die(std::string err)
-{
-    std::cout << "Fatal error: " << err << " " << std::endl;
-    fflush(0);
-    exit(1);
+int main(int argc, char **argv) {
+    const int p                         = argc > 1 ? std::atoi(argv[1]) :
+                                                     default_p;
+    const int q                         = argc > 2 ? std::atoi(argv[2]) :
+                                                     default_q;
+    const double S_to_D                 = argc > 3 ? std::atof(argv[3]) :
+                                                     default_S_to_D;
+    const std::string original_bmpname  = argc > 4 ? argv[4] :
+                                                     default_original_bmpname;
+    const std::string radon_bmpname     = argc > 5 ? argv[5] :
+                                                     default_radon_bmpname;
+    const std::string restored_bmpname  = argc > 6 ? argv[6] :
+                                                     default_restored_bmpname;
+    // validate numerical input arguments
+    if (argc > 7 || p <= 0 || q <= 0 || S_to_D < 1.0) {
+        die("invalid usage.\n" + usage_info);
+    }
+
+    // Create execution queue.
+    sycl::queue main_queue;
+    try {
+        // This sample requires double-precision floating-point arithmetic:
+        main_queue = sycl::queue(sycl::aspect_selector({sycl::aspect::fp64}));
+    } catch (sycl::exception &e) {
+        std::cerr << "Could not find any device with double precision support."
+                  << "Exiting." << std::endl;
+        return 0;
+    }
+    // read input image and convert it to gray-scale values
+    std::cout << "Reading original image from " << original_bmpname << std::endl;
+    padded_matrix original(main_queue);
+    const double max_input_value = bmp_read(original, original_bmpname);
+    // diagonal D of original image
+    const double D = std::hypot(original.h, original.w)*in_pix_len;
+    // scanning width S
+    const double S = S_to_D * D;
+    // Compute samples of the radon transform
+    padded_matrix radon_image(main_queue);
+    radon_image.allocate(p, q);
+    if (!radon_image.data)
+        die("cannot allocate memory for Radon projection");
+    std::cout << "Generating Radon transform data from "
+              << original_bmpname << std::endl;
+    auto radon_ev = acquire_radon(radon_image, S, original);
+    std::cout << "Saving Radon transform data in "
+              << radon_bmpname << std::endl;
+    radon_ev.wait(); // make sure it completes before exporting data
+    bmp_write(radon_bmpname, radon_image);
+    // reconstruct image from its radon transform samples
+    padded_matrix reconstruction(main_queue);
+    reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
+    std::cout << "Saving restored image in " << restored_bmpname << std::endl;
+    bmp_write(restored_bmpname, reconstruction);
+
+    return EXIT_SUCCESS;
 }
