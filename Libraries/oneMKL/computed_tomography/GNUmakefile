@@ -5,7 +5,7 @@ default: run
 all: run
 
 run: computed_tomography
-	./computed_tomography 400 400 input.bmp radon.bmp restored.bmp
+	./computed_tomography
 
 MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=dft
 
