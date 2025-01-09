@@ -2,8 +2,9 @@
 name: Report a bug or a performance issue
 about: Use this template to report unexpected behavior
 title: ''
-labels: 'bug'
+labels: bug
 assignees: ''
+
 ---
 
 # Summary

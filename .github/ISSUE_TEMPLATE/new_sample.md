@@ -1,9 +1,10 @@
 ---
 name: Request to add a oneAPI Sample
 about: Use this template to request to add a new Code Sample
-title: 'Request to Add a oneAPI Sample <YourSampleName>'
-labels: 'enhancement'
-assignees: Project Manager
+title: Request to Add a oneAPI Sample <YourSampleName>
+labels: enhancement
+assignees: ''
+
 ---
 
 ## Summary
@@ -28,4 +29,3 @@ Please include the proposed folder location for your sample to reside
 
 ## Checklist
 [ ] Samples Working Group Permission accepted on <Insert Date>
-
