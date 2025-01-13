@@ -50,7 +50,7 @@
 *       kept on device side to avoid unnecessary synchronization points.
 *
 *       Note, this example differs from the solver_cg2.cpp sample in that we define
-*       our own custom axpby and axpy that can take in mulitple device side scalars for
+*       our own custom axpby and axpy that can take in multiple device side scalars for
 *       construction of alpha/beta from device side on-the-fly to avoid unnecessary synch
 *       points on host for alpha/beta construction.
 *

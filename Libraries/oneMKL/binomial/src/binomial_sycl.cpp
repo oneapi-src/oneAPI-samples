@@ -109,7 +109,7 @@ void Binomial<DATA_TYPE>::body() {
                 id += mul_c;
               }
 
-              // Handling num_steps step by last item and putting it direclty to
+              // Handling num_steps step by last item and putting it directly to
               // SLM last element
               if (local_id == wg_size - 1) {
                 auto d = sx * sycl::exp(id) - xx;

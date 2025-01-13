@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
   oneapi::mkl::dft::compute_forward(desc, sig1);
   // sig2 <- DFT(sig2)
   oneapi::mkl::dft::compute_forward(desc, sig2);
-  // Compute the element-wise multipication of (complex) coefficients in
+  // Compute the element-wise multiplication of (complex) coefficients in
   // backward domain:
   // corr <- sig1 * CONJ(sig2) [component-wise]
   auto sig1_cplx =
