@@ -17,16 +17,18 @@ constexpr double default_S_to_D = 1.0;
 static const std::string default_original_bmpname = "input.bmp";
 static const std::string default_radon_bmpname = "radon.bmp";
 static const std::string default_restored_bmpname = "restored.bmp";
+static const std::string default_errors_bmpname = "errors.bmp";
 #ifdef _WIN64
 static const std::string program_name = "compute_tomography.exe";
 #else
 static const std::string program_name = "compute_tomography";
 #endif
+constexpr double arbitrary_error_threshold = 0.1;
 static const std::string usage_info =
 "\n\
   Usage:\n\
   ======\n\
-    " + program_name + " p q S_to_D in radon_out restored_out\n\
+    " + program_name + " p q S_to_D in radon_out restored_out err_out\n\
   Inputs:\n\
   -------\n\
   p             - number of projection directions considered for the Radon\n\
@@ -56,6 +58,14 @@ static const std::string usage_info =
                   gray-scaled image representing the image reconstructed\n\
                   from the Radon transform data points.\n\
                   \"" + default_restored_bmpname + "\" is used by default.\n\
+  err_out       - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the pixel-wise error in the\n\
+                  restored_out file. This file is created only if the mean\n\
+                  global error is found to exceed "
+                  + std::to_string(100.0*arbitrary_error_threshold) +
+                  "% of the maximum\n\
+                  gray-scale value in the original image.\n\
+                  \"" + default_errors_bmpname + "\" is considered by default.\n\
 ";
 
 #include <cmath>
@@ -661,6 +671,139 @@ void reconstruction_from_radon(padded_matrix& image,
     compute_g_values.wait();
 }
 
+// Routine computing the mean global error and pixel-wise mean local errors in
+// the reconstructed image, when compared to the (gray-scale-converted)
+// original image. The mean error over an area A is defined as
+//       (1.0/area(A)) integral |f_reconstruction - f_original| dA
+//                        A
+// where f_reconstruction (resp. f_original) is the piecewise contant function
+// of the gray-scale intensity in the reconstructed (resp. original) image.
+// Note: f_reconstruction and f_original are considered equal to 0.0 outside
+// the support of the original image.
+//
+// Inputs:
+// -------
+// S:               scanning width used when sampling the Radon transform;
+// original:        padded_matrix containing the original input image's pixel
+//                  values converted to gray-scale values;
+// reconstruction:  padded_matrix containing the reconstructed image's pixel
+//                  gray-scale values.
+// Output:
+// -------
+// errors:          padded_matrix of the same size as reconstruction, containing
+//                  the pixel-wise mean local errors in the pixels of the
+//                  reconstructed image.
+// Returns:
+// --------
+// The mean global error.
+double compute_errors(padded_matrix& errors,
+                      double S,
+                      const padded_matrix& original,
+                      const padded_matrix& reconstruction) {
+    const int q = reconstruction.h;
+    if (q <= 0 || q != reconstruction.w)
+        die("invalid reconstruction considered for evaluating mean local errors");
+    errors.allocate(q, q);
+    if (!errors.data)
+        die("cannot allocate memory for mean local errors");
+    // the reconstructed image is an S-by-S image of q x q pixels
+    const double pixel_length = S/q;
+    const double max_overlap = sycl::min(pixel_length, in_pix_len);
+    // dimensions of the original image:
+    const double hh = in_pix_len*original.h;
+    const double ww = in_pix_len*original.w;
+
+    // helper routines to compute the mean local error in pixel (i,j) of the
+    // reconstructed image
+    const int supremum_io = original.h - 1;
+    const int supremum_jo = original.w - 1;
+    auto get_original_index = [=](double y, double x) {
+        int io = static_cast<int>(sycl::floor((0.5*hh + y) / in_pix_len));
+        int jo = static_cast<int>(sycl::floor((0.5*ww + x) / in_pix_len));
+        io = sycl::max(0, sycl::min(io, supremum_io));
+        jo = sycl::max(0, sycl::min(jo, supremum_jo));
+        return std::pair<int, int>(io, jo);
+    };
+    const double* reconstruction_data = reconstruction.data;
+    const double* original_data = original.data;
+    const int reconstruction_ldw = reconstruction.ldw();
+    const int original_ldw = original.ldw();
+    auto compute_mean_error_in_pixel = [=](int i, int j) {
+        // Notes:
+        // - pixel of index (i,j) in the reconstructed image covers the area of
+        //   points (y, x) such that
+        //              |y - (i - q/2)*pixel_length| <= 0.5*pixel_length
+        //              |x - (j - q/2)*pixel_length| <= 0.5*pixel_length
+        // - pixel of index (io,jo) in the original image covers the area of
+        //   points (y, x) such that
+        //          io*in_pix_len <= y + 0.5*hh <= (io+1)*in_pix_len
+        //          jo*in_pix_len <= x + 0.5*ww <= (jo+1)*in_pix_len
+        // in a common orthonormal reference frame centered on either image
+        const double y_min = (i - q/2 - 0.5)*pixel_length;
+        const double x_min = (j - q/2 - 0.5)*pixel_length;
+        const double y_max = (i - q/2 + 0.5)*pixel_length;
+        const double x_max = (j - q/2 + 0.5)*pixel_length;
+        if (y_min > 0.5*hh || y_max < -0.5*hh ||
+            x_min > 0.5*ww || x_max < -0.5*ww) {
+            // out of scope of relevance, no intersection with the original
+            // image
+            return 0.0;
+        }
+        // find corresponding range of pixels in original image
+        const auto io_jo_min = get_original_index(y_min, x_min);
+        const auto io_jo_max = get_original_index(y_max, x_max);
+        const double got = reconstruction_data[i*reconstruction_ldw + j];
+        double mean_local_error = 0.0;
+        // parse original image's pixels (io, jo) having a non-empty
+        // intersection with the reconstructed image's pixel (i, j)
+        for (int io = io_jo_min.first; io <= io_jo_max.first; io++) {
+            const double yo_min = -0.5*hh + io*in_pix_len;
+            const double yo_max = -0.5*hh + (io + 1)*in_pix_len;
+            double overlap_y =
+                sycl::min(y_max, yo_max) - sycl::max(y_min, yo_min);
+            overlap_y = sycl::max(0.0, sycl::min(overlap_y, max_overlap));
+            for (int jo = io_jo_min.second; jo <= io_jo_max.second; jo++) {
+                const double xo_min = -0.5*ww + jo*in_pix_len;
+                const double xo_max = -0.5*ww + (jo + 1)*in_pix_len;
+                double overlap_x =
+                    sycl::min(x_max, xo_max) - sycl::max(x_min, xo_min);
+                overlap_x = sycl::max(0.0, sycl::min(overlap_x, max_overlap));
+                const double exp = original_data[io*original_ldw + jo];
+                mean_local_error +=
+                    sycl::fabs(exp - got)*overlap_y*overlap_x;
+            }
+        }
+        mean_local_error /= (pixel_length*pixel_length);
+        return mean_local_error;
+    };
+    // compute the mean local errors and the mean global error
+    double mean_error = 0.0;
+    double* L1_error = (double *)sycl::malloc_device(sizeof(double), errors.q);
+    if (!L1_error)
+        die("cannot allocate memory for mean global error");
+    auto init_ev = errors.q.copy(&mean_error, L1_error, 1);
+    auto compute_errors_ev = errors.q.submit([&](sycl::handler &cgh) {
+        cgh.depends_on(init_ev);
+        auto global_integral = sycl::reduction(L1_error, sycl::plus<>());
+        double *local_error_data = errors.data;
+        const int local_error_ldw = errors.ldw();
+        cgh.parallel_for<class compute_errors_class>(
+            sycl::range<2>(q, q), global_integral,
+            [=](sycl::item<2> item, auto& sum) {
+                const int i = item.get_id(0);
+                const int j = item.get_id(1);
+                const double mean_err_ij = compute_mean_error_in_pixel(i, j);
+                local_error_data[i*local_error_ldw + j] = mean_err_ij;
+                sum += mean_err_ij * pixel_length * pixel_length;
+            }
+        );
+    });
+    errors.q.copy(L1_error, &mean_error, 1, compute_errors_ev).wait();
+    sycl::free(L1_error, errors.q);
+    mean_error /= (hh*ww);
+    return mean_error;
+}
+
 int main(int argc, char **argv) {
     const int p                         = argc > 1 ? std::atoi(argv[1]) :
                                                      default_p;
@@ -674,8 +817,10 @@ int main(int argc, char **argv) {
                                                      default_radon_bmpname;
     const std::string restored_bmpname  = argc > 6 ? argv[6] :
                                                      default_restored_bmpname;
+    const std::string errors_bmpname    = argc > 7 ? argv[7] :
+                                                     default_errors_bmpname;
     // validate numerical input arguments
-    if (argc > 7 || p <= 0 || q <= 0 || S_to_D < 1.0) {
+    if (argc > 8 || p <= 0 || q <= 0 || S_to_D < 1.0) {
         die("invalid usage.\n" + usage_info);
     }
 
@@ -714,6 +859,36 @@ int main(int argc, char **argv) {
     reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
     std::cout << "Saving restored image in " << restored_bmpname << std::endl;
     bmp_write(restored_bmpname, reconstruction);
+    // evaluate the mean error, pixel by pixel in the reconstructed image
+    padded_matrix errors(main_queue);
+    const double mean_error = compute_errors(errors, S, original, reconstruction);
+    std::cout << "The mean error in the reconstruction image is " << mean_error
+              << std::endl;
+    if (mean_error / max_input_value > arbitrary_error_threshold) {
+        std::cerr << "The mean error exceeds the (arbitrarily-chosen) "
+                  << "threshold of " << 100.0*arbitrary_error_threshold
+                  << "% of the original image's maximum gray-scale value"
+                  << std::endl;
+        if (std::fabs(p * S_to_D - q) > 0.2*std::max(p*S_to_D, double(q))) {
+            std::cerr << "It is recommended to use values of p and q such that "
+                      << "p*S_to_D and q are commensurate." << std::endl;
+        }
+        else if (S / q > 2.0*in_pix_len) {
+            std::cerr << "Consider increasing q (to "
+                      << std::ceil(S/(2.0*in_pix_len)) << " or more) "
+                      << "to alleviate blurring in the reconstructed image."
+                      << std::endl;
+        }
+        else {
+            std::cerr << "Consider increasing S_to_D and q proportionally to "
+                      << "one another to reduce interpolation errors."
+                      << std::endl;
+        }
+        std::cerr << "Saving local errors in " << errors_bmpname
+                  << std::endl << std::flush;
+        bmp_write(errors_bmpname, errors);
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
