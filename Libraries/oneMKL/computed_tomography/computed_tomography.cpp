@@ -18,6 +18,7 @@ static const std::string default_original_bmpname = "input.bmp";
 static const std::string default_radon_bmpname = "radon.bmp";
 static const std::string default_restored_bmpname = "restored.bmp";
 static const std::string default_errors_bmpname = "errors.bmp";
+constexpr int default_crop = 1;
 #ifdef _WIN64
 static const std::string program_name = "compute_tomography.exe";
 #else
@@ -28,7 +29,7 @@ static const std::string usage_info =
 "\n\
   Usage:\n\
   ======\n\
-    " + program_name + " p q S_to_D in radon_out restored_out err_out\n\
+    " + program_name + " p q S_to_D in radon_out restored_out err_out crop\n\
   Inputs:\n\
   -------\n\
   p             - number of projection directions considered for the Radon\n\
@@ -48,6 +49,11 @@ static const std::string usage_info =
   in            - name of the input image used to generate Radon transform data.\n\
                   The file must be a 24-bit uncompressed bitmap file.\n\
                   \"" + default_original_bmpname + "\" is considered by default.\n\
+  crop          - integer flag indicating whether to crop the generated bitmap\n\
+                  output images to their range of relevance or not. Images are\n\
+                  (resp. are not) cropped if the value is 1 (resp. 0).\n\
+                  The supported values are 0 and 1 (default value is "
+                  + std::to_string(default_crop) + ").\n\
   Outputs:\n\
   --------\n\
   radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
@@ -205,26 +211,38 @@ double bmp_read(padded_matrix &image, const std::string& fname) {
     fp.close();
     return max_gray_scale;
 }
-// Routine exporting a padded_matrix (~array of doubles) as a gray-scale 24-bit
-// uncompressed bitmap image file.
-// For every entry v of the matrix, a gray scale (max(v, 0.0) / max_abs) is
-// calculated and the corresponding pixel's color code is generated.
-// Note: negative values are ignored (considered white) by this routine. While
-// negative values may be found in the reconstructed image, they should be
-// considered artifacts (e.g., due to Gibbs phenomenon) and/or local errors of
-// the reconstruction procedure (e.g., due to the rudimentary spectrum
+// Routine exporting the values image.data[i*image.ldw() + j] of a
+// padded_matrix "image" for indices (i, j) such that
+//           max(min_max_i[0], 0) <= i < min(min_max_i[1], image.h)
+//           max(min_max_j[0], 0) <= j < min(min_max_j[1], image.w)
+// as a gray-scale 24-bit uncompressed bitmap image file.
+// For every such relevant entry v of the matrix, a gray scale value
+// proportional to max(v, 0.0) is calculated (maximizing contrast) and the
+// corresponding pixel's color code is generated. In other words, negative
+// values are ignored (considered white) by this routine.
+// Note: while negative values may be found in the reconstructed image, they
+// may be considered artifacts (e.g., due to Gibbs phenomenon) and/or local
+// errors of the reconstruction procedure (e.g., due to the rudimentary spectrum
 // interpolation).
-void bmp_write(const std::string& fname, const padded_matrix &image) {
-    unsigned sizeof_line  = (image.w * 3 + 3) / 4 * 4;
-    unsigned sizeof_image = image.h * sizeof_line;
+void bmp_write(const std::string& fname, const padded_matrix &image,
+               const int min_max_i[2], const int min_max_j[2]) {
+    const int min_i = std::max(min_max_i[0], 0);
+    const int max_i = std::min(min_max_i[1], image.h);
+    const int min_j = std::max(min_max_j[0], 0);
+    const int max_j = std::min(min_max_j[1], image.w);
+    if (max_i <= min_i || max_j <= min_j)
+        die("invalid range of pixel indices for bmp_write to export");
+
+    unsigned sizeof_line  = ((max_j - min_j) * 3 + 3) / 4 * 4;
+    unsigned sizeof_image = (max_i - min_i) * sizeof_line;
 
     bmp_header header = {{'B', 'M'},
                         unsigned(sizeof(header) + sizeof_image),
                         0,
                         sizeof(header),
                         sizeof(header) - offsetof(bmp_header, bi_size),
-                        unsigned(image.w),
-                        unsigned(image.h),
+                        unsigned(max_j - min_j),
+                        unsigned(max_i - min_i),
                         1,
                         24,
                         0,
@@ -241,8 +259,8 @@ void bmp_write(const std::string& fname, const padded_matrix &image) {
 
     fp.write((char *)(&header), sizeof(header));
     double v_max = std::numeric_limits<double>::lowest();
-    for (int i = 0; i < image.h; ++i)
-        for (int j = 0; j < image.w; ++j)
+    for (int i = min_i; i < max_i; ++i)
+        for (int j = min_j; j < max_j; ++j)
             v_max = std::max(image.data[i * image.ldw() + j], v_max);
 
     if (v_max <= 0.0) {
@@ -250,8 +268,8 @@ void bmp_write(const std::string& fname, const padded_matrix &image) {
         die("inconsistent data range to consider for exporting " + fname);
     }
     pixel pix;
-    for (int i = 0; i < image.h; ++i) {
-        for (int j = 0; j < image.w; ++j) {
+    for (int i = min_i; i < max_i; ++i) {
+        for (int j = min_j; j < max_j; ++j) {
             const double gray =
                 std::max(image.data[i * image.ldw() + j], 0.0)/v_max;
             pix.b = pix.g = pix.r =
@@ -259,7 +277,7 @@ void bmp_write(const std::string& fname, const padded_matrix &image) {
             fp.write((char *)(&pix), 3);
         }
         // rows are rounded up to a multiple of 4 bytes in BMP format
-        for (int j = 3 * image.w; j % 4; ++j)
+        for (int j = 3 * (max_j - min_j); j % 4; ++j)
             fp.put(0);
     }
     fp.close();
@@ -819,10 +837,17 @@ int main(int argc, char **argv) {
                                                      default_restored_bmpname;
     const std::string errors_bmpname    = argc > 7 ? argv[7] :
                                                      default_errors_bmpname;
+    const int crop                      = argc > 8 ? std::atoi(argv[8]) :
+                                                     default_crop;
     // validate numerical input arguments
-    if (argc > 8 || p <= 0 || q <= 0 || S_to_D < 1.0) {
+    if (argc > 9 || p <= 0 || q <= 0 || S_to_D < 1.0 || crop < 0 || crop > 1) {
         die("invalid usage.\n" + usage_info);
     }
+    // range of pixel indices to consider when exporting an image.
+    int i_range[2] = {std::numeric_limits<int>::lowest(),
+                      std::numeric_limits<int>::max()};
+    int j_range[2] = {std::numeric_limits<int>::lowest(),
+                      std::numeric_limits<int>::max()};
 
     // Create execution queue.
     sycl::queue main_queue;
@@ -839,7 +864,9 @@ int main(int argc, char **argv) {
     padded_matrix original(main_queue);
     const double max_input_value = bmp_read(original, original_bmpname);
     // diagonal D of original image
-    const double D = std::hypot(original.h, original.w)*in_pix_len;
+    const double ww = original.w*in_pix_len;
+    const double hh = original.h*in_pix_len;
+    const double D = std::hypot(hh, ww);
     // scanning width S
     const double S = S_to_D * D;
     // Compute samples of the radon transform
@@ -850,15 +877,36 @@ int main(int argc, char **argv) {
     std::cout << "Generating Radon transform data from "
               << original_bmpname << std::endl;
     auto radon_ev = acquire_radon(radon_image, S, original);
+    if (crop == 1) {
+        // values of radon_image.data[i*radon_image.ldw() + j] are expected to
+        // be 0.0 if |(-1.0 + (2.0*j + 1.0)/q)*S_to_D| > 1
+        i_range[0] = 0;
+        i_range[1] = radon_image.h;
+        j_range[0] =
+            static_cast<int>(std::ceil(0.5*((1.0 - 1.0/S_to_D)*q - 1.0)));
+        j_range[1] =
+            static_cast<int>(std::ceil(0.5*((1.0 + 1.0/S_to_D)*q - 1.0)));
+    }
     std::cout << "Saving Radon transform data in "
               << radon_bmpname << std::endl;
     radon_ev.wait(); // make sure it completes before exporting data
-    bmp_write(radon_bmpname, radon_image);
+    bmp_write(radon_bmpname, radon_image, i_range, j_range);
     // reconstruct image from its radon transform samples
     padded_matrix reconstruction(main_queue);
     reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
+    if (crop == 1) {
+        // values of reconstruction.data[i*reconstruction.ldw() + j] are
+        // out of the relevant range of comparison if
+        //             |(i - q/2)*S/q| - 0.5*S/q > 0.5*hh
+        // or
+        //             |(j - q/2)*S/q| - 0.5*S/q > 0.5*ww
+        i_range[0] = static_cast<int>(std::ceil(-0.5*hh*q/S + q/2 - 0.5));
+        i_range[1] = static_cast<int>(std::ceil(+0.5*hh*q/S + q/2 + 0.5));
+        j_range[0] = static_cast<int>(std::ceil(-0.5*ww*q/S + q/2 - 0.5));
+        j_range[1] = static_cast<int>(std::ceil(+0.5*ww*q/S + q/2 + 0.5));
+    }
     std::cout << "Saving restored image in " << restored_bmpname << std::endl;
-    bmp_write(restored_bmpname, reconstruction);
+    bmp_write(restored_bmpname, reconstruction, i_range, j_range);
     // evaluate the mean error, pixel by pixel in the reconstructed image
     padded_matrix errors(main_queue);
     const double mean_error = compute_errors(errors, S, original, reconstruction);
@@ -886,7 +934,8 @@ int main(int argc, char **argv) {
         }
         std::cerr << "Saving local errors in " << errors_bmpname
                   << std::endl << std::flush;
-        bmp_write(errors_bmpname, errors);
+        // same relevant pixel indices for errors as for reconstruction
+        bmp_write(errors_bmpname, errors, i_range, j_range);
         return EXIT_FAILURE;
     }
 
