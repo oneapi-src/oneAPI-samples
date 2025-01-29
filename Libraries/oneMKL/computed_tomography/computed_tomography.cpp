@@ -154,8 +154,7 @@ struct pixel {
 };
 // Routine terminating the application and reporting ad-hoc information.
 void die(const std::string& err) {
-    std::cerr << "Fatal error: " << err << " " << std::endl
-              << std::flush;
+    std::cerr << "Fatal error: " << err << std::endl;
     std::exit(EXIT_FAILURE);
 }
 // Routine reading a 24-bit uncompressed bitmap image file and converting it to
@@ -823,6 +822,11 @@ double compute_errors(padded_matrix& errors,
 }
 
 int main(int argc, char **argv) {
+    if (argc > 1 &&
+        (std::strcmp(argv[1], "-h") == 0 || std::strcmp(argv[1], "-H") == 0)) {
+        std::cout << usage_info << std::endl;
+        return EXIT_SUCCESS;
+    }
     const int p                         = argc > 1 ? std::atoi(argv[1]) :
                                                      default_p;
     const int q                         = argc > 2 ? std::atoi(argv[2]) :
@@ -933,7 +937,7 @@ int main(int argc, char **argv) {
                       << std::endl;
         }
         std::cerr << "Saving local errors in " << errors_bmpname
-                  << std::endl << std::flush;
+                  << std::endl;
         // same relevant pixel indices for errors as for reconstruction
         bmp_write(errors_bmpname, errors, i_range, j_range);
         return EXIT_FAILURE;
