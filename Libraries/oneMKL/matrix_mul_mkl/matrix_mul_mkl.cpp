@@ -136,7 +136,7 @@ void usage(const char *pname)
               << "   double    [default]\n"
               << "   single\n"
               << "   half\n"
-              << "   all(runs all above)\n"
+              << "   all (runs all above)\n"
               << "\n"
               << "This benchmark uses the default DPC++ device, which can be controlled using\n"
               << "  the ONEAPI_DEVICE_SELECTOR environment variable\n";
