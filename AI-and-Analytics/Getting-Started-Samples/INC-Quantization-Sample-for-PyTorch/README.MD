@@ -48,12 +48,6 @@ You will need to download and install the following toolkits, tools, and compone
 Required AI Tools: **Intel® Neural Compressor, Intel® Extension of PyTorch***. 
 <br>If you have not already, select and install these Tools via via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
-**2. Install dependencies**
-```
-pip install -r requirements.txt
-```
-**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
-
 ## Run the `Getting Started with Intel® Neural Compressor for Quantization` Sample 
 
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
@@ -82,19 +76,24 @@ conda activate pytorch
 git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
-4. Launch Jupyter Notebook: 
+4. Install dependencies:
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+5. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
 feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 ```
 jupyter notebook --ip=0.0.0.0
 ```
-5. Follow the instructions to open the URL with the token in your browser.
-6. Select the Notebook:
+6. Follow the instructions to open the URL with the token in your browser.
+7. Select the Notebook:
 ```
 quantize_with_inc.ipynb
 ```
-7. Change the kernel to `pytorch`
-8. Run every cell in the Notebook in sequence.
+8. Change the kernel to `pytorch`
+9. Run every cell in the Notebook in sequence.
 
 ### Conda/PIP
 > **Note**: Make sure your Conda/Python environment with AI Tools installed is activated
@@ -103,7 +102,12 @@ quantize_with_inc.ipynb
 git clone https://github.com/oneapi-src/oneAPI-samples.git
 cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 ```
-2. Launch Jupyter Notebook: 
+2. Install dependencies:
+```
+pip install -r requirements.txt
+```
+**Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+3. Launch Jupyter Notebook: 
 > **Note**: You might need to register Conda kernel to Jupyter Notebook kernel, 
 feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 ```
