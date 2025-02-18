@@ -69,8 +69,8 @@ conda activate jax
 **4. Clone the GitHub repository**
 ``` 
 git clone https://github.com/google/jax.git
-cd jax
-export PYTHONPATH=$PYTHONPATH:$(pwd)
+cp -r jax/examples .
+export PYTHONPATH=$PYTHONPATH:$(pwd) 
 ```
 ## Run the Sample
 
