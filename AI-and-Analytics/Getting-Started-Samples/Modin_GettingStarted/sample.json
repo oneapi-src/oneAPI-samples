@@ -14,7 +14,7 @@
   		"id": "Intel_Modin_GS_py",
   		"steps": [
 			"source /intel/oneapi/intelpython/bin/activate",
-			"pip install matplotlib modin[all]",
+			"pip install -r requirements.txt",
 			"pip install jupyter ipykernel",
 			"jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_GettingStarted.ipynb"
   		]
