@@ -164,7 +164,9 @@ struct StreamingCholeskyInversion {
       int diagonal_size = (kColumns > raw_latency ? kColumns : raw_latency) - 1;
       int col = diagonal_number;
       int row = 0;
-
+ 
+ 
+      [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
       [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations + kInitIterations; it++) {
         // Only perform work when in not dummy iterations
