@@ -166,7 +166,7 @@ struct StreamingCholeskyInversion {
       int row = 0;
  
  
-      [[intel::initiation_interval(1)]]
+      [[intel::initiation_interval(1)]] // NO-FORMAT: Attribute
       [[intel::ivdep(raw_latency)]]  // NO-FORMAT: Attribute
       for (int it = 0; it < kTotalIterations + kInitIterations; it++) {
         // Only perform work when in not dummy iterations
