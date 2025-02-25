@@ -25,8 +25,7 @@
     ],
     "targetDevice": [
         "CPU",
-        "GPU",
-        "FPGA"
+        "GPU"
     ],
     "os": [
         "linux",
@@ -143,48 +142,6 @@
                     "./vector-add-usm",
                     "make clean"
                 ]
-            },
-            {
-                "id": "fpga_emu_buffers",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "make fpga_emu",
-                    "./vector-add-buffers.fpga_emu",
-                    "make clean"
-                ]
-            },
-            {
-                "id": "fpga_emu_usm",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake .. -DUSM=1",
-                    "make fpga_emu",
-                    "./vector-add-usm.fpga_emu",
-                    "make clean"
-                ]
-            },
-            {
-                "id": "fpga_report_buffers",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake ..",
-                    "make report",
-                    "make clean"
-                ]
-            },
-            {
-                "id": "fpga_report_usm",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake .. -DUSM=1",
-                    "make report",
-                    "make clean"
-                ]
             }
         ],
         "windows": [
@@ -291,28 +248,6 @@
                     "cmake -G \"NMake Makefiles\" .. -DUSM=1",
                     "nmake cpu-gpu",
                     "vector-add-usm.exe",
-                    "nmake clean"
-                ]
-            },
-            {
-                "id": "fpga_emu_buffers",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake -G \"NMake Makefiles\" ..",
-                    "nmake fpga_emu",
-                    "vector-add-buffers.fpga_emu.exe",
-                    "nmake clean"
-                ]
-            },
-            {
-                "id": "fpga_emu_usm",
-                "steps": [
-                    "mkdir build",
-                    "cd build",
-                    "cmake -G \"NMake Makefiles\" -DUSM=1 ..",
-                    "nmake fpga_emu",
-                    "vector-add-usm.fpga_emu.exe",
                     "nmake clean"
                 ]
             }
