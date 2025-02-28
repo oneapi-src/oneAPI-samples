@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "transformers (>=4.36,<4.46)",  # Adjusted to match the compatible range
     "evaluate (>=0.4.3,<0.5.0)",
@@ -21,5 +21,3 @@ package-mode = false
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-[tool.poetry.scripts]
-my-test = "INC_QuantizationAwareTraining_TextClassification"
