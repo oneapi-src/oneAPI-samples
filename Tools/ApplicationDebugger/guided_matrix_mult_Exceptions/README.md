@@ -9,7 +9,7 @@ The sample code is a simple program that multiplies together two large matrices 
 | What you will learn   | How to use backtraces in the Intel® Distribution for GDB* to locate incorrect use of the SYCL API.
 | Time to complete      | 50 minutes
 
->**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
+>**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
 ## Purpose
 
@@ -33,9 +33,9 @@ The sample includes three different versions of some simple matrix multiplicatio
 
 | Optimized for       | Description
 |:---                 |:---
-| OS                  | Ubuntu* 20.04
-| Hardware            | GEN9 or newer
-| Software            | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Distribution for GDB*
+| OS                      | Ubuntu* 24.04 LTS
+| Hardware                | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.0 <br> Intel® Distribution for GDB* 2025.0 
 
 
 ## Key Implementation Details
@@ -61,7 +61,7 @@ When working with the command-line interface (CLI), you should configure the one
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/use-the-setvars-and-oneapi-vars-scripts-with-linux.html)*.
 
 
 ### Use Visual Studio Code* (VS Code) (Optional)
@@ -70,13 +70,15 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the extension **Environment Configurator for Intel Software Developer Tools**.
- 2. Download a sample using the extension **Code Sample Browser for Intel Software Developer Tools**.
- 3. Open a terminal in VS Code (**Terminal > New Terminal**).
+ 1. Configure the oneAPI environment with the extension *Environment Configurator for Intel® Software Development Tools*.
+
+ 2. Download a sample using the extension *Code Sample Browser for Intel® Software Development Tools*.
+
+ 3. Open a terminal in VS Code (`Terminal > New Terminal`).
+
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
-*[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
+To learn more about the extensions and how to configure the oneAPI environment, see the *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-vs-code/current/overview.html)*.
 
 ### On Linux*
 
@@ -118,54 +120,52 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
 
 ## Guided Debugging
 
-The following instructions assume you have installed Intel® Distribution for GDB* and have a basic working knowledge of GDB.
+These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
-To learn how setup and use Intel® Distribution for GDB*, see *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.
 
->**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see *[Using the oneAPI Level Zero Interface: A Brief Introduction to the Level Zero API](https://www.intel.com/content/www/us/en/developer/articles/technical/using-oneapi-level-zero-interface.html?wapkw=Level%20Zero#gs.dxm4t4)*.
+>**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
 
 ### Fixing the Null Pointer Version
 
-In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` statement.  Unfortunately, the pointer does not tell which `memcpy` statement caused the error. To find this, we need to use a debugger (any host debugger will work; however, we will use the Intel® Distribution for GDB*).
+In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` statement.  The error message clearly tells you which `memcpy` statement caused the error. 
+
+```
+   ./1_matrix_mul_null_pointer
+   Initializing
+   Computing
+   Device: Intel(R) Data Center GPU Max 1550
+   Device compute units: 512
+   Device max work item size: 1024, 1024, 1024
+   Device max work group size: 1024
+   Problem size: c(150,600) = a(150,300) * b(300,600)
+   Exception caught at File: 1_matrix_mul_null_pointer.cpp | Function: main | Line: 95 | Column: 5
+   terminate called after throwing an instance of 'sycl::_V1::exception'
+   what():  NULL pointer argument in memory copy operation.
+   Aborted (core dumped)
+```
+
+As an exercise, let's find this a debugger (any host debugger will work; however, we will use the Intel® Distribution for GDB*).
 
 1. Start the Intel® Distribution for GDB* debugger and run the application within the debugger.
    ```
    gdb-oneapi ./1_matrix_mul_null_pointer
    (gdb) run
    ```
+   When you get the error message `Debugging of GPU offloaded code is not enabled`, ignore it and answer `n` to the question `Quit anyway? (y or n)`
+
 2. Notice the application failure. The error is the same message seen when we ran it outside the debugger.
    ```
-   terminate called after throwing an instance of 'sycl::_V1::runtime_error'
-     what():  NULL pointer argument in memory copy operation. -30 (CL_INVALID_VALUE)
-   Aborted (core dumped)
+   Exception caught at File: 1_matrix_mul_null_pointer.cpp | Function: main | Line: 95 | Column: 5
+   terminate called after throwing an instance of 'sycl::_V1::exception'
+     what():  NULL pointer argument in memory copy operation.
+
+   Thread 1.1 "1_matrix_mul_nu" received signal SIGABRT, Aborted.
    ```
 3. Run a `backtrace` to get a summary showing the rough location that triggered the assert.
    ```
@@ -173,24 +173,28 @@ In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` state
    ```
 4. Notice in the results that the exception was triggered around line 95 (frame 9):
    ```
-   #0  0x00007ffff77d218b in raise () from /lib/x86_64-linux-gnu/libc.so.6
-   #1  0x00007ffff77b1859 in abort () from /lib/x86_64-linux-gnu/libc.so.6
-   #2  0x00007ffff7b8e951 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #3  0x00007ffff7b9a47c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #4  0x00007ffff7b9a4e7 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #5  0x00007ffff7b9a799 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #6  0x00007ffff7ed64a1 in sycl::_V1::detail::MemoryManager::copy_usm(void const*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned long, void*, std::vector<_pi_event*, std::allocator<_pi_event*> >, _pi_event**) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #7  0x00007ffff7f18b56 in sycl::_V1::detail::queue_impl::memcpy(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, void*, void const*, unsigned long, std::vector<sycl::_V1::event, std::allocator<sycl::_V1::event> > const&) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #8  0x00007ffff7fb8c09 in sycl::_V1::queue::memcpy(void*, void const*, unsigned long) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #9  0x00000000004082ee in main () at /home/guided_matrix_mult/guided_matrix_mult_Exceptions/src/1_matrix_mul_null_pointer.cpp:95
+   #0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+   #1  __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
+   #2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at ./nptl/pthread_kill.c:89
+   #3  0x00007ffff744527e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+   #4  0x00007ffff74288ff in __GI_abort () at ./stdlib/abort.c:79
+   #5  0x00007ffff78a5ff5 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #6  0x00007ffff78bb0da in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #7  0x00007ffff78a5a55 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #8  0x00007ffff78bb391 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #9  0x00007ffff7eb7ea0 in sycl::_V1::detail::queue_impl::memcpy(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, void*, void const*, unsigned long, std::vector<sycl::_V1::event, std::allocator<sycl::_V1::event> > const&, bool, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #10 0x00007ffff7f62421 in sycl::_V1::queue::memcpy(void*, void const*, unsigned long, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #11 0x0000000000403dfa in main ()
+      at 1_matrix_mul_null_pointer.cpp:95
    ```
 5. Examine the last frame using the following (it may be different from the output above):
    ```
    (gdb) frame 9
    ```
-   You should see output similar to the following example:
+   You may need to issues this command twice before you see output similar to the following example:
    ```
-   #9  0x00000000004082ee in main () at /home/guided_matrix_mult/guided_matrix_mult_Exceptions/src/1_matrix_mul_null_pointer.cpp:95
+   #11 0x0000000000403dfa in main ()
+      at 1_matrix_mul_null_pointer.cpp:95
    95          q.memcpy(dev_b, 0, N*P * sizeof(float));
    (gdb)
    ```
@@ -206,13 +210,16 @@ In the second version, the code attempts to execute more than one offload statem
    gdb-oneapi ./2_matrix_mul_multi_offload
    (gdb) run
    ```
-2. Notice the application failure and the location. The error is the same message seen when we ran it outside the debugger.
+   When you get the error message `Debugging of GPU offloaded code is not enabled`, ignore it and answer `n` to the question `Quit anyway? (y or n)`
+
+2. The error is the same message seen when we ran it outside the debugger.
    ```
-   terminate called after throwing an instance of 'sycl::_V1::runtime_error'
-     what():  Attempt to set multiple actions for the command group. Command group must consist of a single kernel or explicit memory operation. -59 (PI_ERROR_INVALID_OPERATION)
-   Thread 1 "2_matrix_mul_mu" received signal SIGABRT, Aborted.
+   terminate called after throwing an instance of 'sycl::_V1::exception'
+   what():  Attempt to set multiple actions for the command group. Command group must consist of a single kernel or explicit memory operation.
+
+   Thread 1.1 "2_matrix_mul_mu" received signal SIGABRT, Aborted.
    ```
-   The assert talks about a “command group” and that only a single command group is allowed within a `submit`.  A command group is something like a `parallel_for` or a SYCL `memcpy` statement – it’s a language construct or function call that makes something happen on the device.  Only one is allowed per explicit `submit` to a queue.
+   The exception talks about a “command group” and that only a single command group is allowed within a `submit`.  A command group is something like a `parallel_for` or a SYCL `memcpy` statement – it’s a language construct or function call that makes something happen on the device.  Only one action is allowed per `submit` construct. 
 
 3. Run a `backtrace` to get summary showing the rough location that triggered the assert.
    ```
@@ -221,25 +228,44 @@ In the second version, the code attempts to execute more than one offload statem
 
 4. Notice in the results that the exception was triggered around line 98 (frame 13):
    ```
-   #0  0x00007ffff77d218b in raise () from /lib/x86_64-linux-gnu/libc.so.6
-   #1  0x00007ffff77b1859 in abort () from /lib/x86_64-linux-gnu/libc.so.6
-   #2  0x00007ffff7b8e951 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #3  0x00007ffff7b9a47c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #4  0x00007ffff7b9a4e7 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #5  0x00007ffff7b9a799 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #6  0x00007ffff7f9998b in sycl::_V1::handler::memcpy(void*, void const*, unsigned long) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #7  0x00000000004092b2 in main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const (this=0x7fffffffc328, h=...) at /home/guided_matrix_mult/guided_matrix_mult_Exceptions/src/2_matrix_mul_multi_offload.cpp:100
-   #8  0x0000000000409145 in std::_Function_handler<void (sycl::_V1::handler&), main::{lambda(auto:1&)#1}>::_M_invoke(std::_Any_data const&, sycl::_V1::handler (__functor=..., __args=...) at /usr/lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9/bits/std_function.h:300
-   #9  0x00007ffff7fba37a in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #10 0x00007ffff7fb9945 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #11 0x00007ffff7fb9905 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) () from /home/intel/oneapi/compiler/2023.0.0/linux/lib/libsycl.so.6
-   #12 0x0000000000408756 in sycl::_V1::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, sycl::_V1::detail::code_location const&)(this=0x7fffffffc7a0, CGF=..., CodeLoc=...) at /home/intel/oneapi/compiler/2023.0.0/linux/bin-llvm/../include/sycl/queue.hpp:318
-   #13 0x0000000000408365 in main () at /home/guided_matrix_mult/guided_matrix_mult_Exceptions/src/2_matrix_mul_multi_offload.cpp:98
+   #0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+   #1  __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
+   #2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at ./nptl/pthread_kill.c:89
+   #3  0x00007ffff744527e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+   #4  0x00007ffff74288ff in __GI_abort () at ./stdlib/abort.c:79
+   #5  0x00007ffff78a5ff5 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #6  0x00007ffff78bb0da in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #7  0x00007ffff78a5a55 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #8  0x00007ffff78bb391 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+   #9  0x00007ffff7f3b940 in sycl::_V1::handler::memcpy(void*, void const*, unsigned long) ()
+      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #10 0x0000000000404a72 in main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const (
+      this=0x7fffffffb480, h=sycl::handler& = {...})
+      at /nfs/site/home/cwcongdo/oneAPI-samples/Tools/ApplicationDebugger/guided_matrix_mult_Exceptions/src/2_matrix_mul_multi_offload.cpp:100
+   #11 0x0000000000404a0d in std::__invoke_impl<void, main::{lambda(auto:1&)#1}&, sycl::_V1::handler&>(std::__invoke_other, main::{lambda(auto:1&)#1}&, sycl::_V1::handler&) (__f=..., __args=sycl::handler& = {...})
+      at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/invoke.h:61
+   #12 0x00000000004049ad in std::__invoke_r<void, main::{lambda(auto:1&)#1}&, sycl::_V1::handler&>(main::{lambda(auto:1&)#1}&, sycl::_V1::handler&) (__fn=..., __args=sycl::handler& = {...})
+      at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/invoke.h:111
+   #13 0x00000000004048c5 in std::_Function_handler<void (sycl::_V1::handler&), main::{lambda(auto:1&)#1}>::_M_invoke(std::_Any_data const&, sycl::_V1::handler&) (__functor=..., __args=sycl::handler& = {...})
+      at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/std_function.h:290
+   #14 0x00007ffff7ebc47a in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, bool, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #15 0x00007ffff7ec16e8 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #16 0x00007ffff7f63099 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #17 0x0000000000404285 in sycl::_V1::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffb990, CGF=..., CodeLoc=...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/queue.hpp:359
+   #18 0x0000000000403e7c in main ()
+      at 2_matrix_mul_multi_offload.cpp:98
    ```
 
 5. Examine the last frame using the following (it may be different from the output above):
    ```
-   (gdb) frame 13
+   (gdb) frame 18
+   ```
+   You may need to issues this command twice before you see output similar to the following example:
+   ```
+   #18 0x0000000000403e7c in main ()
+       at 2_matrix_mul_multi_offload.cpp:98
+   98          q.submit([&](auto &h) {
    ```
 
 6. Examine the code.
@@ -255,9 +281,9 @@ In the second version, the code attempts to execute more than one offload statem
    101         });
    ```
 
-   As the `assert` reported, we are trying to do two memory copies to the device within the `submit` statement, where only a single `parallel_for` or memory copy is allowed. This code needs to be recoded to use a single `submit` per `memcpy`.
+   As the exception reported, we are trying to do two memory copies to the device within the `submit` statement, where only a single `parallel_for` or `memcpy` is allowed. This code needs to be recoded to use a single `memcpy` per `submit`
 
-7. Update the code to use a single submit.
+7. To fix the error, update the code to use a single `memcpy` in the `submit`.
    ```
     q.submit([&](auto &h) {
         h.memcpy(dev_c, &c_back[0], M*P * sizeof(float));
