@@ -1,2 +1,2 @@
 ipykernel
-tornado>=6.4.2 # not directly required, pinned by Snyk to avoid a vulnerability
+tornado>=6.4.2 #note directly required, pinned by Snyk to avoid a vulnerability
