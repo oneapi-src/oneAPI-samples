@@ -14,11 +14,17 @@
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate pytorch",
-				"pip install -r requirements.txt"
+				"pip install uv",
+				"uv init",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
+				"uv add -r requirements.txt",
+				"uv add neural-compressor==2.6",
+				"uv add torch==2.5.0 torchvision==0.20.0"
             ],
 			"id": "itrex_quantize_transformer_models",
 			"steps": [
-				"python quantize_transformer_models_with_itrex.py --model_name \"Intel/neural-chat-7b-v3-1\" --quantize \"int4\" --max_new_tokens 50"
+				"uv run python quantize_transformer_models_with_itrex.py --model_name Intel/neural-chat-7b-v3-1 --quantize int4 --max_new_tokens 50"
 			]
 		}]
 	},

@@ -15,11 +15,16 @@
           "steps": [
               "source /intel/oneapi/intelpython/bin/activate",
               "conda activate tensorflow",
-              "pip install -r requirements.txt --no-deps",
-              "pip install ipykernel jupyter",
-              "python Intel_TensorFlow_AMX_BF16_Inference.py",
-              "python -m ipykernel install --user --name=tensorflow",
-              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
+              "pip install uv",
+              "uv init",
+              "uv python pin $(which python)",
+              "uv venv --system-site-packages",
+              "uv add -r requirements.txt",
+              "uv add numpy==1.26.4",
+              "uv add ipykernel jupyter notebook",
+              "uv run python Intel_TensorFlow_AMX_BF16_Inference.py",
+              "uv run python -m ipykernel install --user --name=tensorflow",
+              "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow2 --to notebook IntelTensorFlow_AMX_BF16_Inference.ipynb"
            ]
       }
        ]
