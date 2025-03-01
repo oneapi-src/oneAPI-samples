@@ -63,9 +63,9 @@ void ParseSecondTable(
     ac_uint<5> numcodelencodes, ac_uint<8> codelencode_map_first_code[8],
     ac_uint<8> codelencode_map_last_code[8],
     ac_uint<5> codelencode_map_base_idx[8], ac_uint<5> codelencode_map[19],
-    ac_uint<15> lit_map_first_code[15], ac_uint<15> lit_map_last_code[15],
+    ac_uint<16> lit_map_first_code[15], ac_uint<16> lit_map_last_code[15],
     ac_uint<9> lit_map_base_idx[15], ac_uint<9> lit_map[286],
-    ac_uint<15> dist_map_first_code[15], ac_uint<15> dist_map_last_code[15],
+    ac_uint<16> dist_map_first_code[15], ac_uint<16> dist_map_last_code[15],
     ac_uint<5> dist_map_base_idx[15], ac_uint<5> dist_map[32]);
 
 }  // namespace huffman_decoder_detail
@@ -156,12 +156,12 @@ void HuffmanDecoder() {
     // These 8 tables are the second Huffman table in optimized form, which are
     // used to decode the actual payload data in optimized form. They are read
     // from the ParseSecondTable helper function.
-    [[intel::fpga_register]] ac_uint<15> lit_map_first_code[15];
-    [[intel::fpga_register]] ac_uint<15> lit_map_last_code[15];
+    [[intel::fpga_register]] ac_uint<16> lit_map_first_code[15];
+    [[intel::fpga_register]] ac_uint<16> lit_map_last_code[15];
     [[intel::fpga_register]] ac_uint<9> lit_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<9> lit_map[286];
-    [[intel::fpga_register]] ac_uint<15> dist_map_first_code[15];
-    [[intel::fpga_register]] ac_uint<15> dist_map_last_code[15];
+    [[intel::fpga_register]] ac_uint<16> dist_map_first_code[15];
+    [[intel::fpga_register]] ac_uint<16> dist_map_last_code[15];
     [[intel::fpga_register]] ac_uint<5> dist_map_base_idx[15];
     [[intel::fpga_register]] ac_uint<5> dist_map[32];
 
@@ -603,9 +603,9 @@ void ParseSecondTable(
     ac_uint<5> codelencode_map_base_idx[8], ac_uint<5> codelencode_map[19],
 
     // outputs
-    ac_uint<15> lit_map_first_code[15], ac_uint<15> lit_map_last_code[15],
+    ac_uint<16> lit_map_first_code[15], ac_uint<16> lit_map_last_code[15],
     ac_uint<9> lit_map_base_idx[15], ac_uint<9> lit_map[286],
-    ac_uint<15> dist_map_first_code[15], ac_uint<15> dist_map_last_code[15],
+    ac_uint<16> dist_map_first_code[15], ac_uint<16> dist_map_last_code[15],
     ac_uint<5> dist_map_base_idx[15], ac_uint<5> dist_map[32]) {
   // length of codelens is MAX(numlitlencodes + numdistcodes)
   // = MAX((2^5 + 257) + (2^5 + 1)) = 322
