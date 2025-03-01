@@ -2,7 +2,7 @@
 
 The Intel AI Tools give data scientists, AI developers, and researchers familiar Python* tools and frameworks to accelerate end-to-end data science and analytics pipelines on Intel® architectures. The components are built using oneAPI libraries for low-level compute optimizations. This toolkit maximizes performance from preprocessing through machine learning, and provides interoperability for efficient model development.
 
-You can find more information at [ AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+You can find more information at [ AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 Users can explore the extensive features of Intel AI Tools through provided feature and functionality samples, offering a deeper understanding of their capabilities.
 

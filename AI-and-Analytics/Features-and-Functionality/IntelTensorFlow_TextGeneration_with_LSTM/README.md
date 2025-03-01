@@ -20,15 +20,15 @@ This sample shows how to train the model for text generation using LSTM on Intel
 |:---                     |:---
 | OS                      | Ubuntu* 22.04 (or newer)
 | Hardware                | Intel® Arc™, Data and Max series GPU
-| Software                | Intel® AI Tools (AI Kit)
+| Software                | Intel® AI Tools
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Tools (AI Kit)**
+- **Intel® AI Tools**
 
-  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the AI Tools for Linux**](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html) for AI Tools installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 

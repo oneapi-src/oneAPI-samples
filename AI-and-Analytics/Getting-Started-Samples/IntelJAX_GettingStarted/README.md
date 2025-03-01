@@ -43,8 +43,8 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get Intel® AI Tools**
 
 Required AI Tools: 'JAX' 
-<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
-please see the [supported versions](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html).
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.<br>
+please see the [supported versions](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html).
 
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
@@ -75,7 +75,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)
 ## Run the Sample
 
 >**Note**: Before running the sample, make sure Environment Setup is completed.
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)/Conda/PIP](#ai-tools-offline-installer-validatedcondapip)
 * [Docker](#docker)
 ### AI Tools Offline Installer (Validated)/Conda/PIP
