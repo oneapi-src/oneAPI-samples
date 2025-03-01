@@ -10,14 +10,23 @@
   "cpuInstructionSets": ["AVX512", "AMX"],
   "ciTests": {
     "linux": [{
+      "env": [
+        "source /intel/oneapi/intelpython/bin/activate",
+        "conda activate tensorflow",
+        "pip install uv",
+        "uv init",
+        "uv python pin $(which python)",
+        "uv venv --system-site-packages",
+        "uv add -r requirements.txt",
+        "uv add py-cpuinfo nbformat nbconvert",
+        "uv add --dev ipykernel",
+        "uv run ipython kernel install --user --name tensorflow",
+        "uv add notebook nbconvert"
+      ],
       "id": "intel llm bf16 infrence and fine-tuning",
       "steps": [
-        "source activate tensorflow",
-        "pip install -r requirements.txt",
-        "python -m pip install py-cpuinfo",
-        "python GPTJ_finetuning.py",
-        "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
-        "python ci_test.py"
+        "uv run python GPTJ_finetuning.py",
+        "uv run python ci_test.py"
       ]
     }]
   },
