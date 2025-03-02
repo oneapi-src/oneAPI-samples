@@ -14,13 +14,17 @@
   		"env": [
         "source /intel/oneapi/intelpython/bin/activate",
         "conda activate base", 
-        "pip install numba"
+        "pip install uv",
+        "uv init",
+        "uv python pin $(which python)",
+        "uv venv --system-site-packages",
+        "uv add numba"
       ],
-  		"id": "idp_numpy_numba_dpnp_gs_py",
-  		"steps": [
-         "python IntelPython_Numpy_Numba_dpnp_kNN.py" 
-  		 ]
-  	}
+      "id": "idp_numpy_numba_dpnp_gs_py",
+      "steps": [
+         "uv run python IntelPython_Numpy_Numba_dpnp_kNN.py"
+      ]
+    }
     ]
 },
 "expertise": "Code Optimization"
