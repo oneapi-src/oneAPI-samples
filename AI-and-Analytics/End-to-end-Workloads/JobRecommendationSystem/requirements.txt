@@ -1,6 +1,6 @@
 ipykernel
 matplotlib
-sentence_transformers
+sentence-transformers
 transformers 
 datasets 
 accelerate 
