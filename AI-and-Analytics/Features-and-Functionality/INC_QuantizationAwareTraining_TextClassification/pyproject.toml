@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "transformers (>=4.36,<4.46)",  # Adjusted to match the compatible range
     "evaluate (>=0.4.3,<0.5.0)",
@@ -16,8 +16,16 @@ dependencies = [
     "neural-compressor (>=2.2.0,<3.0)",  # Adjusted to match the compatible range
     "optimum-intel[neural-compressor] (>=1.18.0,<1.22.0)"  # Added to ensure compatibility
 ]
-[tool.poetry]
-package-mode = false
+
+
+[project.scripts]
+python-validate = "INC_QuantizationAwareTraining_TextClassification:main"
+
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
