@@ -12,7 +12,6 @@
         "linux": [
       {
             "env": [
-                "source /intel/oneapi/intelpython/bin/activate", 
                 "pip install uv",
                 "uv sync"
             ],
