@@ -13,7 +13,7 @@ dependencies = [
     "notebook>=7.3.2,<8.0.0",
     "matplotlib>=3.10.1,<4.0.0",
     "scikit-learn>=1.6.1,<2.0.0",
-    "scikit-learn-intelex>=2025.2.0,<2026.0.0"
+    "scikit-learn-intelex>=2025.2.0,<2026.0.0",
 ]
 
 [project.scripts]

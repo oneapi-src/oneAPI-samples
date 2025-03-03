@@ -555,6 +555,11 @@ dependencies = [
     { name = "scikit-learn-intelex" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "ipykernel" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.1,<4.0.0" },
@@ -562,6 +567,9 @@ requires-dist = [
     { name = "scikit-learn", specifier = ">=1.6.1,<2.0.0" },
     { name = "scikit-learn-intelex", specifier = ">=2025.2.0,<2026.0.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ipykernel", specifier = ">=6.29.5" }]
 
 [[package]]
 name = "ipykernel"
