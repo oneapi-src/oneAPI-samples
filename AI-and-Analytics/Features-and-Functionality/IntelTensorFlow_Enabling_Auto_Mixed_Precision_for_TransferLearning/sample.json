@@ -17,10 +17,15 @@
 				"apt-get update && apt-get install tensorflow-model-server",
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
-				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow"
+				"pip install uv",
+				"uv init",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
+				"uv add -r requirements.txt",
+				"uv add numpy==1.26.4",
+				"uv add --dev ipykernel",
+				"uv run ipython kernel install --user --name tensorflow",
+				"pip install notebook"
 			],
 			"id": "tensorflow_AMP_transfer_learning",
 			"steps": [

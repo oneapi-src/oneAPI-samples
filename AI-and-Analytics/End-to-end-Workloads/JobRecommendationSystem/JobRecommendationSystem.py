@@ -428,6 +428,7 @@ tf.__version__
 # Now, let us import Intel Extension for TensorFlow*. We are using Python API `itex.experimental_ops_override()`. It automatically replace some TensorFlow operators by Custom Operators under `itex.ops` namespace, as well as to be compatible with existing trained parameters.
 
 # %%
+import numpy as np
 import intel_extension_for_tensorflow as itex
 
 itex.experimental_ops_override()

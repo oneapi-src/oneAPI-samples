@@ -13,11 +13,17 @@
 	{
 		"env": ["source /intel/oneapi/intelpython/bin/activate",
 				"conda activate tensorflow",
-				"conda install -n tensorflow -c conda-forge python-flatbuffers -y",
-				"conda install -n tensorflow -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
-				"conda install -n tensorflow -y",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow"
+				"pip install uv",
+				"uv init",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
+				"uv add -r requirements.txt",
+				"uv add flatbuffers",
+				"uv add neural-compressor",
+				"pip install notebook",
+				"uv add --dev ipykernel",
+				"uv run ipython kernel install --user --name tensorflow"
+
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [

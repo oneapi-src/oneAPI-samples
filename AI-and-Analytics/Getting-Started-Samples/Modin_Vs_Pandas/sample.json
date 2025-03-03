@@ -14,9 +14,16 @@
 			"id": "modin_pandas_performance",
 			"steps": [
 				"source /intel/oneapi/intelpython/bin/activate",
-				"pip install numpy pandas modin[all]",
-				"pip install jupyter ipykernel",
-				"jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_Vs_Pandas.ipynb"
+				"conda activate base",
+				"pip install uv",
+				"uv init",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
+				"uv add numpy pandas modin[all]",
+				"uv add --dev ipykernel",
+				"uv run ipython kernel install --user --name modin_vs_pandas",
+				"uv add notebook",
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_Vs_Pandas.ipynb"
 			]
 		}]
 	},

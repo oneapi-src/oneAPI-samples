@@ -15,11 +15,15 @@
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate base",
-				"pip install -r requirements.txt"
+				"pip install uv",
+				"uv init",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
+				"uv add -r requirements.txt"
 			],
 			"id": "IDP_XGBoost_GS_py",
 			"steps": [
-				"python IntelPython_XGBoost_GettingStarted.py"
+				"uv run python IntelPython_XGBoost_GettingStarted.py"
 			]
 		}]
 	},

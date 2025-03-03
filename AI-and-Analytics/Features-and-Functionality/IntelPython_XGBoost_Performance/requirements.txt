@@ -1,6 +1,6 @@
 ###### Requirements ######
 notebook
 matplot
-xgboost==0.81
+xgboost==0.82
 scikit-learn
 pandas

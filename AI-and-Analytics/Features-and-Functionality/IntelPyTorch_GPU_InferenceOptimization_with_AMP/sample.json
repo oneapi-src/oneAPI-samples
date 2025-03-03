@@ -14,11 +14,16 @@
         "id": "intel pytorch gpu inference optimization with amp",
         "steps": [
             "source /intel/oneapi/intelpython/bin/activate",
-            "source activate pytorch-gpu",
-            "pip install -r requirements.txt",
-            "pip install jupyter ipykernel",  
-            "python -m ipykernel install --user --name=pytorch-gpu",
-            "python IntelPyTorch_GPU_InferenceOptimization_with_AMP.py"
+            "conda activate pytorch-gpu",
+            "pip install uv notebook",
+            "uv init",
+            "uv python pin $(which python)",
+            "uv venv --system-site-packages",
+            "uv add -r requirements.txt",
+            "uv add numpy==1.26.4",
+            "uv add --dev ipykernel",
+            "uv run ipython kernel install --user --name=pytorch-gpu",
+            "uv run IntelPyTorch_GPU_InferenceOptimization_with_AMP.py"
          ]
     }
      ]
