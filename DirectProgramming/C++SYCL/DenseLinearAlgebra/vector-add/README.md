@@ -18,33 +18,21 @@ The `Base: Vector Add` is a relatively simple program that adds two large vector
 
 This sample provides example implementations of both Unified Shared Memory (USM) and buffers for side-by-side comparison.
 
->**Note**: See the `Simple Add` sample to examine another getting started sample you can use to learn more about using the Intel® oneAPI Toolkits to develop SYCL-compliant applications for CPU, GPU, and FPGA devices.
+>**Note**: See the `Simple Add` sample to examine another getting started sample you can use to learn more about using the Intel® oneAPI Toolkits to develop SYCL-compliant applications for CPU and GPU devices.
 
 ## Prerequisites
 
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 <br> Windows* 10, 11
-| Hardware                          | GEN9 or newer <br> Intel® Agilex® 7, Arria® 10, and Stratix® 10 FPGAs
+| Hardware                          | GEN9 or newer
 | Software                          | Intel® oneAPI DPC++/C++ Compiler
-
-> **Note**: Even though the Intel DPC++/C++ OneAPI compiler is enough to compile for CPU, GPU, FPGA emulation, generating FPGA reports and generating RTL for FPGAs, there are extra software requirements for the FPGA simulation flow and FPGA compiles.
->
-> For using the simulator flow, Intel® Quartus® Prime Pro Edition and one of the following simulators must be installed and accessible through your PATH:
-> - Questa*-Intel® FPGA Edition
-> - Questa*-Intel® FPGA Starter Edition
-> - ModelSim® SE
->
-> When using the hardware compile flow, Intel® Quartus® Prime Pro Edition must be installed and accessible through your PATH.
-> **Warning** Make sure you add the device files associated with the FPGA that you are targeting to your Intel® Quartus® Prime installation.
 
 ## Key Implementation Details
 
 The basic SYCL implementation explained in the code includes device selector, USM, buffer, accessor, kernel, and command groups.
 
 The code attempts to execute on an available GPU and fallback to the system CPU if a compatible GPU is not detected. If successful, the name of the offload device and a success message is displayed, which indicates your development environment is set up correctly.
-
-In addition, you can target an FPGA device using the instructions provided below. If you do not have FPGA hardware, the sample will run in emulation mode, which includes static optimization reports for design analysis.
 
 > **Note**: For comprehensive information about oneAPI programming, see the [Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide). (Use search or the table of contents to find relevant information quickly.)
 
@@ -104,63 +92,13 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    cmake .. -DUSM=1
    ```
 
-   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex® 7).
-   > You can change the default target by using the command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
-   > 
-   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
-   > 
-   >     intel_a10gx_pac:pac_a10
-   >
-   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
-   >
-   >     intel_s10sx_pac:pac_s10
-   >     intel_s10sx_pac:pac_s10_usm
-   > 
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-#### Build for CPU and GPU
+#### Build 
 
 1. Build the program.
    ```
    make cpu-gpu
    ```
 2. Clean the program. (Optional)
-   ```
-   make clean
-   ```
-
-#### Build for FPGA
-
-1. Compile for FPGA emulation.
-   ```
-   make fpga_emu
-   ```
-2. Compile for simulation (fast compile time, targets simulator FPGA device):
-   ```
-   make fpga_sim
-   ```
-3. Generate HTML performance reports.
-   ```
-   make report
-   ```
-   The reports reside at `simple-add_report.prj/reports/report.html`.
-
-4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
-time.)
-   ```
-   make fpga
-   ```
-
-5. Clean the program. (Optional)
    ```
    make clean
    ```
@@ -186,65 +124,13 @@ time.)
    cmake -G "NMake Makefiles" .. -DUSM=1
    ```
 
-   > **Note**: When building for FPGAs, the default FPGA family will be used (Intel® Agilex® 7).
-   > You can change the default target by using the command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<FPGA device family or FPGA part number>
-   >  ```
-   >
-   > Alternatively, you can target an explicit FPGA board variant and BSP by using the following command:
-   >  ```
-   >  cmake -G "NMake Makefiles" .. -DFPGA_DEVICE=<board-support-package>:<board-variant>
-   >  ```
-   > Here are a few examples of FPGA board variant and BSP (this list is not exhaustive):
-   > 
-   > For Intel® PAC with Intel Arria® 10 GX FPGA, the USM is not supported, you can use below BSP:
-   > 
-   >     intel_a10gx_pac:pac_a10
-   >
-   > For Intel® FPGA PAC D5005, use one of the following BSP based on the USM support:
-   >
-   >     intel_s10sx_pac:pac_s10
-   >     intel_s10sx_pac:pac_s10_usm
-   > 
-   > You will only be able to run an executable on the FPGA if you specified a BSP.
-
-#### Build for CPU and GPU
+#### Build
 
 1. Build the program.
    ```
    nmake cpu-gpu
    ```
 2. Clean the program. (Optional)
-   ```
-   nmake clean
-   ```
-
-#### Build for FPGA
-
->**Note**: Compiling to FPGA hardware on Windows* requires a third-party or custom Board Support Package (BSP) with Windows* support.
-
-1. Compile for FPGA emulation.
-   ```
-   nmake fpga_emu
-   ```
-2. Compile for simulation (fast compile time, targets simulator FPGA device):
-   ```
-   nmake fpga_sim
-   ```
-3. Generate HTML performance reports.
-   ```
-   nmake report
-   ```
-The reports reside at `simple-add_report.prj/reports/report.html`.
-
-4. Compile the program for FPGA hardware. (Compiling for hardware can take a long
-time.)
-   ```
-   nmake fpga
-   ```
-
-5. Clean the program. (Optional)
    ```
    nmake clean
    ```
@@ -267,59 +153,18 @@ The source files (`vector-add-buffers.cpp` and `vector-add-usm.cpp`) specify the
 
 ### On Linux
 
-#### Run for CPU and GPU
-
 1. Run the program for Unified Shared Memory (USM) and buffers.
     ```
     ./vector-add-buffers
     ./vector-add-usm
     ```
-#### Run for FPGA
-
-1.  Run for FPGA emulation.
-    ```
-    ./vector-add-buffers.fpga_emu
-    ./vector-add-usm.fpga_emu
-    ```
-2. Run on FPGA simulator.
-   ```
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-buffers.fpga_sim
-   CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1 ./vector-add-usm.fpga_sim
-   ```
-3. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-    ```
-    ./vector-add-buffers.fpga
-    ./vector-add-usm.fpga
-    ```
 
 ### On Windows
-
-#### Run for CPU and GPU
 
 1. Run the program for Unified Shared Memory (USM) and buffers.
     ```
     vector-add-usm.exe
     vector-add-buffers.exe
-    ```
-
-#### Run for FPGA
-
-1.  Run for FPGA emulation.
-    ```
-    vector-add-buffers.fpga_emu.exe
-    vector-add-usm.fpga_emu.exe
-    ```
-2. Run on FPGA simulator.
-   ```
-   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=1
-   vector-add-buffers.fpga_sim.exe
-   vector-add-usm.fpga_sim.exe
-   set CL_CONTEXT_MPSIM_DEVICE_INTELFPGA=
-   ```
-3. Run on FPGA hardware (only if you ran `cmake` with `-DFPGA_DEVICE=<board-support-package>:<board-variant>`).
-    ```
-    vector-add-buffers.fpga.exe
-    vector-add-usm.fpga.exe
     ```
 
 ## Example Output
