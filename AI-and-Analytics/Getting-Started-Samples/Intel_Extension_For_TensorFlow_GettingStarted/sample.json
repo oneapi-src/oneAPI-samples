@@ -13,24 +13,38 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
+				"pixi shell --manifest-path ../../Preset_environments/deep_learning_tensorflow_cpu/pixi.toml",
+				"pixi add --pypi --feature test_sample pip",
+				"pixi project environment add testcpu --feature test_sample",
+				"pixi shell -e testcpu",
 				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow",
-				"conda deactivate",
-				"conda activate tensorflow-gpu",
+
+				"pixi shell --manifest-path ../../Preset_environments/deep_learning_tensorflow_gpu/pixi.toml",
+				"pixi add --pypi --feature test_sample pip",
+				"pixi project environment add testgpu --feature test_sample",
+				"pixi shell -e testgpu",
 				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
 				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow-gpu",
-				"conda deactivate"
+				"python -m ipykernel install --user --name=tensorflow-gpu"
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate tensorflow",
-				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
+				"pixi shell --manifest-path ../../Preset_environments/deep_learning_tensorflow_cpu/pixi.toml",
+				"pixi shell -e testcpu",
+				"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.cpu.ipynb",
+				"pixi shell -e default",
+				"pixi project environment remove testcpu",
+				"pixi remove --pypi --feature test_sample 'pip'",
+				"rm -rf ../../Preset_environments/deep_learning_tensorflow_cpu/.pixi/envs/test",
+				
+				"pixi shell --manifest-path ../../Preset_environments/deep_learning_tensorflow_gpu/pixi.toml",
+				"pixi shell -e testgpu",
+				"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow-gpu --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.gpu.ipynb",
+				"pixi project environment remove testgpu",
+				"pixi remove --pypi --feature test_sample 'pip'",
+				"rm -rf ../../Preset_environments/deep_learning_tensorflow_gpu/.pixi/envs/test"
 			]
 		}]
 	},

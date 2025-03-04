@@ -1,0 +1,11 @@
+[project]
+channels = ["https://software.repos.intel.com/python/conda", "conda-forge"]
+name = "dl_tensorlfow_gpu"
+platforms = ["linux-64"]
+
+[dependencies]
+intel-extension-for-tensorflow = "==2.15.0.2"
+python = "3.11.*"
+neural-compressor = "==3.1.1"
+intel-optimization-for-horovod = "==0.28.1.6"
+intel-gpu-ocl-icd-system = "*" 

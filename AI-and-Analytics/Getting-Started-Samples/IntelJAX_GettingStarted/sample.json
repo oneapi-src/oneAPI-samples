@@ -11,12 +11,21 @@
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
+			"env": [
+				"pixi shell --manifest-path ../../Preset_environments/deep_learning_jax_cpu/pixi.toml",
+				"pixi add --pypi --feature test_sample pip",
+				"pixi project environment add test --feature test_sample",
+				"pixi shell -e test"
+			],
 			"id": "JAX CPU example",
 			"steps": [
 				"git clone https://github.com/google/jax.git",
 				"cd jax",
-				"conda activate jax",
-				"python examples/spmd_mnist_classifier_fromscratch.py"
+				"python examples/spmd_mnist_classifier_fromscratch.py",
+				"pixi shell -e default",
+				"pixi project environment remove test",
+				"pixi remove --pypi --feature test_sample 'pip'",
+				"rm -rf ../../Preset_environments/classical_ml/.pixi/envs/test"
 			]
 		}]
 	},

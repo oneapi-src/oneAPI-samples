@@ -13,13 +13,19 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate base",
+				"pixi shell --manifest-path ../../Preset_environments/classical_ml/pixi.toml",
+				"pixi add --pypi --feature test_sample pip",
+				"pixi project environment add test --feature test_sample",
+				"pixi shell -e test",
 				"pip install -r requirements.txt"
 			],
 			"id": "idp_sklex_gs_py",
 			"steps": [
-				"python Intel_Extension_For_SKLearn_GettingStarted.py"
+				"python Intel_Extension_For_SKLearn_GettingStarted.py",
+				"pixi shell -e default",
+				"pixi project environment remove test",
+				"pixi remove --pypi --feature test_sample 'pip'",
+				"rm -rf ../../Preset_environments/classical_ml/.pixi/envs/test"
 			]
 		}]
 	},
