@@ -111,12 +111,13 @@ cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
 pip install -r requirements.txt
 ```
 **Install Jupyter Notebook** by running `pip install notebook`. Alternatively, see [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
+
 3. Register Conda kernel to Jupyter Notebook kernel:
 ```
 <CONDA_PATH_TO_ENV>/bin/python -m ipykernel install --user --name=<your-env-name>
 ```
 **Run** `conda env list` to find your Conda environment path <CONDA_PATH_ENV>
-> **Note**: There is another way to regisyer Conda kernel to Jupyter Notebook kernel, feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
+> **Note**: There is another way to register Conda kernel to Jupyter Notebook kernel, feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 4. Launch Jupyter Notebook: 
 ```
 jupyter notebook --ip=0.0.0.0
