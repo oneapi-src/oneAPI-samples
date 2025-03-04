@@ -14,19 +14,75 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 
 # Getting Started Samples
 
-|AI Tools preset | Component      | Folder                                             | Description
-|--------------------------| --------- | ------------------------------------------------ | -
-|Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-PyTorch](INC-Quantization-Sample-for-PyTorch)                     | Performs INT8 quantization on a Hugging Face BERT model.
-|Inference Optimization| Intel® Neural Compressor (INC) | [Intel® Neural Compressor (INC) Sample-for-Tensorflow](INC-Sample-for-Tensorflow)                     | Quantizes a FP32 model into INT8 by Intel® Neural Compressor (INC) and compares the performance between FP32 and INT8.
-|Data Analytics <br/> Classical Machine Learning  | Modin* | [Modin_GettingStarted](Modin_GettingStarted)                     | Run Modin*-accelerated Pandas functions and note the performance gain.
-|Data Analytics <br/> Classical Machine Learning | Modin* |[Modin_Vs_Pandas](Modin_Vs_Pandas)| Compares the performance of Intel® Distribution of Modin* and the performance of Pandas.
-|Classical Machine Learning| Intel® Optimization for XGBoost* | [IntelPython_XGBoost_GettingStarted](IntelPython_XGBoost_GettingStarted)                     | Set up and trains an XGBoost* model on datasets for prediction.
-|Classical Machine Learning| daal4py | [IntelPython_daal4py_GettingStarted](IntelPython_daal4py_GettingStarted)                     | Batch linear regression using the Python API package daal4py from oneAPI Data Analytics Library (oneDAL).
-|Deep Learning <br/> Inference Optimization| Intel® Optimization for TensorFlow* | [IntelTensorFlow_GettingStarted](IntelTensorFlow_GettingStarted)               | A simple training example for TensorFlow.
-|Deep Learning <br/> Inference Optimization|Intel® Extension of PyTorch | [Getting Started with Intel® Extension for PyTorch* (IPEX)](https://github.com/intel/intel-extension-for-pytorch/blob/main/examples/cpu/inference/python/jupyter-notebooks/README.md) | A simple training example for Intel® Extension of PyTorch.
-|Classical Machine Learning| Scikit-learn (OneDAL) | [Intel_Extension_For_SKLearn_GettingStarted](Intel_Extension_For_SKLearn_GettingStarted) | Speed up a scikit-learn application using Intel oneDAL.
-|Deep Learning <br/> Inference Optimization|Intel® Extension of TensorFlow | [Intel® Extension For TensorFlow GettingStarted](Intel_Extension_For_TensorFlow_GettingStarted)         | Guides users how to run a TensorFlow inference workload on both GPU and CPU.
-|Deep Learning Inference Optimization|oneCCL Bindings for PyTorch | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted)         | Guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU. |
-|Inference Optimization|JAX Getting Started Sample | [IntelJAX GettingStarted](https://github.com/oneapi-src/oneAPI-samples/tree/development/AI-and-Analytics/Getting-Started-Samples/IntelJAX_GettingStarted)  | The JAX Getting Started sample demonstrates how to train a JAX model and run inference on Intel® hardware. |
+<table>
+  <tr>
+    <th>AI Tools preset</th>
+    <th>Component</th>
+    <th>Folder</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td rowspan="5">Classical Machine Learning</td>
+    <td rowspan="2">Modin*</td>
+    <td><a href="Modin_GettingStarted">Modin_GettingStarted</a></td>
+    <td>Run Modin*-accelerated Pandas functions and note the performance gain.</td>
+  </tr>
+  <tr>
+    <td><a href="Modin_Vs_Pandas">Modin_Vs_Pandas</a></td>
+    <td>Compares the performance of Intel® Distribution of Modin* and the performance of Pandas.</td>
+  </tr>
+  <tr>
+    <td>Intel® Optimization for XGBoost*</td>
+    <td><a href="IntelPython_XGBoost_GettingStarted">IntelPython_XGBoost_GettingStarted</a></td>
+    <td>Set up and trains an XGBoost* model on datasets for prediction.</td>
+  </tr>
+  <tr>
+    <td rowspan="2">Scikit-learn*</td>
+    <td><a href="Intel_Extension_For_SKLearn_GettingStarted">Intel_Extension_For_SKLearn_GettingStarted</a></td>
+    <td>Speed up a scikit-learn application using Intel oneDAL.</td>
+  </tr>
+  <tr>
+    <td><a href="IntelPython_daal4py_GettingStarted">IntelPython_daal4py_GettingStarted</a></td>
+    <td>Batch linear regression using the Python API package daal4py from oneAPI Data Analytics Library (oneDAL).</td>
+  </tr>
+  <tr>
+    <td rowspan="8">Deep Learning</td>
+    <td rowspan="2">Intel® Extension of PyTorch</td>
+    <td><a href="https://github.com/intel/intel-extension-for-pytorch/blob/main/examples/cpu/inference/python/jupyter-notebooks/README.md">Getting Started with Intel® Extension for PyTorch* (IPEX)</a></td>
+    <td>A simple training example for Intel® Extension of PyTorch.</td>
+  </tr>
+  <tr>
+    <td><a href="Intel_oneCCL_Bindings_For_PyTorch_GettingStarted">Intel_oneCCL_Bindings_For_PyTorch_GettingStarted</a></td>
+    <td>Guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU.</td>
+  </tr>
+  <tr>
+    <td rowspan="2">Intel® Neural Compressor (INC)</td>
+    <td><a href="Intel® Neural Compressor (INC) Sample-for-PyTorch">Intel® Neural Compressor (INC) Sample-for-PyTorch</a></td>
+    <td>Performs INT8 quantization on a Hugging Face BERT model.</td>
+  </tr>
+  <tr>
+    <td><a href="Intel® Neural Compressor (INC) Sample-for-Tensorflow">Intel® Neural Compressor (INC) Sample-for-Tensorflow</a></td>
+    <td>Quantizes a FP32 model into INT8 by Intel® Neural Compressor (INC) and compares the performance between FP32 and INT8.</td>
+  </tr>
+  <tr>
+    <td>ONNX Runtime*</td>
+    <td><a href="https://onnxruntime.ai/docs/get-started/with-python.html#quickstart-examples-for-pytorch-tensorflow-and-scikit-learn">Quickstart Examples for PyTorch, TensorFlow, and SciKit Learn</a></td>
+    <td>Train a model using your favorite framework, export to ONNX format and inference in any supported ONNX Runtime language.</td>
+  </tr>
+  <tr>
+    <td rowspan="2">Intel® Extension of TensorFlow*</td>
+    <td><a href="IntelTensorFlow_GettingStarted">IntelTensorFlow_GettingStarted</a></td>
+    <td>A simple training example for TensorFlow.</td>
+  </tr>
+  <tr>
+    <td><a href="Intel® Extension For TensorFlow GettingStarted">Intel® Extension For TensorFlow GettingStarted</a></td>
+    <td>Guides users how to run a TensorFlow inference workload on both GPU and CPU.</td>
+  </tr>
+  <tr>
+    <td>JAX*</td>
+    <td><a href="IntelJAX GettingStarted">IntelJAX GettingStarted</a></td>
+    <td>The JAX Getting Started sample demonstrates how to train a JAX model and run inference on Intel® hardware.</td>
+  </tr>
+</table>
 
 *Other names and brands may be claimed as the property of others. [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
