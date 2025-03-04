@@ -11,15 +11,21 @@
       "linux": [
       {
           "env": ["apt-get update && apt-get install -y libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6",
-            "source /intel/oneapi/intelpython/bin/activate",
-            "conda activate pytorch",
+            "pixi shell --manifest_path ../../Preset_environments/deep_learning_pytorch_cpu/pixi.toml",
+            "pixi add --pypi --feature test_sample pip",
+            "pixi project environment add test --feature test_sample",
+            "pixi shell -e test",
             "pip install -r requirements.txt",
             "pip install ipykernel jupyter",
             "python -m ipykernel install --user --name=pytorch"
           ],
           "id": "quantize with inc",
           "steps": [
-              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb"
+              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb",
+              "pixi shell -e default",
+              "pixi project environment remove test",
+              "pixi remove --pypi --feature test_sample 'pip'",
+              "rm -rf ../../Preset_environments/deep_learning_pytorch_cpu/.pixi/envs/test"
            ]
       }
        ]

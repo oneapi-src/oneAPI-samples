@@ -11,17 +11,20 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"conda install -n tensorflow -c conda-forge python-flatbuffers -y",
-				"conda install -n tensorflow -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
-				"conda install -n tensorflow -y",
+		"env": ["pixi shell --manifest-path ../../Preset_environments/deep_learning_tensorflow_cpu/pixi.toml",
+				"pixi add --pypi --feature test_sample pip",
+				"pixi project environment add test --feature test_sample",
+				"pixi shell -e test",
 				"pip install jupyter ipykernel",
 				"python -m ipykernel install --user --name=tensorflow"
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
+			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb",
+			"pixi shell -e default",
+			"pixi project environment remove test",
+			"pixi remove --pypi --feature test_sample 'pip'",
+			"rm -rf ../../Preset_environments/deep_learning_tensorflow_cpu/.pixi/envs/test"
 		 ]
 	}
     ]
