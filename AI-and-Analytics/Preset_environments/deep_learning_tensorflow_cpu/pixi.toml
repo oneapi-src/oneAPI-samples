@@ -1,0 +1,10 @@
+[project]
+channels = ["https://software.repos.intel.com/python/conda", "conda-forge"]
+name = "dl_tensorlfow_cpu"
+platforms = ["linux-64"]
+
+[dependencies]
+intel-extension-for-tensorflow = { version = "==2.15.0.0", build = "*cpu*" }
+python = "3.11.*"
+neural-compressor = "==3.1.1"
+onnxruntime = "*"

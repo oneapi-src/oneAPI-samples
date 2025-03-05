@@ -13,13 +13,20 @@
       {
           "id": "intel amx bf16 training",
           "steps": [
-              "source /intel/oneapi/intelpython/bin/activate",
-              "conda activate pytorch",
-              "python -m pip install -r requirements.txt",
+              "pixi shell --manifest-path ../../Preset_environments/deep_learning_pytorch_cpu/pixi.toml",
+              "pixi add --pypi --feature test_sample pip",
+              "pixi project environment add test --feature test_sample",
+              "pixi shell -e test",
+              "pip install -r requirements.txt",
+              "pip install jupyter ipykernel",
               "python -m ipykernel install --user --name=pytorch",
               "python pytorch_training_avx512_bf16.py",
               "python pytorch_training_amx_bf16.py",
-              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb"
+              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb",
+              "pixi shell -e default",
+              "pixi project environment remove test",
+              "pixi remove --pypi --feature test_sample 'pip'",
+              "rm -rf ../../Preset_environments/deep_learning_pytorch_cpu/.pixi/envs/test"
            ]
       }
        ]

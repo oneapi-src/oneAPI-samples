@@ -1,0 +1,14 @@
+[project]
+channels = ["https://software.repos.intel.com/python/conda", "conda-forge"]
+name = "dl_pytorch_cpu"
+platforms = ["linux-64"]
+
+[dependencies]
+intel-extension-for-pytorch = "==2.5.0"
+python = "3.11.*"
+oneccl_bind_pt = "==2.5.0"
+torchvision = "==0.20.0"
+torchaudio = "==2.5.0"
+deepspeed = "==0.15.4"
+neural-compressor = "==3.1.1"
+onnxruntime = "*"
