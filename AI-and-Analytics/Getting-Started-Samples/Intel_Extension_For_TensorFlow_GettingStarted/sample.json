@@ -13,24 +13,25 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow",
-				"conda deactivate",
-				"conda activate tensorflow-gpu",
-				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow-gpu",
-				"conda deactivate"
+
+				"pip install uv==0.6.3", 
+				"uv venv tensorflow",
+				"source tensorflow/bin/activate",
+				"uv sync --active",
+				"uv sync --group tensorflow --active",
+				"uv run --active ipython kernel install --user --env VIRTUAL_ENV $(pwd)/tensorflow --name=tensorflow-gs ",
+				"deactivate",
+				"uv venv tensorflow-gpu",
+				"source tensorflow-gpu/bin/activate",
+				"uv sync --active",
+				"uv sync --group tensorflow-gpu --active",
+				"uv run --active ipython kernel install --user --env VIRTUAL_ENV $(pwd)/tensorflow-gpu --name=tensorflow-gpu-gs",
+				"deactivate",
+				"source tensorflow/bin/activate"
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate tensorflow",
-				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
+				"uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow-gs --to notebook ResNet50_Inference.ipynb"
 			]
 		}]
 	},
