@@ -1,0 +1,12 @@
+[project]
+channels = ["https://software.repos.intel.com/python/conda", "conda-forge"]
+name = "classical_ml"
+platforms = ["linux-64"]
+
+[dependencies]
+xgboost = "*"
+scikit-learn-intelex = "*"
+scikit-learn = "1.5.2"
+modin-ray = "0.32.0"
+mkl = "2025.0.*"
+python = "3.11.*"
