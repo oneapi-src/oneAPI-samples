@@ -74,7 +74,7 @@ conda activate pytorch
 3. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch
 ```
 4. Install dependencies:
 ```
@@ -85,6 +85,10 @@ pip install -r requirements.txt
 5. Register Conda kernel to Jupyter Notebook kernel:
 ```
 $HOME/intel/oneapi/intelpython/bin/python -m ipykernel install --user --name=base
+```
+If a non-default path is used:
+```
+<custom_path>/bin/python -m ipykernel install --user --name=base
 ```
 > **Note**: There is another way to regisyer Conda kernel to Jupyter Notebook kernel, feel free to check [the instruction](https://github.com/IntelAI/models/tree/master/docs/notebooks/perf_analysis#option-1-conda-environment-creation)
 6. Launch Jupyter Notebook: 
@@ -104,7 +108,7 @@ quantize_with_inc.ipynb
 1. Clone the GitHub repository:
 ``` 
 git clone https://github.com/oneapi-src/oneAPI-samples.git
-cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples
+cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch
 ```
 2. Install dependencies:
 ```
