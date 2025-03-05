@@ -68,7 +68,6 @@ cd oneAPI-samples/AI-and-Analytics/Getting-Started-Samples/Modin_GettingStarted
 >**Note**: Before running the following commands, make sure your Conda/Python environment with AI Tools installed is activated
 
 ```
-pip install -r requirements.txt
 pip install notebook
 ``` 
 For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install) for detailed installation instructions.
