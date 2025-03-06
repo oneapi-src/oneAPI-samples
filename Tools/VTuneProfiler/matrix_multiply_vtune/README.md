@@ -65,13 +65,21 @@ Edit the line in `multiply.h` to select the version of the multiply function:
 `#define MULTIPLY multiply1`.
 
 ### On a Linux* System
-	To build SYCL version:
-	cd <sample dir>
-	cmake .
-	make
+1. Build SYCL version:
+```
+cd <sample dir>
+cmake .
+make
+```
 
-    Clean the program
-    make clean
+2. Run the application
+```
+./matrix.dpcpp
+```
+If you want to rebuild or clean the program,
+```
+make clean
+```
 
 If an error occurs, you can get more details by running `make` with
 the `VERBOSE=1` argument:
