@@ -1,0 +1,24 @@
+[project]
+name = "genetic_algorithms_on_gpu_using_intel_distribution_of_python_dpnp"
+version = "0.1.0"
+description = "This sample shows how to implement general genetic algorithm (GA) and offload computation to GPU using dpnp."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dpnp>=0.16.3",
+    "matplotlib>=3.10.1",
+]
+
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
+
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"

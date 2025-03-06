@@ -13,11 +13,14 @@
     {
   		"id": "idp_xgb_performance",
   		"steps": [
-         	"source /intel/oneapi/intelpython/bin/activate",
-          "python IntelPython_XGBoost_Performance.py",
-          "conda remove xgboost --y",
-          "pip install -r requirements.txt",
-          "python IntelPython_XGBoost_Performance.py"		 
+          "pip install uv==0.6.3",
+         	"uv venv",
+          "uv add xgboost==2.1.1",
+          "uv sync",
+          "uv run python IntelPython_XGBoost_Performance.py",
+          "uv add xgboost==0.82",
+          "uv sync",
+          "uv run python IntelPython_XGBoost_Performance.py"
   		 ]
   	}
     ]

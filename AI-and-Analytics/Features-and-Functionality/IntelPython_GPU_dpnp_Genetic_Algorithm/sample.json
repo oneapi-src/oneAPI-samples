@@ -12,13 +12,13 @@
   	"linux": [
     {
   		"env": [
-        "source /intel/oneapi/intelpython/bin/activate",
-        "conda activate base",
-        "pip install -r requirements.txt"
+        "pip install uv==0.6.3",
+        "uv sync"
+
       ],
   		"id": "idp_ga_dpnp_py",
   		"steps": [
-         "python IntelPython_GPU_dpnp_Genetic_Algorithm.py" 
+         "uv run IntelPython_GPU_dpnp_Genetic_Algorithm.py" 
   		 ]
   	}
     ]

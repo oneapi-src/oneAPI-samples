@@ -11,14 +11,16 @@
   "ciTests": {
   	"linux": [
     {
-  		"env": [],
+  		"env": [
+        "pip install uv==0.6.3",
+        "uv venv tensorflow"
+      ],
   		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
   		"steps": [
-      "source /intel/oneapi/intelpython/bin/activate",
-			"conda activate tensorflow",
-			"pip install jupyter ipykernel",
-			"python -m ipykernel install --user --name=tensorflow",
-			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
+        "source tensorflow/bin/activate",
+        "uv sync --active",
+        "uv run --active python -m ipykernel install --user --name=tensorflow",
+        "uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
   		]
   	}
     ]
