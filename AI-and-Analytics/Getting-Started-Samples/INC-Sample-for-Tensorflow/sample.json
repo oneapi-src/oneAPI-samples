@@ -11,23 +11,19 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"pip install uv",
-				"uv init",
-				"uv python pin $(which python)",
-				"uv venv --system-site-packages",
-				"uv add -r requirements.txt",
-				"uv add flatbuffers",
-				"uv add neural-compressor",
-				"pip install notebook",
-				"uv add --dev ipykernel",
-				"uv run ipython kernel install --user --name tensorflow"
+		"env": [
+			"source /intel/oneapi/intelpython/bin/activate",
+			"conda activate tensorflow",
+			"pip install uv",
+			"uv python pin $(which python)",
+			"uv venv --system-site-packages",
+			"uv sync",
+			"uv run ipython kernel install --user --name tensorflow"
 
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
+			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook inc_sample_tensorflow.ipynb"
 		 ]
 	}
     ]

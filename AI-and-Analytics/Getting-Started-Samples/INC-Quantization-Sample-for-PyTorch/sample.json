@@ -10,15 +10,14 @@
     "ciTests": {
       "linux": [
       {
-          "env": ["apt-get update && apt-get install -y libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6",
+          "env": [
+            "apt-get update && apt-get install -y libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6",
             "source /intel/oneapi/intelpython/bin/activate",
             "conda activate pytorch",
             "pip install uv",
-            "uv init",
-            "uv add --dev ipykernel notebook",
             "uv python pin $(which python)",
             "uv venv --system-site-packages",
-            "uv add -r requirements.txt",
+            "uv sync",
             "uv run ipython kernel install --user --name pytorch"
           ],
           "id": "quantize with inc",

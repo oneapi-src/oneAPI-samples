@@ -1,0 +1,14 @@
+[project]
+name = "intel-extension-for-tensorflow-gettingstarted"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.10.1",
+    "notebook>=7.3.2",
+    "numpy==1.26.4",
+    "tensorflow-hub>=0.16.1",
+    "uv>=0.6.5",
+]

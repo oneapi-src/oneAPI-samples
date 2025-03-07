@@ -14,36 +14,16 @@
 		"linux": [{
 			"env": [
 				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate base",
-				"pip install uv notebook",
-				"uv init",
+				"conda activate tensorflow-gpu",
+				"pip install uv",
 				"uv python pin $(which python)",
 				"uv venv --system-site-packages",
-				"uv add -r requirements.txt",
-				"uv add numpy==1.26.4",
-				"uv run ipython kernel install --user --name=tensorflow",
-				"uv run ipython kernel install --user --name=tensorflow-gpu",
-
-				"conda activate tensorflow",
-				"pip install uv notebook",
-				"conda deactivate",
-				"conda activate tensorflow-gpu",
-				"pip install uv notebook",
-				"conda deactivate"
+				"uv sync",
+				"uv run ipython kernel install --user --name=tensorflow-gpu"
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"conda activate tensorflow",
-				"uv python pin $(which python)",
-				"uv venv --system-site-packages",
-				"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.cpu.ipynb",
-				"conda deactivate",
-
-				"conda activate tensorflow-gpu",
-				"uv python pin $(which python)",
-				"uv venv --system-site-packages",
-				"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow-gpu --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.gpu.ipynb",
-				"conda deactivate"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True  --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.gpu.ipynb"
 			]
 		}]
 	},

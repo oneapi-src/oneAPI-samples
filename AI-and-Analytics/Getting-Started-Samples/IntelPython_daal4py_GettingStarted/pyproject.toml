@@ -1,0 +1,12 @@
+[project]
+name = "intelpython-daal4py-gettingstarted"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "joblib>=1.4.2",
+    "notebook>=7.3.2",
+    "numpy==1.26.4",
+    "pandas>=2.2.3",
+]
