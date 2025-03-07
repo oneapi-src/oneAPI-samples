@@ -15,10 +15,9 @@
         "source /intel/oneapi/intelpython/bin/activate",
         "conda activate base", 
         "pip install uv",
-        "uv init",
         "uv python pin $(which python)",
         "uv venv --system-site-packages",
-        "uv add numba"
+        "uv sync"
       ],
       "id": "idp_numpy_numba_dpnp_gs_py",
       "steps": [

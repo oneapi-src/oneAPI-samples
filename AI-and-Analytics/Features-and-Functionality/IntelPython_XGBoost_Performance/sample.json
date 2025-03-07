@@ -19,11 +19,9 @@
       "steps": [
         "python IntelPython_XGBoost_Performance.py",
         "pip install uv",
-        "uv init",
         "uv python pin $(which python)",
         "uv venv --system-site-packages",
-        "uv add -r requirements.txt",
-        "uv add numpy==1.26.4",
+        "uv sync",
         "uv run python IntelPython_XGBoost_Performance.py"
       ]
     }

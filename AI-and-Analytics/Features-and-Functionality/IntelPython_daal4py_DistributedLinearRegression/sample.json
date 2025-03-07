@@ -16,11 +16,9 @@
                 "source /intel/oneapi/intelpython/bin/activate", 
                 "conda activate base", 
                 "pip install uv", 
-                "uv init", 
                 "uv python pin $(which python)", 
                 "uv venv --system-site-packages", 
-                "uv add -r requirements.txt",
-				"uv add numpy==1.26.4" 
+                "uv sync"
 			],
 			"id": "idp_d4p_Linear_Regression_Dist",
 			"steps": [

@@ -1,0 +1,9 @@
+[project]
+name = "intelpython-numpy-numba-dpnp-knn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numba>=0.61.0",
+]

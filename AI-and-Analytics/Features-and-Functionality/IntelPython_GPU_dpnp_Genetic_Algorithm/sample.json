@@ -15,10 +15,9 @@
         "source /intel/oneapi/intelpython/bin/activate",
         "conda activate base",
         "pip install uv",
-        "uv init",
         "uv python pin $(which python)",
         "uv venv --system-site-packages",
-        "uv add -r requirements.txt"
+        "uv sync"
       ],
       "id": "idp_ga_dpnp_py",
       "steps": [

@@ -15,11 +15,9 @@
                 "source /intel/oneapi/intelpython/bin/activate", 
                 "conda activate pytorch",
                 "pip install uv",
-                "uv init",
                 "uv python pin $(which python)",
                 "uv venv --system-site-packages",
-                "uv add -r requirements.txt",
-                "uv add torch==2.5.0 torchvision==0.20.0"
+                "uv sync"
             ],
             "id": "inc_text_classification_quantization_py",
             "steps": [

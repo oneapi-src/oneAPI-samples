@@ -17,12 +17,9 @@
           "source /intel/oneapi/intelpython/bin/activate",
           "conda activate tensorflow-gpu",
           "pip install uv",
-          "uv init",
           "uv python pin $(which python)",
           "uv venv --system-site-packages",
-          "uv add -r requirements.txt",
-          "uv add seaborn",
-          "uv add numpy==1.26.4",
+          "uv sync",
           "uv run python -m spacy download en_core_web_sm",
           "uv run python JobRecommendationSystem.py"
         ]
