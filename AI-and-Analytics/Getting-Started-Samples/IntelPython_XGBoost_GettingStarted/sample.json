@@ -16,6 +16,8 @@
 				"source /intel/oneapi/intelpython/bin/activate",
 				"conda activate base",
 				"pip install uv",
+				"uv python pin $(which python)",
+				"uv venv --system-site-packages",
 				"uv sync"
 			],
 			"id": "IDP_XGBoost_GS_py",
