@@ -11,18 +11,16 @@
   "ciTests": {
     "linux": [
     {
-        "id": "intel pytorch gpu inference optimization with amp",
-        "steps": [
+        "env": [
             "source /intel/oneapi/intelpython/bin/activate",
             "conda activate pytorch-gpu",
-            "pip install uv notebook",
-            "uv init",
+            "pip install uv",
             "uv python pin $(which python)",
             "uv venv --system-site-packages",
-            "uv add -r requirements.txt",
-            "uv add numpy==1.26.4",
-            "uv add --dev ipykernel",
-            "uv run ipython kernel install --user --name=pytorch-gpu",
+            "uv sync"
+        ],
+        "id": "intel pytorch gpu inference optimization with amp",
+        "steps": [
             "uv run IntelPyTorch_GPU_InferenceOptimization_with_AMP.py"
          ]
     }

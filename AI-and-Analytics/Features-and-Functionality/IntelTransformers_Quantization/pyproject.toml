@@ -1,0 +1,18 @@
+[project]
+name = "inteltransformers-quantization"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.4.0",
+    "datasets>=3.3.2",
+    "intel-extension-for-transformers>=1.4.2",
+    "neural-compressor==2.6",
+    "neural-speed>=1.0",
+    "peft>=0.14.0",
+    "sentencepiece>=0.2.0",
+    "torch==2.5.0",
+    "torchvision==0.20.0",
+    "transformers>=4.49.0",
+]

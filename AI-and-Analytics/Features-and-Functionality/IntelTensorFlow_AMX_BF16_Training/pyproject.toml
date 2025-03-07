@@ -1,0 +1,27 @@
+[project]
+name = "inteltensorflow-amx-bf16-training"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "absl-py>=2.1.0",
+    "astunparse>=1.6.3",
+    "h5py>=3.13.0",
+    "huggingface-hub>=0.29.2",
+    "ipykernel>=6.29.5",
+    "keras==2.15.0",
+    "keras-preprocessing>=1.1.2",
+    "matplotlib>=3.10.1",
+    "notebook>=7.3.2",
+    "numpy==1.26.4",
+    "pandas>=2.2.3",
+    "pillow>=11.1.0",
+    "py-cpuinfo>=9.0.0",
+    "tensorboard>=2.19.0",
+    "tensorboard-data-server>=0.7.2",
+    "tensorboard-plugin-wit>=1.8.1",
+    "tf-estimator-nightly>=2.16.0.dev2024012409",
+    "tokenizers>=0.21.0",
+    "transformers>=4.49.0",
+]

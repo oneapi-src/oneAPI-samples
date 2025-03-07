@@ -14,14 +14,10 @@
         "source /intel/oneapi/intelpython/bin/activate",
         "conda activate tensorflow",
         "pip install uv",
-        "uv init",
         "uv python pin $(which python)",
         "uv venv --system-site-packages",
-        "uv add -r requirements.txt",
-        "uv add py-cpuinfo nbformat nbconvert",
-        "uv add --dev ipykernel",
-        "uv run ipython kernel install --user --name tensorflow",
-        "uv add notebook nbconvert"
+        "uv sync",
+        "uv run ipython kernel install --user --name tensorflow"
       ],
       "id": "intel llm bf16 infrence and fine-tuning",
       "steps": [
