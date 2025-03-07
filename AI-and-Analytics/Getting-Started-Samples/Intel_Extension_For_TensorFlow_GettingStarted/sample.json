@@ -23,7 +23,7 @@
 			],
 			"id": "itex_sample_test",
 			"steps": [
-				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True  --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.gpu.ipynb"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow-gpu --to notebook --execute ResNet50_Inference.ipynb --output ResNet50_Inference.nbcovert.gpu.ipynb"
 			]
 		}]
 	},

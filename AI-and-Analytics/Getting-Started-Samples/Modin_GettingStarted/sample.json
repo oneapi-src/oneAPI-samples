@@ -21,7 +21,7 @@
       ],
       "id": "Intel_Modin_GS_py",
       "steps": [
-        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_GettingStarted.ipynb"
+        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=modin_getting_started --to notebook Modin_GettingStarted.ipynb"
       ]
     }
     ]

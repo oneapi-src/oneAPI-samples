@@ -20,7 +20,7 @@
         "uv venv --system-site-packages",
         "uv sync",
         "uv run ipython kernel install --user --name modin_vs_pandas",
-        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_Vs_Pandas.ipynb"
+        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=modin_vs_pandas --to notebook Modin_Vs_Pandas.ipynb"
       ]
     }]
   },

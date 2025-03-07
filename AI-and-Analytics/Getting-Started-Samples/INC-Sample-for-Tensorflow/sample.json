@@ -23,7 +23,7 @@
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook inc_sample_tensorflow.ipynb"
+			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
 		 ]
 	}
     ]
