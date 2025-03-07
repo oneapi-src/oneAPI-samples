@@ -5,4 +5,4 @@ Deprecation Notice: The Intel® oneAPI DPC++/C++ Compiler integrated support for
 Find FPGA samples for earlier versions of the compiler than 2025.0 by selecting the appropriate [tag](https://github.com/oneapi-src/oneAPI-samples/tags) in this repository.
 Find FPGA samples for 2025.0 and subsequent patches in the new Altera [hls-samples](https://github.com/altera-fpga/hls-samples) git repository.
 
-This specific sample can be found in the hls-samples repository [here](https://github.com/altera-fpga/hls-samples/tree/main/Tutorials/Tools/system_profiling/README.md).
+This specific sample can be found in the hls-samples repository [here](https://github.com/altera-fpga/hls-samples/tree/main/Tutorials/Tools/system_profiling).
