@@ -156,7 +156,7 @@ You should see printed output for cells (with similar numbers) and an accuracy r
 ```
 Model accuracy on test data: 0.9833333333333333
 
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## Related Samples

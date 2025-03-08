@@ -90,4 +90,4 @@ def main():
 if __name__ == '__main__':
     main()
     print("Tensorflow HelloWorld Done!")
-    print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+    print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")

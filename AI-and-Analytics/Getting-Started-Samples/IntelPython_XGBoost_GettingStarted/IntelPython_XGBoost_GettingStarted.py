@@ -93,7 +93,7 @@ pd.DataFrame(preds).to_csv('foo.csv',index=False)
 # In[9]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
 
 # In[ ]:
