@@ -13,10 +13,11 @@
       {
         "id": "idp_xgb_d4p_prediction",
         "steps": [
-          "source /intel/oneapi/intelpython/bin/activate",
-          "pip install ipykernel jupyter",
-          "python -m ipykernel install --user --name=xgboost",
-          "jupyter nbconvert --to notebook --execute IntelPython_XGBoost_daal4pyPrediction.ipynb"
+          "pip install uv",
+          "uv venv",
+          "uv sync",
+          "uv run python -m ipykernel install --user --name=xgboost",
+          "uv run jupyter nbconvert --to notebook --execute IntelPython_XGBoost_daal4pyPrediction.ipynb"
         ]
       }
     ]

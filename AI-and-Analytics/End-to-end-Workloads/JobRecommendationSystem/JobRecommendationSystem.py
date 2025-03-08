@@ -476,6 +476,7 @@ model_itex.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accur
 print(model_itex.summary())
 
 # %%
+import numpy as np
 X_final = np.array(embedded_docs)
 y_final = np.array(y)
 
@@ -578,7 +579,6 @@ messages = [
 # Now, we are preparing functions to show similarities between given sentences in the for of heat map. 
 
 # %%
-import numpy as np
 import seaborn as sns
 
 def plot_similarity(labels, features, rotation):

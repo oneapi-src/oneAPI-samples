@@ -13,11 +13,12 @@
 		"linux": [{
 			"id": "model_zoo_sample_test",
 			"steps": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"pip install ipykernel jupyter",
-				"python -m ipykernel install --user --name=tensorflow",
-				"jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
+				"pip install uv",
+				"uv venv tensorflow",
+				"source tensorflow/bin/activate",
+				"uv sync --active",
+				"uv run --active python -m ipykernel install --user --name=tensorflow",
+				"uv run --active jupyter nbconvert --to notebook --execute ResNet50_Inference.ipynb"
 			]
 		}]
 	},
