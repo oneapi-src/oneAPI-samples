@@ -167,7 +167,7 @@ Here is our cluster assignments for first 5 datapoints:
  [1]
  [1]
  [1]]
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## License
