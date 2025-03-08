@@ -111,7 +111,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Example Output
 
 ```
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## License

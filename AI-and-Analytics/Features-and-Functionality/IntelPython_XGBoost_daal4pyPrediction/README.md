@@ -128,7 +128,7 @@ daal4py accuracy score: 0.99
 All looks good!
 speedup: 0.3892766452116991
 Accuracy Difference 0.0
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## License

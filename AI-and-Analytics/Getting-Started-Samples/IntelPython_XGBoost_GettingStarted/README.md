@@ -148,7 +148,7 @@ AI Tools Docker images already have Get Started samples pre-installed. Refer to 
 
 ```
 RMSE: 11.113036205909719
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 ## Related Samples
 
