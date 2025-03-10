@@ -81,10 +81,10 @@
     <script>
 // Links used from GPU Optimization Guide
 var href_gpu_list = "https://dgpu-docs.intel.com/devices/hardware-table.html";
-var href_grf_modes = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/grf-mode-selection.html";
-var href_gpu_architecture = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/xe-arch.html";
-var href_gpu_occupancy = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/thread-mapping.html";
-var href_sub_groups = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/sub-group.html";
+var href_grf_modes = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/small-register-mode-vs-large-register-mode.html";
+var href_gpu_architecture = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/intel-xe-gpu-architecture.html";
+var href_gpu_occupancy = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/thread-mapping-and-gpu-occupancy.html";
+var href_sub_groups = "https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/sub-groups-and-simd-vectorization.html";
     </script>
 	<script>
 // Script from: https://www.chartjs.org/dist/master/chart.min.js
@@ -240,7 +240,7 @@ var targets = [
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
 		"Threads_Per_EU": 8,
-		"EU_Count": [320, 288],
+		"EU_Count": [160, 144],
 		"Max_Threads_Per_Sub_Slice": 64,
 		"Large_GRF_Mode": false,
 		"Subgroup_Sizes": [32, 16],
@@ -307,8 +307,8 @@ var targets = [
 	}
 },
 {
-	"name": "Discrete GPU (Xe HPG / Data Center Flex / ATSM)",
-	"code": "xe_hpg_dg2_flex",
+	"name": "Discrete GPU (Xe HP / Data Center Flex / ATSM)",
+	"code": "xe_hp_ats",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
 		"Threads_Per_EU": 8,
@@ -1109,9 +1109,9 @@ var pci_targets=[
 //FLEX
 {
 	"pci_id": ["56C1"],
-	"name": "Discrete GPU (Xe HPG)",
+	"name": "Discrete GPU (Xe HP)",
 	"product_name": "Intel® Data Center GPU Flex 140",
-	"code": "xe_hpg_dg2_flex",
+	"code": "xe_hp_ats",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
 		"Threads_Per_EU": 8,
@@ -1129,9 +1129,9 @@ var pci_targets=[
 },
 {
 	"pci_id": ["56C0"],
-	"name": "Discrete GPU (Xe HPG)",
+	"name": "Discrete GPU (Xe HP)",
 	"product_name": "Intel® Data Center GPU Flex 170",
-	"code": "xe_hpg_dg2_flex",
+	"code": "xe_hp_ats",
 	"device_info": {
 		"EU_Per_Sub_Slice": 16,
 		"Threads_Per_EU": 8,
@@ -1279,7 +1279,7 @@ var pci_targets=[
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
 		"Threads_Per_EU": 8,
-		"EU_Count": 320,
+		"EU_Count": 160,
 		"Max_Threads_Per_Sub_Slice": 32,
 		"Large_GRF_Mode": false,
 		"Subgroup_Sizes": [32, 16],
@@ -1299,7 +1299,7 @@ var pci_targets=[
 	"device_info": {
 		"EU_Per_Sub_Slice": 8,
 		"Threads_Per_EU": 8,
-		"EU_Count": 288,
+		"EU_Count": 144,
 		"Max_Threads_Per_Sub_Slice": 32,
 		"Large_GRF_Mode": false,
 		"Subgroup_Sizes": [32, 16],
