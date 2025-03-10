@@ -516,9 +516,9 @@ void reconstruction_from_radon(padded_matrix& image,
     By the Fourier slice theorem,
             radon_hat(theta, ksi) = f_hat(ksi*sin(theta), ksi*cos(theta))
     where f_hat is the (continuous) 2D Fourier transform of f, i.e.,
-       f_hat(k_y, k_x) :=
-           integral integral (f(y,x)*exp(-1i*2*M_PI*(k_y*y + k_x*x))) dx dy.
-            y real   x real
+     f_hat(kappa_y, kappa_x) :=
+       integral integral (f(y,x)*exp(-1i*2*M_PI*(kappa_y*y + kappa_x*x))) dx dy.
+        y real   x real
 
     Considering ksi = r / S for integers r in [0, q/2], one has
         radon_hat(theta(i), r / S)
@@ -527,7 +527,7 @@ void reconstruction_from_radon(padded_matrix& image,
     which may be approximated as (midpoint rule)
     radon_hat(theta(i), r / S)
         ~ \sum_j (R[i][j]*exp(-1i*2*M_PI*(r/S)*v(j))) * (S/q), for j=0,...,q-1
-        = exp(1i*M_PI*r*(1.0 - 1.0/q)) * (S/q) * DFT(R[i][0:q[ ; r),    (eq. 1a)
+        = exp(1i*M_PI*r*(1.0 - 1.0/q)) * (S/q) * DFT(R[i][0:q[; r),     (eq. 1a)
     where DFT(R[i][0:q[; r) represents the r-th value of the forward DFT of
     the i-th row of q discrete values in R.
     Note: radon_hat(theta(i) + M_PI, r / S) = conj(radon_hat(theta(i), r / S))
@@ -542,7 +542,7 @@ void reconstruction_from_radon(padded_matrix& image,
     // Distances must be set for batched transforms. For real in-place DFTs with
     // unit stride, the distance in forward domain (wherein elements are real)
     // must be twice the distance in backward domain (wherein elements are
-    // complex). Therefore, padding is requied in forward domain (as accounted
+    // complex). Therefore, padding is required in forward domain (as accounted
     // for by the padded_matrix structure)
     radon_dft.set_value(dft_ns::config_param::FWD_DISTANCE, R.ldw());
     radon_dft.set_value(dft_ns::config_param::BWD_DISTANCE, R.ldw() / 2);
@@ -559,74 +559,55 @@ void reconstruction_from_radon(padded_matrix& image,
     Note that values of i in [p, 2*p) are known too, as the complex conjugates
     of their (i-p) counterparts (albeit not stored explicitly).
 
-    The reconstructed image is based off a version of the spectrum f_hat that
-    is truncated to wave vectors no larger than 0.5*q/S in magnitude, e.g.,
-      g_hat(ksi_y, ksi_x) =
-              f_hat(ksi_y, ksi_x)*heaviside(0.5*q/S - sqrt(ksi_y^2 + ksi_x^2)),
-    where heaviside(x) := {0, 0.5, 1} if {x < 0.0, x == 0, x > 0.0},
-    respectively.
+    The reconstructed image approaches (an elementary cell of) the periodic
+    replication of f of period S along y and x, i.e., of
+                          +\infty      +\infty
+            \psi(y, x) =    \sum         \sum       f(y - n_y*S, x - n_x*S).
+                         n_y=-\infty  n_x=-\infty
+    Given its periodic nature, \psi(y, x) can be expressed as the Fourier series
+   +\infty      +\infty
+     \sum         \sum       \psi_hat[k_y, k_x]*exp(1i*2*M_PI*(k_y*y+k_x*x)/S),
+  k_y=-\infty  k_x=-\infty
+    wherein
+                \psi_hat[k_y, k_x] = (1/S^2)*f_hat(k_y/S, k_x/S).
 
-    While g(y, x) is not strictly equal to f(y, x) pointwise in general, g
-    converges towards f in a weaker sense (e.g., in L2 norm) as q gets large if
-    f is bounded and has compact support. Since samples of g are desired at
-    specific points, i.e., the (centers of the) q x q pixels of the
-    reconstructed S-by-S image, let
-                  g_s(y, x) = g(y, x) * 2d_dirac_comb(y, x; S/q),
-    where 2d_dirac_comb(y, x; alpha) is defined as
-      \sum_j \sum_i 2d_dirac(y-alpha*j, x-alpha*i), {i,j} = -infty,...,+infty.
+    Given that f_hat(k_y/S, k_x/S) is unknown for hypot(k_x, k_y) > q/2, the
+    reconstruction function g approximates \psi as its truncated Fourier series,
+    i.e.,
+       (S^2)*g(y,x) =   \sum     f_hat(k_y/S, k_x/S)*exp(1i*2*M_PI*(k_y*y+k_x*x)/S).
+                      [k_y,k_x],
+                hypot(k_y, k_x) <= q/2
 
-    By the convolution theorem, the spectrum of g_s is
-        g_s_hat(ksi_y, ksi_x) =                                          (eq. 2)
-     (q^2/S^2)*convolution[g_hat(., .), 2d_dirac_comb(., .; q/S)](ksi_y, ksi_x),
-    which is periodic with period q/S along ksi_y and ksi_x. Sampling g_s_hat at
-    wave vectors of components multiple of 1.0/S, i.e., considering
-        f_tilde_hat(ksi_y, ksi_x) =                                      (eq. 3)
-            g_s_hat(ksi_y, ksi_x) * 2d_dirac_comb(ksi_y, ksi_x; 1.0/S)
-    effectively corresponds to f_tilde(y, x) being a periodic replication of
-    (S^2)*g_s(y, x) with period S along y and x (assuming that values of
-    g_s(y, x) may be ignored for {(y, x): max(|y|, |x|) > 0.5*S}).
+    Sampling the values of g at points (i*S/q, j*S/q) (0 <= i < q and 0 <= j < q,
+    i and j are integers), one has
+                          G[i,j] = (1/S^2)*iDFT(G_HAT; i,j)              (eq. 2)
+    where G_HAT is a set of qxq (complex) values G_HAT[m][n] (0 <= m < q and
+    0 <= n < q, m and n are integers) such that
+        G_HAT[m][n] = 0.0,                             if hypot(mm, nn) > 0.5*q;
+        G_HAT[m][n] = f_hat(mm/S, nn/S)                if hypot(mm, nn) < 0.5*q
+                                                   or if (hypot(mm, nn) == 0.5*q
+                                                          && mm != 0 && nn != 0)
+        G_HAT[m][n] = 2*real_part(f_hat(mm/S, nn/S)), if (hypot(mm, nn) == 0.5*q
+                                                        && (mm != 0 || nn != 0)).
+    where the notation "xx" represents an integer such that
+                   0 <= |xx| <= q/2 and mod(x, q) == mod(xx, q)
+    ('x' being either 'm' or 'n' above).
 
-    Developing the (continuous) 2D inverse Fourier transform of f_tilde_hat
-    (see eq. 3), one has
-      f_tilde(y, x) = \sum_i \sum_j 2d_dirac(y-i*(S/q), x-j*(S/q)) G[i%q][j%q],
-                                                      {i,j} = -infty,...,+infty
-    where G[i][j] (0 <= i < q. 0 <= j < q) is the (i,j) value of the 2D backward
-    DFT of
-           G_S_HAT[m][n] = g_s_hat(mm(m)/S, nn(n)/S), 0 <= m < q, 0 <= n < q
-    where 0 <= |xx(x)| <= q/2 and mod(x, q) == mod(xx(x), q) with 'x' being
-    either 'm' or 'n'. Explicitly, for 0 <= m < q, 0 <= n < q, let
-        abs_S_ksi   = sycl::hypot(mm(n), nn(n));
-        theta       = sycl::atan2(mm(n), nn(n));
-    then (see eq. 2)
-        G_S_HAT[m][n]=0.0,                                 if abs_S_ksi > 0.5*q;
-        G_S_HAT[m][n]=f_hat(mm(m)/S, nn(n)/S),      if round(abs_S_ksi) < 0.5*q;
-        G_S_HAT[m][n]=0.5*f_hat(mm(m)/S, nn(n)/S),  if round(abs_S_ksi) = 0.5*q,
-                                               and fmod(theta, 0.5*M_PI) != 0.0;
-        G_S_HAT[m][n]=real_part(f_hat(mm(m)/S, nn(n)/S)),
-                                                    if round(abs_S_ksi) = 0.5*q,
-                                                and fmod(theta, 0.5*M_PI) = 0.0.
-
-    Identifying f_tilde(y, x) as the periodic replication of (S^2)*g_s(y, x)
-    with period S along y and x, one concludes that
-                 g(i*(S/q), j*(S/q)) = G[i%q][j%q] / S^2                 (eq. 4)
-    for integers i and j s.t. |i| <= q/2 and |j| <= q/2 (assuming that values of
-    g_s(y, x) may be ignored for {(y, x): max(|y|, |x|) > 0.5*S}).
-
-    The required values of G_S_HAT[m][n] are interpolated below from the known
+    The required values of G_HAT[m][n] are interpolated below from the known
     values stored in R (using eq. 1b).
-    Note that G_S_HAT[q - m][q - n] = conj(G_S_HAT[m][n]) given that
-    f_hat(-ksi_y, -ksi_x) = conj(f_hat(ksi_y, ksi_x)). This is consistent with
-    the requirements for a well-defined backward real 2D DFT, and the values of
-    G_S_HAT[m][n] do not need to be set explicitly for n > q/2.
+    Note that G_HAT[q - m][q - n] = conj(G_HAT[m][n]) by construction, given
+    that f_hat(-ksi_y, -ksi_x) = conj(f_hat(ksi_y, ksi_x)). This is consistent
+    with the requirements for a well-defined backward real 2D DFT. Therefore, the
+    values of G_HAT[m][n] do not need to be set/stored explicitly for n > q/2.
 */
     std::cout << "\tStep 2 - Interpolating spectrum from polar to "
               << "cartesian grid" << std::endl;
     auto interp_ev = image.q.submit([&](sycl::handler &cgh) {
         cgh.depends_on(compute_radon_hat);
         const complex_t *R_data_c = reinterpret_cast<complex_t*>(R.data);
-        complex_t *G_S_HAT = reinterpret_cast<complex_t*>(image.data);
+        complex_t *G_HAT = reinterpret_cast<complex_t*>(image.data);
         const int R_data_c_ldw  = R.ldw()/2;        // in complex values
-        const int G_S_HAT_ldw   = image.ldw()/2;    // in complex values
+        const int G_HAT_ldw   = image.ldw()/2;      // in complex values
         cgh.parallel_for<class interpolateKernelClass>(
             sycl::range<2>(q, q/2 + 1),
             [=](sycl::item<2> item) {
@@ -634,45 +615,45 @@ void reconstruction_from_radon(padded_matrix& image,
                 const int n = item.get_id(1);
                 const int mm = m - (2*m > q ? q : 0);
                 const int nn = n; // nn(n) == n since n never exceeds q/2
-                const double abs_S_ksi = sycl::hypot(double(mm), double(nn));
+                const double abs_k = sycl::hypot(double(mm), double(nn));
                 const double theta = (mm == 0 && nn == 0) ?
                         0.0 : sycl::atan2(double(mm), double(nn));
                 // theta in [-0.5*M_PI, +0.5*M_PI]
-                complex_t G_S_HAT_mn = complex_t(0.0, 0.0);
-                if (abs_S_ksi <= 0.5*q) {
-                    const int r = static_cast<int>(sycl::round(abs_S_ksi));
+                complex_t G_HAT_mn = complex_t(0.0, 0.0);
+                if (abs_k <= 0.5*q) {
+                    const int r = static_cast<int>(sycl::round(abs_k));
                     const int i =
                         static_cast<int>(sycl::round(((theta + 0.5*M_PI)/M_PI)*p));
                     // if i < 0 or i >= p (e.g., theta = 0.5*M_PI corresponds to
                     // i == p), the value is mapped to the complex conjugate of
                     // R_data_c[(i%p) * R_data_c_ldw + r] (e.g.,
                     // theta = -0.5*M_PI if i == p).
-                    complex_t f_hat_mm_nn =
+                    // Approximated values of
+                    // f_hat((r/S)*sin(theta(i)), (r/S)*cos(theta(i))):
+                    complex_t f_hat_value =
                         R_data_c[(i% p) * R_data_c_ldw + r]*
                         complex_t(sycl::cos(M_PI*r*(1.0 - 1.0/q)),
                                   sycl::sin(M_PI*r*(1.0 - 1.0/q))); // see eq. 1b
                     if (i%(2*p) >= p)
-                        f_hat_mm_nn = std::conj(f_hat_mm_nn);
+                        f_hat_value = std::conj(f_hat_value);
 
-                    G_S_HAT_mn = f_hat_mm_nn;
-                    if (2*r == q) {
-                        if (nn == 0 || mm == 0) // |theta| = 0.0 or 0.5*M_PI
-                            G_S_HAT_mn.imag(0.0);
-                        else
-                            G_S_HAT_mn *= 0.5;
+                    G_HAT_mn = f_hat_value;
+                    if (2*r == q && (nn == 0 || mm == 0)) {
+                        G_HAT_mn *= 2.0;
+                        G_HAT_mn.imag(0.0);
                     }
                     // For a more convenient representation of the reconstructed
                     // image, shift the target reference frame so that the
                     // center of the reconstructed image is located at pixel
                     // of indices (q/2, q/2):
-                    G_S_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*m*(q/2)/q),
-                                            sycl::sin(-2.0*M_PI*m*(q/2)/q));
+                    G_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*m*(q/2)/q),
+                                          sycl::sin(-2.0*M_PI*m*(q/2)/q));
                     // RHS is ((-1)^m, 0) is q is even
-                    G_S_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*n*(q/2)/q),
-                                            sycl::sin(-2.0*M_PI*n*(q/2)/q));
+                    G_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*n*(q/2)/q),
+                                          sycl::sin(-2.0*M_PI*n*(q/2)/q));
                     // RHS is ((-1)^n, 0) is q is even
                 }
-                G_S_HAT[m * G_S_HAT_ldw + n] = G_S_HAT_mn;
+                G_HAT[m * G_HAT_ldw + n] = G_HAT_mn;
         });
     });
     std::cout << "\tStep 3 - In-place backward real 2D DFT of size "
@@ -680,7 +661,7 @@ void reconstruction_from_radon(padded_matrix& image,
     real_descriptor_t q_by_q_real_dft({q, q});
     // Default strides are set by default for in-place DFTs (consistently with
     // the implementation of padded_matrix)
-    // Scaling factor for backward DFT (see eq. 4)
+    // Scaling factor for backward DFT (see eq. 2)
     q_by_q_real_dft.set_value(dft_ns::config_param::BACKWARD_SCALE, 1.0 / (S*S));
     q_by_q_real_dft.commit(image.q);
     auto compute_g_values =
@@ -693,7 +674,7 @@ void reconstruction_from_radon(padded_matrix& image,
 // original image. The mean error over an area A is defined as
 //       (1.0/area(A)) integral |f_reconstruction - f_original| dA
 //                        A
-// where f_reconstruction (resp. f_original) is the piecewise contant function
+// where f_reconstruction (resp. f_original) is the piecewise constant function
 // of the gray-scale intensity in the reconstructed (resp. original) image.
 // Note: f_reconstruction and f_original are considered equal to 0.0 outside
 // the support of the original image.
