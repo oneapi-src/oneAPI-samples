@@ -25,69 +25,6 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-constexpr int default_p = 400;
-constexpr int default_q = 400;
-constexpr double default_S_to_D = 1.0;
-static const std::string default_original_bmpname = "input.bmp";
-static const std::string default_radon_bmpname = "radon.bmp";
-static const std::string default_restored_bmpname = "restored.bmp";
-static const std::string default_errors_bmpname = "errors.bmp";
-constexpr int default_crop = 1;
-#ifdef _WIN64
-static const std::string program_name = "compute_tomography.exe";
-#else
-static const std::string program_name = "compute_tomography";
-#endif
-constexpr double arbitrary_error_threshold = 0.1;
-static const std::string usage_info =
-"\n\
-  Usage:\n\
-  ======\n\
-    " + program_name + " p q in radon_out restored_out S_to_D err_out crop\n\
-  Inputs:\n\
-  -------\n\
-  p             - number of projection directions considered for the Radon\n\
-                  transform (number of angles spanning a range of M_PI).\n\
-                  p must be a strictly positive integer (default value is " +
-                  std::to_string(default_p) + ").\n\
-  q             - number of samples of the Radon transform for every\n\
-                  projection direction.\n\
-                  q must be a strictly positive integer (default value is " +
-                  std::to_string(default_q) + ").\n\
-  in            - name of the input image used to generate Radon transform data.\n\
-                  The file must be a 24-bit uncompressed bitmap file.\n\
-                  \"" + default_original_bmpname + "\" is considered by default.\n\
-  S_to_D        - ratio of the scanning width used for sampling the Radon\n\
-                  transform (for any projection direction) to the diagonal of\n\
-                  the input image.\n\
-                  S_to_D must be a floating-point value larger than or equal\n\
-                  to 1.0 (default value is " +
-                  std::to_string(default_S_to_D) + ").\n\
-  crop          - integer flag indicating whether to crop the generated bitmap\n\
-                  output images to their range of relevance or not. Images are\n\
-                  (resp. are not) cropped if the value is 1 (resp. 0).\n\
-                  The supported values are 0 and 1 (default value is "
-                  + std::to_string(default_crop) + ").\n\
-  Outputs:\n\
-  --------\n\
-  radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the generated Radon\n\
-                  transform data points.\n\
-                  \"" + default_radon_bmpname + "\" is used by default.\n\
-  restored_out  - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the image reconstructed\n\
-                  from the Radon transform data points.\n\
-                  \"" + default_restored_bmpname + "\" is used by default.\n\
-  err_out       - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the pixel-wise error in the\n\
-                  restored_out file. This file is created only if the mean\n\
-                  global error is found to exceed "
-                  + std::to_string(100.0*arbitrary_error_threshold) +
-                  "% of the maximum\n\
-                  gray-scale value in the original image.\n\
-                  \"" + default_errors_bmpname + "\" is considered by default.\n\
-";
-
 namespace dft_ns = oneapi::mkl::dft;
 using real_descriptor_t =
     dft_ns::descriptor<dft_ns::precision::DOUBLE, dft_ns::domain::REAL>;
@@ -807,6 +744,65 @@ double compute_errors(padded_matrix& errors,
 }
 
 int main(int argc, char **argv) {
+    constexpr int default_p = 400;
+    constexpr int default_q = 400;
+    constexpr double default_S_to_D = 1.0;
+    constexpr std::string_view default_original_bmpname = "input.bmp";
+    constexpr std::string_view default_radon_bmpname = "radon.bmp";
+    constexpr std::string_view default_restored_bmpname = "restored.bmp";
+    constexpr std::string_view default_errors_bmpname = "errors.bmp";
+    constexpr int default_crop = 1;
+    constexpr double arbitrary_error_threshold = 0.1;
+    /*----------------------- USAGE INFO START --------------------------------*/
+    const std::string usage_info =
+"\n\
+  Usage:\n\
+  ======\n\
+    " + std::string(argv[0]) + " p q in radon_out restored_out S_to_D err_out crop\n\
+  Inputs:\n\
+  -------\n\
+  p             - number of projection directions considered for the Radon\n\
+                  transform (number of angles spanning a range of M_PI).\n\
+                  p must be a strictly positive integer (default value is " +
+                  std::to_string(default_p) + ").\n\
+  q             - number of samples of the Radon transform for every\n\
+                  projection direction.\n\
+                  q must be a strictly positive integer (default value is " +
+                  std::to_string(default_q) + ").\n\
+  in            - name of the input image used to generate Radon transform data.\n\
+                  The file must be a 24-bit uncompressed bitmap file.\n\
+                  \"" + std::string(default_original_bmpname) + "\" is considered by default.\n\
+  S_to_D        - ratio of the scanning width used for sampling the Radon\n\
+                  transform (for any projection direction) to the diagonal of\n\
+                  the input image.\n\
+                  S_to_D must be a floating-point value larger than or equal\n\
+                  to 1.0 (default value is " +
+                  std::to_string(default_S_to_D) + ").\n\
+  crop          - integer flag indicating whether to crop the generated bitmap\n\
+                  output images to their range of relevance or not. Images are\n\
+                  (resp. are not) cropped if the value is 1 (resp. 0).\n\
+                  The supported values are 0 and 1 (default value is "
+                  + std::to_string(default_crop) + ").\n\
+  Outputs:\n\
+  --------\n\
+  radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the generated Radon\n\
+                  transform data points.\n\
+                  \"" + std::string(default_radon_bmpname) + "\" is used by default.\n\
+  restored_out  - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the image reconstructed\n\
+                  from the Radon transform data points.\n\
+                  \"" + std::string(default_restored_bmpname) + "\" is used by default.\n\
+  err_out       - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the pixel-wise error in the\n\
+                  restored_out file. This file is created only if the mean\n\
+                  global error is found to exceed "
+                  + std::to_string(100.0*arbitrary_error_threshold) +
+                  "% of the maximum\n\
+                  gray-scale value in the original image.\n\
+                  \"" + std::string(default_errors_bmpname) + "\" is considered by default.\n\
+";
+    /*------------------------ USAGE INFO END --------------------------------*/
     if (argc > 1 &&
         (std::strcmp(argv[1], "-h") == 0 || std::strcmp(argv[1], "-H") == 0)) {
         std::cout << usage_info << std::endl;
@@ -817,15 +813,15 @@ int main(int argc, char **argv) {
     const int q                         = argc > 2 ? std::atoi(argv[2]) :
                                                      default_q;
     const std::string original_bmpname  = argc > 3 ? argv[3] :
-                                                     default_original_bmpname;
+                                                     std::string(default_original_bmpname);
     const std::string radon_bmpname     = argc > 4 ? argv[4] :
-                                                     default_radon_bmpname;
+                                                     std::string(default_radon_bmpname);
     const std::string restored_bmpname  = argc > 5 ? argv[5] :
-                                                     default_restored_bmpname;
+                                                     std::string(default_restored_bmpname);
     const double S_to_D                 = argc > 6 ? std::atof(argv[6]) :
                                                      default_S_to_D;
     const std::string errors_bmpname    = argc > 7 ? argv[7] :
-                                                     default_errors_bmpname;
+                                                     std::string(default_errors_bmpname);
     const int crop                      = argc > 8 ? std::atoi(argv[8]) :
                                                      default_crop;
     // validate numerical input arguments
