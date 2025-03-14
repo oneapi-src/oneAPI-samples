@@ -16,13 +16,13 @@ For more information on oneMKL and complete documentation of all oneMKL routines
 
 Computed Tomography uses oneMKL discrete Fourier transform (DFT) routines to transform simulated raw CT data (as collected by a CT scanner) into a reconstructed image of the scanned object.
 
-In computed tomography, the raw imaging data is a set of line integrals over the actual object, also known as its _Radon transform_. From this data, the original image must be recovered by approximately inverting the Radon transform. This sample uses Fourier reconstruction for inverting the Radon transform of a user-provided input image: using batched 1D real DFT of Radon transform data points, samples of the input image's Fourier spectrum may be estimated on a polar grid; after interpolating the latter onto a Cartesian grid, an inverse 2D real DFT produces a fair reproduction of the original image.
+In computed tomography, the raw imaging data is a set of line integrals over the actual object, also known as its _Radon transform_. From this data, the original image must be recovered by approximately inverting the Radon transform. This sample uses Fourier reconstruction for inverting the Radon transform of a user-provided input image. Using batched 1D real DFT of Radon transform data points, samples of the input image's Fourier spectrum may be estimated on a polar grid. After interpolating the latter onto a Cartesian grid, an inverse 2D real DFT produces a fair reproduction of the original image.
 
 This sample performs its computations on the default SYCL device. You can set the `ONEAPI_DEVICE_SELECTOR` environment variable to `*:cpu` or `*:gpu` to select the device to use.
 
 ## Key Implementation Details
 
-To use oneMKL DFT routines, the sample creates double-precision real DFT descriptor objects, calls the `commit` member function with a `sycl::queue` object to define the device and context. The `compute_*` routines are then called to perform the actual computation with the appropriate descriptor object and input data.
+To use oneMKL DFT routines, the sample creates double-precision real DFT descriptor objects and calls the `commit` member function with a `sycl::queue` object to define the device and context. The `compute_*` routines are then called to perform the actual computation with the appropriate descriptor object and input data.
 
 ## Using Visual Studio Code* (Optional)
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,

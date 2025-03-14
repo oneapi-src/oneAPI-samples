@@ -11,6 +11,20 @@
 ************************************************************************
 */
 #include <string>
+#include <cmath>
+#include <complex>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+#include <sycl/sycl.hpp>
+#include "oneapi/mkl.hpp"
+
+#if !defined(M_PI)
+#define M_PI 3.14159265358979323846
+#endif
+
 constexpr int default_p = 400;
 constexpr int default_q = 400;
 constexpr double default_S_to_D = 1.0;
@@ -29,7 +43,7 @@ static const std::string usage_info =
 "\n\
   Usage:\n\
   ======\n\
-    " + program_name + " p q S_to_D in radon_out restored_out err_out crop\n\
+    " + program_name + " p q in radon_out restored_out S_to_D err_out crop\n\
   Inputs:\n\
   -------\n\
   p             - number of projection directions considered for the Radon\n\
@@ -40,15 +54,15 @@ static const std::string usage_info =
                   projection direction.\n\
                   q must be a strictly positive integer (default value is " +
                   std::to_string(default_q) + ").\n\
+  in            - name of the input image used to generate Radon transform data.\n\
+                  The file must be a 24-bit uncompressed bitmap file.\n\
+                  \"" + default_original_bmpname + "\" is considered by default.\n\
   S_to_D        - ratio of the scanning width used for sampling the Radon\n\
                   transform (for any projection direction) to the diagonal of\n\
                   the input image.\n\
                   S_to_D must be a floating-point value larger than or equal\n\
                   to 1.0 (default value is " +
                   std::to_string(default_S_to_D) + ").\n\
-  in            - name of the input image used to generate Radon transform data.\n\
-                  The file must be a 24-bit uncompressed bitmap file.\n\
-                  \"" + default_original_bmpname + "\" is considered by default.\n\
   crop          - integer flag indicating whether to crop the generated bitmap\n\
                   output images to their range of relevance or not. Images are\n\
                   (resp. are not) cropped if the value is 1 (resp. 0).\n\
@@ -74,20 +88,6 @@ static const std::string usage_info =
                   \"" + default_errors_bmpname + "\" is considered by default.\n\
 ";
 
-#include <cmath>
-#include <complex>
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-#include <sycl/sycl.hpp>
-#include "oneapi/mkl.hpp"
-
-#if !defined(M_PI)
-#define M_PI 3.14159265358979323846
-#endif
-
 namespace dft_ns = oneapi::mkl::dft;
 using real_descriptor_t =
     dft_ns::descriptor<dft_ns::precision::DOUBLE, dft_ns::domain::REAL>;
@@ -101,27 +101,30 @@ constexpr double in_pix_len = 1.0;
 // For such operations (real in-place DFTs), data padding is required to store
 // all the backward domain's elements.
 struct padded_matrix {
-    sycl::queue q;
+    sycl::queue queue;
     double *data;
     int h, w;
     padded_matrix(sycl::queue &main_queue) :
-        q{main_queue}, data{nullptr}, h(0), w(0) {}
+        queue{main_queue}, data{nullptr}, h(0), w(0) {}
     padded_matrix(const padded_matrix &) = delete;
     padded_matrix &operator=(const padded_matrix &) = delete;
     void deallocate() {
         if (data)
-            sycl::free(data, q);
+            sycl::free(data, queue);
         data = nullptr;
         h = w = 0;
     }
-    inline int ldw() const {
-        return 2 * (w / 2 + 1);
+    inline int complex_padded_width() const {
+        return (w / 2 + 1);
+    }
+    inline int real_padded_width() const {
+        return 2 * complex_padded_width();
     }
     void allocate(int _h, int _w) {
         deallocate();
         h   = _h;
         w   = _w;
-        data = (double *)sycl::malloc_shared(sizeof(double) * h * ldw(), q);
+        data = sycl::malloc_shared<double>(h * real_padded_width(), queue);
     }
     ~padded_matrix() {
         deallocate();
@@ -158,7 +161,7 @@ void die(const std::string& err) {
     std::exit(EXIT_FAILURE);
 }
 // Routine reading a 24-bit uncompressed bitmap image file and converting it to
-// a gray-scale padded_matrix (~array of doubles in [0, 1], 0 is white, 1 is
+// a gray-scale padded_matrix (array of doubles in [0, 1], 0 is white, 1 is
 // black). The maximum such gray-scale value is returned.
 double bmp_read(padded_matrix &image, const std::string& fname) {
     std::fstream fp;
@@ -197,7 +200,7 @@ double bmp_read(padded_matrix &image, const std::string& fname) {
         for (int j = 0; j < image.w; ++j) {
             fp.read((char *)(&pix), 3);
             double gray_scale = (255.0 - (pix.r + pix.g + pix.b) / 3.0) / 255.0;
-            image.data[i * image.ldw() + j] = gray_scale;
+            image.data[i * image.real_padded_width() + j] = gray_scale;
             max_gray_scale = std::max(max_gray_scale, gray_scale);
         }
         // rows are rounded up to a multiple of 4 bytes in BMP format
@@ -210,8 +213,8 @@ double bmp_read(padded_matrix &image, const std::string& fname) {
     fp.close();
     return max_gray_scale;
 }
-// Routine exporting the values image.data[i*image.ldw() + j] of a
-// padded_matrix "image" for indices (i, j) such that
+// Routine exporting the values image.data[i*image.real_padded_width() + j] of
+// a padded_matrix "image" for indices (i, j) such that
 //           max(min_max_i[0], 0) <= i < min(min_max_i[1], image.h)
 //           max(min_max_j[0], 0) <= j < min(min_max_j[1], image.w)
 // as a gray-scale 24-bit uncompressed bitmap image file.
@@ -260,7 +263,7 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
     double v_max = std::numeric_limits<double>::lowest();
     for (int i = min_i; i < max_i; ++i)
         for (int j = min_j; j < max_j; ++j)
-            v_max = std::max(image.data[i * image.ldw() + j], v_max);
+            v_max = std::max(image.data[i * image.real_padded_width() + j], v_max);
 
     if (v_max <= 0.0) {
         fp.close();
@@ -270,7 +273,7 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
     for (int i = min_i; i < max_i; ++i) {
         for (int j = min_j; j < max_j; ++j) {
             const double gray =
-                std::max(image.data[i * image.ldw() + j], 0.0)/v_max;
+                std::max(image.data[i * image.real_padded_width() + j], 0.0)/v_max;
             pix.b = pix.g = pix.r =
                 static_cast<unsigned char>(std::round(255.0*(1.0 - gray)));
             fp.write((char *)(&pix), 3);
@@ -287,17 +290,17 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
 // where L is the set of points (y, x) such that
 //                    x*cos(theta) + y*sin(theta) = v
 // in a given orthonormal frame.
-// Let p = radon_projection.h, q = radon_projection.q, and
-// radon_ldw = radon_projection.ldw(). For all integers i in [0, p-1] and j in
-// [0, q-1], this routine sets
+// Let p = radon_projection.h, q = radon_projection.w, and
+// radon_ldw = radon_projection.real_padded_width(). For all integers i in
+// [0, p-1] and j in [0, q-1], this routine sets
 //    radon_projection.data[i*radon_ldw + j] = radon[f_input](theta(i), v(j))
 // where
 //   theta(i)   = -0.5*M_PI + i*M_PI/p,
-//   v(j)       = (-1.0 + (2.0*j + 1.0)/q)*0.5*S,
+//   v(j)       = (-1.0 + (2.0*j + 1.0)/q)*0.5*scanning_width,
 // considering the function f_input defined as
 //                      f_input(y, x) = 0
 // if max(|y|/hh, |x|/ww) > 0.5, and
-//            f_input(y, x) = input.data[ii*input.ldw() + jj]
+//            f_input(y, x) = input.data[ii*input.real_padded_width() + jj]
 // where integers ii and jj are such that
 //              ii*in_pix_len <= y + 0.5*hh < (ii + 1)*in_pix_len,
 //              jj*in_pix_len <= x + 0.5*ww < (jj + 1)*in_pix_len,
@@ -305,7 +308,7 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
 //
 // Inputs:
 // -------
-// S:                   scanning width used for sampling the Radon transform
+// scanning_width:      scanning width used for sampling the Radon transform
 //                      for every projection angle theta (see above);
 // input:               padded_matrix defining the function f_input to consider
 //                      when computing Radon transform values (see above).
@@ -314,24 +317,24 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
 // radon_projection:    padded_matrix containing the desired samples of the
 //                      radon transform described above.
 //                      The calculations are enqueued to the queue encapsulated
-//                      this object.
+//                      in this object.
 // Returns:
 // --------
 // a sycl::event object tracking the completion of the task.
 sycl::event acquire_radon(padded_matrix &radon_projection,
-                          double S, const padded_matrix &input) {
+                          double scanning_width, const padded_matrix &input) {
 
     const double hh = input.h*in_pix_len;
     const double ww = input.w*in_pix_len;
-    if (S < std::hypot(hh, ww)) {
+    if (scanning_width < std::hypot(hh, ww)) {
         die("invalid scanning width for acquire_radon");
     }
-    // helper computing the length from "origin" to the closest point on one of
-    // the lines that define a rectangular box (determined by its "center" and
-    // its "side_lengths") in the direction of vector "+dir_v".
+    // helper computing the distance from "origin" to the closest point on one
+    // of the lines that define a rectangular box (determined by its "center"
+    // and its "side_lengths") in the direction of vector "+dir_v".
     // std::numeric_limits<double>::max() is returned if no intersection is
     // found.
-    auto compute_length_to_closest_edge =
+    auto compute_distance_to_closest_edge =
         [=](const double origin[2], const double dir_v[2],
             const double center[2], const double side_lengths[2]) {
         double lambda = std::numeric_limits<double>::max();
@@ -348,7 +351,7 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
         }
         return lambda;
     };
-    const int input_ldw = input.ldw();
+    const int input_ldw = input.real_padded_width();
     const double *input_data = input.data;
     auto integrate_along_line = [=](double theta, double v) {
         /*
@@ -381,10 +384,12 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
         */
         const double cs = sycl::cos(theta), sn = sycl::sin(theta);
         const double unit_vector[2] = {+cs, -sn};
-        const double half_chord = sycl::sqrt(0.25*S*S - v*v);
+        const double half_chord =
+            sycl::sqrt(0.25*scanning_width*scanning_width - v*v);
         /*
         the coordinates (y, x) of any point lying on the chord that L makes in
-        the circle of center O and radius 0.5*S may be parameterized as
+        the circle of center O and radius 0.5*scanning_width may be
+        parameterized as
                y(alpha) = v*sn + (-half_chord + alpha)*unit_vector[0];
                x(alpha) = v*cs + (-half_chord + alpha)*unit_vector[1];
         where 0 <= alpha <= 2*half_chord is a curvilinear abscissa along L.
@@ -403,8 +408,8 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
         double dalpha = 0.0;
         while (sycl::fabs(cursor[0]) > 0.5*hh ||
                sycl::fabs(cursor[1]) > 0.5*ww) {
-            dalpha = compute_length_to_closest_edge(cursor, unit_vector,
-                                                    box_center, box_edges);
+            dalpha = compute_distance_to_closest_edge(cursor, unit_vector,
+                                                      box_center, box_edges);
             if (dalpha > 2.0*half_chord) {
                 // no intersection between L and the image was found
                 return 0.0;
@@ -430,8 +435,8 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
             // There is always one dalpha s.t.
             //                0 < dalpha <= sqrt(2)*in_pix_len
             // for any pixel inside the input image, crossed by L.
-            dalpha = compute_length_to_closest_edge(cursor, unit_vector,
-                                                    box_center, box_edges);
+            dalpha = compute_distance_to_closest_edge(cursor, unit_vector,
+                                                      box_center, box_edges);
             // Note: cursor was moved "a little more" into the pixel, previously
             integral += input_data[ii * input_ldw + jj]*(dalpha + a_little_more);
             // move the cursor into the following pixel
@@ -446,10 +451,10 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
         return integral;
     };
 
-    sycl::event ev = radon_projection.q.submit([&](sycl::handler &cgh) {
+    sycl::event ev = radon_projection.queue.submit([&](sycl::handler &cgh) {
         const int p = radon_projection.h;
         const int q = radon_projection.w;
-        const int radon_ldw = radon_projection.ldw();
+        const int radon_ldw = radon_projection.real_padded_width();
         double *radon_data  = radon_projection.data;
         cgh.parallel_for<class acquire_radon_class>(
             sycl::range<2>(p, q),
@@ -458,8 +463,8 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
                 const int j = item.get_id(1);
                 // -0.5*M_PI <= theta < 0.5*M_PI
                 const double theta = -0.5*M_PI + i * M_PI / p;
-                // -0.5*S < v < 0.5*S
-                const double v = (-1.0 + (2.0 * j + 1.0) / q)*0.5*S;
+                // -0.5*scanning_width < v < 0.5*scanning_width
+                const double v = (-1.0 + (2.0 * j + 1.0) / q)*0.5*scanning_width;
                 radon_data[i * radon_ldw + j] = integrate_along_line(theta, v);
             }
         );
@@ -501,8 +506,8 @@ void reconstruction_from_radon(padded_matrix& image,
           different from the value of 0.5*x if x%2 == 1.
 
     The input R to this routine is interpreted as
-             R.data[i * R.ldw() + j] == radon[f](theta(i), v(j))
-                                     := "R[i][j]"
+        R.data[i * R.real_padded_width() + j] == radon[f](theta(i), v(j))
+                                              := "R[i][j]"
     where
                theta(i) = -0.5*M_PI + i * M_PI / p;
                v(j)     = (-1.0 + (2.0*j + 1.0) / q) * 0.5 * S;
@@ -544,17 +549,17 @@ void reconstruction_from_radon(padded_matrix& image,
     // must be twice the distance in backward domain (wherein elements are
     // complex). Therefore, padding is required in forward domain (as accounted
     // for by the padded_matrix structure)
-    radon_dft.set_value(dft_ns::config_param::FWD_DISTANCE, R.ldw());
-    radon_dft.set_value(dft_ns::config_param::BWD_DISTANCE, R.ldw() / 2);
+    radon_dft.set_value(dft_ns::config_param::FWD_DISTANCE, R.real_padded_width());
+    radon_dft.set_value(dft_ns::config_param::BWD_DISTANCE, R.complex_padded_width());
     // Scaling factor for forward DFT (see eq. 1a above)
     radon_dft.set_value(dft_ns::config_param::FORWARD_SCALE, S / q);
     // oneMKL DFT descriptor operate in-place by default
-    radon_dft.commit(R.q);
+    radon_dft.commit(R.queue);
     auto compute_radon_hat = dft_ns::compute_forward(radon_dft, R.data, {dep});
 /*
     Using R_data_c = reinterpret_cast<complex_t*>(R.data), one has
-         f_hat((r/S)*sin(theta(i)), (r/S)*cos(theta(i)))                (eq. 1b)
-                 ~ exp(1i*M_PI*r*(1.0 - 1.0/q)) * R_data_c[i * R.ldw()/2 + r]
+    f_hat((r/S)*sin(theta(i)), (r/S)*cos(theta(i)))                     (eq. 1b)
+      ~ exp(1i*M_PI*r*(1.0 - 1.0/q)) * R_data_c[i * R.complex_padded_width() + r]
     for 0 <= i < p and 0 <= r <= q/2 (upon completion of compute_radon_hat).
     Note that values of i in [p, 2*p) are known too, as the complex conjugates
     of their (i-p) counterparts (albeit not stored explicitly).
@@ -602,12 +607,12 @@ void reconstruction_from_radon(padded_matrix& image,
 */
     std::cout << "\tStep 2 - Interpolating spectrum from polar to "
               << "cartesian grid" << std::endl;
-    auto interp_ev = image.q.submit([&](sycl::handler &cgh) {
+    auto interp_ev = image.queue.submit([&](sycl::handler &cgh) {
         cgh.depends_on(compute_radon_hat);
         const complex_t *R_data_c = reinterpret_cast<complex_t*>(R.data);
         complex_t *G_HAT = reinterpret_cast<complex_t*>(image.data);
-        const int R_data_c_ldw  = R.ldw()/2;        // in complex values
-        const int G_HAT_ldw   = image.ldw()/2;      // in complex values
+        const int R_data_c_ldw  = R.complex_padded_width();
+        const int G_HAT_ldw     = image.complex_padded_width();
         cgh.parallel_for<class interpolateKernelClass>(
             sycl::range<2>(q, q/2 + 1),
             [=](sycl::item<2> item) {
@@ -648,10 +653,10 @@ void reconstruction_from_radon(padded_matrix& image,
                     // of indices (q/2, q/2):
                     G_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*m*(q/2)/q),
                                           sycl::sin(-2.0*M_PI*m*(q/2)/q));
-                    // RHS is ((-1)^m, 0) is q is even
+                    // RHS is ((-1)^m, 0) if q is even
                     G_HAT_mn *= complex_t(sycl::cos(-2.0*M_PI*n*(q/2)/q),
                                           sycl::sin(-2.0*M_PI*n*(q/2)/q));
-                    // RHS is ((-1)^n, 0) is q is even
+                    // RHS is ((-1)^n, 0) if q is even
                 }
                 G_HAT[m * G_HAT_ldw + n] = G_HAT_mn;
         });
@@ -663,7 +668,7 @@ void reconstruction_from_radon(padded_matrix& image,
     // the implementation of padded_matrix)
     // Scaling factor for backward DFT (see eq. 2)
     q_by_q_real_dft.set_value(dft_ns::config_param::BACKWARD_SCALE, 1.0 / (S*S));
-    q_by_q_real_dft.commit(image.q);
+    q_by_q_real_dft.commit(image.queue);
     auto compute_g_values =
         dft_ns::compute_backward(q_by_q_real_dft, image.data, {interp_ev});
     compute_g_values.wait();
@@ -724,8 +729,8 @@ double compute_errors(padded_matrix& errors,
     };
     const double* reconstruction_data = reconstruction.data;
     const double* original_data = original.data;
-    const int reconstruction_ldw = reconstruction.ldw();
-    const int original_ldw = original.ldw();
+    const int reconstruction_ldw = reconstruction.real_padded_width();
+    const int original_ldw = original.real_padded_width();
     auto compute_mean_error_in_pixel = [=](int i, int j) {
         // Notes:
         // - pixel of index (i,j) in the reconstructed image covers the area of
@@ -776,15 +781,14 @@ double compute_errors(padded_matrix& errors,
     };
     // compute the mean local errors and the mean global error
     double mean_error = 0.0;
-    double* L1_error = (double *)sycl::malloc_device(sizeof(double), errors.q);
+    double* L1_error = sycl::malloc_shared<double>(1, errors.queue);
     if (!L1_error)
         die("cannot allocate memory for mean global error");
-    auto init_ev = errors.q.copy(&mean_error, L1_error, 1);
-    auto compute_errors_ev = errors.q.submit([&](sycl::handler &cgh) {
-        cgh.depends_on(init_ev);
+    L1_error[0] = 0.0;
+    auto compute_errors_ev = errors.queue.submit([&](sycl::handler &cgh) {
         auto global_integral = sycl::reduction(L1_error, sycl::plus<>());
         double *local_error_data = errors.data;
-        const int local_error_ldw = errors.ldw();
+        const int local_error_ldw = errors.real_padded_width();
         cgh.parallel_for<class compute_errors_class>(
             sycl::range<2>(q, q), global_integral,
             [=](sycl::item<2> item, auto& sum) {
@@ -796,9 +800,9 @@ double compute_errors(padded_matrix& errors,
             }
         );
     });
-    errors.q.copy(L1_error, &mean_error, 1, compute_errors_ev).wait();
-    sycl::free(L1_error, errors.q);
-    mean_error /= (hh*ww);
+    compute_errors_ev.wait();
+    mean_error = L1_error[0]/(hh*ww);
+    sycl::free(L1_error, errors.queue);
     return mean_error;
 }
 
@@ -812,14 +816,14 @@ int main(int argc, char **argv) {
                                                      default_p;
     const int q                         = argc > 2 ? std::atoi(argv[2]) :
                                                      default_q;
-    const double S_to_D                 = argc > 3 ? std::atof(argv[3]) :
-                                                     default_S_to_D;
-    const std::string original_bmpname  = argc > 4 ? argv[4] :
+    const std::string original_bmpname  = argc > 3 ? argv[3] :
                                                      default_original_bmpname;
-    const std::string radon_bmpname     = argc > 5 ? argv[5] :
+    const std::string radon_bmpname     = argc > 4 ? argv[4] :
                                                      default_radon_bmpname;
-    const std::string restored_bmpname  = argc > 6 ? argv[6] :
+    const std::string restored_bmpname  = argc > 5 ? argv[5] :
                                                      default_restored_bmpname;
+    const double S_to_D                 = argc > 6 ? std::atof(argv[6]) :
+                                                     default_S_to_D;
     const std::string errors_bmpname    = argc > 7 ? argv[7] :
                                                      default_errors_bmpname;
     const int crop                      = argc > 8 ? std::atoi(argv[8]) :
@@ -863,8 +867,8 @@ int main(int argc, char **argv) {
               << original_bmpname << std::endl;
     auto radon_ev = acquire_radon(radon_image, S, original);
     if (crop == 1) {
-        // values of radon_image.data[i*radon_image.ldw() + j] are expected to
-        // be 0.0 if |(-1.0 + (2.0*j + 1.0)/q)*S_to_D| > 1
+        // values of radon_image.data[i*radon_image.real_padded_width() + j] are
+        // expected to be 0.0 if |(-1.0 + (2.0*j + 1.0)/q)*S_to_D| > 1
         i_range[0] = 0;
         i_range[1] = radon_image.h;
         j_range[0] =
@@ -880,8 +884,8 @@ int main(int argc, char **argv) {
     padded_matrix reconstruction(main_queue);
     reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
     if (crop == 1) {
-        // values of reconstruction.data[i*reconstruction.ldw() + j] are
-        // out of the relevant range of comparison if
+        // values of reconstruction.data[i*reconstruction.real_padded_width() + j]
+        // are out of the relevant range of comparison if
         //             |(i - q/2)*S/q| - 0.5*S/q > 0.5*hh
         // or
         //             |(j - q/2)*S/q| - 0.5*S/q > 0.5*ww
