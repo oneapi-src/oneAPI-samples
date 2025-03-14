@@ -1,0 +1,23 @@
+[project]
+name = "intelpython-daal4py-distributedkmeans"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "daal4py>=2024.7.0",
+    "joblib>=1.4.2",
+    "mpi4py>=4.0.3",
+    "notebook>=7.3.2",
+    "pandas>=2.2.3",
+    "scikit-learn>=1.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel",
+    "jupyter"
+]
+
+[[tool.uv.index]]
+url = "https://pytorch-extension.intel.com/release-whl/stable/cpu/cn/"

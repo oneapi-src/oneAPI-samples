@@ -8,18 +8,17 @@
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
-    {
-  		"env": [],
-  		"id": "Intel_Modin_GS_py",
-  		"steps": [
-			"source /intel/oneapi/intelpython/bin/activate",
-			"pip install -r requirements.txt",
-			"pip install jupyter ipykernel",
-			"jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_GettingStarted.ipynb"
-  		]
-  	}
-    ]
+    "linux": [{
+      "env": [
+        "pip install uv==0.6.3",
+        "uv sync",
+        "uv run python -m ipykernel install --user --name=modin_gs"
+      ],
+      "id": "Intel_Modin_GS_py",
+      "steps": [
+        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=modin_gs --to notebook Modin_GettingStarted.ipynb"
+      ]
+    }]
 },
 "expertise": "Getting Started"
 }

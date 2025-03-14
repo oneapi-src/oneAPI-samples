@@ -12,14 +12,15 @@
         "linux": [
       {
             "env": [
-                "source /intel/oneapi/intelpython/bin/activate", 
-                "conda activate tensorflow-gpu",
-                "pip install jupyter",
-                "python -m ipykernel install --user --name=tensorflow-gpu"
+                "pip install uv",
+                "uv venv tensorflow-gpu",
+                "source tensorflow-gpu/bin/activate",
+                "uv sync --active",
+                "uv run --active python -m ipykernel install --user --name=tensorflow-gpu"
             ],
             "id": "distributed_learning_tensorflow_horovod_py",
             "steps": [
-              "jupyter nbconvert --to notebook --execute tensorflow_with_horovod.ipynb"
+                "uv run --active jupyter nbconvert --to notebook --execute tensorflow_with_horovod.ipynb"
              ]
         }
       ]

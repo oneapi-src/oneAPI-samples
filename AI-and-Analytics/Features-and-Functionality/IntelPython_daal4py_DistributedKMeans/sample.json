@@ -13,13 +13,13 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate base",
-				"pip install -r requirements.txt"
+				"uv venv",
+				"uv sync",
+				"source /opt/intel/oneapi/setvars.sh"
 			],
 			"id": "idp_d4p_KM_Dist",
 			"steps": [
-				"mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py"
+				"uv run mpirun -n 4 python ./IntelPython_daal4py_Distributed_Kmeans.py"
 			]
 		}]
 	},
