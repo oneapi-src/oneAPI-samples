@@ -172,8 +172,8 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
     if (max_i <= min_i || max_j <= min_j)
         die("invalid range of pixel indices for bmp_write to export");
 
-    unsigned sizeof_line  = ((max_j - min_j) * 3 + 3) / 4 * 4;
-    unsigned sizeof_image = (max_i - min_i) * sizeof_line;
+    unsigned int sizeof_line  = ((max_j - min_j) * 3 + 3) / 4 * 4;
+    unsigned int sizeof_image = (max_i - min_i) * sizeof_line;
 
     bmp_header header = {{'B', 'M'},
                         unsigned(sizeof(header) + sizeof_image),
