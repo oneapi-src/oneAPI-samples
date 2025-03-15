@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/dpct_output/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.dp.hpp'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/dpct_output/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.dp.hpp'
 Replacements:
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          0
     Length:          0
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2004
     Length:          11
     ReplacementText: ''
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2043
     Length:          0
     ReplacementText: ', const sycl::nd_item<3> &item_ct1'
@@ -28,7 +28,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2096
     Length:          10
     ReplacementText: 'item_ct1.get_local_range(2)'
@@ -37,7 +37,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2109
     Length:          10
     ReplacementText: 'item_ct1.get_group(2)'
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2122
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2235
     Length:          26
     ReplacementText: 'dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(&g_odata[0], 10)'
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2310
     Length:          26
     ReplacementText: 'dpct::atomic_fetch_sub<sycl::access::address_space::generic_space>(&g_odata[1], 10)'
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2362
     Length:          28
     ReplacementText: 'dpct::atomic_exchange<sycl::access::address_space::generic_space>(&g_odata[2], tid)'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2415
     Length:          27
     ReplacementText: 'dpct::atomic_fetch_max<sycl::access::address_space::generic_space>(&g_odata[3], tid)'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2467
     Length:          27
     ReplacementText: 'dpct::atomic_fetch_min<sycl::access::address_space::generic_space>(&g_odata[4], tid)'
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2535
     Length:          42
     ReplacementText: 'dpct::atomic_fetch_compare_inc<sycl::access::address_space::generic_space>((unsigned int *)&g_odata[5], 17)'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2604
     Length:          43
     ReplacementText: 'dpct::atomic_fetch_compare_dec<sycl::access::address_space::generic_space>((unsigned int *)&g_odata[6], 137)'
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2681
     Length:          36
     ReplacementText: 'dpct::atomic_compare_exchange_strong<sycl::access::address_space::generic_space>(&g_odata[7], tid - 1, tid)'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2772
     Length:          35
     ReplacementText: 'dpct::atomic_fetch_and<sycl::access::address_space::generic_space>(&g_odata[8], 2 * tid + 7)'
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2827
     Length:          31
     ReplacementText: 'dpct::atomic_fetch_or<sycl::access::address_space::generic_space>(&g_odata[9], 1 << tid)'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
     Offset:          2879
     Length:          28
     ReplacementText: 'dpct::atomic_fetch_xor<sycl::access::address_space::generic_space>(&g_odata[10], tid)'
@@ -155,8 +155,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics/simpleAtomicIntrinsics_kernel.cuh'
-    Digest:          baf3619377df1b5b695bf2c3c737d5e2
+  - MainSourceFile:  ''
+    Digest:          ''
+    HasCUDASyntax:   false
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -164,7 +165,7 @@ FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -179,7 +180,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/simpleAtomicIntrinsics'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -218,6 +219,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

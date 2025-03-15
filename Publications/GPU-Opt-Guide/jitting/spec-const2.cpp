@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // Snippet begin
-#include <CL/sycl.hpp>
 #include <chrono>
+#include <sycl/sycl.hpp>
 #include <vector>
 
 class specialized_kernel;

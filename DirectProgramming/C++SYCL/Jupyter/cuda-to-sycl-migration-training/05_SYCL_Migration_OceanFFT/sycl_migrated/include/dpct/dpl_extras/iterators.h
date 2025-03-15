@@ -31,13 +31,12 @@ namespace internal {
 // std::cout<<*(p+1)<<std::endl;  // '1'
 // wrap = 2;                    // apply function, store 2*2=4
 // std::cout<<*(p+1)<<std::endl;  // '4'
-template <typename T, typename _UnaryFunc>
-class transform_output_ref_wrapper {
- private:
+template <typename T, typename _UnaryFunc> class transform_output_ref_wrapper {
+private:
   T __my_reference_;
   _UnaryFunc __my_unary_func_;
 
- public:
+public:
   template <typename U>
   transform_output_ref_wrapper(U &&__reference, _UnaryFunc __unary_func)
       : __my_reference_(std::forward<U>(__reference)),
@@ -56,18 +55,16 @@ class transform_output_ref_wrapper {
 // transform_iterator is dereferenced, so that a
 // the supplied unary function may be applied on write, resulting in a
 // transform_output_iterator
-template <typename _UnaryFunc>
-struct _Unary_Out {
+template <typename _UnaryFunc> struct _Unary_Out {
   _Unary_Out(_UnaryFunc __f_) : __f(__f_) {}
   _UnaryFunc __f;
-  template <typename T>
-  auto operator()(T &&val) const {
+  template <typename T> auto operator()(T &&val) const {
     return transform_output_ref_wrapper<T, _UnaryFunc>(std::forward<T>(val),
                                                        __f);
   }
 };
 
-}  // end namespace internal
+} // end namespace internal
 
 using std::advance;
 
@@ -78,9 +75,8 @@ oneapi::dpl::counting_iterator<T> make_counting_iterator(const T &input) {
   return oneapi::dpl::counting_iterator<T>(input);
 }
 
-template <typename _Tp>
-class constant_iterator {
- public:
+template <typename _Tp> class constant_iterator {
+public:
   typedef std::false_type is_hetero;
   typedef std::true_type is_passed_directly;
   typedef std::ptrdiff_t difference_type;
@@ -95,13 +91,13 @@ class constant_iterator {
   explicit constant_iterator(_Tp __init)
       : __my_value_(__init), __my_counter_(0) {}
 
- private:
+private:
   // used to construct iterator instances with different counter values required
   // by arithmetic operators
   constant_iterator(const _Tp &__value, const difference_type &__offset)
       : __my_value_(__value), __my_counter_(__offset) {}
 
- public:
+public:
   // non-const variants of access operators are not provided so unintended
   // writes are caught at compile time.
   const_reference operator*() const { return __my_value_; }
@@ -161,7 +157,7 @@ class constant_iterator {
     return !(*this < __it);
   }
 
- private:
+private:
   _Tp __my_value_;
   uint64_t __my_counter_;
 };
@@ -173,9 +169,8 @@ constant_iterator<_Tp> make_constant_iterator(_Tp __value) {
 
 // key_value_pair class to represent a key and value, specifically a
 // dereferenced arg_index_input_iterator
-template <typename _KeyTp, typename _ValueTp>
-class key_value_pair {
- public:
+template <typename _KeyTp, typename _ValueTp> class key_value_pair {
+public:
   key_value_pair() = default;
 
   key_value_pair(const _KeyTp &_key, const _ValueTp &_value)
@@ -195,24 +190,21 @@ class key_value_pair {
 
 namespace detail {
 
-template <typename KeyTp, typename _ValueTp>
-struct make_key_value_pair {
+template <typename KeyTp, typename _ValueTp> struct make_key_value_pair {
   template <typename ValRefTp>
-  key_value_pair<KeyTp, _ValueTp> operator()(
-      const oneapi::dpl::__internal::tuple<KeyTp, ValRefTp> &tup) const {
+  key_value_pair<KeyTp, _ValueTp>
+  operator()(const oneapi::dpl::__internal::tuple<KeyTp, ValRefTp> &tup) const {
     return ::dpct::key_value_pair<KeyTp, _ValueTp>(::std::get<0>(tup),
                                                    ::std::get<1>(tup));
   }
 };
 
-template <class T>
-struct __zip_iterator_impl;
-template <class... Ts>
-struct __zip_iterator_impl<std::tuple<Ts...>> {
+template <class T> struct __zip_iterator_impl;
+template <class... Ts> struct __zip_iterator_impl<std::tuple<Ts...>> {
   using type = oneapi::dpl::zip_iterator<Ts...>;
 };
 
-}  // end namespace detail
+} // end namespace detail
 
 // dpct::zip_iterator can only accept std::tuple type as template argument for
 // compatibility purpose. Please use oneapi::dpl::zip_iterator if you want to
@@ -236,7 +228,7 @@ class arg_index_input_iterator
                                 InputIteratorT>,
       detail::make_key_value_pair<OffsetT, OutputValueT>>;
 
- public:
+public:
   typedef OffsetT difference_type;
 
   // signal to __get_sycl_range that this iterator is as a direct pass iterator
@@ -289,8 +281,8 @@ class arg_index_input_iterator
     return *this;
   }
 
-  friend arg_index_input_iterator operator+(
-      difference_type __forward, const arg_index_input_iterator &__it) {
+  friend arg_index_input_iterator
+  operator+(difference_type __forward, const arg_index_input_iterator &__it) {
     return __it + __forward;
   }
 
@@ -324,8 +316,7 @@ class arg_index_input_iterator
   }
 };
 
-template <typename IterT>
-struct io_iterator_pair {
+template <typename IterT> struct io_iterator_pair {
   inline io_iterator_pair() : selector(false) {}
 
   inline io_iterator_pair(const IterT &first, const IterT &second)
@@ -351,6 +342,6 @@ auto make_transform_output_iterator(_Iter __it, _UnaryFunc __unary_func) {
       __it, internal::_Unary_Out<_UnaryFunc>(__unary_func));
 }
 
-}  // end namespace dpct
+} // end namespace dpct
 
 #endif

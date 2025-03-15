@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 // clang-format off
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <assert.h>
 #include <chrono>
@@ -61,7 +61,7 @@ void do_work_sycl_native (sycl::queue &q, unsigned NELEMENTS, unsigned NREPETITI
 }
 # endif
 
-int main (int argc, char *argv[])
+int main ()
 {
 	static constexpr unsigned NELEMENTS = 64*1024*1024;
 	static constexpr unsigned NREPETITIONS = 1024;
@@ -97,7 +97,7 @@ int main (int argc, char *argv[])
 		std::cout << "std::log result[0] = " << std_res[0] << std::endl;
 
 		bool allequal = true;
-		for (auto i = 1; i < NELEMENTS; ++i)
+		for (unsigned i = 1; i < NELEMENTS; ++i)
 			allequal = allequal and std_res[0] == std_res[i];
 		if (allequal)
 		{
@@ -130,7 +130,7 @@ int main (int argc, char *argv[])
 		std::cout << "sycl::log result[0] = " << sycl_res[0] << std::endl;
 
 		bool allequal = true;
-		for (auto i = 1; i < NELEMENTS; ++i)
+		for (unsigned i = 1; i < NELEMENTS; ++i)
 			allequal = allequal and sycl_res[0] == sycl_res[i];
 		if (allequal)
 		{
@@ -163,7 +163,7 @@ int main (int argc, char *argv[])
 		std::cout << "sycl::native::log result[0] = " << sycl_native_res[0] << std::endl;
 
 		bool allequal = true;
-		for (auto i = 1; i < NELEMENTS; ++i)
+		for (unsigned i = 1; i < NELEMENTS; ++i)
 			allequal = allequal and sycl_native_res[0] == sycl_native_res[i];
 		if (allequal)
 		{

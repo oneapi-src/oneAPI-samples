@@ -172,11 +172,11 @@ void fwtBatchGPU(float *d_Data, int M, int log2N) {
   const int THREAD_N = 256;
 
   int N = 1 << log2N;
-  sycl::range<3> grid(1, M, (1 << log2N) / (4 * THREAD_N));
+  dpct::dim3 grid((1 << log2N) / (4 * THREAD_N), M, 1);
 
   for (; log2N > ELEMENTARY_LOG2SIZE; log2N -= 2, N >>= 2, M <<= 2) {
     dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
-      int N_ct2 = N / 4;
+      auto N_ct2 = N / 4;
 
       cgh.parallel_for(sycl::nd_range<3>(grid * sycl::range<3>(1, 1, THREAD_N),
                                          sycl::range<3>(1, 1, THREAD_N)),

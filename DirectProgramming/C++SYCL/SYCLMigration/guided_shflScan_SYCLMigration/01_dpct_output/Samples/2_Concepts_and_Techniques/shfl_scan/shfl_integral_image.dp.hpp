@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -286,7 +280,7 @@ void shfl_intimage_rows(const sycl::uint4 *img, sycl::uint4 *integral_image,
 // block sums.
 void shfl_vertical_shfl(unsigned int *img, int width, int height,
                         const sycl::nd_item<3> &item_ct1,
-                        sycl::local_accessor<unsigned int, 2> sums) {
+                        unsigned int sums[32][9]) {
 
   int tidx = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
              item_ct1.get_local_id(2);
@@ -335,12 +329,20 @@ void shfl_vertical_shfl(unsigned int *img, int width, int height,
 
     for (int i = 1; i <= 8; i *= 2) {
       /*
-      DPCT1108:4: '__shfl_up_sync' was migrated with the experimental feature
-      masked sub_group function which may not be supported by all compilers or
-      runtimes. You may need to adjust the code.
+      DPCT1023:4: The SYCL sub-group does not support mask options for
+      dpct::shift_sub_group_right. You can specify
+      "--use-experimental-features=masked-sub-group-operation" to use the
+      experimental helper function to migrate __shfl_up_sync.
       */
-      int n = dpct::experimental::shift_sub_group_right(
-          mask, item_ct1.get_sub_group(), partial_sum, i);
+      /*
+      DPCT1096:44: The right-most dimension of the work-group used in the SYCL
+      kernel that calls this function may be less than "32". The function
+      "dpct::shift_sub_group_right" may return an unexpected result on the CPU
+      device. Modify the size of the work-group to ensure that the value of the
+      right-most dimension is a multiple of "32".
+      */
+      int n =
+          dpct::shift_sub_group_right(item_ct1.get_sub_group(), partial_sum, i);
 
       if (lane_id >= i) partial_sum += n;
     }

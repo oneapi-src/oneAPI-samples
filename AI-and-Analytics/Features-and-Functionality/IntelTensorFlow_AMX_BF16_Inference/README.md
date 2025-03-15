@@ -20,7 +20,7 @@ The Intel® Optimization for TensorFlow* gives users the ability to speed up inf
 |:---                               |:---
 | OS                                | Ubuntu* 18.04 or newer
 | Hardware                          | 4th Gen Intel® Xeon® Scalable Processors newer
-| Software                          | Intel® AI Analytics Toolkit (AI Kit)
+| Software                          | AI Tools
 
 ### For Local Development Environments
 

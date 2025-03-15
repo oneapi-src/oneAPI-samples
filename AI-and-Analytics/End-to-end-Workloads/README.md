@@ -11,7 +11,7 @@ through machine learning, and provide interoperability for efficient model
 development.
 
 You can find more information at
-[Intel AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+[Intel AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 
 # End-to-end Samples

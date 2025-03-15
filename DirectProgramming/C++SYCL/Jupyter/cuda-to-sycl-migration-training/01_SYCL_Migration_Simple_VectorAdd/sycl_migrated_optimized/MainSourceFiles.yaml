@@ -1,8 +1,8 @@
 ---
-MainSourceFile:  '/home/rkris11/work/cuda/MainSrcFiles_placehold'
+MainSourceFile:  '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/MainSrcFiles_placehold'
 Replacements:
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          0
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          206
     Length:          19
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
     ConstantFlag:    ''
@@ -10,8 +10,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          120
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          326
     Length:          11
     ReplacementText: ''
     ConstantFlag:    ''
@@ -19,8 +19,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          180
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          386
     Length:          0
     ReplacementText: ",\n                     const sycl::nd_item<3> &item_ct1"
     ConstantFlag:    ''
@@ -28,8 +28,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          196
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          402
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
     ConstantFlag:    ''
@@ -37,8 +37,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          213
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          419
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
     ConstantFlag:    ''
@@ -46,8 +46,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          230
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          436
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
     ConstantFlag:    ''
@@ -55,8 +55,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          263
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          469
     Length:          0
     ReplacementText: "\n        dpct::device_ext &dev_ct1 = dpct::get_current_device();\n        sycl::queue &q_ct1 = dev_ct1.in_order_queue();"
     ConstantFlag:    ''
@@ -64,8 +64,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          304
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          510
     Length:          14
     ReplacementText: 'dpct::device_info'
     ConstantFlag:    ''
@@ -73,17 +73,17 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          333
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          539
     Length:          32
-    ReplacementText: 'dpct::get_device_info(dev, dpct::dev_mgr::instance().get_device(0))'
+    ReplacementText: 'dpct::get_device(0).get_device_info(dev)'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          407
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          613
     Length:          4
     ReplacementText: 'get_name()'
     ConstantFlag:    ''
@@ -91,8 +91,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          762
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          968
     Length:          33
     ReplacementText: 'd_A = sycl::malloc_device<float>(N, q_ct1)'
     ConstantFlag:    ''
@@ -100,8 +100,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          806
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1012
     Length:          33
     ReplacementText: 'd_B = sycl::malloc_device<float>(N, q_ct1)'
     ConstantFlag:    ''
@@ -109,8 +109,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          850
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1056
     Length:          33
     ReplacementText: 'd_C = sycl::malloc_device<float>(N, q_ct1)'
     ConstantFlag:    ''
@@ -118,8 +118,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          946
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1152
     Length:          10
     ReplacementText: q_ct1.memcpy
     ConstantFlag:    ''
@@ -127,8 +127,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          980
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1186
     Length:          24
     ReplacementText: ''
     ConstantFlag:    ''
@@ -136,8 +136,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1016
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1222
     Length:          10
     ReplacementText: q_ct1.memcpy
     ConstantFlag:    ''
@@ -145,8 +145,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1050
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1256
     Length:          24
     ReplacementText: ''
     ConstantFlag:    ''
@@ -154,8 +154,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1144
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1350
     Length:          40
     ReplacementText: "q_ct1.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, N), sycl::range<3>(1, 1, N)), \n          [=](sycl::nd_item<3> item_ct1) {\n            VectorAddKernel(d_A, d_B, d_C, item_ct1);\n          });"
     ConstantFlag:    ''
@@ -163,8 +163,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1184
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1390
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -172,8 +172,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1257
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1463
     Length:          10
     ReplacementText: q_ct1.memcpy
     ConstantFlag:    ''
@@ -181,8 +181,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1291
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1497
     Length:          24
     ReplacementText: ''
     ConstantFlag:    ''
@@ -190,8 +190,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1316
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1522
     Length:          0
     ReplacementText: '.wait()'
     ConstantFlag:    ''
@@ -199,8 +199,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1494
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1700
     Length:          13
     ReplacementText: 'dpct::dpct_free(d_A, q_ct1)'
     ConstantFlag:    ''
@@ -208,8 +208,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1518
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1724
     Length:          13
     ReplacementText: 'dpct::dpct_free(d_B, q_ct1)'
     ConstantFlag:    ''
@@ -217,8 +217,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/cuda/vectoradd.cu'
-    Offset:          1542
+  - FilePath:        '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Offset:          1748
     Length:          13
     ReplacementText: 'dpct::dpct_free(d_C, q_ct1)'
     ConstantFlag:    ''
@@ -227,16 +227,16 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/rkris11/work/cuda/vectoradd.cu'
-    Digest:          94a00fac90fc59be1140115c91bdaf4e
-DpctVersion:     19.0.0
+  - MainSourceFile:  '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda/vectoradd.cu'
+    Digest:          cf933ad350e521879fbf674f6a82801e
+DpctVersion:     2025.0.0
 MainHelperFileName: ''
 USMLevel:        ''
 FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/rkris11/work/cuda'
+    Value:           '/home/rkris11/work/git/oneAPI-samples/DirectProgramming/C++SYCL/Jupyter/cuda-to-sycl-migration-training/01_SYCL_Migration_Simple_VectorAdd/cuda'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -251,7 +251,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           ''
+    Value:           '/home/rkris11/work/git'
     Specified:       false
   CtadEnabled:
     Value:           'false'
@@ -290,6 +290,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

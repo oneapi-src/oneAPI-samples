@@ -33,14 +33,14 @@
 
 #pragma once
 
-#include <helper_string.h>
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <dpct/dpct.hpp>
-#include <sycl/sycl.hpp>
+#include <helper_string.h>
 
 #ifndef EXIT_WAIVED
 #define EXIT_WAIVED 2
@@ -55,10 +55,10 @@
 static const char *_cudaGetErrorEnum(dpct::err0 error) {
   /*
   DPCT1009:4: SYCL uses exceptions to report errors and does not use the error
-  codes. The original code was commented out and a warning string was inserted.
-  You need to rewrite this code.
+  codes. The call was replaced by a placeholder string. You need to rewrite this
+  code.
   */
-  return "cudaGetErrorName is not supported" /*cudaGetErrorName(error)*/;
+  return "<Placeholder string>";
 }
 #endif
 
@@ -245,43 +245,43 @@ static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
 // cuRAND API errors
 static const char *_cudaGetErrorEnum(int error) {
   switch (error) {
-    case 0:
+    case CURAND_STATUS_SUCCESS:
       return "CURAND_STATUS_SUCCESS";
 
-    case 100:
+    case CURAND_STATUS_VERSION_MISMATCH:
       return "CURAND_STATUS_VERSION_MISMATCH";
 
-    case 101:
+    case CURAND_STATUS_NOT_INITIALIZED:
       return "CURAND_STATUS_NOT_INITIALIZED";
 
-    case 102:
+    case CURAND_STATUS_ALLOCATION_FAILED:
       return "CURAND_STATUS_ALLOCATION_FAILED";
 
-    case 103:
+    case CURAND_STATUS_TYPE_ERROR:
       return "CURAND_STATUS_TYPE_ERROR";
 
-    case 104:
+    case CURAND_STATUS_OUT_OF_RANGE:
       return "CURAND_STATUS_OUT_OF_RANGE";
 
-    case 105:
+    case CURAND_STATUS_LENGTH_NOT_MULTIPLE:
       return "CURAND_STATUS_LENGTH_NOT_MULTIPLE";
 
-    case 106:
+    case CURAND_STATUS_DOUBLE_PRECISION_REQUIRED:
       return "CURAND_STATUS_DOUBLE_PRECISION_REQUIRED";
 
-    case 201:
+    case CURAND_STATUS_LAUNCH_FAILURE:
       return "CURAND_STATUS_LAUNCH_FAILURE";
 
-    case 202:
+    case CURAND_STATUS_PREEXISTING_FAILURE:
       return "CURAND_STATUS_PREEXISTING_FAILURE";
 
-    case 203:
+    case CURAND_STATUS_INITIALIZATION_FAILED:
       return "CURAND_STATUS_INITIALIZATION_FAILED";
 
-    case 204:
+    case CURAND_STATUS_ARCH_MISMATCH:
       return "CURAND_STATUS_ARCH_MISMATCH";
 
-    case 999:
+    case CURAND_STATUS_INTERNAL_ERROR:
       return "CURAND_STATUS_INTERNAL_ERROR";
   }
 
@@ -588,7 +588,8 @@ static const char *_cudaGetErrorEnum(NppStatus error) {
 
 template <typename T>
 void check(T result, char const *const func, const char *const file,
-           int const line) {}
+           int const line) {
+}
 
 #ifdef __DPCT_HPP__
 // This will output the proper CUDA error strings in the event
@@ -635,17 +636,32 @@ inline int ftoi(float value) {
 inline int _ConvertSMVer2Cores(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the # of cores per SM
-  typedef struct dpct_type_554348 {
+  typedef struct dpct_type_133627 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
     int Cores;
   } sSMtoCores;
 
   sSMtoCores nGpuArchCoresPerSM[] = {
-      {0x30, 192}, {0x32, 192}, {0x35, 192}, {0x37, 192}, {0x50, 128},
-      {0x52, 128}, {0x53, 128}, {0x60, 64},  {0x61, 128}, {0x62, 128},
-      {0x70, 64},  {0x72, 64},  {0x75, 64},  {0x80, 64},  {0x86, 128},
-      {0x87, 128}, {0x89, 128}, {0x90, 128}, {-1, -1}};
+      {0x30, 192},
+      {0x32, 192},
+      {0x35, 192},
+      {0x37, 192},
+      {0x50, 128},
+      {0x52, 128},
+      {0x53, 128},
+      {0x60,  64},
+      {0x61, 128},
+      {0x62, 128},
+      {0x70,  64},
+      {0x72,  64},
+      {0x75,  64},
+      {0x80,  64},
+      {0x86, 128},
+      {0x87, 128},
+      {0x89, 128},
+      {0x90, 128},
+      {-1, -1}};
 
   int index = 0;
 
@@ -666,22 +682,34 @@ inline int _ConvertSMVer2Cores(int major, int minor) {
   return nGpuArchCoresPerSM[index - 1].Cores;
 }
 
-inline const char *_ConvertSMVer2ArchName(int major, int minor) {
+inline const char* _ConvertSMVer2ArchName(int major, int minor) {
   // Defines for GPU Architecture types (using the SM version to determine
   // the GPU Arch name)
-  typedef struct dpct_type_876740 {
+  typedef struct dpct_type_138373 {
     int SM;  // 0xMm (hexidecimal notation), M = SM Major version,
     // and m = SM minor version
-    const char *name;
+    const char* name;
   } sSMtoArchName;
 
   sSMtoArchName nGpuArchNameSM[] = {
-      {0x30, "Kepler"},       {0x32, "Kepler"},  {0x35, "Kepler"},
-      {0x37, "Kepler"},       {0x50, "Maxwell"}, {0x52, "Maxwell"},
-      {0x53, "Maxwell"},      {0x60, "Pascal"},  {0x61, "Pascal"},
-      {0x62, "Pascal"},       {0x70, "Volta"},   {0x72, "Xavier"},
-      {0x75, "Turing"},       {0x80, "Ampere"},  {0x86, "Ampere"},
-      {0x87, "Ampere"},       {0x89, "Ada"},     {0x90, "Hopper"},
+      {0x30, "Kepler"},
+      {0x32, "Kepler"},
+      {0x35, "Kepler"},
+      {0x37, "Kepler"},
+      {0x50, "Maxwell"},
+      {0x52, "Maxwell"},
+      {0x53, "Maxwell"},
+      {0x60, "Pascal"},
+      {0x61, "Pascal"},
+      {0x62, "Pascal"},
+      {0x70, "Volta"},
+      {0x72, "Xavier"},
+      {0x75, "Turing"},
+      {0x80, "Ampere"},
+      {0x86, "Ampere"},
+      {0x87, "Ampere"},
+      {0x89, "Ada"},
+      {0x90, "Hopper"},
       {-1, "Graphics Device"}};
 
   int index = 0;
@@ -702,14 +730,13 @@ inline const char *_ConvertSMVer2ArchName(int major, int minor) {
       major, minor, nGpuArchNameSM[index - 1].name);
   return nGpuArchNameSM[index - 1].name;
 }
-// end of GPU Architecture definitions
+  // end of GPU Architecture definitions
 
 #ifdef __DPCT_HPP__
 // General GPU Device CUDA Initialization
 inline int gpuDeviceInit(int devID) {
   int device_count;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -740,10 +767,10 @@ inline int gpuDeviceInit(int devID) {
   need to adjust this code.
   */
   checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      major = dpct::dev_mgr::instance().get_device(devID).get_major_version()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version()));
   /*
   DPCT1035:10: All SYCL devices can be used by the host to submit tasks. You may
   need to adjust this code.
@@ -765,8 +792,7 @@ inline int gpuDeviceInit(int devID) {
   the selected device if needed.
   */
   checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(devID)));
-  printf("gpuDeviceInit() CUDA Device [%d]: \"%s\n", devID,
-         _ConvertSMVer2ArchName(major, minor));
+  printf("gpuDeviceInit() CUDA Device [%d]: \"%s\n", devID, _ConvertSMVer2ArchName(major, minor));
 
   return devID;
 }
@@ -779,8 +805,7 @@ inline int gpuGetMaxGflopsDeviceId() try {
   int devices_prohibited = 0;
 
   uint64_t max_compute_perf = 0;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr,
@@ -799,12 +824,10 @@ inline int gpuGetMaxGflopsDeviceId() try {
     may need to adjust this code.
     */
     checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-    checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
-                                                 .get_device(current_device)
-                                                 .get_major_version()));
-    checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
-                                                 .get_device(current_device)
-                                                 .get_minor_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        major = dpct::get_device(current_device).get_major_version()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        minor = dpct::get_device(current_device).get_minor_version()));
 
     // If this GPU is not running on Compute Mode prohibited,
     // then we can add it to the list
@@ -816,20 +839,18 @@ inline int gpuGetMaxGflopsDeviceId() try {
       if (major == 9999 && minor == 9999) {
         sm_per_multiproc = 1;
       } else {
-        sm_per_multiproc = _ConvertSMVer2Cores(major, minor);
+        sm_per_multiproc =
+            _ConvertSMVer2Cores(major,  minor);
       }
       int multiProcessorCount = 0, clockRate = 0;
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(multiProcessorCount = dpct::dev_mgr::instance()
-                                                     .get_device(current_device)
-                                                     .get_max_compute_units()));
-      dpct::err0 result =
-          DPCT_CHECK_ERROR(clockRate = dpct::dev_mgr::instance()
-                                           .get_device(current_device)
-                                           .get_max_clock_frequency());
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          multiProcessorCount =
+              dpct::get_device(current_device).get_max_compute_units()));
+      dpct::err0 result = DPCT_CHECK_ERROR(
+          clockRate =
+              dpct::get_device(current_device).get_max_clock_frequency());
 
-      uint64_t compute_perf =
-          (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
+      uint64_t compute_perf = (uint64_t)multiProcessorCount * sm_per_multiproc * clockRate;
 
       if (compute_perf > max_compute_perf) {
         max_compute_perf = compute_perf;
@@ -850,7 +871,8 @@ inline int gpuGetMaxGflopsDeviceId() try {
   }
 
   return max_perf_device;
-} catch (sycl::exception const &exc) {
+}
+catch (sycl::exception const &exc) {
   std::cerr << exc.what() << "Exception caught at file:" << __FILE__
             << ", line:" << __LINE__ << std::endl;
   std::exit(1);
@@ -884,14 +906,13 @@ inline int findCudaDevice(int argc, const char **argv) {
     */
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(devID)));
     int major = 0, minor = 0;
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        major =
-            dpct::dev_mgr::instance().get_device(devID).get_major_version()));
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        minor =
-            dpct::dev_mgr::instance().get_device(devID).get_minor_version()));
-    printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n", devID,
-           _ConvertSMVer2ArchName(major, minor), major, minor);
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version()));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version()));
+    printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
+           devID, _ConvertSMVer2ArchName(major, minor), major, minor);
+
   }
 
   return devID;
@@ -902,8 +923,7 @@ inline int findIntegratedGPU() {
   int device_count = 0;
   int devices_prohibited = 0;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      device_count = dpct::dev_mgr::instance().device_count()));
+  checkCudaErrors(DPCT_CHECK_ERROR(device_count = dpct::device_count()));
 
   if (device_count == 0) {
     fprintf(stderr, "CUDA error: no devices supporting CUDA.\n");
@@ -918,10 +938,8 @@ inline int findIntegratedGPU() {
     may need to adjust this code.
     */
     checkCudaErrors(DPCT_CHECK_ERROR(computeMode = 1));
-    checkCudaErrors(
-        DPCT_CHECK_ERROR(integrated = dpct::dev_mgr::instance()
-                                          .get_device(current_device)
-                                          .get_integrated()));
+    checkCudaErrors(DPCT_CHECK_ERROR(
+        integrated = dpct::get_device(current_device).get_integrated()));
     // If GPU is integrated and is not running on Compute Mode prohibited,
     // then cuda can map to GLES resource
     /*
@@ -936,15 +954,12 @@ inline int findIntegratedGPU() {
       checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(current_device)));
 
       int major = 0, minor = 0;
-      checkCudaErrors(DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance()
-                                                   .get_device(current_device)
-                                                   .get_major_version()));
-      checkCudaErrors(DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance()
-                                                   .get_device(current_device)
-                                                   .get_minor_version()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          major = dpct::get_device(current_device).get_major_version()));
+      checkCudaErrors(DPCT_CHECK_ERROR(
+          minor = dpct::get_device(current_device).get_minor_version()));
       printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n",
-             current_device, _ConvertSMVer2ArchName(major, minor), major,
-             minor);
+             current_device, _ConvertSMVer2ArchName(major, minor), major, minor);
 
       return current_device;
     } else {
@@ -969,14 +984,15 @@ inline bool checkCudaCapabilities(int major_version, int minor_version) {
   int dev;
   int major = 0, minor = 0;
 
-  checkCudaErrors(dev = dpct::dev_mgr::instance().current_device_id());
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      major = dpct::dev_mgr::instance().get_device(dev).get_major_version()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version()));
+  checkCudaErrors(DPCT_CHECK_ERROR(dev = dpct::get_current_device_id()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(major = dpct::get_device(dev).get_major_version()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(minor = dpct::get_device(dev).get_minor_version()));
 
   if ((major > major_version) ||
-      (major == major_version && minor >= minor_version)) {
+      (major == major_version &&
+       minor >= minor_version)) {
     printf("  Device %d: <%16s >, Compute SM %d.%d detected\n", dev,
            _ConvertSMVer2ArchName(major, minor), major, minor);
     return true;
@@ -990,6 +1006,6 @@ inline bool checkCudaCapabilities(int major_version, int minor_version) {
 }
 #endif
 
-// end of CUDA Helper Functions
+  // end of CUDA Helper Functions
 
 #endif  // COMMON_HELPER_CUDA_H_

@@ -76,8 +76,8 @@ void computeEigenvaluesSmallMatrix(const InputData &input,
   sdkStartTimer(&timer);
 
   for (unsigned int i = 0; i < iterations; ++i) {
-    sycl::range<3> blocks(1, 1, 1);
-    sycl::range<3> threads(1, 1, MAX_THREADS_BLOCK_SMALL_MATRIX);
+    dpct::dim3 blocks(1, 1, 1);
+    dpct::dim3 threads(MAX_THREADS_BLOCK_SMALL_MATRIX, 1, 1);
 
     q.submit([&](sycl::handler &cgh) {
       

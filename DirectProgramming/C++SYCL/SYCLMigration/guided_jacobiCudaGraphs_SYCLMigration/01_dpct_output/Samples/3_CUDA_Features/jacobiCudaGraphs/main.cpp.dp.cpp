@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -146,7 +140,7 @@ int main(int argc, char **argv) {
   double *d_b, *d_x, *d_x_new;
   dpct::queue_ptr stream1;
   /*
-  DPCT1025:45: The SYCL queue is created ignoring the flag and priority options.
+  DPCT1025:30: The SYCL queue is created ignoring the flag and priority options.
   */
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1 = dpct::get_current_device().create_queue()));
@@ -164,8 +158,20 @@ int main(int argc, char **argv) {
       DPCT_CHECK_ERROR(stream1->memset(d_x, 0, sizeof(double) * N_ROWS)));
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1->memset(d_x_new, 0, sizeof(double) * N_ROWS)));
+  /*
+  DPCT1124:31: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(
       stream1->memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS)));
+  /*
+  DPCT1124:32: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1->memcpy(d_b, b, sizeof(double) * N_ROWS)));
 

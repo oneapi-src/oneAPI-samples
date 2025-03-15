@@ -1,5 +1,5 @@
 {
-  "guid": "E3AE364B-D5B5-416B-B8AE-014A65AC2B82",
+  "guid": "3F0A8D5C-F434-491C-A145-4B957AF14B7C",
   "name": "fastWalshTransform",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample demonstrates the efficient implementation of naturally-ordered Walsh transform",

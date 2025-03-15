@@ -122,7 +122,7 @@ void bisectKernelLarge_MultIntervals(
   }
 
   /*
-  DPCT1065:47: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:37: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -137,7 +137,7 @@ void bisectKernelLarge_MultIntervals(
   }
 
   /*
-  DPCT1065:48: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:38: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -153,7 +153,7 @@ void bisectKernelLarge_MultIntervals(
                             right_count, mid, all_threads_converged);
 
     /*
-    DPCT1065:49: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:39: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -173,7 +173,7 @@ void bisectKernelLarge_MultIntervals(
         (left == right), cta, item_ct1);
 
     /*
-    DPCT1065:50: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:40: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -197,7 +197,7 @@ void bisectKernelLarge_MultIntervals(
     }
 
     /*
-    DPCT1065:51: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:41: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -215,7 +215,7 @@ void bisectKernelLarge_MultIntervals(
     }
 
     /*
-    DPCT1065:52: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:42: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -231,7 +231,7 @@ void bisectKernelLarge_MultIntervals(
     }
 
     /*
-    DPCT1065:53: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:43: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -243,7 +243,7 @@ void bisectKernelLarge_MultIntervals(
                           item_ct1.get_local_range(2)] = 0;
 
     /*
-    DPCT1065:54: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:44: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */

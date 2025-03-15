@@ -1,24 +1,38 @@
 {
-  "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
-  "name": "Vectorize VecMatMult",
-  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
-  "description": "Fortran Tutorial - Using Auto Vectorization",
-  "toolchain": [ "ifx" ],
-  "languages": [ { "fortran": {} } ],
-  "targetDevice": [ "CPU" ],
-  "os": [ "linux" ],
-  "builder": [ "make" ],
-  "ciTests":{
-    "linux": [
-      {
-        "id": "fort_vecsample_cpu",
-        "steps": [
-          "make",
-          "make run",
-          "make clean"
+    "guid": "f92e64c7-7a7c-4749-b421-9f7a9e120099",
+    "name": "Vectorize VecMatMult",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"
+    ],
+    "description": "Fortran Tutorial - Using Auto Vectorization",
+    "toolchain": [
+        "ifx"
+    ],
+    "languages": [
+        {
+            "fortran": {}
+        }
+    ],
+    "targetDevice": [
+        "CPU"
+    ],
+    "os": [
+        "linux"
+    ],
+    "builder": [
+        "make"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "fort_vecsample_cpu",
+                "steps": [
+                    "make",
+                    "make run",
+                    "make clean"
+                ]
+            }
         ]
-       }
-    ]
-  },
-  "expertise": "Concepts and Functionality"
+    },
+    "expertise": "Concepts and Functionality"
 }

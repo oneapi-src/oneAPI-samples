@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
   /////////////////////////////////////////////////////////////////
   // determine the number of CUDA capable GPUs
   //
-  num_gpus = dpct::dev_mgr::instance().device_count();
+  num_gpus = dpct::device_count();
 
   if (num_gpus < 1) {
     printf("no CUDA capable devices were detected\n");
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < num_gpus; i++) {
     dpct::device_info dprop;
-    dpct::get_device_info(dprop, dpct::dev_mgr::instance().get_device(i));
+    dpct::get_device(i).get_device_info(dprop);
     printf("   %d: %s\n", i, dprop.get_name());
   }
 
@@ -122,8 +122,7 @@ int main(int argc, char *argv[]) {
     DPCT_CHECK_ERROR(dpct::select_device(
         cpu_thread_id %
         num_gpus)); // "% num_gpus" allows more CPU threads than GPU devices
-    DPCT_CHECK_ERROR(
-        gpu_id = dpct::dev_mgr::instance().current_device_id());
+    DPCT_CHECK_ERROR(gpu_id = dpct::get_current_device_id());
     printf("CPU thread %d (of %d) uses CUDA device %d\n", cpu_thread_id,
            num_cpu_threads, gpu_id);
 
@@ -134,9 +133,9 @@ int main(int argc, char *argv[]) {
         cpu_thread_id * n /
             num_cpu_threads;  // pointer to this CPU thread's portion of data
     unsigned int nbytes_per_kernel = nbytes / num_cpu_threads;
-    sycl::range<3> gpu_threads(1, 1, 128); // 128 threads per block
-    sycl::range<3> gpu_blocks(1, 1, n / (gpu_threads[2] * num_cpu_threads));
- 
+    dpct::dim3 gpu_threads(128); // 128 threads per block
+    dpct::dim3 gpu_blocks(n / (gpu_threads.x * num_cpu_threads));
+
     DPCT_CHECK_ERROR(d_a = (int *)sycl::malloc_device(
                              nbytes_per_kernel, dpct::get_in_order_queue()));
     DPCT_CHECK_ERROR(

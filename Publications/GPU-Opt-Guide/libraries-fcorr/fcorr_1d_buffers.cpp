@@ -5,12 +5,12 @@
 // =============================================================
 
 // Snippet begin
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <mkl.h>
-#include <oneapi/mkl/dfti.hpp>
+#include <oneapi/mkl/dft.hpp>
 #include <oneapi/mkl/rng.hpp>
 #include <oneapi/mkl/vm.hpp>
+#include <sycl/sycl.hpp>
 
 int main(int argc, char **argv) {
   unsigned int N = (argc == 1) ? 32 : std::stoi(argv[1]);

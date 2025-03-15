@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
             size_t glob_id = item.get_global_id(0);
             size_t group_id = item.get_group(0);
             size_t loc_id = item.get_local_id(0);
-            sycl::ext::oneapi::sub_group sg = item.get_sub_group();
+            sycl::sub_group sg = item.get_sub_group();
             sycl::vec<int, 8> sum{0, 0, 0, 0, 0, 0, 0, 0};
             using global_ptr =
                 sycl::multi_ptr<int, sycl::access::address_space::global_space>;

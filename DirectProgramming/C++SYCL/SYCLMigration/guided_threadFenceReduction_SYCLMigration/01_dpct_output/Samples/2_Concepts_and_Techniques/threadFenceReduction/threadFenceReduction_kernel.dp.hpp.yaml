@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/dpct_output/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.dp.hpp'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/dpct_output/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.dp.hpp'
 Replacements:
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          1654
     Length:          30
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          1684
     Length:          32
     ReplacementText: ''
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          1717
     Length:          34
     ReplacementText: ''
@@ -28,7 +28,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2236
     Length:          11
     ReplacementText: ''
@@ -37,7 +37,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2352
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2372
     Length:          0
     ReplacementText: ",\n                            const sycl::nd_item<3> &item_ct1"
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2378
     Length:          25
     ReplacementText: 'sycl::sub_group'
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2413
     Length:          28
     ReplacementText: 'item_ct1.get_sub_group()'
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2465
     Length:          0
     ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::sub_group::barrier() with sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2467
     Length:          16
     ReplacementText: 'item_ct1.get_sub_group().barrier()'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2722
     Length:          0
     ReplacementText: "    /*\n    DPCT1065:3: Consider replacing sycl::sub_group::barrier() with sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2726
     Length:          16
     ReplacementText: 'item_ct1.get_sub_group().barrier()'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2748
     Length:          0
     ReplacementText: "  /*\n  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2750
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2772
     Length:          17
     ReplacementText: 'item_ct1.get_local_linear_id()'
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2836
     Length:          10
     ReplacementText: 'item_ct1.get_local_range(2)'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2915
     Length:          0
     ReplacementText: "  /*\n  DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
@@ -154,7 +154,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2917
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -163,7 +163,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          2983
     Length:          11
     ReplacementText: ''
@@ -172,7 +172,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3095
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -181,7 +181,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3115
     Length:          0
     ReplacementText: ",\n                             const sycl::nd_item<3> &item_ct1,\n                             uint8_t *dpct_local"
@@ -190,7 +190,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3121
     Length:          32
     ReplacementText: 'auto sdata = (float *)dpct_local;'
@@ -199,7 +199,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3273
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -208,7 +208,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3305
     Length:          10
     ReplacementText: 'item_ct1.get_group(2)'
@@ -217,7 +217,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3336
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -226,7 +226,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3391
     Length:          9
     ReplacementText: 'item_ct1.get_group_range(2)'
@@ -235,7 +235,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          3962
     Length:          0
     ReplacementText: ', item_ct1'
@@ -244,7 +244,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4037
     Length:          10
     ReplacementText: 'item_ct1.get_group(2)'
@@ -253,7 +253,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4112
     Length:          11
     ReplacementText: ''
@@ -262,7 +262,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4228
     Length:          0
     ReplacementText: ",\n                                const sycl::nd_item<3> &item_ct1,\n                                uint8_t *dpct_local"
@@ -271,7 +271,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4268
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -280,7 +280,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4291
     Length:          23
     ReplacementText: 'item_ct1.get_group()'
@@ -289,7 +289,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4375
     Length:          0
     ReplacementText: ', item_ct1, dpct_local'
@@ -298,16 +298,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4467
     Length:          44
-    ReplacementText: 'dpct::global_memory<unsigned int, 0> retirementCount(0);'
+    ReplacementText: 'static dpct::global_memory<unsigned int, 0> retirementCount(0);'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4513
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -316,7 +316,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4556
     Length:          0
     ReplacementText: ' try '
@@ -325,7 +325,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4567
     Length:          18
     ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
@@ -334,7 +334,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4586
     Length:          15
     ReplacementText: 'retirementCount.get_ptr()'
@@ -343,7 +343,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4632
     Length:          3
     ReplacementText: ''
@@ -352,7 +352,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4635
     Length:          52
     ReplacementText: ''
@@ -361,7 +361,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4688
     Length:          0
     ReplacementText: '.wait())'
@@ -370,7 +370,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          4691
     Length:          0
     ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
@@ -379,7 +379,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          5705
     Length:          11
     ReplacementText: ''
@@ -388,7 +388,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          5823
     Length:          0
     ReplacementText: ",\n                                 const sycl::nd_item<3> &item_ct1,\n                                 uint8_t *dpct_local,\n                                 unsigned int &retirementCount, bool &amLast"
@@ -397,7 +397,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          5863
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -406,7 +406,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          5886
     Length:          23
     ReplacementText: 'item_ct1.get_group()'
@@ -415,7 +415,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6037
     Length:          0
     ReplacementText: ', item_ct1, dpct_local'
@@ -424,7 +424,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6122
     Length:          9
     ReplacementText: 'item_ct1.get_group_range(2)'
@@ -433,7 +433,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6168
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -442,7 +442,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6185
     Length:          23
     ReplacementText: ''
@@ -451,7 +451,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6213
     Length:          31
     ReplacementText: 'auto smem = (float *)dpct_local;'
@@ -460,7 +460,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
     Offset:          6339
     Length:          15
     ReplacementText: "/*\n    DPCT1078:4: Consider replacing memory_order::acq_rel with memory_order::seq_cst for correctness if strong memory order restrictions are needed.\n    */\n    sycl::atomic_fence(sycl::memory_order::acq_rel, sycl::memory_scope::device)"
@@ -469,8 +469,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6459
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6436
     Length:          38
     ReplacementText: 'dpct::atomic_fetch_compare_inc<sycl::access::address_space::generic_space>(&retirementCount, item_ct1.get_group_range(2))'
     ConstantFlag:    ''
@@ -478,8 +478,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6617
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6594
     Length:          9
     ReplacementText: 'item_ct1.get_group_range(2)'
     ConstantFlag:    ''
@@ -487,8 +487,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6640
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6617
     Length:          0
     ReplacementText: "    /*\n    DPCT1065:5: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
     ConstantFlag:    ''
@@ -496,8 +496,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6644
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6621
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
     ConstantFlag:    ''
@@ -505,8 +505,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6797
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6774
     Length:          9
     ReplacementText: 'item_ct1.get_group_range(2)'
     ConstantFlag:    ''
@@ -514,8 +514,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          6922
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          6899
     Length:          0
     ReplacementText: ', item_ct1'
     ConstantFlag:    ''
@@ -523,44 +523,26 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7468
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7445
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7482
-    Length:          13
-    ReplacementText: 1, 1, threads
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7500
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7477
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7513
-    Length:          12
-    ReplacementText: 1, 1, blocks
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7545
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7522
     Length:          0
     ReplacementText: "      /*\n      DPCT1083:7: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
     ConstantFlag:    ''
@@ -568,8 +550,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7753
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7730
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -577,8 +559,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7761
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7738
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<512, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -586,8 +568,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7857
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7834
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -595,8 +577,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7891
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7868
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -604,8 +586,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7899
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7876
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<256, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -613,8 +595,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          7995
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          7972
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -622,8 +604,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8029
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8006
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -631,8 +613,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8037
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8014
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<128, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -640,8 +622,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8133
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8110
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -649,8 +631,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8166
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8143
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -658,8 +640,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8174
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8151
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<64, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -667,8 +649,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8269
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8246
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -676,8 +658,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8302
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8279
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -685,8 +667,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8310
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8287
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<32, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -694,8 +676,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8405
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8382
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -703,8 +685,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8438
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8415
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:12: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -712,8 +694,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8446
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8423
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<16, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -721,8 +703,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8541
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8518
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -730,8 +712,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8573
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8550
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -739,8 +721,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8581
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8558
     Length:          94
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<8, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -748,8 +730,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8675
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8652
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -757,8 +739,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8707
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8684
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -766,8 +748,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8715
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8692
     Length:          94
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<4, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -775,8 +757,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8809
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8786
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -784,8 +766,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8841
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8818
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -793,8 +775,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8849
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8826
     Length:          94
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<2, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -802,8 +784,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8943
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8920
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -811,8 +793,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8975
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8952
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:16: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -820,8 +802,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          8983
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          8960
     Length:          94
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<1, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -829,8 +811,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9077
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9054
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -838,8 +820,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9150
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9127
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:17: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -847,8 +829,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9158
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9135
     Length:          97
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<512, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -856,8 +838,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9255
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9232
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -865,8 +847,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9289
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9266
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:18: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -874,8 +856,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9297
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9274
     Length:          97
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<256, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -883,8 +865,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9394
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9371
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -892,8 +874,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9428
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9405
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:19: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -901,8 +883,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9436
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9413
     Length:          97
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<128, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -910,8 +892,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9533
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9510
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -919,8 +901,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9566
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9543
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:20: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -928,8 +910,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9574
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9551
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<64, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -937,8 +919,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9670
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9647
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -946,8 +928,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9703
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9680
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:21: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -955,8 +937,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9711
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9688
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<32, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -964,8 +946,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9807
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9784
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -973,8 +955,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9840
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9817
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:22: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -982,8 +964,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9848
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9825
     Length:          96
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<16, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -991,8 +973,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9944
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9921
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1000,8 +982,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9976
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9953
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:23: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1009,8 +991,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          9984
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          9961
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<8, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -1018,8 +1000,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10079
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10056
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1027,8 +1009,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10111
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10088
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:24: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1036,8 +1018,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10119
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10096
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<4, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -1045,8 +1027,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10214
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10191
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1054,8 +1036,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10246
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10223
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:25: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1063,8 +1045,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10254
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10231
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<2, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -1072,8 +1054,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10349
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10326
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1081,8 +1063,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10381
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10358
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:26: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1090,8 +1072,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10389
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10366
     Length:          95
     ReplacementText: "dpct::get_in_order_queue().submit(\n          [&](sycl::handler &cgh) {\n            sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                reduceMultiPass<1, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
@@ -1099,8 +1081,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10484
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10461
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1108,44 +1090,26 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10651
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10628
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10665
-    Length:          13
-    ReplacementText: 1, 1, threads
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10683
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10660
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10696
-    Length:          12
-    ReplacementText: 1, 1, blocks
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10711
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10688
     Length:          0
     ReplacementText: "  /*\n  DPCT1083:28: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n  */\n"
     ConstantFlag:    ''
@@ -1153,8 +1117,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10882
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10859
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:27: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1162,8 +1126,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10890
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10867
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<512, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1171,8 +1135,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          10987
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10964
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1180,8 +1144,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11021
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          10998
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:29: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1189,8 +1153,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11029
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11006
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<256, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1198,8 +1162,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11126
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11103
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1207,8 +1171,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11160
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11137
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:30: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1216,8 +1180,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11168
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11145
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<128, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1225,8 +1189,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11265
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11242
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1234,8 +1198,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11298
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11275
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:31: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1243,8 +1207,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11306
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11283
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<64, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1252,8 +1216,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11402
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11379
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1261,8 +1225,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11435
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11412
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:32: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1270,8 +1234,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11443
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11420
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<32, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1279,8 +1243,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11539
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11516
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1288,8 +1252,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11572
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11549
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:33: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1297,8 +1261,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11580
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11557
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<16, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1306,8 +1270,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11676
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11653
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1315,8 +1279,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11708
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11685
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:34: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1324,8 +1288,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11716
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11693
     Length:          95
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<8, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1333,8 +1297,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11811
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11788
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1342,8 +1306,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11843
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11820
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:35: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1351,8 +1315,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11851
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11828
     Length:          95
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<4, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1360,8 +1324,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11946
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11923
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1369,8 +1333,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11978
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11955
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:36: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1378,8 +1342,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          11986
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          11963
     Length:          95
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<2, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1387,8 +1351,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12081
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12058
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1396,8 +1360,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12113
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12090
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:37: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1405,8 +1369,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12121
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12098
     Length:          95
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<1, true>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1414,8 +1378,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12216
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12193
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1423,8 +1387,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12289
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12266
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:38: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1432,8 +1396,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12297
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12274
     Length:          98
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<512, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1441,8 +1405,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12395
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12372
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1450,8 +1414,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12429
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12406
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:39: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1459,8 +1423,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12437
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12414
     Length:          98
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<256, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1468,8 +1432,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12535
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12512
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1477,8 +1441,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12569
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12546
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:40: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1486,8 +1450,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12577
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12554
     Length:          98
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<128, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1495,8 +1459,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12675
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12652
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1504,8 +1468,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12708
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12685
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:41: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1513,8 +1477,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12716
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12693
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<64, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1522,8 +1486,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12813
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12790
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1531,8 +1495,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12846
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12823
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:42: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1540,8 +1504,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12854
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12831
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<32, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1549,8 +1513,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12951
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12928
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1558,8 +1522,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12984
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12961
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:43: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1567,8 +1531,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          12992
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          12969
     Length:          97
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<16, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1576,8 +1540,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13089
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13066
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1585,8 +1549,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13121
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13098
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:44: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1594,8 +1558,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13129
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13106
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<8, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1603,8 +1567,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13225
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13202
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1612,8 +1576,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13257
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13234
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:45: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1621,8 +1585,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13265
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13242
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<4, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1630,8 +1594,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13361
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13338
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1639,8 +1603,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13393
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13370
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:46: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1648,8 +1612,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13401
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13378
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<2, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1657,8 +1621,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13497
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13474
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1666,8 +1630,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13529
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13506
     Length:          0
     ReplacementText: "        /*\n        DPCT1049:47: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
@@ -1675,8 +1639,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13537
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13514
     Length:          96
     ReplacementText: "{\n          retirementCount.init();\n\n          dpct::get_in_order_queue().submit(\n            [&](sycl::handler &cgh) {\n              auto retirementCount_ptr_ct1 = retirementCount.get_ptr();\n\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(smemSize), cgh);\n              sycl::local_accessor<bool, 0> amLast_acc_ct1(cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(dimGrid * dimBlock, dimBlock), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  reduceSinglePass<1, false>(d_idata, d_odata, size, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), *retirementCount_ptr_ct1, amLast_acc_ct1);\n                });\n            });\n        }"
     ConstantFlag:    ''
@@ -1684,8 +1648,8 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Offset:          13633
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
+    Offset:          13610
     Length:          1
     ReplacementText: ''
     ConstantFlag:    ''
@@ -1694,8 +1658,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction/threadFenceReduction_kernel.cuh'
-    Digest:          9b6ab86a93335b5e32ce467ef5517c6f
+  - MainSourceFile:  ''
+    Digest:          ''
+    HasCUDASyntax:   false
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -1703,7 +1668,7 @@ FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/vidya/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -1718,7 +1683,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/threadFenceReduction'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -1757,6 +1722,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

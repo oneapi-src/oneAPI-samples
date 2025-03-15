@@ -1,16 +1,34 @@
 {
     "name": "Discrete Cosine Transform",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Spectral Methods"],
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL/Spectral Methods"
+    ],
     "description": "An image processing algorithm as seen in the JPEG compression standard",
-    "os": ["linux", "windows"],
-    "builder": ["ide", "cmake"],
-    "languages": [{"cpp":{}}],
-    "toolchain": ["dpcpp"],
+    "os": [
+        "linux",
+        "windows"
+    ],
+    "builder": [
+        "ide",
+        "cmake"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "toolchain": [
+        "dpcpp"
+    ],
     "guid": "54D189B9-2011-48ED-BFFC-E390D128EED5",
-    "targetDevice": [ "CPU", "GPU" ],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
     "ciTests": {
         "linux": [
             {
+                "id": "test",
                 "steps": [
                     "mkdir build",
                     "cd build",
@@ -21,8 +39,9 @@
                 ]
             }
         ],
-        "windows": [ 
-            { 
+        "windows": [
+            {
+                "id": "test",
                 "steps": [
                     "MSBuild DCT.sln /t:Rebuild /p:Configuration=\"Intel Release\"",
                     "cd x64\\Intel Release",

@@ -260,4 +260,4 @@ model = INCModelForSequenceClassification.from_pretrained(save_dir)
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")

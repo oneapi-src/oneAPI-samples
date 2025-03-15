@@ -1,0 +1,6 @@
+add_compile_options(-O3 -fiopenmp -fopenmp-targets=spir64)
+add_link_options(-fiopenmp -fopenmp-targets=spir64)
+add_subdirectory(01_memory_order)
+add_subdirectory(07_explicit_subdevice)
+add_subdirectory(13_openmp_explicit_subdevice)
+add_subdirectory(14_explicit_subsubdevice)

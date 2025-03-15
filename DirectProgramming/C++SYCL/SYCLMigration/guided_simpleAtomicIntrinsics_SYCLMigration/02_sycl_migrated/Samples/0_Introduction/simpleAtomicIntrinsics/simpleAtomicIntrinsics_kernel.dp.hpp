@@ -68,11 +68,11 @@ void testKernel(int *g_odata, const sycl::nd_item<3> &item_ct1) {
 //Note: The DPC++ compiler is currently in the process of incorporating native support for atomic increment/decrement operations, along with ongoing performance enhancements.
   // Atomic increment (modulo 17+1)
  //dpct::atomic_fetch_compare_inc<sycl::access::address_space::generic_space>(
- //     (unsigned int *)&g_odata[5], 17);
+  //    (unsigned int *)&g_odata[5], 17);
 
   // Atomic decrement
   //dpct::atomic_fetch_compare_dec<sycl::access::address_space::generic_space>(
-  //    (unsigned int *)&g_odata[6], 137);
+    //  (unsigned int *)&g_odata[6], 137);
 
   // Atomic compare-and-swap
   dpct::atomic_compare_exchange_strong<

@@ -70,11 +70,11 @@ void computeEigenvaluesSmallMatrix(const InputData &input,
   sdkStartTimer(&timer);
 
   for (unsigned int i = 0; i < iterations; ++i) {
-    sycl::range<3> blocks(1, 1, 1);
-    sycl::range<3> threads(1, 1, MAX_THREADS_BLOCK_SMALL_MATRIX);
+    dpct::dim3 blocks(1, 1, 1);
+    dpct::dim3 threads(MAX_THREADS_BLOCK_SMALL_MATRIX, 1, 1);
 
     /*
-    DPCT1049:16: The work-group size passed to the SYCL kernel may exceed the
+    DPCT1049:55: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */

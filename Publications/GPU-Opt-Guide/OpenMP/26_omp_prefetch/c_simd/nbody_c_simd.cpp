@@ -15,7 +15,7 @@
 
 void nbody_1d_gpu(float *c, float *a, float *b, int n1, int n2) {
 #pragma omp target teams distribute parallel for thread_limit(WORKGROUP_SIZE / \
-                                                              VECLEN)
+                                                                  VECLEN)
   for (int i = 0; i < n1; i += VECLEN) {
     const float ma0 = 0.269327f, ma1 = -0.0750978f, ma2 = 0.0114808f;
     const float ma3 = -0.00109313f, ma4 = 0.0000605491f, ma5 = -0.00000147177f;
@@ -37,8 +37,8 @@ void nbody_1d_gpu(float *c, float *a, float *b, int n1, int n2) {
         for (int v = 0; v < VECLEN; ++v)
           bb[u + v] = b[j + u + v];
 #ifdef PREFETCH
-        int next_tile = j + TILE_SIZE + u;
-#pragma ompx prefetch data(PREFETCH_HINT : b[next_tile]) if (next_tile < n2)
+#pragma ompx prefetch data(                                                    \
+    PREFETCH_HINT : b[j + TILE_SIZE + u]) if ((j + TILE_SIZE + u) < n2)
 #endif
       }
 // compute current tile
@@ -118,14 +118,14 @@ int main() {
   }
 
 #pragma omp target
-  {}
+  {
+  }
 
-#pragma omp target enter data map(alloc                                        \
-                                  : a [0:ARRAYLEN1], b [0:ARRAYLEN2],          \
-                                    c [0:ARRAYLEN1])
-#pragma omp target enter data map(alloc : d [0:CACHE_CLEAN_SIZE])
+#pragma omp target enter data map(alloc : a[0 : ARRAYLEN1], b[0 : ARRAYLEN2],  \
+                                      c[0 : ARRAYLEN1])
+#pragma omp target enter data map(alloc : d[0 : CACHE_CLEAN_SIZE])
 
-#pragma omp target update to(a [0:ARRAYLEN1], b [0:ARRAYLEN2])
+#pragma omp target update to(a[0 : ARRAYLEN1], b[0 : ARRAYLEN2])
 
   double t1, t2, elapsed_s = 0.0;
   for (int i = 0; i < ITERATIONS; ++i) {
@@ -138,7 +138,7 @@ int main() {
     elapsed_s += (t2 - t1);
   }
 
-#pragma omp target update from(c [0:ARRAYLEN1])
+#pragma omp target update from(c[0 : ARRAYLEN1])
 
   float sum = 0.0f;
   for (int i = 0; i < ARRAYLEN1; ++i)
@@ -155,10 +155,9 @@ int main() {
 
   printf("\nTotal time = %8.1f milliseconds\n", (elapsed_s * 1000));
 
-#pragma omp target exit data map(delete                                        \
-                                 : a [0:ARRAYLEN1], b [0:ARRAYLEN2],           \
-                                   c [0:ARRAYLEN1])
-#pragma omp target exit data map(delete : d [0:CACHE_CLEAN_SIZE])
+#pragma omp target exit data map(delete : a[0 : ARRAYLEN1], b[0 : ARRAYLEN2],  \
+                                     c[0 : ARRAYLEN1])
+#pragma omp target exit data map(delete : d[0 : CACHE_CLEAN_SIZE])
 
   delete[] a;
   delete[] b;

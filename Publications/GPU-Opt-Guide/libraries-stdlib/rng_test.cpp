@@ -5,10 +5,10 @@
 // =============================================================
 
 // Snippet begin
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <oneapi/dpl/random>
 #include <oneapi/mkl/rng.hpp>
+#include <sycl/sycl.hpp>
 
 int main(int argc, char **argv) {
   unsigned int N = (argc == 1) ? 20 : std::stoi(argv[1]);

@@ -30,7 +30,7 @@ void do_work (unsigned NELEMENTS, unsigned NREPETITIONS, T initial_value, T *res
 	}
 }
 
-int main (int argc, char *argv[])
+int main ()
 {
 	static constexpr unsigned NELEMENTS = 64*1024*1024;
 	static constexpr unsigned NREPETITIONS = 1024;
@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
 		std::cout << "std::log result[0] = " << std_res[0] << std::endl;
 
 		bool allequal = true;
-		for (auto i = 1; i < NELEMENTS; ++i)
+		for (unsigned i = 1; i < NELEMENTS; ++i)
 			allequal = allequal and std_res[0] == std_res[i];
 		if (allequal)
 		{

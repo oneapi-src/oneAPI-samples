@@ -12,7 +12,7 @@ The `Intel® Optimization for XGBoost* Getting Started` sample demonstrates how 
 
 XGBoost* is a widely used gradient boosting library in the classical ML area. Designed for flexibility, performance, and portability, XGBoost* includes optimized distributed gradient boosting frameworks and implements Machine Learning algorithms underneath. Starting with 0.9 version of XGBoost, Intel has been up streaming optimizations through the `hist` histogram tree-building method. Starting with 1.3.3 version of XGBoost and beyond, Intel has also begun up streaming inference optimizations to XGBoost as well.
 
-In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of AI Tools. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. It also demonstrates how to use software products that can be found in the [AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+In this code sample, you will learn how to use Intel optimizations for XGBoost published as part of AI Tools. The sample also illustrates how to set up and train an XGBoost* model on datasets for prediction. It also demonstrates how to use software products that can be found in the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get AI Tools**
 
 Required AI Tools: Intel® Optimization for XGBoost*
-<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+<br>If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
 **2. (Offline Installer) Activate the AI Tools bundle base environment**
@@ -74,7 +74,7 @@ For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install)
 ## Run the Sample
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/IntelPython_XGBoost_GettingStarted#environment-setup) is completed.
 
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Conda/PIP](#condapip) 
 * [Docker](#docker)
@@ -85,7 +85,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 If the default path is used during the installation of AI Tools:
 ```
-$HOME/intel/oneapi/intelpython/envs/base/bin/python -m ipykernel install --user --name=base
+$HOME/intel/oneapi/intelpython/bin/python -m ipykernel install --user --name=base
 ```
 If a non-default path is used:
 ```
@@ -148,7 +148,7 @@ AI Tools Docker images already have Get Started samples pre-installed. Refer to 
 
 ```
 RMSE: 11.113036205909719
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 ## Related Samples
 

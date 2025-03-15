@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <stdio.h>
+#include <sycl/sycl.hpp>
 
 constexpr int N = 25;
 constexpr int STEPS = 100000;

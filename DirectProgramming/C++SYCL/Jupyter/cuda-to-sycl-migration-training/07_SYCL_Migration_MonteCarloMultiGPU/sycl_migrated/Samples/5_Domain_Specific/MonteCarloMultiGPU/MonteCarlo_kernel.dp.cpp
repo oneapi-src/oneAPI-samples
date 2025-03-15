@@ -51,7 +51,7 @@
 #define MAX_OPTIONS (1024 * 1024)
 
 // Preprocessed input option data
-typedef struct dpct_type_164939 {
+typedef struct dpct_type_642279 {
   real S;
   real X;
   real MuByT;
@@ -181,9 +181,9 @@ extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
           .wait());
 
   // place each device pathN random numbers apart on the random number sequence
-  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+  dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
     auto plan_rngStates_ct0 = plan->rngStates;
-    int plan_device_ct1 = plan->device;
+    auto plan_device_ct1 = plan->device;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
                                            sycl::range<3>(1, 1, THREAD_N),

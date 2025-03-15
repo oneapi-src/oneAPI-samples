@@ -49,7 +49,7 @@ inline int floorPow2(int n) {
 
   int exp;
   /*
-  DPCT1017:70: The sycl::frexp call is used instead of the frexp call. These two
+  DPCT1017:56: The sycl::frexp call is used instead of the frexp call. These two
   calls do not provide exactly the same functionality. Check the potential
   precision and/or performance issues for the generated code.
   */
@@ -72,7 +72,7 @@ inline int ceilPow2(int n) {
 
   int exp;
   /*
-  DPCT1017:71: The sycl::frexp call is used instead of the frexp call. These two
+  DPCT1017:57: The sycl::frexp call is used instead of the frexp call. These two
   calls do not provide exactly the same functionality. Check the potential
   precision and/or performance issues for the generated code.
   */

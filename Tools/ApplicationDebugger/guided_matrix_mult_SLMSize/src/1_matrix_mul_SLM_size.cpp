@@ -14,7 +14,7 @@
  * relevant terms noted in the comments.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 
@@ -71,7 +71,7 @@ int main() {
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
 
     cout << "Device compute units: " << q.get_device().get_info<info::device::max_compute_units>() << "\n";
-    auto maxWorkItemSize = q.get_device().get_info<cl::sycl::info::device::max_work_item_sizes<3>>();
+    auto maxWorkItemSize = q.get_device().get_info<sycl::info::device::max_work_item_sizes<3>>();
     cout << "Device max work item size: " << maxWorkItemSize.get(0) << ", " << maxWorkItemSize.get(1) << ", " << maxWorkItemSize.get(2) << "\n";
     cout << "Device max work group size: " << q.get_device().get_info<info::device::max_work_group_size>() << "\n";
 

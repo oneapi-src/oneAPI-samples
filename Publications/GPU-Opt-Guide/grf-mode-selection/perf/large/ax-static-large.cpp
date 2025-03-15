@@ -111,17 +111,15 @@ int main(void) {
       g[i * 6 + j] = 1.0;
   }
 
-#pragma omp target enter data map(alloc                                        \
-                                  : w [0:ASIZE], u [0:ASIZE], g [0:6 * ASIZE], \
-                                    D [0:NX1 * NX1])
-#pragma omp target update to(w [0:ASIZE], u [0:ASIZE], g [0:6 * ASIZE],        \
-                             D [0:NX1 * NX1])
+#pragma omp target enter data map(alloc : w[0 : ASIZE], u[0 : ASIZE],          \
+                                      g[0 : 6 * ASIZE], D[0 : NX1 * NX1])
+#pragma omp target update to(w[0 : ASIZE], u[0 : ASIZE], g[0 : 6 * ASIZE],     \
+                                 D[0 : NX1 * NX1])
 
   for (int i = 0; i < 100; i++)
     c_ax_v80_static(nelt, nx, w, u, g, D);
 
-#pragma omp target exit data map(delete                                        \
-                                 : w [0:ASIZE], u [0:ASIZE], g [0:6 * ASIZE],  \
-                                   D [0:NX1 * NX1])
+#pragma omp target exit data map(delete : w[0 : ASIZE], u[0 : ASIZE],          \
+                                     g[0 : 6 * ASIZE], D[0 : NX1 * NX1])
   return 0;
 }

@@ -1,5 +1,5 @@
 {
-    "guid": "0048A391-E39E-4394-9BC5-374098D510E1",	
+    "guid": "B924DC65-2D0C-4E2F-8A36-A2B2B8A1313F",	
     "name": "dwtHaar1D Sample",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample computes Discrete Haar wavelet decomposition for 1D signals with a length which is a power of 2.",

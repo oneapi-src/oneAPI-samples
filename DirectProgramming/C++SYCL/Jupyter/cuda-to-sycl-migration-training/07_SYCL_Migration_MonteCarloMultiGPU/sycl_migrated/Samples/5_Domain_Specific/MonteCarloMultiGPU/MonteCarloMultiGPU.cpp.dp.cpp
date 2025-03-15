@@ -68,9 +68,9 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
   // select problem size
   for (int i = 0; i < GPU_N; i++) {
     dpct::device_info deviceProp;
-    DPCT_CHECK_ERROR(dpct::get_device_info(
-        deviceProp, dpct::dev_mgr::instance().get_device(i)));
-
+    
+    DPCT_CHECK_ERROR(dpct::get_device(i).get_device_info(deviceProp));
+    
     int cudaCores = _ConvertSMVer2Cores(deviceProp.get_major_version(),
                                         deviceProp.get_minor_version()) *
                     deviceProp.get_max_compute_units();
@@ -85,8 +85,8 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
 
 int adjustGridSize(int GPUIndex, int defaultGridSize) {
   dpct::device_info deviceProp;
-  DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(GPUIndex)));
+  
+  DPCT_CHECK_ERROR(dpct::get_device(GPUIndex).get_device_info(deviceProp));
   int maxGridSize = deviceProp.get_max_compute_units() * 40;
   return ((defaultGridSize > maxGridSize) ? maxGridSize : defaultGridSize);
 }
@@ -112,8 +112,8 @@ static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   DPCT_CHECK_ERROR(dpct::select_device(plan->device));
 
   dpct::device_info deviceProp;
-  DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(plan->device)));
+  DPCT_CHECK_ERROR(
+      dpct::get_device(plan->device).get_device_info(deviceProp));
 
   // Start the timer
   sdkStartTimer(&hTimer[plan->device]);
@@ -167,8 +167,8 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
     DPCT_CHECK_ERROR(dpct::select_device(plan[i].device));
 
     dpct::device_info deviceProp;
-    DPCT_CHECK_ERROR(dpct::get_device_info(
-        deviceProp, dpct::dev_mgr::instance().get_device(plan[i].device)));
+    DPCT_CHECK_ERROR(
+        dpct::get_device(plan[i].device).get_device_info(deviceProp));
 
     // Allocate intermediate memory for MC integrator
     // and initialize RNG state
@@ -291,7 +291,7 @@ int main(int argc, char **argv) {
 
   // GPU number present in the system
   int GPU_N;
-  DPCT_CHECK_ERROR(GPU_N = dpct::dev_mgr::instance().device_count());
+  DPCT_CHECK_ERROR(GPU_N = dpct::device_count());
   int nOptions = 8 * 1024;
 
   nOptions = adjustProblemSize(GPU_N, nOptions);
@@ -388,9 +388,8 @@ int main(int argc, char **argv) {
 
     for (i = 0; i < GPU_N; i++) {
       dpct::device_info deviceProp;
-      DPCT_CHECK_ERROR(dpct::get_device_info(
-          deviceProp,
-          dpct::dev_mgr::instance().get_device(optionSolver[i].device)));
+      DPCT_CHECK_ERROR(dpct::get_device(optionSolver[i].device)
+                                           .get_device_info(deviceProp));
       printf("GPU Device #%i: %s\n", optionSolver[i].device,
              deviceProp.get_name());
       printf("Options         : %i\n", optionSolver[i].optionCount);

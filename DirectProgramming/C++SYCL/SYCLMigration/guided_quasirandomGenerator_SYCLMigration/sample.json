@@ -1,5 +1,5 @@
 {
-  "guid": "329AD1BF-844C-4DA1-8C76-3BC3942F25AB",
+  "guid": "0873C4AD-6939-41D4-9759-0DAE7BCC4813",
   "name": "quasirandomGenerator",
   "categories": ["Toolkit/oneAPI-samples/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "Implements Niederreiter Quasirandom Sequence Generator and Inverse Cumulative Normal Distribution functions for the generation of Standard Normal Distributions.",

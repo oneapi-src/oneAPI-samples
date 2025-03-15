@@ -23,7 +23,7 @@ This example demonstrates how to perform reduction by using the CPU in serial mo
 
 This code shows how to use OpenMP on the CPU host as well as using target offload capabilities.
 
-The different modes use a simple calculation using the well known mathematical formula that states if one integrates from 0 to 1 over the function, $(4.0/(1+x*x))dx$, the answer is pi. One can approximate this integral by summing up the area of a large number of rectangles over this same range.
+The different modes use a simple calculation using the well known mathematical formula, $\int_{0}^{1} \frac{4}{1 + x^2}\\mathrm{d}x$, the answer is pi. One can approximate this integral by summing up the area of a large number of rectangles over this same range.
 
 Each of the different functions calculates pi by breaking the range into many tiny rectangles and then summing up the results.
 

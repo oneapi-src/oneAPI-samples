@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/dpct_output/Common/helper_cuda.h'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT/dpct_output/Common/helper_cuda.h'
 Replacements:
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          1793
     Length:          0
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          2210
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          2266
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -28,7 +28,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          2287
     Length:          0
     ReplacementText: "  /*\n  DPCT1009:4: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.\n  */\n"
@@ -37,7 +37,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          2296
     Length:          23
     ReplacementText: '"<Placeholder string>"'
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3631
     Length:          11
     ReplacementText: int
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3680
     Length:          13
     ReplacementText: '0'
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3735
     Length:          18
     ReplacementText: '1'
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3800
     Length:          18
     ReplacementText: '2'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3865
     Length:          18
     ReplacementText: '3'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3930
     Length:          19
     ReplacementText: '4'
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          3997
     Length:          20
     ReplacementText: '5'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4066
     Length:          17
     ReplacementText: '6'
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4129
     Length:          18
     ReplacementText: '7'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4194
     Length:          18
     ReplacementText: '8'
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4259
     Length:          20
     ReplacementText: '9'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4328
     Length:          31
     ReplacementText: '10'
@@ -154,7 +154,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4419
     Length:          20
     ReplacementText: '11'
@@ -163,7 +163,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4488
     Length:          17
     ReplacementText: '12'
@@ -172,7 +172,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4551
     Length:          18
     ReplacementText: '13'
@@ -181,7 +181,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4616
     Length:          21
     ReplacementText: '14'
@@ -190,7 +190,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4687
     Length:          19
     ReplacementText: '15'
@@ -199,7 +199,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          4754
     Length:          19
     ReplacementText: '16'
@@ -208,7 +208,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          7109
     Length:          14
     ReplacementText: int
@@ -217,7 +217,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          15785
     Length:          199
     ReplacementText: ''
@@ -226,7 +226,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          15995
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -235,7 +235,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          16461
     Length:          0
     ReplacementText: "  /*\n  DPCT1010:5: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
@@ -244,7 +244,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          16463
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -253,7 +253,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          16481
     Length:          18
     ReplacementText: '0'
@@ -262,7 +262,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          16504
     Length:          259
     ReplacementText: ''
@@ -271,7 +271,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          17099
     Length:          0
     ReplacementText: "  /*\n  DPCT1010:7: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.\n  */\n"
@@ -280,7 +280,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          17101
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -289,7 +289,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          17119
     Length:          18
     ReplacementText: '0'
@@ -298,7 +298,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          17142
     Length:          235
     ReplacementText: ''
@@ -307,25 +307,25 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          17829
     Length:          0
-    ReplacementText: ' dpct_type_554348'
+    ReplacementText: ' dpct_type_133627'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          19036
     Length:          0
-    ReplacementText: ' dpct_type_876740'
+    ReplacementText: ' dpct_type_138373'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          20194
     Length:          18
     ReplacementText: __DPCT_HPP__
@@ -334,16 +334,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          20331
     Length:          33
-    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::dev_mgr::instance().device_count())'
+    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::device_count())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          20960
     Length:          0
     ReplacementText: "  /*\n  DPCT1035:9: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
@@ -352,7 +352,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          20978
     Length:          67
     ReplacementText: 'DPCT_CHECK_ERROR(computeMode = 1)'
@@ -361,25 +361,25 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21066
     Length:          72
-    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance().get_device(devID).get_major_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21159
     Length:          72
-    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21234
     Length:          0
     ReplacementText: "  /*\n  DPCT1035:10: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n  */\n"
@@ -388,7 +388,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21255
     Length:          25
     ReplacementText: '0'
@@ -397,7 +397,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21573
     Length:          0
     ReplacementText: "  /*\n  DPCT1093:11: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n  */\n"
@@ -406,7 +406,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21591
     Length:          13
     ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
@@ -415,7 +415,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21611
     Length:          0
     ReplacementText: ')'
@@ -424,7 +424,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          21830
     Length:          0
     ReplacementText: ' try '
@@ -433,16 +433,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22013
     Length:          33
-    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::dev_mgr::instance().device_count())'
+    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::device_count())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22381
     Length:          0
     ReplacementText: "    /*\n    DPCT1035:12: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
@@ -451,7 +451,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22401
     Length:          76
     ReplacementText: 'DPCT_CHECK_ERROR(computeMode = 1)'
@@ -460,25 +460,25 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22500
     Length:          81
-    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance().get_device(current_device).get_major_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::get_device(current_device).get_major_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22604
     Length:          81
-    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance().get_device(current_device).get_minor_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::get_device(current_device).get_minor_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22789
     Length:          0
     ReplacementText: "    /*\n    DPCT1035:13: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
@@ -487,7 +487,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          22812
     Length:          25
     ReplacementText: '0'
@@ -496,16 +496,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          23085
     Length:          92
-    ReplacementText: 'DPCT_CHECK_ERROR(multiProcessorCount = dpct::dev_mgr::instance().get_device(current_device).get_max_compute_units())'
+    ReplacementText: 'DPCT_CHECK_ERROR(multiProcessorCount = dpct::get_device(current_device).get_max_compute_units())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          23186
     Length:          11
     ReplacementText: 'dpct::err0'
@@ -514,16 +514,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          23207
     Length:          72
-    ReplacementText: 'DPCT_CHECK_ERROR(clockRate = dpct::dev_mgr::instance().get_device(current_device).get_max_clock_frequency())'
+    ReplacementText: 'DPCT_CHECK_ERROR(clockRate = dpct::get_device(current_device).get_max_clock_frequency())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          23287
     Length:          473
     ReplacementText: ''
@@ -532,7 +532,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          24298
     Length:          0
     ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
@@ -541,7 +541,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          24947
     Length:          0
     ReplacementText: "    /*\n    DPCT1093:14: The \"devID\" device may be not the one intended for use. Adjust the selected device if needed.\n    */\n"
@@ -550,7 +550,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          24967
     Length:          13
     ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
@@ -559,7 +559,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          24987
     Length:          0
     ReplacementText: ')'
@@ -568,34 +568,34 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25040
     Length:          72
-    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance().get_device(devID).get_major_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::get_device(devID).get_major_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25135
     Length:          72
-    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance().get_device(devID).get_minor_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::get_device(devID).get_minor_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25508
     Length:          33
-    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::dev_mgr::instance().device_count())'
+    ReplacementText: 'DPCT_CHECK_ERROR(device_count = dpct::device_count())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25806
     Length:          0
     ReplacementText: "    /*\n    DPCT1035:15: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
@@ -604,7 +604,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25826
     Length:          76
     ReplacementText: 'DPCT_CHECK_ERROR(computeMode = 1)'
@@ -613,16 +613,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          25925
     Length:          74
-    ReplacementText: 'DPCT_CHECK_ERROR(integrated = dpct::dev_mgr::instance().get_device(current_device).get_integrated())'
+    ReplacementText: 'DPCT_CHECK_ERROR(integrated = dpct::get_device(current_device).get_integrated())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26119
     Length:          0
     ReplacementText: "    /*\n    DPCT1035:16: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.\n    */\n"
@@ -631,7 +631,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26157
     Length:          25
     ReplacementText: '0'
@@ -640,7 +640,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26187
     Length:          0
     ReplacementText: "      /*\n      DPCT1093:17: The \"current_device\" device may be not the one intended for use. Adjust the selected device if needed.\n      */\n"
@@ -649,7 +649,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26209
     Length:          13
     ReplacementText: 'DPCT_CHECK_ERROR(dpct::select_device'
@@ -658,7 +658,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26238
     Length:          0
     ReplacementText: ')'
@@ -667,62 +667,62 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26296
     Length:          81
-    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance().get_device(current_device).get_major_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::get_device(current_device).get_major_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          26402
     Length:          81
-    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance().get_device(current_device).get_minor_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::get_device(current_device).get_minor_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          27117
     Length:          19
-    ReplacementText: 'DPCT_CHECK_ERROR(dev = dpct::dev_mgr::instance().current_device_id())'
+    ReplacementText: 'DPCT_CHECK_ERROR(dev = dpct::get_current_device_id())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          27157
     Length:          70
-    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::dev_mgr::instance().get_device(dev).get_major_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(major = dpct::get_device(dev).get_major_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Offset:          27248
     Length:          70
-    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::dev_mgr::instance().get_device(dev).get_minor_version())'
+    ReplacementText: 'DPCT_CHECK_ERROR(minor = dpct::get_device(dev).get_minor_version())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Avijit/cuda-samples/Common/helper_cuda.h'
+  - MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Common/helper_cuda.h'
     Digest:          b335aa967b6d80921de9d6528e1564a5
-DpctVersion:     19.0.0
+DpctVersion:     2025.0.0
 MainHelperFileName: ''
 USMLevel:        ''
 FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Avijit/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -737,7 +737,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/4_CUDA_Libraries/oceanFFT'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -776,6 +776,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

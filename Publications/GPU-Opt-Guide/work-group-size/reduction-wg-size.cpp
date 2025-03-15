@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <sycl/sycl.hpp>
 #include <unistd.h>
 #include <vector>
 

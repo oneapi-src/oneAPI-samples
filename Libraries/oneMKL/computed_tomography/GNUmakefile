@@ -7,10 +7,9 @@ all: run
 run: computed_tomography
 	./computed_tomography 400 400 input.bmp radon.bmp restored.bmp
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
-MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=dft
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel $(MKL_LIBS)
+DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel
 
 computed_tomography: computed_tomography.cpp
 	icpx $< -fsycl -o $@ $(DPCPP_OPTS)

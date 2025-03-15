@@ -1,8 +1,8 @@
 {
   "guid": "b234282f-b414-4441-b7ed-a1c9e7567545",
-  "name": "Predictive Modeling with XGBoost* and the Intel® AI Analytics Toolkit (AI Kit)",
+  "name": "Predictive Modeling with XGBoost* and the AI Tools",
   "categories": ["Toolkit/oneAPI AI And Analytics/Getting Started"],
-  "description": "Predictive Modeling using Decision Trees, Bagging, and XGBoost using Intel® AI Analytics Toolkit and Jupyter Notebooks",
+  "description": "Predictive Modeling using Decision Trees, Bagging, and XGBoost using AI Tools and Jupyter Notebooks",
   "builder": ["cli"],
   "languages": [{"python":{}}],
   "dependencies": ["intelpython"],

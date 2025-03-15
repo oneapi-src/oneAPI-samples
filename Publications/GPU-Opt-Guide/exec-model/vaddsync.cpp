@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sycl/sycl.hpp>
 
 auto d_selector = sycl::default_selector_v;
 
@@ -114,12 +114,12 @@ int main() {
 
   std::cout << "Running on device: "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
-  
+
   auto sgsizes = q.get_device().get_info<sycl::info::device::sub_group_sizes>();
 
   constexpr int sgsize = 16;
   bool supported = false;
-  std::cout << "Sub-group sizes supported:"; 
+  std::cout << "Sub-group sizes supported:";
   for (auto sz : sgsizes) {
     std::cout << " " << sz;
     if (sz == sgsize) {
@@ -127,13 +127,15 @@ int main() {
     }
   }
   std::cout << std::endl;
-  
+
   if (!supported) {
-    std::cout << "Sub-group size " << sgsize << " is not supported. Please change sgsize to one of the supported sizes"
+    std::cout << "Sub-group size " << sgsize
+              << " is not supported. Please change sgsize to one of the "
+                 "supported sizes"
               << std::endl;
     return 0;
   }
-  
+
   std::cout << "Using sub-group size " << sgsize << std::endl;
   std::cout << "Vector size: " << a.size() << "\n";
 

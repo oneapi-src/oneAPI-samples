@@ -3,10 +3,11 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sstream>
+#include <sycl/sycl.hpp>
 
 auto d_selector = sycl::default_selector_v;
 
@@ -39,8 +40,6 @@ int VectorAdd1(sycl::queue &q, const IntArray &a, const IntArray &b,
   });
   q.wait();
   auto end = std::chrono::steady_clock::now();
-  std::cout << "VectorAdd1 completed on device - took " << (end - start).count()
-            << " u-secs\n";
   return ((end - start).count());
 } // end VectorAdd1
 
@@ -78,8 +77,6 @@ int VectorAdd2(sycl::queue &q, const IntArray &a, const IntArray &b,
   });
   q.wait();
   auto end = std::chrono::steady_clock::now();
-  std::cout << "VectorAdd2<" << groups << "> completed on device - took "
-            << (end - start).count() << " u-secs\n";
   return ((end - start).count());
 } // end VectorAdd2
 
@@ -122,22 +119,44 @@ int main() {
     }
 
   // time the kernels
+  std::stringstream ss;
+
   Initialize(sum);
   int t = VectorAdd1(q, a, b, sum, 1000);
+  ss << "Execution times (u-secs) on "
+     << q.get_device().get_info<sycl::info::device::name>()
+     << " device:" << std::endl;
+  ss << "  VectorAdd1    : " << t << std::endl;
   Initialize(sum);
   t = VectorAdd2<1>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<1> : " << t << std::endl;
   t = VectorAdd2<2>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<2> : " << t << std::endl;
   t = VectorAdd2<3>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<3> : " << t << std::endl;
   t = VectorAdd2<4>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<4> : " << t << std::endl;
   t = VectorAdd2<5>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<5> : " << t << std::endl;
   t = VectorAdd2<6>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<6> : " << t << std::endl;
   t = VectorAdd2<7>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<7> : " << t << std::endl;
   t = VectorAdd2<8>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<8> : " << t << std::endl;
   t = VectorAdd2<12>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<12>: " << t << std::endl;
   t = VectorAdd2<16>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<16>: " << t << std::endl;
   t = VectorAdd2<20>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<20>: " << t << std::endl;
   t = VectorAdd2<24>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<24>: " << t << std::endl;
   t = VectorAdd2<28>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<28>: " << t << std::endl;
   t = VectorAdd2<32>(q, a, b, sum, 1000);
+  ss << "  VectorAdd2<32>: " << t << std::endl;
+
+  std::cout << ss.str();
   return 0;
-}
+} // end of codeblock

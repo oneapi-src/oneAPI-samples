@@ -286,5 +286,5 @@ print("::: GENERATED TEXT::: " + generated_text)
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 

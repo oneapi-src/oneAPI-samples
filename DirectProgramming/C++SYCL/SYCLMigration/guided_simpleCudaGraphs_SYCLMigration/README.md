@@ -41,7 +41,7 @@ This sample contains two versions in the following folders:
 | OS                                                 | Ubuntu* 22.04
 | Hardware (for 02_sycl_migrated__option1)           | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon CPU <br> Intel® Data Center GPU Max <br> Nvidia Testla P100 <br> Nvidia A100 <br> Nvidia H100
 | Hardware (for 02_sycl_migrated__option2)           | Intel® Data Center GPU Max <br> 
-| Software                                           | SYCLomatic (Tag - 20240403) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2024.2 <br> oneAPI for NVIDIA GPUs plugin (version 2024.1) from Codeplay
+| Software                                           | SYCLomatic (Tag - 20241104) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2025.0 <br> oneAPI for NVIDIA GPUs plugin (version 2025.0) from Codeplay
 
 For more information on how to install Syclomatic Tool, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br>
 Refer to [oneAPI for NVIDIA GPUs plugin](https://developer.codeplay.com/products/oneapi/nvidia/) from Codeplay to execute a sample on NVIDIA GPU.
@@ -411,7 +411,7 @@ If an error occurs, you can get more details by running `make` with the `VERBOSE
 ```
 $ make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-1/overview.html) for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2025-0/overview.html) for more information on using the utility.
 
 ## License
 Code samples are licensed under the MIT license. See

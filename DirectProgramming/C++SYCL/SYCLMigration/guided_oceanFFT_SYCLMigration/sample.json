@@ -1,5 +1,5 @@
 {
-  "guid": "FCC565D0-95E4-4ED2-9426-9FD6D85F7C39",	
+  "guid": "67BBE6BC-5449-4BB1-8387-9087786F0900",	
   "name": "guided_oceanFFT_SYCLMigration",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample shows the demonstrates the use of SYCL queues for Ocean height field on GPU devices.",

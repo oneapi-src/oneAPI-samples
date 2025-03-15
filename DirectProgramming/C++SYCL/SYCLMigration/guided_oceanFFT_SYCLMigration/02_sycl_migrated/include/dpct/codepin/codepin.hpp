@@ -9,59 +9,164 @@
 #define __DPCT_CODEPIN_HPP__
 
 #include "serialization/basic.hpp"
+#include <chrono>
+#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <map>
 #include <memory>
 #include <numeric>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include <stdlib.h>
+
+// Random seed for data sampling.
+#ifndef CODEPIN_RAND_SEED
+#define CODEPIN_RAND_SEED 0
+#endif
+
+// Data size threshold to trigger data sampling.
+// array/pointer size larger than the threshold will be sampled.
+#ifndef CODEPIN_SAMPLING_THRESHOLD
+#define CODEPIN_SAMPLING_THRESHOLD 20
+#endif
+
+// Sampling percent, interval: [0, 100]
+// 0: No data will be logged.  
+// 100: all data will be logged.
+#ifndef CODEPIN_SAMPLING_PERCENT
+#define CODEPIN_SAMPLING_PERCENT 1
+#endif
+
+#define CODEPIN_TO_STR(x) CODEPIN_STR(x)
+#define CODEPIN_STR(x) #x
+#pragma message(                                                               \
+    "CodePin data sampling feature is enabled for data dump. As follow list 3 configs for data sampling:")
+#pragma message("CODEPIN_RAND_SEED: " CODEPIN_TO_STR(CODEPIN_RAND_SEED))
+#pragma message("CODEPIN_SAMPLING_THRESHOLD: " CODEPIN_TO_STR(                \
+    CODEPIN_SAMPLING_THRESHOLD))
+#pragma message("CODEPIN_SAMPLING_PERCENT: " CODEPIN_TO_STR(CODEPIN_SAMPLING_PERCENT))
+#pragma message(                                                               \
+    "Define the macros in the build command to change sampling configs. Also refer to codepin.hpp for definitions and default value of the macros.")
+
 namespace dpct {
 namespace experimental {
+namespace codepin {
 
+inline static std::map<std::string, int> api_index;
+inline static std::map<std::string, event_t> event_map;
+inline static bool rand_seed_setup = false;
 namespace detail {
 
-class Logger {
+inline static std::unordered_set<void *> ptr_unique;
+
+class logger {
 public:
-  Logger(const std::string &dump_file) : dst_output(dump_file) {
-    opf.open(dst_output);
-    ss << "[";
+  logger(const std::string &dump_file)
+      : opf(dump_file), json_ss(opf), arr(json_ss) {
+    auto top_obj = arr.object();
+    top_obj.key("CodePin Random Seed");
+    top_obj.value(CODEPIN_RAND_SEED);
+    top_obj.key("CodePin Sampling Threshold");
+    top_obj.value(CODEPIN_SAMPLING_THRESHOLD);
+    top_obj.key("CodePin Sampling Percent");
+    top_obj.value(CODEPIN_SAMPLING_PERCENT);
+  }
+  ~logger() {}
+
+  detail::json_stringstream &get_stringstream() {
+    return this->json_ss;
   }
 
-  ~Logger() {
-    this->remove_lastchar_stream();
-    ss << "]";
-    opf << ss.str();
-    opf.close();
+  template <class... Args>
+  void print_CP(const std::string &cp_id, std::string device_name,
+                size_t free_byte, size_t total_byte, float elapse_time,
+                queue_t queue, Args... args) {
+    ptr_unique.clear();
+    auto obj = arr.object();
+    obj.key("ID");
+    obj.value(cp_id);
+    obj.key("Device Name");
+    obj.value(device_name);
+    obj.key("Device ID");
+#ifdef __NVCC__
+    int device_id;
+    cudaGetDevice(&device_id);
+    obj.value(device_id);
+#else
+    obj.value((int)dpct::get_current_device_id());
+#endif
+    obj.key("Stream Address");
+    obj.value((void *)queue);
+    obj.key("Free Device Memory");
+    obj.value(free_byte);
+    obj.key("Total Device Memory");
+    obj.value(total_byte);
+    obj.key("Elapse Time(ms)");
+    obj.value(elapse_time);
+    obj.key("CheckPoint");
+    auto cp_obj =
+        obj.value<detail::json_stringstream::json_obj>();
+    print_args(cp_obj, queue, 0, args...);
   }
 
-  std::stringstream &get_outputstream() { return this->ss; }
+  void print_args(json_stringstream::json_obj &obj, queue_t queue,
+                  int index = 0) {}
 
-  /// This function is used to remove the last character from the stringstream
-  /// within the Logger class. When outputting JSON, commas are typically used
-  /// to separate key-value pairs. However, the last key-value pair does not
-  /// require a trailing comma. Therefore, after completing the output of the
-  /// last key-value pair, this function is called to remove the last comma.
-  void remove_lastchar_stream() {
-    std::streampos pos = ss.tellp();
-    ss.seekp(pos - std::streamoff(1));
-    ss << "";
+  template <class First, class... RestArgs>
+  void print_args(json_stringstream::json_obj &obj, queue_t queue, int index,
+                  std::string_view arg_name, First &arg, RestArgs... args) {
+    obj.key(arg_name);
+    {
+      auto type_obj =
+          obj.value<detail::json_stringstream::json_obj>();
+      detail::data_ser<First>::print_type_name(type_obj);
+      type_obj.key("Address");
+      print_address(type_obj, arg);
+      type_obj.key("Index");
+      type_obj.value(index);
+      type_obj.key("Data");
+      detail::data_ser<First>::dump(json_ss, arg, queue);
+    }
+    print_args(obj, queue, index + 1, args...);
+  }
+  template <class ArgT>
+  void print_address(json_stringstream::json_obj &obj, ArgT arg) {
+    if constexpr (std::is_pointer<ArgT>::value) {
+      obj.value((void *)arg);
+    } else {
+      obj.value((void *)&arg);
+    }
   }
 
 private:
-  std::string dst_output;
   std::ofstream opf;
-  std::stringstream ss;
+  detail::json_stringstream json_ss;
+  detail::json_stringstream::json_array arr;
 };
 
-inline static std::unordered_set<void *> ptr_unique;
-inline static std::map<std::string, int> api_index;
-inline static std::string data_file = "app_runtime_data_record.json";
-inline static Logger log(data_file);
+#ifdef __NVCC__
+inline std::string data_file_prefix = "CodePin_CUDA_";
+#else
+inline std::string data_file_prefix = "CodePin_SYCL_";
+#endif
+
+inline std::string get_data_file_name(std::string_view data_file_prefix) {
+  std::time_t now_time = std::time(nullptr);
+  std::stringstream strs;
+  strs << data_file_prefix
+       << std::put_time(std::localtime(&now_time), "%Y-%m-%d_%H-%M-%S")
+       << ".json";
+  return strs.str();
+}
+
+inline logger log(get_data_file_name(data_file_prefix));
 
 inline std::map<void *, uint32_t> &get_ptr_size_map() {
   static std::map<void *, uint32_t> ptr_size_map;
@@ -74,110 +179,102 @@ inline uint32_t get_ptr_size_in_bytes(void *ptr) {
   return (it != ptr_size_map.end()) ? it->second : 0;
 }
 
-inline bool is_dev_ptr(void *p) {
-#ifdef __NVCC__
-  cudaPointerAttributes attr;
-  cudaPointerGetAttributes(&attr, p);
-  if (attr.type == cudaMemoryTypeDevice)
-    return true;
-  return false;
-#else
-  dpct::pointer_attributes attributes;
-  attributes.init(p);
-  if (attributes.get_device_pointer() != nullptr)
-    return true;
-  return false;
-#endif
-}
-
 template <class T>
-class DataSer<T, typename std::enable_if<std::is_pointer<T>::value>::type> {
+class data_ser<T*, void> {
 public:
-  static void dump(std::ostream &ss, T value,
-                   dpct::experimental::StreamType stream) {
+  static void dump(detail::json_stringstream &ss, T* value,
+                   queue_t queue) {
     if (ptr_unique.find(value) != ptr_unique.end()) {
       return;
     }
     ptr_unique.insert(value);
-    ss << "{\"Type\":\"Pointer\",\"Data\":[";
     int size = get_ptr_size_in_bytes(value);
     size = size == 0 ? 1 : size / sizeof(*value);
-    using PointedType =
-        std::remove_reference_t<std::remove_cv_t<std::remove_pointer_t<T>>>;
-    if (is_dev_ptr(value)) {
-      PointedType *h_data = new PointedType[size];
+    using PointeeType =
+        std::remove_cv_t<std::remove_pointer_t<T>>;
+    PointeeType *dump_addr = value;
+    bool is_dev = is_dev_ptr(value);
+    if (is_dev) {
+      PointeeType *h_data = new PointeeType[size];
 #ifdef __NVCC__
-      cudaMemcpyAsync(h_data, value, size * sizeof(PointedType),
-                      cudaMemcpyDeviceToHost, stream);
-      cudaStreamSynchronize(stream);
+      cudaMemcpyAsync(h_data, value, size * sizeof(PointeeType),
+                      cudaMemcpyDeviceToHost, queue);
+      cudaStreamSynchronize(queue);
 #else
-      stream->memcpy(h_data, value, size * sizeof(PointedType)).wait();
+      queue->memcpy((void *)h_data, (void *)value, size * sizeof(PointeeType))
+          .wait();
 #endif
-      for (int i = 0; i < size; ++i) {
-        dpct::experimental::detail::DataSer<PointedType>::dump(
-            ss, *(h_data + i), stream);
-        if (i != size - 1)
-          ss << ",";
-      }
-      delete[] h_data;
-    } else {
-      for (int i = 0; i < size; ++i) {
-        dpct::experimental::detail::DataSer<PointedType>::dump(ss, *(value + i),
-                                                               stream);
-        if (i != size - 1)
-          ss << ",";
-      }
+      dump_addr = h_data;    
     }
-
-    ss << "]}";
+    auto arr = ss.array();
+    for (int i = 0; i < size; ++i) {
+      if (size > CODEPIN_SAMPLING_THRESHOLD && i != 0) {
+        float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        if (r > (float)CODEPIN_SAMPLING_PERCENT/(float)100)
+          continue;
+      }
+      auto obj = arr.object();
+      detail::data_ser<PointeeType>::print_type_name(obj);
+      obj.key("Data");
+      detail::data_ser<PointeeType>::dump(
+          ss, *(dump_addr + i), queue);
+    }
+    if(is_dev)
+      delete[] dump_addr;
+  }
+  static void print_type_name(
+      detail::json_stringstream::json_obj &obj) {
+    obj.key("Type");
+    obj.value("Pointer");
   }
 };
 
 template <class T>
-class DataSer<T, typename std::enable_if<std::is_array<T>::value>::type> {
+class data_ser<T, typename std::enable_if<std::is_array<T>::value>::type> {
 public:
-  static void dump(std::ostream &ss, T value,
-                   dpct::experimental::StreamType stream) {
-    ss << "{\"Type\":\"Array\",\"Data\":[";
-    for (auto tmp : value) {
-      dpct::experimental::detail::DataSer<std::remove_extent_t<T>>::dump(
-          ss, tmp, stream);
-      ss << ",";
+  static void dump(detail::json_stringstream &ss, T value,
+                   queue_t queue) {
+    auto arr = ss.array();
+    size_t size = sizeof(T) / sizeof(value[0]);
+    for (size_t i = 0; i < size; ++i) {
+      if (size > CODEPIN_SAMPLING_THRESHOLD && i != 0) {
+        float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        if (r > (float)CODEPIN_SAMPLING_PERCENT/(float)100)
+          continue;
+      }
+      auto obj = arr.object();
+      detail::data_ser<
+          std::remove_extent_t<T>>::print_type_name(obj);
+      obj.key("Data");
+      detail::data_ser<std::remove_extent_t<T>>::dump(
+          ss, value[i], queue);
     }
-    ss << "]}";
+  }
+  static void print_type_name(
+      detail::json_stringstream::json_obj &obj) {
+    obj.key("Type");
+    obj.value("Array");
   }
 };
 
-inline void serialize_var(std::ostream &ss,
-                          dpct::experimental::StreamType stream) {
-  ;
-}
-
-template <class T, class... Args>
-void serialize_var(std::ostream &ss, dpct::experimental::StreamType stream,
-                   const std::string &var_name, T var, Args... args) {
-  ss << "\"" << var_name << "\":";
-  ptr_unique.clear();
-  dpct::experimental::detail::DataSer<T>::dump(ss, var, stream);
-  ss << ",";
-  serialize_var(ss, stream, args...);
-}
-
 template <class... Args>
-void gen_log_API_CP(const std::string &api_name,
-                    dpct::experimental::StreamType stream, Args... args) {
-  if (api_index.find(api_name) == api_index.end()) {
-    api_index[api_name] = 0;
-  } else {
-    api_index[api_name]++;
+void gen_log_API_CP(const std::string &cp_id, std::string device_name,
+                    size_t free_byte, size_t total_byte, float elapse_time,
+                    queue_t queue, Args... args) {
+  if (!rand_seed_setup) {
+    srand(CODEPIN_RAND_SEED);
+    rand_seed_setup = true;
+    std::cout << "CodePin data sampling is enabled for data dump. As follow list 3 "
+                 "configs for data sampling:"
+              << std::endl;
+    std::cout << "CODEPIN_RAND_SEED: " << CODEPIN_RAND_SEED << std::endl;
+    std::cout << "CODEPIN_SAMPLING_THRESHOLD: " << CODEPIN_SAMPLING_THRESHOLD
+              << std::endl;
+    std::cout << "CODEPIN_SAMPLING_PERCENT: " << CODEPIN_SAMPLING_PERCENT
+              << std::endl;
   }
-  std::string new_api_name =
-      api_name + ":" + std::to_string(api_index[api_name]);
-  log.get_outputstream() << "{\"ID\":"
-                         << "\"" << new_api_name << "\",\"CheckPoint\":{";
-  serialize_var(log.get_outputstream(), stream, args...);
-  log.remove_lastchar_stream();
-  log.get_outputstream() << "}},";
+  log.print_CP(cp_id, device_name, free_byte, total_byte, elapse_time, queue,
+               args...);
 }
 } // namespace detail
 
@@ -188,30 +285,100 @@ inline void synchronize(sycl::queue *q) { q->wait(); }
 #endif
 
 /// Generate API check point prolog.
-/// \param api_name The UID of the function call.
+/// \param cp_id The UID of the function call.
 /// \param queue The sycl queue to synchronize the command execution.
 /// \param args The var name string and variable value pair list.
 template <class... Args>
-void gen_prolog_API_CP(const std::string &api_name,
-                       dpct::experimental::StreamType queue, Args... args) {
+void gen_prolog_API_CP(const std::string &cp_id,
+                       queue_t queue, Args&&... args) {
   synchronize(queue);
-  dpct::experimental::detail::gen_log_API_CP(api_name, queue, args...);
+  std::string prolog_tag = cp_id + ":" + "prolog";
+  if (api_index.find(cp_id) == api_index.end()) {
+    api_index[cp_id] = 0;
+  } else {
+    api_index[cp_id]++;
+  }
+  std::string event_id =
+      cp_id + ":" + std::to_string(api_index[cp_id]);
+  size_t free_byte, total_byte;
+#ifdef __NVCC__
+  int device;
+  cudaGetDevice(&device);  
+  cudaDeviceProp deviceProp;
+  cudaGetDeviceProperties(&deviceProp, device);
+  std::string device_name(deviceProp.name);
+  cudaMemGetInfo(&free_byte, &total_byte);
+  cudaEvent_t event;
+  cudaEventCreate(&event);
+  cudaEventRecord(event, queue);
+  event_map[event_id] = event;
+#else
+  dpct::get_current_device().get_memory_info(free_byte, total_byte);
+  std::string device_name = dpct::get_current_device().get_info<sycl::info::device::name>();
+#ifdef DPCT_PROFILING_ENABLED
+  sycl::event event = queue->ext_oneapi_submit_barrier();
+  event_map[event_id] = event;
+#endif //DPCT_PROFILING_ENABLED
+#endif
+
+  detail::gen_log_API_CP(prolog_tag, device_name, free_byte, total_byte, 0.0f,
+                         queue, args...);
 }
 
 /// Generate API check point epilog.
-/// \param api_name The UID of the function call.
+/// \param cp_id The UID of the function call.
 /// \param stream The sycl queue to synchronize the command execution.
 /// \param args The var name string and variable value pair list.
 template <class... Args>
-void gen_epilog_API_CP(const std::string &api_name,
-                       dpct::experimental::StreamType queue, Args... args) {
-  gen_prolog_API_CP(api_name, queue, args...);
+void gen_epilog_API_CP(const std::string &cp_id,
+                       queue_t queue, Args&&... args) {
+  synchronize(queue);
+  std::string epilog_tag = cp_id + ":" + "epilog";
+  std::string event_id =
+      cp_id + ":" + std::to_string(api_index[cp_id]);
+  size_t free_byte, total_byte;
+  float kernel_elapsed_time = 0.0f;
+#ifdef __NVCC__
+  int device;
+  cudaGetDevice(&device);  
+  cudaDeviceProp deviceProp;
+  cudaGetDeviceProperties(&deviceProp, device);
+  std::string device_name(deviceProp.name);
+  cudaMemGetInfo(&free_byte, &total_byte);
+  cudaEvent_t event;
+  cudaEventCreate(&event);
+  cudaEventRecord(event, queue);
+  auto pre_event = event_map[event_id];
+  event_map.erase(event_id);
+  cudaEventSynchronize(event);
+  cudaEventElapsedTime(&kernel_elapsed_time, pre_event, event);
+#else
+#ifdef DPCT_PROFILING_ENABLED
+  sycl::event event = queue->ext_oneapi_submit_barrier();
+  auto pre_event = event_map[event_id];
+  event_map.erase(event_id);
+  event.wait_and_throw();
+  kernel_elapsed_time =
+      (event.get_profiling_info<sycl::info::event_profiling::command_end>() -
+       pre_event
+           .get_profiling_info<sycl::info::event_profiling::command_start>()) /
+      1000000.0f;
+#endif //DPCT_PROFILING_ENABLED
+  std::string device_name = dpct::get_current_device().get_info<sycl::info::device::name>();
+  dpct::get_current_device().get_memory_info(free_byte, total_byte);
+#endif
+  detail::gen_log_API_CP(epilog_tag, device_name, free_byte, total_byte,
+                         kernel_elapsed_time, queue, args...);
 }
 
 inline std::map<void *, uint32_t> &get_ptr_size_map() {
-  return dpct::experimental::detail::get_ptr_size_map();
+  return detail::get_ptr_size_map();
 }
-
+} // namespace codepin
 } // namespace experimental
 } // namespace dpct
+
+namespace dpctexp = dpct::experimental;
+
+
 #endif // End of __DPCT_CODEPIN_HPP__

@@ -110,7 +110,7 @@ correctly.
 To measure performance with RNG Device API following changes need to be introduced:
 1. Macro `USE_DEVICE_API` is to distinguish between implementation for Device API and Host API.
 2. Remove memory allocation that used to store random numbers.
-3. Introduce Device API calls in `generate_paths_kernel` because random nubers can
+3. Introduce Device API calls in `generate_paths_kernel` because random numbers can
    be generated within the SYCL kernel and can be used immediately to generate paths.
 4. Do not call RNG Host API as a separate call.
 

@@ -4,10 +4,10 @@
 // SPDX-License-Identifier: MIT
 // =============================================================
 #include "align.hpp"
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sycl/sycl.hpp>
 
 template <typename T> using VectorAllocator = AlignedAllocator<T>;
 

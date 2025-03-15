@@ -9,21 +9,16 @@
 #ifndef __DPCT_DNNL_UTILS_HPP__
 #define __DPCT_DNNL_UTILS_HPP__
 
-#include <oneapi/dpl/algorithm>
-#include <oneapi/dpl/execution>
-#include <oneapi/dpl/numeric>
-#include <oneapi/mkl.hpp>
-#include <oneapi/mkl/rng/device.hpp>
-#include <sycl/sycl.hpp>
+#include "compat_service.hpp"
+#include "lib_common_utils.hpp"
+
 #include <oneapi/dnnl/dnnl.hpp>
 #include <oneapi/dnnl/dnnl_sycl.hpp>
-#include <unordered_map>
+#include <oneapi/mkl/rng/device.hpp>
+
 #include <algorithm>
 #include <list>
-
-#include "memory.hpp"
-#include "device.hpp"
-#include "lib_common_utils.hpp"
+#include <unordered_map>
 
 namespace dpct {
 namespace dnnl {
@@ -589,10 +584,10 @@ public:
     *out_n = dims[0];
     *out_c = weight_dims[0];
     *out_h = 1 + (dims[2] + 2 * _paddings[0] -
-                  (1 + (_dilates[0] * (weight_dims[2] - 1)))) /
+                  (1 + ((_dilates[0] + 1) * (weight_dims[2] - 1)))) /
                      _strides[0];
     *out_w = 1 + (dims[3] + 2 * _paddings[1] -
-                  (1 + (_dilates[1] * (weight_dims[3] - 1)))) /
+                  (1 + ((_dilates[1] + 1) * (weight_dims[3] - 1)))) /
                      _strides[1];
   }
   /// Getting the output dimensions of a memory after ND convolution has been
@@ -612,7 +607,7 @@ public:
     out_dims[1] = weight_dims[1];
     for (int i = 2; i < ndims; i++) {
       out_dims[i] = 1 + (dims[i] + 2 * _paddings[i - 2] -
-                         (1 + (_dilates[i - 2] * (weight_dims[i] - 1)))) /
+                         (1 + ((_dilates[i - 2] + 1) * (weight_dims[i] - 1)))) /
                             _strides[i - 2];
     }
   }
@@ -683,7 +678,7 @@ class dropout_desc {
     void *_state = nullptr;
     std::vector<std::uint8_t> _host_state;
     rng_engine_t _rng_engine;
-    dropout_desc_imp() : _rng_engine(dpct::get_default_queue(), 1) {}
+    dropout_desc_imp() : _rng_engine(::dpct::cs::get_default_queue(), 1) {}
   };
   std::shared_ptr<dropout_desc_imp> _imp;
 
@@ -901,7 +896,7 @@ class engine_ext {
           });
         }
         size_t new_buffer_capacity =
-            std::max(request_buffer_size, info.capacity * 2);
+            (std::max)(request_buffer_size, info.capacity * 2);
         info.capacity = new_buffer_capacity;
         info.buffer = (uint8_t *)sycl::malloc_device(new_buffer_capacity, *_q);
         info.q = *_q;
@@ -1023,20 +1018,21 @@ class engine_ext {
     return q->fill<T>(static_cast<T *>(src), *static_cast<const T *>(value),
                       size_with_byte / sizeof(T));
   }
-  template <typename T> struct no_zero_op {
-    T operator()(T e) {
-      if (!e) {
-        return 1;
-      }
-      return e;
-    }
-  };
   template <typename T>
   void transform_no_zero_with_type(sycl::queue *q, void *src, void *dst,
                                    size_t num) {
-    std::transform(oneapi::dpl::execution::make_device_policy(*q),
-                   static_cast<T *>(src), static_cast<T *>(src) + num,
-                   static_cast<T *>(dst), no_zero_op<T>());
+    q->submit([&](sycl::handler &cgh) {
+      cgh.parallel_for<::dpct::cs::kernel_name<class zero_to_one, T>>(
+          sycl::range<1>(num), [=](sycl::id<1> idx) {
+            T *src_ptr = static_cast<T *>(src) + idx[0];
+            T *dst_ptr = static_cast<T *>(dst) + idx[0];
+            if (*src_ptr) {
+              *dst_ptr = *src_ptr;
+            } else {
+              *dst_ptr = 1;
+            }
+          });
+    });
   }
   void transform_no_zero(const memory_desc_ext &desc, void *src, void *dst);
   ::dnnl::memory::desc get_group_weight_desc(int group_count,
@@ -1051,6 +1047,11 @@ class engine_ext {
                              int *direction_num, int *gate_num);
 public:
   engine_ext() {}
+  engine_ext(std::nullptr_t) {
+    _eng = nullptr;
+    _s = nullptr;
+    _q = nullptr;
+  }
   operator bool() const {
     return bool(_eng) && bool(_s) && bool(_q);
   }
@@ -1062,9 +1063,14 @@ public:
   }
   /// Creating oneDNN engine.
   void create_engine() {
-    _q = &dpct::get_current_device().default_queue();
+#if USE_DPCT_HELPER
+    _q = &::dpct::cs::get_current_device().default_queue();
+#else
+    _q = ::dpct::cs::get_current_device().default_queue();
+#endif
     _eng = std::make_shared<::dnnl::engine>(::dnnl::sycl_interop::make_engine(
-        dpct::get_current_device(), dpct::get_current_device().get_context()));
+        ::dpct::cs::get_current_device(),
+        ::dpct::cs::get_current_device().get_context()));
     _s = std::make_shared<::dnnl::stream>(
         ::dnnl::sycl_interop::make_stream(*_eng, *_q));
     _engine_id = _engine_count++;
@@ -2135,6 +2141,8 @@ memory_desc_ext::to_dnnl_data_type(dpct::library_data_t dt) {
     return dnnl_dt::bf16;
   case dpct::library_data_t::real_float:
     return dnnl_dt::f32;
+  case dpct::library_data_t::real_double:
+    return dnnl_dt::f64;
   case dpct::library_data_t::real_int32:
     return dnnl_dt::s32;
   case dpct::library_data_t::real_int8:
@@ -2165,6 +2173,8 @@ memory_desc_ext::to_dpct_library_data_t(::dnnl::memory::data_type dt,
     return dpct_dt::real_bfloat16;
   case dnnl_dt::f32:
     return dpct_dt::real_float;
+  case dnnl_dt::f64:
+    return dpct_dt::real_double;
   case dnnl_dt::s32:
     return dpct_dt::real_int32;
   case dnnl_dt::s8:

@@ -203,9 +203,9 @@ double JacobiMethodGpu(const float *A, const double *b,
                        const float conv_threshold, const int max_iter,
                        double *x, double *x_new, dpct::queue_ptr stream) {
   // CTA size
-  sycl::range<3> nthreads(1, 1, 256);
+  dpct::dim3 nthreads(256, 1, 1);
   // grid size
-  sycl::range<3> nblocks(1, 1, (N_ROWS / ROWS_PER_CTA) + 2);
+  dpct::dim3 nblocks((N_ROWS / ROWS_PER_CTA) + 2, 1, 1);
 
   double sum = 0.0;
   double *d_sum;
@@ -217,22 +217,23 @@ double JacobiMethodGpu(const float *A, const double *b,
     checkCudaErrors(DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
     if ((k & 1) == 0) {
       /*
-      DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the
+      DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:57: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:27: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:58: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:28: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -252,22 +253,23 @@ double JacobiMethodGpu(const float *A, const double *b,
       });
     } else {
       /*
-      DPCT1049:12: The work-group size passed to the SYCL kernel may exceed the
+      DPCT1049:4: The work-group size passed to the SYCL kernel may exceed the
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:59: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:29: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:60: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:30: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -287,10 +289,10 @@ double JacobiMethodGpu(const float *A, const double *b,
       });
     }
     /*
-    DPCT1124:48: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
-    the origin API might be synchronous, depends on the type of operand memory,
-    so you may need to call wait() on event return by memcpy API to ensure
-    synchronization behavior.
+    DPCT1124:22: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+    the origin API might be synchronous, it depends on the type of operand
+    memory, so you may need to call wait() on event return by memcpy API to
+    ensure synchronization behavior.
     */
     checkCudaErrors(
         DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
@@ -299,21 +301,21 @@ double JacobiMethodGpu(const float *A, const double *b,
     if (sum <= conv_threshold) {
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
-      nblocks[2] = (N_ROWS / nthreads[2]) + 1;
+      nblocks.x = (N_ROWS / nthreads.x) + 1;
       /*
-      DPCT1083:14: The size of local memory in the migrated code may be
-      different from the original code. Check that the allocated memory size in
-      the migrated code is correct.
+      DPCT1083:6: The size of local memory in the migrated code may be different
+      from the original code. Check that the allocated memory size in the
+      migrated code is correct.
       */
-      size_t sharedMemSize = ((nthreads[2] / 32) + 1) * sizeof(double);
+      size_t sharedMemSize = ((nthreads.x / 32) + 1) * sizeof(double);
       if ((k & 1) == 0) {
         /*
-        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
+        DPCT1049:5: The work-group size passed to the SYCL kernel may exceed the
+        limit. To get the device limit, query info::device::max_work_group_size.
+        Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -331,12 +333,12 @@ double JacobiMethodGpu(const float *A, const double *b,
         });
       } else {
         /*
-        DPCT1049:15: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
+        DPCT1049:7: The work-group size passed to the SYCL kernel may exceed the
+        limit. To get the device limit, query info::device::max_work_group_size.
+        Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -355,8 +357,8 @@ double JacobiMethodGpu(const float *A, const double *b,
       }
 
       /*
-      DPCT1124:49: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
-      the origin API might be synchronous, depends on the type of operand
+      DPCT1124:23: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
       memory, so you may need to call wait() on event return by memcpy API to
       ensure synchronization behavior.
       */

@@ -1,5 +1,5 @@
 {
-    "guid": "7EBAB336-3149-49E1-8B53-C9DFBD5366FE",	
+    "guid": "B4055287-2313-463F-B81B-F376C63451B8",	
     "name": "guided_cudaOpenMP_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample demonstrates to use OpenMP API to write an application for multiple GPUs.",

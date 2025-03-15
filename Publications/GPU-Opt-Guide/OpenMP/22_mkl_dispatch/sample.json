@@ -7,7 +7,7 @@
   "description": "oneAPI GPU Optimization Guide Examples",
   "toolchain": [
     "dpcpp",
-    "ifort"
+    "ifx"
   ],
   "languages": [
     {
@@ -34,7 +34,7 @@
           "mkdir ../../build",
           "cd ../../build",
           "cmake ..",
-          "make dgemm_target_variant_dispatch_c dgemm_dispatch_c dgemm_example_01 dgemm_example_02 dgemm_example_03 dgemm_batch_example_01 dgemm_batch_example_02 dgemm_dispatch_f",
+          "make dgemm_dispatch_c dgemm_example_01 dgemm_example_02 dgemm_example_03 dgemm_batch_example_01 dgemm_batch_example_02 dgemm_dispatch_f",
           "make clean"
         ]
       }

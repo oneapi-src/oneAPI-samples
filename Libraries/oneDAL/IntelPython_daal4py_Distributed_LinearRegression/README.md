@@ -1,7 +1,7 @@
 *This sample and any necessary extra files/data needed to run it are already located in the [AI-and-Analytics](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics) folder of this repository. Please go to the [IntelPython_daal4py_DistributedLinearRegression](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Features-and-Functionality/IntelPython_daal4py_DistributedLinearRegression)  folder within the AI-and-Analytics folder to get everything you need to build and run this sample.*
 
 # `Intel Python daal4py Distributed Linear Regression` Sample
-This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the Intel® MPI Library installed, and it demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This sample code shows how to train and predict with a distributed linear regression model using the python API package daal4py for oneAPI Data Analytics Library. It assumes you have a working version of the Intel® MPI Library installed, and it demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -18,7 +18,7 @@ daal4py is a simplified API to the Intel® Data Analytics Acceleration Library (
 In this sample, you will run a distributed Linear Regression model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
 
 ## Key Implementation Details
-This distributed linear regression sample code is implemented for the CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python* as part of the [Intel&reg; AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
+This distributed linear regression sample code is implemented for the CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel(R) Distribution for Python* as part of the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 
 ## Additional Requirements
@@ -51,7 +51,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 ## Building daal4py for CPU
 
-oneAPI Data Analytics Library is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script.
+oneAPI Data Analytics Library is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -69,7 +69,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel AI Analytics Toolkit is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the AI Tools is installed in the inteloneapi folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```

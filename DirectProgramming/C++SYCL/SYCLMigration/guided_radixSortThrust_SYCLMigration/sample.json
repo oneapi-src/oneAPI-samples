@@ -1,5 +1,5 @@
 {
-    "guid": "DA09E38F-2DCC-40C9-B312-588F59AF9A60",
+    "guid": "92E535C7-1E6D-4F56-AD7C-DECDDD09EF96",
     "name": "guided_radixSortThrust_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "Radix Sort Thrust Migrated demonstrates a fast and efficient parallel radix sort that uses the SYCL version of the THRUST library",

@@ -3,18 +3,16 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <sycl/sycl.hpp>
 #include <unistd.h>
 #include <vector>
 
 // Summation of 256k 'one' values
 constexpr size_t N = 1024 * 1024;
 
-// Number of repetitions
-constexpr int repetitions = 10000;
 // expected vlaue of sum
 int sum_expected = N;
 
@@ -50,7 +48,6 @@ int reductionSingleQ(std::vector<int> &data, int iter) {
   int sum = 0;
 
   int work_group_size = 512;
-  int num_work_groups = 1;
   int num_work_items = work_group_size;
 
   const sycl::property_list props = {sycl::property::buffer::use_host_ptr()};
@@ -78,10 +75,11 @@ int reductionSingleQ(std::vector<int> &data, int iter) {
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
                        int sum = 0;
-                       for (int i = loc_id; i < data_size; i += num_work_items)
+                       for (size_t i = loc_id; i < data_size;
+                            i += num_work_items)
                          sum += buf_acc[i];
                        scratch[loc_id] = sum;
-                       for (int i = work_group_size / 2; i > 0; i >>= 1) {
+                       for (size_t i = work_group_size / 2; i > 0; i >>= 1) {
                          item.barrier(sycl::access::fence_space::local_space);
                          if (loc_id < i)
                            scratch[loc_id] += scratch[loc_id + i];
@@ -111,7 +109,6 @@ int reductionMultipleQMultipleC(std::vector<int> &data, int iter) {
   int sum = 0;
 
   int work_group_size = 512;
-  int num_work_groups = 1;
   int num_work_items = work_group_size;
 
   const sycl::property_list props = {sycl::property::buffer::use_host_ptr()};
@@ -141,10 +138,11 @@ int reductionMultipleQMultipleC(std::vector<int> &data, int iter) {
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
                        int sum = 0;
-                       for (int i = loc_id; i < data_size; i += num_work_items)
+                       for (size_t i = loc_id; i < data_size;
+                            i += num_work_items)
                          sum += buf_acc[i];
                        scratch[loc_id] = sum;
-                       for (int i = work_group_size / 2; i > 0; i >>= 1) {
+                       for (size_t i = work_group_size / 2; i > 0; i >>= 1) {
                          item.barrier(sycl::access::fence_space::local_space);
                          if (loc_id < i)
                            scratch[loc_id] += scratch[loc_id + i];
@@ -175,7 +173,6 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
   int sum = 0;
 
   int work_group_size = 512;
-  int num_work_groups = 1;
   int num_work_items = work_group_size;
 
   const sycl::property_list props = {sycl::property::buffer::use_host_ptr()};
@@ -206,10 +203,11 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
                      [=](sycl::nd_item<1> item) {
                        size_t loc_id = item.get_local_id(0);
                        int sum = 0;
-                       for (int i = loc_id; i < data_size; i += num_work_items)
+                       for (size_t i = loc_id; i < data_size;
+                            i += num_work_items)
                          sum += buf_acc[i];
                        scratch[loc_id] = sum;
-                       for (int i = work_group_size / 2; i > 0; i >>= 1) {
+                       for (size_t i = work_group_size / 2; i > 0; i >>= 1) {
                          item.barrier(sycl::access::fence_space::local_space);
                          if (loc_id < i)
                            scratch[loc_id] += scratch[loc_id + i];
@@ -235,7 +233,7 @@ int reductionMultipleQSingleC(std::vector<int> &data, int iter) {
   return sum;
 } // end reductionMultipleQSingleC
 
-int main(int argc, char *argv[]) {
+int main() {
 
   std::vector<int> data(N, 1);
   reductionSingleQ(data, 100);

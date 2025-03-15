@@ -1,3 +1,9 @@
+//==============================================================
+// Copyright © Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+// =============================================================
+
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <iostream>
@@ -18,7 +24,7 @@ int main()
         sycl::queue &q_ct1 = dev_ct1.in_order_queue();
         //# Print device name
         dpct::device_info dev;
-        dpct::get_device_info(dev, dpct::dev_mgr::instance().get_device(0));
+        dpct::get_device(0).get_device_info(dev);
         std::cout << "Device: " << dev.get_name() << "\n";
 
         //# Initialize vectors on host

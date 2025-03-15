@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -240,8 +234,8 @@ void runTest(int argc, char **argv) {
   unsigned int dlevels_step = dlevels_complete;
 
   // 1D signal so the arrangement of elements is also 1D
-  sycl::range<3> block_size(1, 1, 1);
-  sycl::range<3> grid_size(1, 1, 1);
+  dpct::dim3 block_size;
+  dpct::dim3 grid_size;
 
   // number of decomposition levels left after one iteration on the device
   unsigned int dlevels_left = dlevels_complete;
@@ -251,12 +245,12 @@ void runTest(int argc, char **argv) {
   // computation is split across multiple SM's if enough input data
   if (dlevels_complete <= 10) {
     // decomposition can be performed at once
-    block_size[2] = num_threads_total_left;
+    block_size.x = num_threads_total_left;
     approx_is_input = 0;
   } else {
     // 512 threads per block
-    grid_size[2] = (num_threads_total_left / 512);
-    block_size[2] = 512;
+    grid_size.x = (num_threads_total_left / 512);
+    block_size.x = 512;
 
     // 512 threads corresponds to 10 decomposition steps
     dlevels_step = 10;
@@ -285,9 +279,9 @@ void runTest(int argc, char **argv) {
     from the original code. Check that the allocated memory size in the migrated
     code is correct.
     */
-    unsigned int mem_shared = (2 * block_size[2]) * sizeof(float);
+    unsigned int mem_shared = (2 * block_size.x) * sizeof(float);
     // extra memory requirements to avoid bank conflicts
-    mem_shared += ((2 * block_size[2]) / NUM_BANKS) * sizeof(float);
+    mem_shared += ((2 * block_size.x) / NUM_BANKS) * sizeof(float);
 
     // run kernel
     /*
@@ -304,7 +298,7 @@ void runTest(int argc, char **argv) {
           [=](sycl::nd_item<3> item_ct1) {
             dwtHaar1D(
                 d_idata, d_odata, approx_final, dlevels_step,
-                num_threads_total_left, block_size[2], item_ct1,
+                num_threads_total_left, block_size.x, item_ct1,
                 dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
                     .get());
           });
@@ -313,10 +307,10 @@ void runTest(int argc, char **argv) {
     // Copy approx_final to appropriate location
     if (approx_is_input) {
       checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy(
-          d_idata, approx_final, grid_size[2] * 4)));
+          d_idata, approx_final, grid_size.x * 4)));
     } else {
       checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy(
-          d_odata, approx_final, grid_size[2] * 4)));
+          d_odata, approx_final, grid_size.x * 4)));
     }
 
     // update level variables
@@ -334,13 +328,13 @@ void runTest(int argc, char **argv) {
     num_threads_total_left = num_threads_total_left >> 10;
 
     // update block and grid size
-    grid_size[2] =
-        (num_threads_total_left / 512) + ((0 != (num_threads_total_left % 512))
+    grid_size.x =
+        (num_threads_total_left / 512) + (0 != (num_threads_total_left % 512))
             ? 1
-            : 0);
+            : 0;
 
-    if (grid_size[2] <= 1) {
-      block_size[2] = num_threads_total_left;
+    if (grid_size.x <= 1) {
+      block_size.x = num_threads_total_left;
     }
   }
 
@@ -352,7 +346,7 @@ void runTest(int argc, char **argv) {
 
   // post processing
   // write file for regression test
-  if (r_fname[0] == '\0') {
+  if (r_fname == NULL) {
     fprintf(stderr,
             "Cannot write the output file storing the result of the wavelet "
             "decomposition.\n%s",

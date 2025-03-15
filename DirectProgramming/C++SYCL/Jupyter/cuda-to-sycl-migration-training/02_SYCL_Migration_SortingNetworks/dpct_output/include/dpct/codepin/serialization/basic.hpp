@@ -11,11 +11,13 @@
 #if defined(__linux__)
 #include <cxxabi.h>
 #endif
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
 #ifdef __NVCC__
+#include <cuda_bf16.h>
+#include <cuda_fp16.h>
 #include <cuda_runtime.h>
 #else
 #include <dpct/dpct.hpp>
@@ -105,6 +107,8 @@ public:
     void value(std::string_view value) { js.os << "\"" << value << "\""; };
     void value(float value) { js.os << "\"" << value << "\""; };
     void value(size_t value) { js.os << "\"" << value << "\""; };
+    void value(int value) { js.os << "\"" << value << "\""; };
+    void value(void *value) { js.os << "\"" << value << "\""; };
     ~json_obj() {
       js.indent.resize(js.indent.size() - js.tab_length);
       js.os << js.newline;
@@ -173,7 +177,7 @@ json_stringstream::json_obj::value<json_stringstream::json_obj>() {
   return js.object();
 }
 
-template <typename T> std::string demangle_name() {
+template <typename T> inline std::string demangle_name() {
   std::string ret_str = "";
 #if defined(__linux__)
   int s;
@@ -191,14 +195,25 @@ template <typename T> std::string demangle_name() {
 #endif
   return ret_str;
 }
+
+#ifdef __NVCC__
+template <> inline std::string demangle_name<__half>() { return "fp16"; }
+template <> inline std::string demangle_name<__nv_bfloat16>() { return "bf16"; }
+#else
+template <> inline std::string demangle_name<sycl::half>() { return "fp16"; }
+template <> inline std::string demangle_name<sycl::ext::oneapi::bfloat16>() {
+  return "bf16";
+}
+#endif
+
 template <class T, class T2 = void> class data_ser {
+
 public:
-  static void dump(json_stringstream &ss, T value,
-                   queue_t stream) {
+  static void dump(json_stringstream &ss, T value, queue_t queue) {
     auto obj = ss.object();
     obj.key("Data");
     obj.value("CODEPIN:ERROR:1: Unable to find the corresponding serialization "
-        "function.");
+              "function.");
   }
   static void print_type_name(json_stringstream::json_obj &obj) {
     obj.key("Type");
@@ -209,16 +224,60 @@ public:
 template <class T>
 class data_ser<T, typename std::enable_if<std::is_arithmetic<T>::value>::type> {
 public:
-  static void dump(json_stringstream &ss, const T &value,
-                   queue_t stream) {
+  static void dump(json_stringstream &ss, const T &value, queue_t queue) {
     auto arr = ss.array();
     arr.member<T>(value);
   }
-  static void print_type_name(json_stringstream::json_obj &obj){
+  static void print_type_name(json_stringstream::json_obj &obj) {
     obj.key("Type");
     obj.value(std::string(demangle_name<T>()));
   }
 };
+
+#ifdef __NVCC__
+template <> class data_ser<__half> {
+public:
+  static void dump(json_stringstream &ss, const __half &value, queue_t queue) {
+    float f = __half2float(value);
+    auto arr = ss.array();
+    arr.member<float>(value);
+  }
+  static void print_type_name(json_stringstream::json_obj &obj) {
+    obj.key("Type");
+    obj.value(std::string(demangle_name<__half>()));
+  }
+};
+template <> class data_ser<__nv_bfloat16> {
+public:
+  static void dump(json_stringstream &ss, const __nv_bfloat16 &value,
+                   queue_t queue) {
+    float f = __bfloat162float(value);
+    auto arr = ss.array();
+    arr.member<float>(value);
+  }
+  static void print_type_name(json_stringstream::json_obj &obj) {
+    obj.key("Type");
+    obj.value(std::string(demangle_name<__nv_bfloat16>()));
+  }
+};
+#else
+template <typename T>
+class data_ser<T,
+               typename std::enable_if<
+                   std::is_same<T, sycl::half>::value ||
+                   std::is_same<T, sycl::ext::oneapi::bfloat16>::value>::type> {
+public:
+  static void dump(json_stringstream &ss, const T &value, queue_t queue) {
+    auto arr = ss.array();
+    arr.member<T>(value);
+  }
+  static void print_type_name(json_stringstream::json_obj &obj) {
+    obj.key("Type");
+    obj.value(std::string(demangle_name<T>()));
+  }
+
+};
+#endif
 
 #ifdef __NVCC__
 template <> class data_ser<int3> {

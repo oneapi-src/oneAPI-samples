@@ -35,7 +35,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Global types
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct dpct_type_495057 {
+typedef struct dpct_type_106637 {
   float S;
   float X;
   float T;
@@ -46,19 +46,19 @@ typedef struct dpct_type_495057 {
 typedef struct
     // #ifdef __CUDACC__
     //__align__(8)
-    // #endif dpct_type_363787
+    // #endif dpct_type_820854
     {
   float Expected;
   float Confidence;
 } TOptionValue;
 
 // GPU outputs before CPU postprocessing
-typedef struct dpct_type_118506 {
+typedef struct dpct_type_873278 {
   real Expected;
   real Confidence;
 } __TOptionValue;
 
-typedef struct dpct_type_258576 {
+typedef struct dpct_type_146184 {
   // Device ID for multi-GPU version
   int device;
   // Option count for this plan

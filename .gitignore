@@ -4,3 +4,5 @@ build/
 # emacs save files
 *~
 
+# Jupyter Notebook checkpoint directories
+.ipynb_checkpoints/

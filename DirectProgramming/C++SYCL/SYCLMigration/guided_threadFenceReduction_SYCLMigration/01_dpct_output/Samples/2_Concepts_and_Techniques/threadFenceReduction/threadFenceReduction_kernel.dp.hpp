@@ -148,7 +148,7 @@ void reduceMultiPass(const float *g_idata, float *g_odata,
 
 // Global variable used by reduceSinglePass to count how many blocks have
 // finished
-dpct::global_memory<unsigned int, 0> retirementCount(0);
+static dpct::global_memory<unsigned int, 0> retirementCount(0);
 
 dpct::err0 setRetirementCount(int retCnt) try {
   return DPCT_CHECK_ERROR(
@@ -209,7 +209,6 @@ void reduceSinglePass(const float *g_idata, float *g_odata,
     are needed.
     */
     sycl::atomic_fence(sycl::memory_order::acq_rel, sycl::memory_scope::device);
-   // __syncthreads();
 
     // Thread 0 takes a ticket
     if (tid == 0) {
@@ -257,8 +256,8 @@ bool isPow2(unsigned int x) { return ((x & (x - 1)) == 0); }
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
                        float *d_odata) {
-  sycl::range<3> dimBlock(1, 1, threads);
-  sycl::range<3> dimGrid(1, 1, blocks);
+  dpct::dim3 dimBlock(threads, 1, 1);
+  dpct::dim3 dimGrid(blocks, 1, 1);
   int smemSize =
       /*
       DPCT1083:7: The size of local memory in the migrated code may be different
@@ -717,8 +716,8 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
 extern "C" void reduceSinglePass(int size, int threads, int blocks,
                                  float *d_idata, float *d_odata) {
-  sycl::range<3> dimBlock(1, 1, threads);
-  sycl::range<3> dimGrid(1, 1, blocks);
+  dpct::dim3 dimBlock(threads, 1, 1);
+  dpct::dim3 dimGrid(blocks, 1, 1);
   /*
   DPCT1083:28: The size of local memory in the migrated code may be different
   from the original code. Check that the allocated memory size in the migrated

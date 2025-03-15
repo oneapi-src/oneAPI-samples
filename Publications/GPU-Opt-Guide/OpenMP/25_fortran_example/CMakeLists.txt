@@ -1,3 +1,3 @@
-add_fortran_example_with_mkl(test-SharedMem)
-add_fortran_example_with_mkl(test-Map-UpdateTo)
-add_fortran_example_with_mkl(test-HostMem-DeviceMem-Map-UpdateTo)
+add_subdirectory(shared-mem)
+add_subdirectory(map-update)
+add_subdirectory(host-device-mem)

@@ -66,7 +66,7 @@ If you have already set up the PIP or Conda environment and installed AI Tools g
 
 Required AI Tools: Intel® Neural Compressor, Intel® Extension for TensorFlow* (CPU)
 
-If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
@@ -112,7 +112,7 @@ For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install)
 
 > **Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Sample-for-TensorFlow#environment-setup) is completed.
 >
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to see relevant instructions:
 
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Conda/PIP](#condapip)

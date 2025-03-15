@@ -1,6 +1,6 @@
 # Introduction to Machine Learning
 
-The Jupyter Notebooks in these samples are intended to give professors and students an accessible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms which are used daily to address machine learning challenges. The collection has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel® Extension for Scikit-learn* which is part of the Intel® AI Analytics Toolkit (AI Kit). This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.
+The Jupyter Notebooks in these samples are intended to give professors and students an accessible but challenging introduction to machine learning. It enumerates and describes many commonly used Scikit-learn* algorithms which are used daily to address machine learning challenges. The collection has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel® Extension for Scikit-learn* which is part of the AI Tools. This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.
 
 This workshop is designed to be used on Intel® DevCloud and includes details on submitting batch jobs on the Intel® DevCloud environment.
 
@@ -10,7 +10,7 @@ This workshop is designed to be used on Intel® DevCloud and includes details on
 |:---                       |:---
 | OS                        | Ubuntu* 20.04 (or newer) <br> Windows* 10, 11
 | Hardware                  | Gen (or newer)
-| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> Intel® AI Analytics Toolkit (AI Kit) <br> pip install seaborn
+| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> AI Tools <br> pip install seaborn
 
 Additionally, you will need to know about:
 
@@ -50,7 +50,7 @@ The training content can be accessed locally on the computer after installing ne
 
 2. Install JupyterLab. See the [Installation Guide](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html) for more information. 
 
-3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and Intel® AI Analytics Toolkit (AI Kit) from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
+3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and AI Tools from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
 
 4. After you complete the installation, refresh the new environment variables.
    ```bash

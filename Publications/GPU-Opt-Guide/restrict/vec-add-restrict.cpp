@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sycl/sycl.hpp>
 
 // Array type and data size for this example.
 constexpr size_t array_size = 3 * 5 * 7 * (1 << 17);

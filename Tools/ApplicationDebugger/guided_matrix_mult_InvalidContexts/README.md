@@ -12,10 +12,7 @@ verifies the results.
 | What you will learn   | A method to determine the root cause of incorrect use of queues with different contexts.
 | Time to complete      | 50 minutes
 
-> **Note**: For comprehensive instructions on the Intel® Distribution for GDB*
-> and writing SYCL code, see the *[Intel® oneAPI Programming
-> Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use
-> search or the table of contents to find relevant information quickly.)
+> **Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
 ## Purpose
 
@@ -42,9 +39,10 @@ program.
 
 | Optimized for       | Description
 |:---                 |:---
-| OS                  | Ubuntu* 20.04
-| Hardware            | GEN9 or newer
-| Software            | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Distribution for GDB* <br> [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace), which is available from the [onetrace](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) GitHub repository.
+| OS                      | Ubuntu* 24.04 LTS
+| Hardware                | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.0 <br> Intel® Distribution for GDB* 2025.0 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2506.18 or newer from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -81,9 +79,7 @@ development.
 > - For non-POSIX shells, like csh, use the following command:
 >   `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see *[Use the
-> setvars Script with Linux* or
-> macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/use-the-setvars-and-oneapi-vars-scripts-with-linux.html)*.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -92,20 +88,15 @@ create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
 
- 1. Configure the oneAPI environment with the extension **Environment
-    Configurator for Intel® oneAPI Toolkits**.
+ 1. Configure the oneAPI environment with the extension *Environment Configurator for Intel® Software Development Tools*.
 
- 2. Download a sample using the extension **Code Sample Browser for Intel®
-    oneAPI Toolkits**.
+ 2. Download a sample using the extension *Code Sample Browser for Intel® Software Development Tools*.
 
- 3. Open a terminal in VS Code (**Terminal > New Terminal**).
+ 3. Open a terminal in VS Code (`Terminal > New Terminal`).
 
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI
-environment, see the *[Using Visual Studio Code with Intel® oneAPI Toolkits
-User
-Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
+To learn more about the extensions and how to configure the oneAPI environment, see the *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-vs-code/current/overview.html)*.
 
 ### On Linux*
 
@@ -155,73 +146,26 @@ the `VERBOSE=1` argument:
 make VERBOSE=1
 ```
 
-If you receive an error message, troubleshoot the problem using the
-**Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility
-provides configuration and system checks to help find missing dependencies,
-permissions errors, and other issues. See the *[Diagnostics Utility for Intel®
-oneAPI Toolkits User
-Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)*
-for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
 
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute
-node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-
-- `-d .` sets the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage
-jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the
-Intel® DevCloud for oneAPI Documentation.
-
-> **Note**: Since Intel® DevCloud for oneAPI includes the appropriate
-> development environment already configured, you do not need to set
-> environment variables.
 
 ## Guided Debugging
 
 The following instructions assume you have installed Intel® Distribution for
 GDB* and have a basic working knowledge of GDB.
 
-To learn how setup and use Intel® Distribution for GDB*, see *[Get Started
-with Intel® Distribution for GDB* on Linux* OS
-Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.
 
-> **Note**: SYCL applications will use the oneAPI Level Zero runtime by
-> default. oneAPI Level Zero provides a low-level, direct-to-metal interface
-> for the devices in a oneAPI platform. For more information see *[Using the
-> oneAPI Level Zero Interface: A Brief Introduction to the Level Zero
-> API](https://www.intel.com/content/www/us/en/developer/articles/technical/using-oneapi-level-zero-interface.html?wapkw=Level%20Zero#gs.dxm4t4)*.
+>**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
 
 This guided example demonstrates what might happen when a developer mixes up
 queues owned by different contexts.
 
 ### Getting the Tracing and Profiling Tool
 
-At an important step in this tutorial, the instructions require a utility that
-was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
-You must download the [Tracing and Profiling
-Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) code from
-GitHub and build the utility. The build instructions are included in the
-README in the GitHub repository.
+To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Check the Programs
 
@@ -243,13 +187,13 @@ README in the GitHub repository.
    ```
    Initializing
    Computing
-   Device: Intel(R) Graphics [0x020a]
-   Device compute units: 960
+   Device: Intel(R) Data Center GPU Max 1550
+   Device compute units: 512
    Device max work item size: 1024, 1024, 1024
    Device max work group size: 1024
    Problem size: c(150,600) = a(150,300) * b(300,600)
-   terminate called after throwing an instance of 'cl::sycl::runtime_error'
-     what():  Native API failed. Native API returns: -5 (CL_OUT_OF_RESOURCES) -5 (CL_OUT_OF_RESOURCES)
+   terminate called after throwing an instance of 'sycl::_V1::exception'
+   what():  Native API failed. Native API returns: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
 
@@ -276,38 +220,24 @@ README in the GitHub repository.
    export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
    ```
 
-3. Check the results on the **CPU** using OpenCL. You should see similar problems.
+3. Check the results on the **CPU** using OpenCL. 
 
    ```
    ONEAPI_DEVICE_SELECTOR=opencl:cpu ./1_matrix_mul_invalid_contexts
    ```
-
-   The output might look like the following:
-
-   ```
-   Initializing
-   Computing
-   Device: Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz
-   Device compute units: 144
-   Device max work item size: 8192, 8192, 8192
-   Device max work group size: 8192
-   terminate called after throwing an instance of 'cl::sycl::runtime_error'
-     what():  No device of requested type available. Please check https://software.intel.com/content/www/us/en/develop/articles/intel-oneapi-dpcpp-system-requirements.html -1 (CL_DEVICE_NOT_FOUND)
-   Aborted (core dumped)
-   ```
-
-Note the change in results. In the next section we will examine what went
-wrong.
+   Interestingly, this runs just fine.  In the next section we will try to explain the inconsistency.
 
 ### Use the Debugger to Find the Issue
 
 In this section, you will use the Intel® Distribution for GDB* to determine
-what might be wrong.
+what might be wrong.  
+
+In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html) before you can see code running on the GPU.
 
 1. Start the debugger using OpenCL™ on the **GPU**.
 
    ```
-   ONEAPI_DEVICE_SELECTOR=opencl:gpu gdb-oneapi ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu ZET_ENABLE_PROGRAM_DEBUGGING=1 gdb-oneapi ./1_matrix_mul_invalid_contexts
    ```
 
 2. You should get the prompt `(gdb)`.
@@ -328,16 +258,16 @@ what might be wrong.
    Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
    Initializing
    Computing
-   Device: Intel(R) Graphics [0x020a]
-   Device compute units: 960
+   Device: Intel(R) Data Center GPU Max 1550
+   Device compute units: 512
    Device max work item size: 1024, 1024, 1024
    Device max work group size: 1024
    Problem size: c(150,600) = a(150,300) * b(300,600)
-   [New Thread 0x15553b1c8700 (LWP 47514)]
-   terminate called after throwing an instance of 'sycl::_V1::runtime_error'
-   what():  Native API failed. Native API returns: -5 (PI_ERROR_OUT_OF_RESOURCES) -5 (PI_ERROR_OUT_OF_RESOURCES)
+   [New Thread 0x7fffcbe006c0 (LWP 41231)]
+   terminate called after throwing an instance of 'sycl::_V1::exception'
+   what():  Native API failed. Native API returns: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
 
-   Thread 1 "a.out" received signal SIGABRT, Aborted.
+   Thread 1 "1_matrix_mul_in" received signal SIGABRT, Aborted.
    __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
    warning: 44     ./nptl/pthread_kill.c: No such file or directory
 
@@ -356,24 +286,25 @@ what might be wrong.
    #0  __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
    #1  __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
    #2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at ./nptl/pthread_kill.c:89
-   #3  0x0000155554a4526e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
-   #4  0x0000155554a288ff in __GI_abort () at ./stdlib/abort.c:79
-   #5  0x00001555552a5ffe in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
-   #6  0x00001555552bae9c in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
-   #7  0x00001555552a5a49 in std::terminate() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
-   #8  0x00001555552bae8e in std::rethrow_exception(std::__exception_ptr::exception_ptr) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
-   #9  0x0000155555000b93 in sycl::_V1::detail::Scheduler::enqueueCommandForCG(std::shared_ptr<sycl::_V1::detail::event_impl>, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&, sycl::_V1::detail::BlockingT) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #10 0x00001555550001e1 in sycl::_V1::detail::Scheduler::addCG(std::unique_ptr<sycl::_V1::detail::CG, std::default_delete<sycl::_V1::detail::CG> >, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, _pi_ext_command_buffer*, std::vector<unsigned int, std::allocator<unsigned int> > const&) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #11 0x0000155555039c8a in sycl::_V1::handler::finalize() () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #12 0x0000155554fbc2fd in void sycl::_V1::detail::queue_impl::finalizeHandler<sycl::_V1::handler>(sycl::_V1::handler&, sycl::_V1::event&) ()
-      from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #13 0x0000155554fbbe19 in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #14 0x0000155554fbb800 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #15 0x000015555506f8b5 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) ()
-      from /opt/intel/oneapi/compiler/2024.2/lib/libsycl.so.7
-   #16 0x0000000000404b98 in sycl::_V1::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffb2e0, CGF=...,
-      CodeLoc=...) at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/queue.hpp:358
-   #17 0x00000000004046c3 in main () at 1_matrix_mul_invalid_contexts.cpp:101
+   #3  0x00007ffff744527e in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+   #4  0x00007ffff74288ff in __GI_abort () at ./stdlib/abort.c:79
+   #5  0x00007ffff78a5ff5 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+   #6  0x00007ffff78bb0da in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+   #7  0x00007ffff78a5a55 in std::terminate() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+   #8  0x00007ffff78bb0c1 in std::rethrow_exception(std::__exception_ptr::exception_ptr) ()
+      from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+   #9  0x00007ffff7efb6c3 in sycl::_V1::detail::Scheduler::enqueueCommandForCG(std::shared_ptr<sycl::_V1::detail::event_impl>, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&, sycl::_V1::detail::BlockingT) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #10 0x00007ffff7efae66 in sycl::_V1::detail::Scheduler::addCG(std::unique_ptr<sycl::_V1::detail::CG, std::default_delete<sycl::_V1::detail::CG> >, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, bool, ur_exp_command_buffer_handle_t_*, std::vector<unsigned int, std::allocator<unsigned int> > const&) ()
+      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #11 0x00007ffff7f30e83 in sycl::_V1::handler::finalize() () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #12 0x00007ffff7ebd481 in void sycl::_V1::detail::queue_impl::finalizeHandler<sycl::_V1::handler>(sycl::_V1::handler&, sycl::_V1::event&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #13 0x00007ffff7ebc5e8 in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, bool, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #14 0x00007ffff7ec16e8 in sycl::_V1::detail::queue_impl::submit(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::code_location const&, std::function<void (bool, bool, sycl::_V1::event&)> const*) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #15 0x00007ffff7f63099 in sycl::_V1::queue::submit_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #16 0x0000000000404385 in sycl::_V1::queue::submit<main::{lambda(auto:1&)#1}>(main::{lambda(auto:1&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffb880, CGF=..., CodeLoc=...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/queue.hpp:359
+   #17 0x0000000000403eeb in main ()
+      at 1_matrix_mul_invalid_contexts.cpp:101
    (gdb)
    ```
 
@@ -417,7 +348,7 @@ what might be wrong.
    ```
 
    As you can see, there is something wrong in line 101.  Unfortunately, the
-   generic `PI_OUT_OF_RESOURCES` we saw when it crashed does not really mean
+   generic `UR_RESULT_ERROR_OUT_OF_RESOURCES` we saw when it crashed does not really mean
    anything - it just tells us there is a problem.
 
    Fortunately, in this case the two variables, `dev_c` and `c_back`, are
@@ -448,35 +379,31 @@ what might be wrong.
 
 ### Identify the Problem without Code Inspection
 
-You must have already built the [Tracing and Profiling
-Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you
-have built the utility, you can start it before your program (similar to
-starting GBD).
+You must have already built the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool). Once you have built the utility, you can start it before your program (similar to using GBD).
 
-One of the things that the Tracing and Profiling utility can help us identify
-is printing every low-level API call made to OpenCL™ or Level Zero. This is
-the features that we will use to attempt to match the source to the events.
+One of the things that the Unified Tracing and Profiling utility can help us see
+is every low-level API call made to OpenCL™ or Level Zero. We will use it to attempt to match the source to the events.
 
 1. Let's look at the output from using OpenCL again since the program stopped
-   when it hit a failure previously.<br> Include `-c` when invoking `onetrace`
+   when it hit a failure previously.<br> Include `-c` when invoking `unitrace`
    to enable call logging of API calls.
 
    > **Note**: You must modify the command shown below to include the path to
-   > where you installed the `onetrace` utility.
+   > where you installed the `unitrace` utility.
 
    ```
-   ONEAPI_DEVICE_SELECTOR=opencl:gpu [path]/onetrace -c ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=opencl:gpu [path]/unitrace -c --opencl ./1_matrix_mul_invalid_contexts
    ```
 
-   The `onetrace` utility outputs extensive results. A few key excerpts with
-   areas of interest are shown below.
+   The `unitrace` utility outputs extensive results. A few key excerpts with
+   areas of interest are shown below (note - pulling these out is not easy without a program that can highlight multiple searches with different colors).
 
-   ![alt text](./TraceOutput.png "onetrace -c output for OpenCL")
+   ![alt text](./TraceOutput.png "unitrace -c output for OpenCL")
 
    Let's work backwards from the error, starting with `clEnqueueMemcpyINTEL`.
 
    This function (line 22) uses `command_queue = 0x49d7130` and copies
-   `src_ptr` into device memory `dst_ptr = 0xff00ffffffeb0000`. Working back
+   `src_ptr` into device memory `dst_ptr = 0xff00ffffffeb0000` (NOTE:  in some versions of `unitrace` these addresses may be returned in decimal rather than hexidecimal). Working back
    up the stack, you can see we allocated the device memory with the address
    `0xff00ffffffeb0000` using device context `0x49dbff0` (line 16). However,
    the command queue (`0x49d7130`) being used in the `clEnqueueMemcpyINTEL`
@@ -485,14 +412,14 @@ the features that we will use to attempt to match the source to the events.
    (`0x49dbff0` - line 16 again). The generic error we get is the OpenCL
    indication stating that this is illegal.
 
-   This is legal if both queues point to the same device context; however, in
+   This *is legal* if both queues point to the same device context; however, in
    this example `q2` is actually defined pointing to another device context.
    You might do this in actual code if you have multiple offload compute
    devices you are targeting. This code is sending work and data to each
    device for processing. It is easy to accidentally send the wrong pointer to
    the wrong queue in complex code.
 
-   For context an example of legal memory copy where the device context
+   For comparison, an example of legal memory copy where the device context
    (`0x488d190`) used for the command queue (`0x49d7130`) is the same as that
    uses for the memory allocation is shown as well (lines 4, 7, 19).
 
@@ -500,12 +427,12 @@ the features that we will use to attempt to match the source to the events.
    detected the issue there:
 
    ```
-   ONEAPI_DEVICE_SELECTOR=level_zero:gpu [path]onetrace -c ./1_matrix_mul_invalid_contexts
+   ONEAPI_DEVICE_SELECTOR=level_zero:gpu [path]unitrace -c ./1_matrix_mul_invalid_contexts
    ```
 
    Your output might be similar to the following:
 
-   ![alt text](./TraceOutput_LevelZero.png "onetrace -c output for Level Zero")
+   ![alt text](./TraceOutput_LevelZero.png "unitrace -c output for Level Zero")
 
    Once again, if we look closely, we can see that we are using two different
    device contexts, one to create the command queue, and one to create the
@@ -515,12 +442,17 @@ the features that we will use to attempt to match the source to the events.
    devices, the program will crash in those cases but not in the single-card,
    single-tile system. This could make debugging quite challenging.
 
-   The `onetrace` utility can be very helpful detecting these sorts of issues
+   The `unitrace` utility can be very helpful detecting these sorts of issues
    at a low level.  It has other useful abilities, like telling you how much
    runtime each OpenCL or Level Zero call consumed, how long your kernels ran
    on the device, how long memory transfers took, and it can even create a
-   timeline showing what happened when using the Chrome(tm) tracing browser
+   timeline showing "what happened when" using the Chrome(tm) tracing browser
    tool.
+
+### A final thought.
+If you look at the source, `1_matrix_mul_invalid_contexts.cpp`, you will see that both queues where created with the `default_selector_v` device selector to make this tutorial work for most people (lines 68 and 83).   If these were set to use different device selectors (say `gpu_selector_v` and `cpu_selector_v` or a custom device), or we specified exactly which device to use for each queue, our ability to use `ONEAPI_DEVICE_SELECTOR` to explore the problem might have been handicapped in this sample.   But we hope it is clear that this code has an error in it in the case where two entirely different devices are selected.
+
+For more on device discovery in SYCL, please see https://www.intel.com/content/www/us/en/developer/articles/technical/device-discovery-with-sycl.html.
 
 ### Fix the Problem
 

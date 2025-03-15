@@ -238,21 +238,17 @@ The compiler may be able to perform additional optimizations if it can optimize 
    > **Note**: Your line and column numbers may be different.
 
    ```
-    LOOP BEGIN at the driver.f90(73,16)
-       remark #15541: loop was not vectorized: inner loop was already vectorized
-
-       LOOP BEGIN at matvec.f90(32,3) inlined into the driver.f90(70,14)
-          remark #15398: loop was not vectorized: loop was transformed to memset or memcpy
-       LOOP END
-
-       LOOP BEGIN at matvec.f90(33,3) inlined into driver.f90(70,14)
-          remark #15541: loop was not vectorized: inner loop was already vectorized
-
-          LOOP BEGIN at matvec.f90(38,6) inlined into driver.f90(70,14)
-             remark #15399: vectorization support: unroll factor set to 4
-             remark #15300: LOOP WAS VECTORIZED
-          LOOP END
-       LOOP END
+    LOOP BEGIN at src/driver.f90 (56, 7)
+        remark #15541: loop was not vectorized: outer loop is not an auto-vectorization candidate.
+    
+        LOOP BEGIN at src/matvec.f90 (20, 3)
+            remark #15541: loop was not vectorized: outer loop is not an auto-vectorization candidate.
+    
+            LOOP BEGIN at src/matvec.f90 (25, 6)
+                remark #15300: LOOP WAS VECTORIZED
+                remark #15305: vectorization support: vector length 2
+            LOOP END
+        LOOP END
     LOOP END
    ```
 2. Run the program, and record the execution time.

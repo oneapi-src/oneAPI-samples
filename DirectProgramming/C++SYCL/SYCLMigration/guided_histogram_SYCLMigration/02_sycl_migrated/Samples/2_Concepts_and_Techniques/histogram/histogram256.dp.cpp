@@ -167,7 +167,7 @@ extern "C" void histogram256(uint *d_Histogram, void *d_Data, uint byteCount, sy
     sycl::local_accessor<uint, 1> s_Hist_acc_ct1(
         sycl::range<1>(1536 /*HISTOGRAM256_THREADBLOCK_MEMORY*/), cgh);
 
-    uint *d_PartialHistograms_ct0 = d_PartialHistograms;
+    auto d_PartialHistograms_ct0 = d_PartialHistograms;
     uint byteCount_sizeof_uint_ct2 = byteCount / sizeof(uint);
 
     cgh.parallel_for(
@@ -188,8 +188,8 @@ extern "C" void histogram256(uint *d_Histogram, void *d_Data, uint byteCount, sy
     sycl::local_accessor<uint, 1> data_acc_ct1(
         sycl::range<1>(256 /*MERGE_THREADBLOCK_SIZE*/), cgh);
 
-    uint *d_PartialHistograms_ct1 = d_PartialHistograms;
-    uint PARTIAL_HISTOGRAM256_COUNT_ct2 = PARTIAL_HISTOGRAM256_COUNT;
+    auto d_PartialHistograms_ct1 = d_PartialHistograms;
+    auto PARTIAL_HISTOGRAM256_COUNT_ct2 = PARTIAL_HISTOGRAM256_COUNT;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, HISTOGRAM256_BIN_COUNT) *

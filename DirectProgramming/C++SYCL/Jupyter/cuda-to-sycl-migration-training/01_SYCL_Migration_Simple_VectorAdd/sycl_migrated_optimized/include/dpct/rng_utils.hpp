@@ -9,24 +9,21 @@
 #ifndef __DPCT_RNG_UTILS_HPP__
 #define __DPCT_RNG_UTILS_HPP__
 
-#include <sycl/sycl.hpp>
-#include <oneapi/mkl.hpp>
-#ifdef __INTEL_MKL__ // The oneMKL Interfaces Project does not support this.
-#include <oneapi/mkl/rng/device.hpp>
-#endif
-#include "device.hpp"
+#include "compat_service.hpp"
 #include "lib_common_utils.hpp"
+
+#include <oneapi/mkl/rng/device.hpp>
 
 namespace dpct {
 namespace rng {
-#ifdef __INTEL_MKL__ // The oneMKL Interfaces Project does not support this.
 namespace device {
 /// The random number generator on device.
 /// \tparam engine_t The device random number generator engine. It can only be
 /// oneapi::mkl::rng::device::mrg32k3a<1> or
 /// oneapi::mkl::rng::device::mrg32k3a<4> or
 /// oneapi::mkl::rng::device::philox4x32x10<1> or
-/// oneapi::mkl::rng::device::philox4x32x10<4>.
+/// oneapi::mkl::rng::device::philox4x32x10<4> or "
+/// oneapi::mkl::rng::device::mcg59<1>.
 template <typename engine_t> class rng_generator {
   static_assert(
       std::disjunction_v<
@@ -116,6 +113,12 @@ public:
             std::is_same<distr_t, oneapi::mkl::rng::device::uniform<float>>,
             std::is_same<distr_t, oneapi::mkl::rng::device::uniform<double>>>,
         "distribution is not supported.");
+#ifndef __INTEL_MKL__
+    static_assert(
+        vec_size == 4 || _is_engine_vec_size_one,
+        "When using the oneMKL Interfaces Project, this function only support "
+        "vec_size == 4 or _is_engine_vec_size_one is true.");
+#endif
 
     if constexpr (std::is_same_v<
                       distr_t, oneapi::mkl::rng::device::bits<std::uint32_t>>) {
@@ -163,6 +166,17 @@ public:
   engine_t &get_engine() { return _engine; }
 
 private:
+  template <typename distr_t> auto generate_single(distr_t &distr) {
+    if constexpr (_is_engine_vec_size_one) {
+      return oneapi::mkl::rng::device::generate(distr, _engine);
+    }
+#ifdef __INTEL_MKL__
+    else {
+      return oneapi::mkl::rng::device::generate_single(distr, _engine);
+    }
+#endif
+  }
+
   template <int vec_size, typename distr_t, class... distr_params_t>
   auto generate_vec(distr_t &distr, distr_params_t... distr_params) {
     if constexpr (sizeof...(distr_params_t)) {
@@ -181,29 +195,16 @@ private:
         return oneapi::mkl::rng::device::generate(distr, _engine);
       }
     } else if constexpr (vec_size == 1) {
-      if constexpr (_is_engine_vec_size_one) {
-        return oneapi::mkl::rng::device::generate(distr, _engine);
-      } else {
-        return oneapi::mkl::rng::device::generate_single(distr, _engine);
-      }
+      return generate_single(distr);
     } else if constexpr (vec_size == 2) {
-      if constexpr (_is_engine_vec_size_one) {
-        sycl::vec<typename distr_t::result_type, 2> res;
-        res.x() = oneapi::mkl::rng::device::generate(distr, _engine);
-        res.y() = oneapi::mkl::rng::device::generate(distr, _engine);
-        return res;
-      } else {
-        sycl::vec<typename distr_t::result_type, 2> res;
-        res.x() = oneapi::mkl::rng::device::generate_single(distr, _engine);
-        res.y() = oneapi::mkl::rng::device::generate_single(distr, _engine);
-        return res;
-      }
+      sycl::vec<typename distr_t::result_type, 2> res;
+      res.x() = generate_single(distr);
+      res.y() = generate_single(distr);
+      return res;
     }
   }
 };
-
 } // namespace device
-#endif
 
 enum class random_mode {
   best,
@@ -330,7 +331,7 @@ class rng_generator : public rng_generator_base {
 public:
   /// Constructor of rng_generator.
   /// \param q The queue where the generator should be executed.
-  rng_generator(sycl::queue &q = dpct::get_default_queue())
+  rng_generator(sycl::queue &q = ::dpct::cs::get_default_queue())
       : rng_generator_base(&q),
         _engine(create_engine(&q, _seed, _dimensions, _mode)) {}
 
@@ -530,16 +531,20 @@ private:
                                        const random_mode mode) {
 #ifdef __INTEL_MKL__
     if constexpr (std::is_same_v<engine_t, oneapi::mkl::rng::mrg32k3a>) {
-      switch (mode) {
-      case random_mode::best:
-        return engine_t(*queue, seed,
-                        oneapi::mkl::rng::mrg32k3a_mode::custom{81920});
-      case random_mode::legacy:
-        return engine_t(*queue, seed,
-                        oneapi::mkl::rng::mrg32k3a_mode::custom{4096});
-      case random_mode::optimal:
-        return engine_t(*queue, seed,
-                        oneapi::mkl::rng::mrg32k3a_mode::optimal_v);
+      // oneapi::mkl::rng::mrg32k3a_mode is only supported for GPU device. For
+      // other devices, this argument will be ignored.
+      if (queue->get_device().is_gpu()) {
+        switch (mode) {
+        case random_mode::best:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::custom{81920});
+        case random_mode::legacy:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::custom{4096});
+        case random_mode::optimal:
+          return engine_t(*queue, seed,
+                          oneapi::mkl::rng::mrg32k3a_mode::optimal_v);
+        }
       }
     }
     return std::is_same_v<engine_t, oneapi::mkl::rng::sobol>
@@ -580,7 +585,7 @@ typedef std::shared_ptr<rng::host::detail::rng_generator_base> host_rng_ptr;
 /// \return The pointer of random number generator.
 inline host_rng_ptr
 create_host_rng(const random_engine_type type,
-                sycl::queue &q = dpct::get_default_queue()) {
+                sycl::queue &q = ::dpct::cs::get_default_queue()) {
   switch (type) {
   case random_engine_type::philox4x32x10:
     return std::make_shared<

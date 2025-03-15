@@ -1,0 +1,45 @@
+{
+    "guid": "198ADB7C-9E6E-4714-ACD3-E869C86CB174",
+    "name": "Address Sanitizer",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL/Dense Linear Algebra"
+    ],
+    "description": "Address Sanitizer sample provides examples of error memory detection in SYCL",
+    "toolchain": [
+        "dpcpp"
+    ],
+    "os": [
+        "linux"
+    ],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
+    "gpuRequired": [
+        "gen9",
+        "pvc"
+    ],
+    "builder": [
+        "cmake"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "test",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "make",
+                    "make run_all"
+                ]
+            }
+        ]
+    },
+    "expertise": "Memory Management"
+}

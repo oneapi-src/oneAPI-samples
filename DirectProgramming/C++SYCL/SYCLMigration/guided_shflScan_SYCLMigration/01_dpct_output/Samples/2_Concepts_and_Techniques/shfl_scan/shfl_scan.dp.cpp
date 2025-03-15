@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,12 +81,20 @@ void shfl_scan_test(int *data, int width, const sycl::nd_item<3> &item_ct1,
   for (int i = 1; i <= width; i *= 2) {
     unsigned int mask = 0xffffffff;
     /*
-    DPCT1108:5: '__shfl_up_sync' was migrated with the experimental feature
-    masked sub_group function which may not be supported by all compilers or
-    runtimes. You may need to adjust the code.
+    DPCT1023:5: The SYCL sub-group does not support mask options for
+    dpct::shift_sub_group_right. You can specify
+    "--use-experimental-features=masked-sub-group-operation" to use the
+    experimental helper function to migrate __shfl_up_sync.
     */
-    int n = dpct::experimental::shift_sub_group_right(
-        mask, item_ct1.get_sub_group(), value, i, width);
+    /*
+    DPCT1096:42: The right-most dimension of the work-group used in the SYCL
+    kernel that calls this function may be less than "32". The function
+    "dpct::shift_sub_group_right" may return an unexpected result on the CPU
+    device. Modify the size of the work-group to ensure that the value of the
+    right-most dimension is a multiple of "32".
+    */
+    int n =
+        dpct::shift_sub_group_right(item_ct1.get_sub_group(), value, i, width);
 
     if (lane_id >= i) value += n;
   }
@@ -119,9 +121,16 @@ void shfl_scan_test(int *data, int width, const sycl::nd_item<3> &item_ct1,
   // scan sum the warp sums
   // the same shfl scan operation, but performed on warp sums
   //
-  if (warp_id == 0 &&
-      lane_id < (item_ct1.get_local_range(2) /
+  //#ifdef NVIDIA_GPU
+  #if 1
+    if (warp_id == 0) {
+
+  #else
+    if (warp_id == 0 &&
+        lane_id < (item_ct1.get_local_range(2) /
                  item_ct1.get_sub_group().get_local_range().get(0))) {
+  #endif
+
     int warp_sum = sums[lane_id];
 
     int mask = (1 << (item_ct1.get_local_range(2) /
@@ -131,12 +140,20 @@ void shfl_scan_test(int *data, int width, const sycl::nd_item<3> &item_ct1,
                           item_ct1.get_sub_group().get_local_range().get(0));
          i *= 2) {
       /*
-      DPCT1108:6: '__shfl_up_sync' was migrated with the experimental feature
-      masked sub_group function which may not be supported by all compilers or
-      runtimes. You may need to adjust the code.
+      DPCT1023:6: The SYCL sub-group does not support mask options for
+      dpct::shift_sub_group_right. You can specify
+      "--use-experimental-features=masked-sub-group-operation" to use the
+      experimental helper function to migrate __shfl_up_sync.
       */
-      int n = dpct::experimental::shift_sub_group_right(
-          mask, item_ct1.get_sub_group(), warp_sum, i,
+      /*
+      DPCT1096:43: The right-most dimension of the work-group used in the SYCL
+      kernel that calls this function may be less than "32". The function
+      "dpct::shift_sub_group_right" may return an unexpected result on the CPU
+      device. Modify the size of the work-group to ensure that the value of the
+      right-most dimension is a multiple of "32".
+      */
+      int n = dpct::shift_sub_group_right(
+          item_ct1.get_sub_group(), warp_sum, i,
           (item_ct1.get_local_range(2) /
            item_ct1.get_sub_group().get_local_range().get(0)));
 
@@ -263,14 +280,14 @@ bool shuffle_simple_test(int argc, char **argv) {
 
   // use command-line specified CUDA device, otherwise use device with highest
   // Gflops/s
-//  cuda_device = findCudaDevice(argc, (const char **)argv);
+  cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      cuda_device = dpct::dev_mgr::instance().current_device_id()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(cuda_device = dpct::get_current_device_id()));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(cuda_device))));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_device(cuda_device).get_device_info(deviceProp)));
 
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
          /*
@@ -406,7 +423,7 @@ bool shuffle_simple_test(int argc, char **argv) {
   dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
     sycl::local_accessor<int, 0> buf_acc_ct1(cgh);
 
-    int *d_data_blockSize_ct0 = d_data + blockSize;
+    auto d_data_blockSize_ct0 = d_data + blockSize;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, gridSize - 1) *
                                            sycl::range<3>(1, 1, blockSize),
@@ -540,8 +557,8 @@ bool shuffle_integral_image_test() {
   printf("Diff = %d\n", err);
 
   // Execute column prefix sum kernel and time it
-  sycl::range<3> blockSz(1, 8, 32);
-  sycl::range<3> testGrid(1, 1, w / blockSz[2]);
+  dpct::dim3 blockSz(32, 8);
+  dpct::dim3 testGrid(w / blockSz.x, 1);
 
   dpct::sync_barrier(start);
   /*
@@ -550,8 +567,7 @@ bool shuffle_integral_image_test() {
   Adjust the work-group size if needed.
   */
   dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
-    sycl::local_accessor<unsigned int, 2> sums_acc_ct1(sycl::range<2>(32, 9),
-                                                       cgh);
+    sycl::local_accessor<unsigned int[32][9], 0> sums_acc_ct1(cgh);
 
     cgh.parallel_for(sycl::nd_range<3>(testGrid * blockSz, blockSz),
                      [=](sycl::nd_item<3> item_ct1)
@@ -601,11 +617,11 @@ int main(int argc, char *argv[]) {
   cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      cuda_device = dpct::dev_mgr::instance().current_device_id()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(cuda_device = dpct::get_current_device_id()));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(cuda_device))));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_device(cuda_device).get_device_info(deviceProp)));
 
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
          /*

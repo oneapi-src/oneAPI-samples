@@ -3,12 +3,12 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <algorithm>
 #include <cassert>
 #include <cfloat>
 #include <iostream>
 #include <string>
+#include <sycl/sycl.hpp>
 
 #ifndef NTIMES
 #define NTIMES 10
@@ -40,6 +40,7 @@ cl_ulong triad(size_t array_size, size_t inner_loop_size) {
 
   // Run main computation <num_runs> times & record best time
   for (int i = 0; i < num_runs; i++) {
+    // Snippet begin
     auto q0_event = q.submit([&](sycl::handler &h) {
       // set specialization constant using runtime variable
       h.set_specialization_constant<trip_sc>(inner_loop_size);
@@ -68,6 +69,7 @@ cl_ulong triad(size_t array_size, size_t inner_loop_size) {
     std::cout << "Execution time (iteration " << i
               << ") [sec]: " << (double)exec_time_ns0 * 1.0E-9 << "\n";
     min_time_ns0 = std::min(min_time_ns0, exec_time_ns0);
+    // Snippet end
   }
 
   // Check correctness

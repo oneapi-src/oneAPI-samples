@@ -4,10 +4,13 @@
 # # Fine-tuning GPT-J for GLUE cola dataset.
 
 # ## Model : GPT-J (6B)
-#  **[GPT-J(6B)] (https://huggingface.co/EleutherAI/gpt-j-6b): released in March 2021.It was the largest open source GPT-3-style language model in the world at the time of release.**
-#
-#  **GPT-J is similar to ChatGPT in ability, although it does not function as a chat bot, only as a text predictor.   Developed using Mesh     Tranformer & xmap in JAX**
-#
+#  **[GPT-J(6B)] (https://huggingface.co/EleutherAI/gpt-j-6b): released in March 2021.
+# 
+# It was the largest open source GPT-3-style language model in the world at the time of release.**
+# 
+#  **GPT-J is similar to ChatGPT in ability, although it does not function as a chat bot, only as a text predictor.
+#   Developed using Mesh Tranformer & xmap in JAX**
+# 
 #  *The model consists of :
 # >
 #      - 28 layers
@@ -16,7 +19,7 @@
 #      - 16 heads, each with a dimension of 256.*
 # >
 # *The model is trained with a tokenization vocabulary of 50257, using the same set of Byte Pair Encoding(BPEs) as GPT-2/GPT-3.*
-#
+# 
 
 # ## Dataset : GLUE cola
 # *CoLA The Corpus of Linguistic Acceptability (Warstadt et al., 2018) consists of English acceptability judgments drawn from books and journal articles on linguistic theory. Each example is a
@@ -130,9 +133,9 @@ training_args = TrainingArgs()
 
 
 # ### Set precision and set inter_op and intra op thread settings for best performance
-#
+# 
 # *Bfloat16 training gives 2x+ performance compared to fp32 on 4th gen Xeon*
-#
+# 
 
 # In[4]:
 
@@ -259,7 +262,7 @@ data_collator = DataCollatorWithPadding(tokenizer, return_tensors="np")
 #      2. Number of steps for trainng.
 #      3. Adam optimizer with decay.
 #      4. Call backs for model training.*
-#
+#    >
 
 # In[10]:
 
@@ -364,7 +367,7 @@ model = TFGPTJForSequenceClassification.from_pretrained(
 
 
 # ### Convert raw dataset to tf dataset & compile the model**
-#
+# 
 # **Get Optimizerand loss. Compile the model**
 
 # In[12]:
@@ -446,4 +449,10 @@ if training_args.output_dir :
     # If we're not pushing to hub, at least save a local copy when we're done
     print("Save the model id dir :",training_args.output_dir)
     model.save_pretrained(training_args.output_dir)
+
+
+# In[17]:
+
+
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 

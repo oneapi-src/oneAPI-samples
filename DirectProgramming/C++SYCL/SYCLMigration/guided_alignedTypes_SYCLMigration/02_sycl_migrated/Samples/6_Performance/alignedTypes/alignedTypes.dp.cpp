@@ -53,43 +53,43 @@ typedef unsigned char uint8;
 
 typedef unsigned short int uint16;
 
-typedef struct dpct_type_135292 {
+typedef struct dpct_type_166306 {
   unsigned char r, g, b, a;
 } RGBA8_misaligned;
 
-typedef struct dpct_type_670789 {
+typedef struct dpct_type_808717 {
   unsigned int l, a;
 } LA32_misaligned;
 
-typedef struct dpct_type_317807 {
+typedef struct dpct_type_888150 {
   unsigned int r, g, b;
 } RGB32_misaligned;
 
-typedef struct dpct_type_426295 {
+typedef struct dpct_type_326346 {
   unsigned int r, g, b, a;
 } RGBA32_misaligned;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Aligned types
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct __dpct_align__(4) dpct_type_157154 {
+typedef struct __dpct_align__(4) dpct_type_158674 {
   unsigned char r, g, b, a;
 }
 RGBA8;
 
 typedef unsigned int I32;
 
-typedef struct __dpct_align__(8) dpct_type_102693 {
+typedef struct __dpct_align__(8) dpct_type_150317 {
   unsigned int l, a;
 }
 LA32;
 
-typedef struct __dpct_align__(16) dpct_type_278528 {
+typedef struct __dpct_align__(16) dpct_type_746933 {
   unsigned int r, g, b;
 }
 RGB32;
 
-typedef struct __dpct_align__(16) dpct_type_726353 {
+typedef struct __dpct_align__(16) dpct_type_166901 {
   unsigned int r, g, b, a;
 }
 RGBA32;
@@ -103,7 +103,7 @@ RGBA32;
 // "Structure of arrays" storage strategy offers best performance
 // in general case. See section 5.1.2 of the Programming Guide.
 ////////////////////////////////////////////////////////////////////////////////
-typedef struct __dpct_align__(16) dpct_type_111555 {
+typedef struct __dpct_align__(16) dpct_type_988250 {
   RGBA32 c1, c2;
 }
 RGBA32_2;
@@ -193,8 +193,8 @@ int runTest(int packedElementSize, int memory_size) {
 
   for (int i = 0; i < NUM_ITERATIONS; i++) {
     dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
-      TData *d_odata_ct0 = (TData *)d_odata;
-      TData *d_idata_ct1 = (TData *)d_idata;
+      auto d_odata_ct0 = (TData *)d_odata;
+      auto d_idata_ct1 = (TData *)d_idata;
 
       cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, 64) *
                                              sycl::range<3>(1, 1, 256),

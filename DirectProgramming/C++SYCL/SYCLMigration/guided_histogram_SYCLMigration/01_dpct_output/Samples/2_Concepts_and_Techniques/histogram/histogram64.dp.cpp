@@ -95,7 +95,7 @@ void histogram64Kernel(uint *d_PartialHistograms, data_t *d_Data,
   // Since histogram counters are byte-sized, every single thread can't do more
   // than 255 submission
   /*
-  DPCT1065:3: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -114,7 +114,7 @@ void histogram64Kernel(uint *d_PartialHistograms, data_t *d_Data,
 
   // Accumulate per-thread histograms into per-block and write to global memory
   /*
-  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -168,7 +168,7 @@ void mergeHistogram64Kernel(uint *d_Histogram,
 
   for (uint stride = MERGE_THREADBLOCK_SIZE / 2; stride > 0; stride >>= 1) {
     /*
-    DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -234,7 +234,7 @@ extern "C" void histogram64(uint *d_Histogram, void *d_Data, uint byteCount) {
             4096 /*HISTOGRAM64_THREADBLOCK_SIZE * HISTOGRAM64_BIN_COUNT*/),
         cgh);
 
-    uint *d_PartialHistograms_ct0 = d_PartialHistograms;
+    auto d_PartialHistograms_ct0 = d_PartialHistograms;
     uint byteCount_sizeof_data_t_ct2 = byteCount / sizeof(data_t);
 
     cgh.parallel_for(
@@ -261,7 +261,7 @@ extern "C" void histogram64(uint *d_Histogram, void *d_Data, uint byteCount) {
     sycl::local_accessor<uint, 1> data_acc_ct1(
         sycl::range<1>(256 /*MERGE_THREADBLOCK_SIZE*/), cgh);
 
-    uint *d_PartialHistograms_ct1 = d_PartialHistograms;
+    auto d_PartialHistograms_ct1 = d_PartialHistograms;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, HISTOGRAM64_BIN_COUNT) *

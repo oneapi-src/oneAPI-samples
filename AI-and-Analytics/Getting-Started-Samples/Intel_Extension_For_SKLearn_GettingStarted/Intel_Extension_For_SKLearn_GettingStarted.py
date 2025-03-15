@@ -130,5 +130,5 @@ print(f"Model accuracy on test data: {result}")
 
 
 np.savetxt("svm_results.csv", Y_pred, delimiter =  ",")
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 

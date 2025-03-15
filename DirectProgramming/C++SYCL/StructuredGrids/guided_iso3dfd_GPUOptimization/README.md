@@ -114,7 +114,7 @@ Perform the following steps:
 |                                        | make clean                          |
 | make run_all                           |                                     | make run_verify_all
 | make run_cpu                           |                                     | 
-| make run_gpu_basic_offload             |                                     | run_verify_gpu_basic
+| make run_gpu_basic                     |                                     | run_verify_gpu_basic
 | make run_gpu_linear                    |                                     | run_verify_gpu_linear
 | make run_gpu_private_I                 | make run_gpu_private_K              | run_verify_gpu_private
 | make run_gpu_optimized                 | make run_gpu_optimized_good_params  | run_verify_gpu_optimized 

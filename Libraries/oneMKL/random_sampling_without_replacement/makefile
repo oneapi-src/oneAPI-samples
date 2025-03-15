@@ -9,7 +9,7 @@ run: lottery.exe lottery_usm.exe lottery_device_api.exe
 	.\lottery_usm.exe
 	.\lottery_device_api.exe
 
-DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations OpenCL.lib
+DPCPP_OPTS=/I"$(MKLROOT)\include" /Qmkl /Qmkl-sycl-impl=rng /DMKL_ILP64 /EHsc -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations OpenCL.lib
 
 lottery.exe: lottery.cpp
 	icx-cl -fsycl lottery.cpp /Felottery.exe $(DPCPP_OPTS)

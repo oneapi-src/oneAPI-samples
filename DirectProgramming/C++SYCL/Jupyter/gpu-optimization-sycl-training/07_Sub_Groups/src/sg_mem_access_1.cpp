@@ -19,7 +19,7 @@ int main() {
     h.parallel_for(sycl::nd_range(sycl::range{N / 16}, sycl::range{32}),
                    [=](sycl::nd_item<1> it) {
                      int i = it.get_global_linear_id();
-                     sycl::ext::oneapi::sub_group sg = it.get_sub_group();
+                     sycl::sub_group sg = it.get_sub_group();
                      int sgSize = sg.get_local_range()[0];
                      i = (i / sgSize) * sgSize * 16 + (i % sgSize);
                      for (int j = 0; j < sgSize * 16; j += sgSize) {

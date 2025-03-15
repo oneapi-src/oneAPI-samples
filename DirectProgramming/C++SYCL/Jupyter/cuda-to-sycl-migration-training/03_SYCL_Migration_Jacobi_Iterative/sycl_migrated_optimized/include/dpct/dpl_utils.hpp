@@ -16,6 +16,8 @@
 #include <oneapi/dpl/algorithm>
 #include <oneapi/dpl/numeric>
 
+#include "compat_service.hpp"
+
 #include "dpl_extras/memory.h"
 #include "dpl_extras/algorithm.h"
 #include "dpl_extras/numeric.h"

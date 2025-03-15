@@ -11,7 +11,7 @@ Languages are selected from the CommonVoice dataset for training, validation, an
 
 ## Purpose
 
-Spoken audio comes in different languages and this sample uses a model to identify what that language is. The user will use an Intel® AI Analytics Toolkit container environment to train a model and perform inference leveraging Intel-optimized libraries for PyTorch*. There is also an option to quantize the trained model with Intel® Neural Compressor (INC) to speed up inference.
+Spoken audio comes in different languages and this sample uses a model to identify what that language is. The user will use an AI Tools container environment to train a model and perform inference leveraging Intel-optimized libraries for PyTorch*. There is also an option to quantize the trained model with Intel® Neural Compressor (INC) to speed up inference.
 
 ## Prerequisites
 
@@ -39,7 +39,7 @@ For both training and inference, you can run the sample and scripts in Jupyter N
 
 ### Create and Set Up Environment
 
-1. Create your conda environment by following the instructions on the Intel [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). You can follow these settings:
+1. Create your conda environment by following the instructions on the Intel [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). You can follow these settings:
 
 * Tool: AI Tools
 * Preset or customize: Customize

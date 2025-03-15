@@ -2,7 +2,7 @@
 // Iota is the equivalent of a Hello, World! sample for data parallel programs.
 // Building and running the sample verifies that your development environment
 // is setup correctly and demonstrates the use of the core features of SYCL.
-// This sample runs on both CPU and GPU (or FPGA). When run, it computes on both
+// This sample runs on both CPU and GPU. When run, it computes on both
 // the CPU and offload device, then compares results. If the code executes on
 // both CPU and the offload device, the name of the offload device and a success
 // message are displayed. And, your development environment is setup correctly!
@@ -22,10 +22,6 @@
 #include <sycl/sycl.hpp>
 #include <array>
 #include <iostream>
-
-#if FPGA_HARDWARE || FPGA_EMULATOR || FPGA_SIMULATOR
-  #include <sycl/ext/intel/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 using namespace std;
@@ -73,19 +69,8 @@ void IotaParallel(queue &q, int *a, size_t size, int value) {
 //************************************
 int main() {
   // Create device selector for the device of your interest.
-#if FPGA_EMULATOR
-  // Intel extension: FPGA emulator selector on systems without FPGA card.
-  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
-#elif FPGA_SIMULATOR
-  // Intel extension: FPGA simulator selector on systems without FPGA card.
-  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
-#elif FPGA_HARDWARE
-  // Intel extension: FPGA selector on systems with FPGA card.
-  auto selector = sycl::ext::intel::fpga_selector_v;
-#else
   // The default device selector will select the most performant device.
   auto selector = default_selector_v;
-#endif
 
   constexpr int value = 100000;
 

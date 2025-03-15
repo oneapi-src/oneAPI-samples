@@ -2,7 +2,7 @@
 // Vector Add is the equivalent of a Hello, World! sample for data parallel
 // programs. Building and running the sample verifies that your development
 // environment is setup correctly and demonstrates the use of the core features
-// of SYCL. This sample runs on both CPU and GPU (or FPGA). When run, it
+// of SYCL. This sample runs on both CPU and GPU. When run, it
 // computes on both the CPU and offload device, then compares results. If the
 // code executes on both CPU and offload device, the device name and a success
 // message are displayed. And, your development environment is setup correctly!
@@ -23,9 +23,6 @@
 #include <array>
 #include <iostream>
 #include <string>
-#if FPGA_HARDWARE || FPGA_EMULATOR || FPGA_SIMULATOR
-#include <sycl/ext/intel/fpga_extensions.hpp>
-#endif
 
 using namespace sycl;
 
@@ -81,19 +78,8 @@ int main(int argc, char* argv[]) {
   // Change array_size if it was passed as argument
   if (argc > 1) array_size = std::stoi(argv[1]);
   // Create device selector for the device of your interest.
-#if FPGA_EMULATOR
-  // Intel extension: FPGA emulator selector on systems without FPGA card.
-  auto selector = sycl::ext::intel::fpga_emulator_selector_v;
-#elif FPGA_SIMULATOR
-  // Intel extension: FPGA simulator selector on systems without FPGA card.
-  auto selector = sycl::ext::intel::fpga_simulator_selector_v;
-#elif FPGA_HARDWARE
-  // Intel extension: FPGA selector on systems with FPGA card.
-  auto selector = sycl::ext::intel::fpga_selector_v;
-#else
   // The default device selector will select the most performant device.
   auto selector = default_selector_v;
-#endif
 
   try {
     queue q(selector, exception_handler);

@@ -6,8 +6,8 @@
 #include <sycl/sycl.hpp>
 
 int main() {
-  constexpr size_t N = 8192 * 8192;
-  constexpr size_t M = 257;
+  constexpr int N = 8192 * 8192;
+  constexpr int M = 257;
 
   sycl::queue q{sycl::property::queue::enable_profiling{}};
   std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>() << "\n";

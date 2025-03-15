@@ -218,7 +218,7 @@ int main(int argc, char **argv) {
   auto evt1 = oneapi::mkl::dft::compute_forward(desc, img1);
   // img2 <- DFT(img2)
   auto evt2 = oneapi::mkl::dft::compute_forward(desc, img2);
-  // Compute the element-wise multipication of (complex) coefficients in
+  // Compute the element-wise multiplication of (complex) coefficients in
   // backward domain:
   // corr <- sig1 * CONJ(sig2) [component-wise]
   evt = oneapi::mkl::vm::mulbyconj(

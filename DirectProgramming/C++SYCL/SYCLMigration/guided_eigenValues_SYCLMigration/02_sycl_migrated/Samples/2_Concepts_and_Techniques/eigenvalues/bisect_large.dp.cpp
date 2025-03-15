@@ -216,8 +216,8 @@ void computeEigenvaluesLargeMatrix(const InputData &input,
                                    const float precision, const float lg,
                                    const float ug,
                                    const unsigned int iterations, sycl::queue q) {
-  sycl::range<3> blocks(1, 1, 1);
-  sycl::range<3> threads(1, 1, MAX_THREADS_BLOCK);
+  dpct::dim3 blocks(1, 1, 1);
+  dpct::dim3 threads(MAX_THREADS_BLOCK, 1, 1);
 
   StopWatchInterface *timer_step1 = NULL;
   StopWatchInterface *timer_step2_one = NULL;
@@ -304,12 +304,12 @@ void computeEigenvaluesLargeMatrix(const InputData &input,
         q.memcpy(&num_one_intervals, result.g_num_one, sizeof(unsigned int))
             .wait());
 
-    sycl::range<3> grid_onei(1, 1, 1);
-    grid_onei[2] = getNumBlocksLinear(num_one_intervals, MAX_THREADS_BLOCK);
-    sycl::range<3> threads_onei(1, 1, 1);
+    dpct::dim3 grid_onei;
+    grid_onei.x = getNumBlocksLinear(num_one_intervals, MAX_THREADS_BLOCK);
+    dpct::dim3 threads_onei;
     // use always max number of available threads to better balance load times
     // for matrix data
-    threads_onei[2] = MAX_THREADS_BLOCK;
+    threads_onei.x = MAX_THREADS_BLOCK;
 
     // compute eigenvalues for intervals that contained only one eigenvalue
     // after the first processing step
@@ -360,8 +360,8 @@ void computeEigenvaluesLargeMatrix(const InputData &input,
                              .wait());
 
     // setup the execution environment
-    sycl::range<3> grid_mult(1, 1, num_blocks_mult);
-    sycl::range<3> threads_mult(1, 1, MAX_THREADS_BLOCK);
+    dpct::dim3 grid_mult(num_blocks_mult, 1, 1);
+    dpct::dim3 threads_mult(MAX_THREADS_BLOCK, 1, 1);
 
     sdkStartTimer(&timer_step2_mult);
 

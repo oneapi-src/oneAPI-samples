@@ -11,6 +11,7 @@
 #include <getopt.h>
 #include <ctime>
 #include <chrono>
+#include <cmath>
 
 using namespace sycl;
 
@@ -20,9 +21,9 @@ void mm_kernel(queue &q, std::vector<float> &matrix_a, std::vector<float> &matri
 //# floating point error verification function
 bool almost_equal(float a, float b){
     float tolerance = 1e-6;
-    float diff = fabs(a - b);
-    a = fabs(a);
-    b = fabs(b);
+    float diff = std::fabs(a - b);
+    a = std::fabs(a);
+    b = std::fabs(b);
     float bigger = (b > a) ? b : a;
     if(diff <= bigger * tolerance) return true;
     return false;
@@ -89,7 +90,7 @@ int main(int argc, char *argv[]) {
     // find valid work-group sizes to try for performance.
     std::vector<int> work_group_sizes;
     auto max_work_group_size = q.get_device().get_info<info::device::max_work_group_size>();
-    int work_group_dim_size = sqrt(max_work_group_size);
+    int work_group_dim_size = std::sqrt(max_work_group_size);
     work_group_dim_size = work_group_dim_size - work_group_dim_size % 2; 
     while (work_group_dim_size >= 2){
         if (N % work_group_dim_size == 0) work_group_sizes.push_back(work_group_dim_size);

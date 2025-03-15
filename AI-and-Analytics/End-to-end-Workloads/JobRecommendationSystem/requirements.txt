@@ -1,10 +1,10 @@
 ipykernel
 matplotlib
-sentence_transformers
-transformers 
-datasets 
-accelerate 
-wordcloud  
-spacy 
+sentence-transformers
+transformers
+datasets
+accelerate
+wordcloud
+spacy
 jinja2
 nltk

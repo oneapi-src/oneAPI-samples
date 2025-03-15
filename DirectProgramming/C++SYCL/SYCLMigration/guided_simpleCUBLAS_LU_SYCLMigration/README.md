@@ -28,7 +28,7 @@ This sample contains two versions in the following folders:
 |:---                   |:---
 | OS                    | Ubuntu* 22.04
 | Hardware              | Intel® Gen9 <br> Intel® Gen11 <br> Intel® Xeon CPU <br> Intel® Data Center GPU Max <br> NVIDIA Tesla P100 <br> NVIDIA A100 <br> NVIDIA H100
-| Software                | SYCLomatic (Tag - 20240403) <br> Intel® oneAPI Base Toolkit version 2024.1 <br> oneAPI for NVIDIA GPUs" plugin from Codeplay (version 2024.1)
+| Software                | SYCLomatic (Tag - 20241104) <br> Intel® oneAPI Base Toolkit version 2025.0 <br> oneAPI for NVIDIA GPUs" plugin from Codeplay (version 2025.0)
 
 For more information on how to install Syclomatic Tool & DPC++ CUDA® plugin, visit [Migrate from CUDA* to C++ with SYCL*](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html#gs.v354cy) <br> How to run SYCL™ applications on NVIDIA® GPUs, refer to oneAPI for NVIDIA GPUs plugin from Codeplay [Install oneAPI for NVIDIA GPUs](https://developer.codeplay.com/products/oneapi/nvidia/)
 
@@ -85,6 +85,15 @@ CUDA code includes a custom API findCUDADevice in helper_cuda file to find the b
 ```
 Since its a custom API SYCLomatic tool will not act on it and we can either remove it or replace it with the sycl get_device() API.
 
+onMKL in opensource has changed into oneMath for Nvidia support, need to adjust the code
+```
+#ifdef NVIDIA_GPU
+  #include <dpct/nvi_blas_utils.hpp>
+#else
+  #include <dpct/blas_utils.hpp>
+#endif
+```
+Added `nvi_blas_utils.hpp` from `blas_utils.hpp` the only difference is the namespace as oneMath has `oneapi::math` whereas intel mkl has `oneapi::mkl`. 
 ## Build the `simpleCUBLAS_LU` Sample for CPU and GPU
 
 > **Note**: If you have not already done so, set up your CLI
@@ -101,7 +110,8 @@ Since its a custom API SYCLomatic tool will not act on it and we can either remo
 
 1. Change to the sample directory.
 2. For **Nvidia GPUs**, install the opensource dpcpp compiler & opensource oneMKL lib and set the environment variables before build.
-   Here are the [steps](https://intel.github.io/llvm-docs/GetStartedGuide.html#:~:text=the%20same%20name.-,Linux,-%3A) to build opensource oneAPI DPC++ compiler & [steps to build oneMKL](https://oneapi-src.github.io/oneMKL/building_the_project.html#:~:text=install%20.%20%2D%2Dprefix%20%3Cpath_to_install_dir%3E-,Building%20for%20CUDA%C2%B6,-On%20Linux*)
+   Here are the [steps](https://intel.github.io/llvm-docs/GetStartedGuide.html#:~:text=the%20same%20name.-,Linux,-%3A) to build opensource oneAPI DPC++ compiler & [steps to build oneMath](https://uxlfoundation.github.io/oneMath/building_the_project_with_dpcpp.html#build-commands)
+   && on building oneMath make sure `ENABLE_CUBLAS_BACKEND` & `ENABLE_CUSOLVER_BACKEND` are enabled.
    ```
    export PATH=path_to_opensource_DPC++_build_binaries:$PATH
    export LD_LIBRARY_PATH=path_to_opensource_DPC++_lib/:$LD_LIBRARY_PATH
@@ -144,7 +154,7 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-1/overview.html) for more information on using the utility.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2025-0/overview.html) for more information on using the utility.
 
 ## License
 Code samples are licensed under the MIT license. See

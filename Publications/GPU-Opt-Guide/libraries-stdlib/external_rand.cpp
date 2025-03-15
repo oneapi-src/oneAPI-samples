@@ -7,9 +7,9 @@
 // dpcpp -D{HOST|CPU|GPU} -std=c++17 -fsycl external_rand.cpp -o external_rand
 
 // Snippet begin
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
+#include <sycl/sycl.hpp>
 
 constexpr int N = 5;
 

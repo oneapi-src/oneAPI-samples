@@ -1,4 +1,4 @@
-#define DPCT_COMPAT_RT_VERSION 12020
+#define DPCT_COMPAT_RT_VERSION 12040
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -201,8 +201,7 @@ int runTest(const int argc, const char **argv) try {
 
   if (getCmdLineArgumentString(argc, argv, "device", &device)) {
     int deviceCount;
-    dpct::err0 error_id = DPCT_CHECK_ERROR(
-        deviceCount = dpct::dev_mgr::instance().device_count());
+    dpct::err0 error_id = DPCT_CHECK_ERROR(deviceCount = dpct::device_count());
 
     if (deviceCount == 0) {
       printf("!!!!!No devices found!!!!!\n");
@@ -233,8 +232,8 @@ int runTest(const int argc, const char **argv) try {
   for (int currentDevice = startDevice; currentDevice <= endDevice;
        currentDevice++) {
     dpct::device_info deviceProp;
-    dpct::err0 error_id = DPCT_CHECK_ERROR(dpct::get_device_info(
-        deviceProp, dpct::dev_mgr::instance().get_device(currentDevice)));
+    dpct::err0 error_id = DPCT_CHECK_ERROR(
+        dpct::get_device(currentDevice).get_device_info(deviceProp));
 
     if (error_id == 0) {
       printf(" Device %d: %s\n", currentDevice, deviceProp.get_name());

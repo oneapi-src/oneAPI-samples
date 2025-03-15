@@ -269,4 +269,4 @@ plt.bar(
     ],
 )
 # %%
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")

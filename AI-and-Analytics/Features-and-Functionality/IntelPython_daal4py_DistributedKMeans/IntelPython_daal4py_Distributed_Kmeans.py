@@ -103,10 +103,16 @@ kmeans_result = d4p.kmeans(nClusters = 3, maxIterations = 5, assignFlag = True,
 
 # To **get Kmeans result objects** (assignments, centroids, goalFunction [deprecated], nIterations, and objectiveFunction):
 
-# In[ ]:
+# In[8]:
 
 
 # retrieving and printing cluster assignments
 assignments = kmeans_result.assignments
 print("Here is our cluster assignments for first 5 datapoints: \n\n", assignments[:5])
+
+
+# In[9]:
+
+
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 

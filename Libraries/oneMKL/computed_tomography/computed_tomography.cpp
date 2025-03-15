@@ -218,7 +218,7 @@ sycl::event step2_interpolation(matrix_r &fhat,
                                 const std::vector<sycl::event> &deps)
 {
     // radonImage is the result of r2c FFT
-    // rt(pp,:) contains frequences 0...q
+    // rt(pp,:) contains frequencies 0...q
     complex *rt = (complex *)radon_image.data;
     complex *ft = (complex *)fhat.data;
 

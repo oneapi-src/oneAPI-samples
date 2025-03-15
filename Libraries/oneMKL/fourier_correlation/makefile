@@ -9,7 +9,7 @@ run_all: fcorr_1d_buff.exe fcorr_1d_usm.exe fcorr_2d_usm.exe
 	.\fcorr_1d_usm 1024
 	.\fcorr_2d_usm
 
-DPCPP_OPTS=-DMKL_ILP64 -I"%MKLROOT%\include" /Qmkl OpenCL.lib /EHsc
+DPCPP_OPTS=-DMKL_ILP64 -I"%MKLROOT%\include" /Qmkl /Qmkl-sycl-impl="blas,dft,rng,vm" OpenCL.lib /EHsc
 
 fcorr_1d_buff.exe: fcorr_1d_buffers.cpp
 	icx-cl -fsycl fcorr_1d_buffers.cpp /Fefcorr_1d_buff.exe $(DPCPP_OPTS)

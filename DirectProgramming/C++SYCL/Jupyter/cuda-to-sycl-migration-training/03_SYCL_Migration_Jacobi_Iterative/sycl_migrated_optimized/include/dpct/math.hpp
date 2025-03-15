@@ -304,8 +304,8 @@ bfe_safe(const T source, const uint32_t bit_start, const uint32_t num_bits) {
   }
 #endif
   const uint32_t bit_width = CHAR_BIT * sizeof(T);
-  const uint32_t pos = std::min(bit_start, bit_width);
-  const uint32_t len = std::min(pos + num_bits, bit_width) - pos;
+  const uint32_t pos = (std::min)(bit_start, bit_width);
+  const uint32_t len = (std::min)(pos + num_bits, bit_width) - pos;
   if constexpr (std::is_signed_v<T>) {
     const T mask = (T{1} << len) - 1;
 
@@ -313,7 +313,7 @@ bfe_safe(const T source, const uint32_t bit_start, const uint32_t num_bits) {
     // extracted field.
     //
     // sign_bit = len == 0 ? 0 : source[min(pos + len - 1, bit_width - 1)]
-    const uint32_t sign_bit_pos = std::min(pos + len - 1, bit_width - 1);
+    const uint32_t sign_bit_pos = (std::min)(pos + len - 1, bit_width - 1);
     const T sign_bit = len != 0 && ((source >> sign_bit_pos) & 1);
     const T sign_bit_padding = (-sign_bit & ~mask);
     return ((source >> pos) & mask) | sign_bit_padding;
@@ -375,8 +375,8 @@ bfi_safe(const T x, const T y, const uint32_t bit_start,
   }
 #endif
   constexpr unsigned bit_width = CHAR_BIT * sizeof(T);
-  const uint32_t pos = std::min(bit_start, bit_width);
-  const uint32_t len = std::min(pos + num_bits, bit_width) - pos;
+  const uint32_t pos = (std::min)(bit_start, bit_width);
+  const uint32_t len = (std::min)(pos + num_bits, bit_width) - pos;
   return dpct::bfi(x, y, pos, len);
 }
 
@@ -419,25 +419,29 @@ template <typename T1, typename T2>
 std::enable_if_t<std::is_integral_v<T1> && std::is_integral_v<T2>,
                  std::common_type_t<T1, T2>>
 min(T1 a, T2 b) {
-  return sycl::min<std::common_type_t<T1, T2>>(a, b);
+  using common_t = std::common_type_t<T1, T2>;
+  return sycl::min(static_cast<common_t>(a), static_cast<common_t>(b));
 }
 template <typename T1, typename T2>
 std::enable_if_t<std::is_floating_point_v<T1> && std::is_floating_point_v<T2>,
                  std::common_type_t<T1, T2>>
 min(T1 a, T2 b) {
-  return sycl::fmin<std::common_type_t<T1, T2>>(a, b);
+  using common_t = std::common_type_t<T1, T2>;
+  return sycl::fmin(static_cast<common_t>(a), static_cast<common_t>(b));
 }
 template <typename T1, typename T2>
 std::enable_if_t<std::is_integral_v<T1> && std::is_integral_v<T2>,
                  std::common_type_t<T1, T2>>
 max(T1 a, T2 b) {
-  return sycl::max<std::common_type_t<T1, T2>>(a, b);
+  using common_t = std::common_type_t<T1, T2>;
+  return sycl::max(static_cast<common_t>(a), static_cast<common_t>(b));
 }
 template <typename T1, typename T2>
 std::enable_if_t<std::is_floating_point_v<T1> && std::is_floating_point_v<T2>,
                  std::common_type_t<T1, T2>>
 max(T1 a, T2 b) {
-  return sycl::fmax<std::common_type_t<T1, T2>>(a, b);
+  using common_t = std::common_type_t<T1, T2>;
+  return sycl::fmax(static_cast<common_t>(a), static_cast<common_t>(b));
 }
 
 // pow functions overload.
@@ -736,8 +740,9 @@ inline unsigned vectorized_unary(unsigned a, const UnaryOperation unary_op) {
 template <typename VecT>
 inline unsigned vectorized_sum_abs_diff(unsigned a, unsigned b) {
   sycl::vec<unsigned, 1> v0{a}, v1{b};
-  auto v2 = v0.as<VecT>();
-  auto v3 = v1.as<VecT>();
+  // Need convert element type to wider signed type to avoid overflow.
+  auto v2 = v0.as<VecT>().template convert<int>();
+  auto v3 = v1.as<VecT>().template convert<int>();
   auto v4 = sycl::abs_diff(v2, v3);
   unsigned sum = 0;
   for (size_t i = 0; i < v4.size(); ++i) {
@@ -2131,6 +2136,99 @@ template <typename RetT, typename AT, typename BT>
 inline constexpr RetT extend_vavrg4_sat(AT a, BT b, RetT c) {
   return detail::extend_vbinary4<RetT, true, false>(a, b, c, detail::average());
 }
+
+namespace experimental {
+namespace matrix {
+namespace syclex = sycl::ext::oneapi::experimental;
+struct row_major
+    : public std::integral_constant<syclex::matrix::layout,
+                                    syclex::matrix::layout::row_major> {};
+struct col_major
+    : public std::integral_constant<syclex::matrix::layout,
+                                    syclex::matrix::layout::col_major> {};
+struct a : public std::integral_constant<syclex::matrix::use,
+                                         syclex::matrix::use::a> {};
+struct b : public std::integral_constant<syclex::matrix::use,
+                                         syclex::matrix::use::b> {};
+struct accumulator
+    : public std::integral_constant<syclex::matrix::use,
+                                    syclex::matrix::use::accumulator> {};
+
+template <class use, int m, int n, int k> struct matrix_size_traits;
+template <int m, int n, int k> struct matrix_size_traits<a, m, n, k> {
+  static constexpr int rows = m;
+  static constexpr int cols = k;
+};
+
+template <int m, int n, int k> struct matrix_size_traits<b, m, n, k> {
+  static constexpr int rows = k;
+  static constexpr int cols = n;
+};
+
+template <int m, int n, int k> struct matrix_size_traits<accumulator, m, n, k> {
+  static constexpr int rows = m;
+  static constexpr int cols = n;
+};
+
+// A class that wraps the syclex::matrix::joint_matrix class and provides
+// copy constructor and assignment operator.
+template <typename use, int m, int n, int k, typename T,
+          typename layout = std::integral_constant<
+              syclex::matrix::layout, syclex::matrix::layout::dynamic>>
+class joint_matrix {
+  using joint_matrix_type = syclex::matrix::joint_matrix<
+      sycl::sub_group, T, use::value, matrix_size_traits<use, m, n, k>::rows,
+      matrix_size_traits<use, m, n, k>::cols, layout::value>;
+
+  static inline decltype(auto) get_wi_data(joint_matrix_type &matrix) {
+    return sycl::ext::oneapi::detail::get_wi_data(
+        sycl::ext::oneapi::this_work_item::get_sub_group(), matrix);
+  }
+
+public:
+  joint_matrix()
+      : matrix(), x(matrix), num_elements(get_wi_data(matrix).length()) {}
+  joint_matrix(joint_matrix &other)
+      : x(matrix), num_elements(get_wi_data(matrix).length()) {
+    syclex::matrix::joint_matrix_copy(
+        sycl::ext::oneapi::this_work_item::get_sub_group(), other.get(),
+        matrix);
+  }
+  joint_matrix &operator=(joint_matrix &other) {
+    if (this != &other) {
+      syclex::matrix::joint_matrix_copy(
+          sycl::ext::oneapi::this_work_item::get_sub_group(), other.get(),
+          matrix);
+    }
+    return *this;
+  }
+
+  joint_matrix_type &get() { return matrix; }
+
+  const joint_matrix_type &get() const { return matrix; }
+
+  class matrix_accessor {
+    friend joint_matrix;
+    joint_matrix_type &matrix;
+    matrix_accessor(joint_matrix_type &matrix) : matrix(matrix) {}
+
+  public:
+    decltype(auto) operator[](unsigned I) { return get_wi_data(matrix)[I]; }
+    decltype(auto) operator[](unsigned I) const {
+      return get_wi_data(matrix)[I];
+    }
+  };
+
+private:
+  joint_matrix_type matrix;
+
+public:
+  matrix_accessor x;
+  const size_t num_elements;
+};
+} // namespace matrix
+} // namespace experimental
+
 } // namespace dpct
 
 #endif // __DPCT_MATH_HPP__

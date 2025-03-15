@@ -37,10 +37,10 @@ You will need to download and install the following toolkits, tools, and compone
 **1. Get AI Tools**
 
 
-Required AI Tools: daal4py (Select Intel® Extension for Scikit-learn* on [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to install)
+Required AI Tools: daal4py (Select Intel® Extension for Scikit-learn* on [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to install)
 
 
-If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
@@ -83,7 +83,7 @@ For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install)
 ## Run the Sample
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Conda/PIP](#condapip) 
 * [Docker](#docker)
@@ -94,7 +94,7 @@ Go to the section which corresponds to the installation method chosen in [AI Too
 
 If the default path is used during the installation of AI Tools:
 ```
-$HOME/intel/oneapi/intelpython/envs/base/bin/python -m ipykernel install --user --name=base
+$HOME/intel/oneapi/intelpython/bin/python -m ipykernel install --user --name=base
 ```
 If a non-default path is used:
 ```
@@ -176,7 +176,7 @@ Here is one of our loaded model's features:
    2.76607367e+00 -2.82517989e+00  5.49968304e+00  3.48833264e-03
   -8.73247684e-01  1.74005447e-01 -8.38917510e-03 -3.28044397e-01
    1.58423529e-02 -4.57542900e-01]]
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 ## Related Samples
 

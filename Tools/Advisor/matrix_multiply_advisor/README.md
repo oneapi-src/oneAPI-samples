@@ -265,7 +265,7 @@ rm build.sh.*; rm run.sh.*; make clean
 exit
 ```
 ## Running an Intel&reg; Advisor analysis
-See the [Intel® Advisor Cookbook](https://software.intel.com/en-us/advisor-cookbook).
+See the [Intel® Advisor Cookbook](https://www.intel.com/content/www/us/en/docs/advisor/cookbook/).
 
 ### Build and run additional samples
 Several sample programs are available for you to try, many of which can be compiled and run in a similar fashion to this sample. Experiment with running the various samples on different kinds of compute nodes or adjust their source code to experiment with different workloads.

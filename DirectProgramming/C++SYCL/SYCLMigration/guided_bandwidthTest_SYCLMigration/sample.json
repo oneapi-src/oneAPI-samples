@@ -1,5 +1,5 @@
 {
-    "guid": "6D162CA2-2948-40C9-8634-A8E802473A70",	
+    "guid": "7AC2C489-F608-4228-86DA-B30E3949FC63",	
     "name": "guided_bandwidthTest_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample shows the demonstrates how to measure the memcopy bandwidth of the GPU.",

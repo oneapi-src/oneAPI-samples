@@ -9,7 +9,7 @@ The sample is a simple program that multiplies together two large matrices and v
 | What you will learn   | A method to determine the root cause problems from passing bad buffers through the SYCL runtime.
 | Time to complete      | 50 minutes
 
->**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://software.intel.com/en-us/oneapi-programming-guide)*. (Use search or the table of contents to find relevant information quickly.)
+>**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
 ## Purpose
 
@@ -30,9 +30,10 @@ The sample includes different versions of a simple matrix multiplication program
 
 | Optimized for           | Description
 |:---                     |:---
-| OS                      | Ubuntu* 20.04
+| OS                      | Ubuntu* 24.04 LTS
 | Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler <br> Intel® Distribution for GDB* <br> [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace), which is available from the [onetrace](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) GitHub repository.
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.0 <br> Intel® Distribution for GDB* 2025.0 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2506.18 or newer from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -57,7 +58,7 @@ When working with the command-line interface (CLI), configure the oneAPI toolkit
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
+> For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/use-the-setvars-and-oneapi-vars-scripts-with-linux.html)*.
 
 ### Use Visual Studio Code* (VS Code) (Optional)
 
@@ -65,13 +66,15 @@ You can use Visual Studio Code* (VS Code) extensions to set your environment,
 create launch configurations, and browse and download samples.
 
 The basic steps to build and run a sample using VS Code include:
- 1. Configure the oneAPI environment with the **Environment Configurator for Intel® oneAPI Toolkits** extension.
- 2. Download a sample using the **Code Sample Browser for Intel® oneAPI Toolkits** extension.
- 3. Open a terminal in VS Code (**Terminal > New Terminal**).
+ 1. Configure the oneAPI environment with the extension *Environment Configurator for Intel® Software Development Tools*.
+
+ 2. Download a sample using the extension *Code Sample Browser for Intel® Software Development Tools*.
+
+ 3. Open a terminal in VS Code (`Terminal > New Terminal`).
+
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the
-*[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
+To learn more about the extensions and how to configure the oneAPI environment, see the *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-vs-code/current/overview.html)*.
 
 ### On Linux*
 
@@ -118,49 +121,22 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permission errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)* for more information on using the utility.
-
-
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes    |Command Options
-  |:---               |:---
-  |GPU                |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU                |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-For more information on how to specify compute nodes read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
+If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
 
 
 ## Guided Debugging
 
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.
 
->**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see *[Using the oneAPI Level Zero Interface: A Brief Introduction to the Level Zero API](https://www.intel.com/content/www/us/en/developer/articles/technical/using-oneapi-level-zero-interface.html?wapkw=Level%20Zero#gs.dxm4t4)*.
+>**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
 
 ### Getting the Tracing and Profiling Tool
 
-At an important step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
-You must download the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace) code from GitHub and build the utility. The build instructions are included in the readme in the GitHub repository.
-
-To complete the steps in the following section, you must have already built the [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GDB).
+To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Guided Instructions for Zero Buffer
 
@@ -173,9 +149,9 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    The program should crash almost immediately with segmentation faults as shown below.
    ```
    Problem size: c(150,600) = a(150,300) * b(300,600)
-   FATAL: Unexpected page fault from GPU at 0xb000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
-   FATAL: Unexpected page fault from GPU at 0xb000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
-   Abort was called at 287 line in file:
+   Segmentation fault from GPU at 0x0, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 1 (Write), banned: 0, aborting.
+   Segmentation fault from GPU at 0x0, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 1 (Write), banned: 0, aborting.
+   Abort was called at 269 line in file:
    ./shared/source/os_interface/linux/drm_neo.cpp
    Aborted (core dumped)
    ```
@@ -195,10 +171,13 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
     The program will stop with a segmentation fault that will look something like this
 
     ```
-    Thread 2.809 received signal SIGSEGV, Segmentation fault.
-    [Switching to thread 2.809:0 (ZE 0.12.5.0 lane 0)]
-   0x00008000ffc7a3d0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const (this=0xff00000000c5b910, Id=...) at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/accessor.hpp:1296
-    1296        return Result;
+   Thread 2.1797 received signal SIGSEGV, Segmentation fault
+   Warning: The location reported for the signal may be inaccurate.
+   [Switching to thread 2.1797:0 (ZE 0.28.0.4 lane 0)]
+   0x00008000ffc7d0a0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}::operator()(unsigned long) const (this=0xff0000000193e9c0, I=1)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/accessor.hpp:671
+   671           Result = Result * getMemoryRange()[I] + Id[I];
+   (gdb)
     ```
 
 5. Run a `backtrace` to get a summary showing the approximate location triggering the assert.
@@ -208,27 +187,38 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
 
    The output might look similar to the following.
    ```
-   #0  0x00008000ffc7a3d0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const (this=0xff00000000c5b910, Id=...)
-      at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/accessor.hpp:1296
-   #1  0x00008000ffc7b040 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::operator[]<2, void>(sycl::_V1::id<2>) const (this=0xff00000000c5b910, Index=...)
-      at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/accessor.hpp:2352
-   #2  0x00008000ffca1180 in main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff00000000c5b910, index=...) at a1_matrix_mul_zero_buff.cpp:81
-   #3  0x00008000ffca0cc0 in _ZTSZZ4mainENKUlRT_E_clIN4sycl3_V17handlerEEEDaS0_EUlS_E_ (_arg_a=..., _arg_a=..., _arg_a=..., _arg_a=...)
-      at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/handler.hpp:1569
+   #0  0x00008000ffc7d0a0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}::operator()(unsigned long) const (this=0xff0000000193e9c0, I=1)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/accessor.hpp:671
+   #1  0x00008000ffc75cd0 in sycl::_V1::detail::loop_impl<0ul, 1ul, sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}>(std::integer_sequence<unsigned long, 0ul, 1ul>, sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}&&) (f=...) at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/detail/helpers.hpp:247
+   #2  0x00008000ffc734a0 in sycl::_V1::detail::loop<2ul, sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}>(sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const::{lambda(unsigned long)#1}&&) (f=...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/detail/helpers.hpp:251
+   #3  0x00008000ffc7aab0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::getLinearIndex<2>(sycl::_V1::id<2>) const (this=0xff0000000193d910, Id=sycl::id = ...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/accessor.hpp:670
+   #4  0x00008000ffc7b7b0 in sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >::operator[]<2, void>(sycl::_V1::id<2>) const (this=0xff0000000193d910, Index=sycl::id = ...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/accessor.hpp:1735
+   #5  0x00008000ffca1180 in main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff0000000193d910,
+      index=sycl::item range ..., offset ... = ...) at a1_matrix_mul_zero_buff.cpp:81
+   #6  0x00008000ffca0cc0 in _ZTSZZ4mainENKUlRT_E_clIN4sycl3_V17handlerEEEDaS0_EUlS_E_ (_arg_a=sycl::id = ...,
+      _arg_a=sycl::id = ..., _arg_a=sycl::id = ..., _arg_a=sycl::id = ...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/handler.hpp:1639
    ```
 
-    This stack might look a little odd due to the fact we are seeing one thread out of many launched on the GPU.   Frame 2 of the backtrace output shows an entry at line 81 of `a1_matrix_mul_zero_buff`.
+    This stack might look a little odd due to the fact we are seeing one thread out of many launched on the GPU.   Frame 5 of the backtrace output shows an entry at line 81 of `a1_matrix_mul_zero_buff`.
 
 6. Examine this frame (the frame number might be different from the output shown).
    ```
-   (gdb) frame 2
+   (gdb) frame 5
+   #5  0x00008000ffca1180 in main::{lambda(auto:1&)#1}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff0000000193d910,
+    index=sycl::item range ..., offset ... = ...) at a1_matrix_mul_zero_buff.cpp:81
+   81              a[index] = 1.0f;
+
    ```
 
 7. Examine the code in that region.
    ```
    (gdb) list
    ```
-   The code in frame 2 that is near the problem that triggered segmentation fault is shown:
+   The code in frame 5 that is near the problem that triggered segmentation fault is shown:
    ```
    76            accessor a(a_buf, h, write_only);
    77
@@ -247,19 +237,23 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
    (gdb) print /r a
    ```
-   >**Note:** `/r` disables the *pretty printer* for the SYCL `buffer` class. You can see all available pretty printers using `info pretty-printer` at the gdb prompt.
+   >**Note:** `/r` disables the *pretty printer* for the SYCL `buffer` class. You can see all available pretty printers using `info pretty-printer` at the `gdb` prompt.
 
    You might notice that this buffer has a size 0 by 0 elements (the `AccessRange` and `MemRange` are for a `common_array` of size 0 by 0 elements). Since it has zero size, this buffer is the problem.
 
    ```
-   $1 = {<sycl::_V1::detail::accessor_common<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >> = {static AS = sycl::_V1::access::address_space::global_space, static IsHostBuf = false, static IsHostTask = false, static IsPlaceH = <optimized out>,
-      static IsGlobalBuf = true, static IsConstantBuf = false, static IsAccessAnyWrite = true, static IsAccessReadOnly = false, static IsConst = false,
+   $1 = {<sycl::_V1::detail::accessor_common<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> >> = {
+      static AS = sycl::_V1::access::address_space::global_space, static IsHostBuf = false, static IsHostTask = false,
+      static IsPlaceH = <optimized out>, static IsGlobalBuf = true, static IsConstantBuf = false,
+      static IsAccessAnyWrite = true, static IsAccessReadOnly = false, static IsConst = false,
       static IsAccessReadWrite = <optimized out>,
       static IsAccessAtomic = <optimized out>}, <sycl::_V1::detail::OwnerLessBase<sycl::_V1::accessor<float, 2, (sycl::_V1::access::mode)1025, (sycl::_V1::access::target)2014, (sycl::_V1::access::placeholder)0, sycl::_V1::ext::oneapi::accessor_property_list<> > >> = {<No data fields>}, static AdjustedDim = 2, static IsAccessAnyWrite = true,
-   static IsAccessReadOnly = false, static IsConstantBuf = false, static IsGlobalBuf = true, static IsHostBuf = false, static IsPlaceH = <optimized out>, static IsConst = false,
-   static IsHostTask = false, impl = {Offset = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>},
-      AccessRange = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>}, MemRange = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}},
-         static dimensions = <optimized out>}}, {MData = 0x0}}
+   static IsAccessReadOnly = false, static IsConstantBuf = false, static IsGlobalBuf = true, static IsHostBuf = false,
+   static IsPlaceH = <optimized out>, static IsConst = false, static IsHostTask = false, impl = {
+      Offset = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>},
+      AccessRange = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>},
+      MemRange = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>}}, {
+      MData = 0x0}}
    ```
 
 9. Now look at the `index` variable, which represents the iteration space that we will traverse to set all elements of the array `a` to an initial value of `1.0`.
@@ -268,11 +262,13 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
    You will see something like this:
    ```
-   $2 = {static dimensions = <optimized out>, MImpl = {MExtent = {<sycl::_V1::detail::array<2>> = {common_array = {150, 300}}, static dimensions = <optimized out>},
-      MIndex = {<sycl::_V1::detail::array<2>> = {common_array = {145, 32}}, static dimensions = <optimized out>}, MOffset = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}},
-         static dimensions = <optimized out>}}}
+   $2 = {static dimensions = <optimized out>, MImpl = {MExtent = {<sycl::_V1::detail::array<2>> = {common_array = {150,
+            300}}, static dimensions = <optimized out>}, MIndex = {<sycl::_V1::detail::array<2>> = {common_array = {120,
+            144}}, static dimensions = <optimized out>}, MOffset = {<sycl::_V1::detail::array<2>> = {common_array = {0,
+            0}}, static dimensions = <optimized out>}}}
+
    ```
-   Clearly there is a mismatch here!   'a' has no space reserved for it, yet we will be iterating over 150 by 300 elements (and updating element 145 by 32 in this thread), which is clearly an error.
+   Clearly there is a mismatch here!   'a' has no space reserved for it, yet we will be iterating over 150 by 300 elements (and updating element 120 by 144 in this thread), which is clearly an error.
 
 10.  Now look at the host thread that spawned this computation.
 
@@ -285,17 +281,17 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
    The result will be quite long, but it's the last line we want to get the call frame for our program:
    ```
-   #0  __GI___ioctl (fd=3, request=3224396954) at ../sysdeps/unix/sysv/linux/ioctl.c:36
-   #1  0x000015553675c844 in ?? () from /lib/x86_64-linux-gnu/libze_intel_gpu.so.1
+   #0  0x00007ffff770e7db in __GI_sched_yield () at ../sysdeps/unix/syscall-template.S:120
    :
-   #30 0x00000000004050ca in sycl::_V1::queue::submit<main::{lambda(auto:1&)#3}>(main::{lambda(auto:1&)#3}, sycl::_V1::detail::code_location const&) (this=0x7fffffffb458, CGF=...,
-      CodeLoc=...) at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/queue.hpp:358
-   #31 0x0000000000404d40 in main () at a1_matrix_mul_zero_buff.cpp:98
+   #17 0x0000000000403f67 in sycl::_V1::queue::submit<main::{lambda(auto:1&)#3}>(main::{lambda(auto:1&)#3}, sycl::_V1::detail::code_location const&) (this=0x7fffffffba28, CGF=..., CodeLoc=...)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/queue.hpp:359
+   #18 0x0000000000403bf5 in main () at ./a1_matrix_mul_zero_buff.cpp:98
+
    (gdb)
    ```
    If we go to that final frame:
    ```
-   (gdb) frame 31
+   (gdb) frame 18
    #31 0x0000000000404d40 in main () at a1_matrix_mul_zero_buff.cpp:98
    98          q.submit([&](auto &h) {
    (gdb)
@@ -305,18 +301,20 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    Inspection of `a_buf` and `b_buf` will show a fundamental difference we already observed on the device side
    ```
    (gdb) print /r a_buf
-   $5 = {<sycl::_V1::detail::buffer_plain> = {impl = warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   std::shared_ptr<sycl::_V1::detail::buffer_impl> (use count 1, weak count 0) = {
-         get() = 0x28b06d0}}, <sycl::_V1::detail::OwnerLessBase<sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void> >> = {<No data fields>},
-   Range = {<sycl::_V1::detail::array<2>> = {common_array = {0, 0}}, static dimensions = <optimized out>}, OffsetInBytes = 0, IsSubBuffer = false}
+   $3 = {<sycl::_V1::detail::buffer_plain> = {
+      impl = {<std::__shared_ptr<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2>> = {<std::__shared_ptr_access<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2, false, false>> = {<No data fields>}, _M_ptr = 0x1f7c1c0,
+         _M_refcount = {
+            _M_pi = 0x1f7c1b0}}, <No data fields>}}, <sycl::_V1::detail::OwnerLessBase<sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void> >> = {<No data fields>}, Range = {<sycl::_V1::detail::array<2>> = {
+         common_array = {0, 0}}, static dimensions = <optimized out>}, OffsetInBytes = 0, IsSubBuffer = false}
+
 
    (gdb) print /r b_buf
-   $6 = {<sycl::_V1::detail::buffer_plain> = {impl = warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   warning: RTTI symbol not found for class 'std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>'
-   std::shared_ptr<sycl::_V1::detail::buffer_impl> (use count 1, weak count 0) = {
-         get() = 0x28b07e0}}, <sycl::_V1::detail::OwnerLessBase<sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void> >> = {<No data fields>},
-   Range = {<sycl::_V1::detail::array<2>> = {common_array = {300, 600}}, static dimensions = <optimized out>}, OffsetInBytes = 0, IsSubBuffer = false}
+   $4 = {<sycl::_V1::detail::buffer_plain> = {
+      impl = {<std::__shared_ptr<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2>> = {<std::__shared_ptr_access<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2, false, false>> = {<No data fields>}, _M_ptr = 0x1fb96c0,
+         _M_refcount = {
+            _M_pi = 0x1fb96b0}}, <No data fields>}}, <sycl::_V1::detail::OwnerLessBase<sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void> >> = {<No data fields>}, Range = {<sycl::_V1::detail::array<2>> = {
+         common_array = {300, 600}}, static dimensions = <optimized out>}, OffsetInBytes = 0, IsSubBuffer = false}
+
    (gdb)
    ```
 
@@ -346,15 +344,14 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
    ```
    Device max work group size: 1024
    Problem size: c(150,600) = a(150,300) * b(300,600)
-   FATAL: Unexpected page fault from GPU at 0x1d000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
-   FATAL: Unexpected page fault from GPU at 0x1d000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
-   Abort was called at 287 line in file:
+   Segmentation fault from GPU at 0x13000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
+   Segmentation fault from GPU at 0x13000, ctx_id: 1 (CCS) type: 0 (NotPresent), level: 3 (PML4), access: 0 (Read), banned: 0, aborting.
+   Abort was called at 269 line in file:
    ./shared/source/os_interface/linux/drm_neo.cpp
    Aborted (core dumped)
-
    ```
 
-2. Check the output if we run on the GPU again but using OpenCL.
+2. If your machine shows an OpenCL gpu device when you run `sycl-ls`, check the output if we run on the GPU again but using OpenCL.
    ```
    ONEAPI_DEVICE_SELECTOR=opencl:gpu ./b1_matrix_mul_null_usm
    ```
@@ -372,13 +369,13 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
 
 #### Attempting to Understand What Is Happening
 
-Why did we try with multiple backends?   If one had shown incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests as something that goes terribly wrong.  Or one of the backbends might have a bug.  But here all three crash, so it's likely we are doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address 0x0, while this may be legally allocated memory on the GPU.
+Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests as something that goes terribly wrong.  Or one of the backbends might have a bug.  But here all three crash, so it's likely we are doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address 0x0, while this may be legally allocated memory on the GPU.
 
 Let's see what caused the problem by running in the debugger:
 
 1. Start the debugger using OpenCL™ on the CPU.
    ```
-   ZET_ENABLE_PROGRAM_DEBUGGING=1 gdb-oneapi ./b1_matrix_mul_null_usm
+   ONEAPI_DEVICE_SELECTOR=opencl:cpu gdb-oneapi ./b1_matrix_mul_null_usm
    ```
 2. You should get the prompt `(gdb)`.
 
@@ -391,11 +388,12 @@ Let's see what caused the problem by running in the debugger:
    ```
    Problem size: c(150,600) = a(150,300) * b(300,600)
 
-   Thread 2.794 received signal SIGSEGV, Segmentation fault.
-   [Switching to thread 2.794:0 (ZE 0.12.3.1 lane 0)]
-   0x00008100ffcb6ab0 in main::{lambda(auto:1&)#2}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff00000000819590, index=...) at b1_matrix_mul_null_usm.cpp:122
+   Thread 2.1616 received signal SIGSEGV, Segmentation fault
+   Warning: The location reported for the signal may be inaccurate.
+   [Switching to thread 2.1616:0 (ZE 0.25.1.7 lane 0)]
+   0x00008000ffca6a70 in main::{lambda(auto:1&)#2}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff00000000e6ba90,
+      index=sycl::item range ..., offset ... = ...) at b1_matrix_mul_null_usm.cpp:122
    122               sum += dev_a[a_index] * dev_b[b_index];
-
    (gdb)
    ```
 
@@ -405,13 +403,19 @@ Let's see what caused the problem by running in the debugger:
    ```
    You should see output similar to the following.
    ```
-   #0  0x00008100ffcb6ab0 in main::{lambda(auto:1&)#2}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0xff00000000819590, index=...) at b1_matrix_mul_null_usm.cpp:122
-   #1  0x00008100ffcb07f0 in _ZTSZZ4mainENKUlRT_E0_clIN4sycl3_V17handlerEEEDaS0_EUlS_E_ (_arg_width_a=300, _arg_dev_a=0x0, _arg_dev_b=0xff003ffffff00000, _arg_dev_c=0xff003fffffea0000)
-      at /opt/intel/oneapi/compiler/2024.2/bin/compiler/../../include/sycl/handler.hpp:1569
+   #0  0x00007ffff4a75f60 in main::{lambda(auto:1&)#2}::operator()<sycl::_V1::handler>(sycl::_V1::handler&) const::{lambda(auto:1)#1}::operator()<sycl::_V1::item<2, true> >(sycl::_V1::item<2, true>) const (this=0x7fff3d5ff438,
+      index=sycl::item range ..., offset ... = ...) at b1_matrix_mul_null_usm.cpp:122
+   #1  0x00007ffff4a76490 in _ZTSZZ4mainENKUlRT_E0_clIN4sycl3_V17handlerEEEDaS0_EUlS_E_ (_arg_width_a=300,
+      _arg_dev_a=0x0, _arg_dev_b=0x7fffe5250000, _arg_dev_c=0x7fffe5d20000)
+      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/handler.hpp:1639
+   #2  0x00007ffff2ac223f in non-virtual thunk to Intel::OpenCL::DeviceBackend::Kernel::RunGroup(void const*, unsigned long const*, void*) const () from /opt/intel/oneapi/compiler/2025.0/lib/libintelocl.so
+   :
+   #21 0x00007ffff769caa4 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+   #22 0x00007ffff7729c3c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
    (gdb)
    ```
 
-5. We got lucky in that we got a small call stack, and the frame where we crashed is in our code.   Let's examine the code in a little more detail:
+5. We got lucky in that the frame where we crashed is in our code.   Let's examine the code in a little more detail:
    ```
    (gdb) list
    ```
@@ -464,34 +468,37 @@ What would we have seen if `dev_a` had contained just a random pointer value?  I
 
 #### Other Debug Techniques
 
-If you are trying to debug bad values on the GPU, you will be very challenged to figure out whether or not this is due to bad inputs. You *might* be able to catch the bad pointer if you breakpoint at the correct line. You also *might* see something odd if you capture the arguments sent to API calls with `onetrace`.
+If you are trying to debug bad values on the GPU, you will be very challenged to figure out whether or not this is due to bad inputs. You *might* be able to catch the bad pointer if you breakpoint at or just before the line there you crash. You also *might* see something odd if you capture the arguments sent to API calls with `unitrace`.
 
-You need to build onetrace before you can use it. See the instructions at [Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/onetrace). Once you have built the utility, you can invoke it before your program (similar to GDB).
+You need to build `unitrace` before you can use it. See the instructions at [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool). Once you have built the utility, you can invoke it before your program (similar to GDB).
 
-1. Run the oneTrace tool. (we include `-c` when invoking `onetrace` to enable call logging of API calls.)
+1. Run the `unitrace` tool. (we include `-c` when invoking `unitrace` to enable call logging of API calls.)
 
-   >**Note**: You must modify the command shown below to include the path to where you installed the `onetrace` utility.
+   >**Note**: You must modify the command shown below to include the path to where you installed the `unitrace` utility.
    ```
-   [path]/onetrace -c ./b1_matrix_mul_null_usm > b1_matrix_mul_null_usm_onetrace_out.txt 2>&1
+   [path]/unitrace -c ./b1_matrix_mul_null_usm > b1_matrix_mul_null_usm_unitrace_out.txt 2>&1
    ```
    While reviewing the output, you might see something like the following excerpt near the bottom of the output.
    ```
    :
-   >>>> [198147949] zeKernelCreate: hModule = 0x2b127b0 desc = 0x7fffd0375630 {ZE_STRUCTURE_TYPE_KERNEL_DESC(0x1d) 0 0 "_ZTSZZ4mainENKUlRT_E0_clIN2cl4sycl7handlerEEEDaS0_EUlS_E_"} phKerne
-   l = 0x7fffd0375628 (hKernel = 0x2af4720)
-   <<<< [198599544] zeKernelCreate [448864 ns] hKernel = 0x2c487a0 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198608874] zeKernelSetIndirectAccess: hKernel = 0x2c487a0 flags = 7
-   <<<< [198611092] zeKernelSetIndirectAccess [735 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198619429] zeKernelSetArgumentValue: hKernel = 0x2c487a0 argIndex = 0 argSize = 4 pArgValue = 0x2b11870
-   <<<< [198621003] zeKernelSetArgumentValue [305 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198625048] zeKernelSetArgumentValue: hKernel = 0x2c487a0 argIndex = 1 argSize = 8 pArgValue = 0
-   <<<< [198627236] zeKernelSetArgumentValue [1072 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198630079] zeKernelSetArgumentValue: hKernel = 0x2c487a0 argIndex = 2 argSize = 8 pArgValue = 0x2b11880
-   <<<< [198635408] zeKernelSetArgumentValue [4305 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198637750] zeKernelSetArgumentValue: hKernel = 0x2c487a0 argIndex = 3 argSize = 8 pArgValue = 0x2b11888
-   <<<< [198639962] zeKernelSetArgumentValue [1207 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [198645602] zeKernelGetProperties: hKernel = 0x2c487a0 pKernelProperties = 0x34b17c0
-   <<<< [198647342] zeKernelGetProperties [693 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411066857] zeKernelCreate: hModule = 44797904 desc = 140735939087520 {ZE_STRUCTURE_TYPE_KERNEL_DESC(0x1d) 0 0 "_ZTSZZ4mainENKUlRT_E0_clIN4sycl3_V17handlerEEEDaS0_EUlS_E_"} phKernel = 140735939087512 (hKernel = 14798282318754847232)
+   <<<< [1487508411092885] zeKernelCreate [21566 ns] hKernel = 44799912 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411096140] zeDeviceGetSubDevices: hDevice = 39507224 pCount = 140735939087500 (Count = 0) phSubdevices = 0
+   <<<< [1487508411098094] zeDeviceGetSubDevices [395 ns] Count = 0 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411099724] zeDeviceGetSubDevices: hDevice = 39507224 pCount = 140735939087500 (Count = 0) phSubdevices = 0
+   <<<< [1487508411100759] zeDeviceGetSubDevices [22 ns] Count = 0 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411104804] zeKernelSetIndirectAccess: hKernel = 44799912 flags = 7
+   <<<< [1487508411106715] zeKernelSetIndirectAccess [431 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411113472] zeKernelGetProperties: hKernel = 44799912 pKernelProperties = 45076936
+   <<<< [1487508411122357] zeKernelGetProperties [7693 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411125804] zeKernelSetArgumentValue: hKernel = 44799912 argIndex = 0 argSize = 4 pArgValue = 44677968
+   <<<< [1487508411127704] zeKernelSetArgumentValue [265 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411130788] zeKernelSetArgumentValue: hKernel = 44799912 argIndex = 1 argSize = 8 pArgValue = 0
+   <<<< [1487508411132260] zeKernelSetArgumentValue [528 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411133457] zeKernelSetArgumentValue: hKernel = 44799912 argIndex = 2 argSize = 8 pArgValue = 140735939087912
+   <<<< [1487508411135573] zeKernelSetArgumentValue [1131 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [1487508411136604] zeKernelSetArgumentValue: hKernel = 44799912 argIndex = 3 argSize = 8 pArgValue = 140735939087912
+   <<<< [1487508411137932] zeKernelSetArgumentValue [459 ns] -> ZE_RESULT_SUCCESS(0x0)
    :
    ```
    Notice how all the kernel arguments have a non-zero value except one (`argIndex = 1`) when they are set up. We have nothing to help us map the kernel arguments created by the SYCL runtime and passed to Level Zero to the arguments in the user program (the value may be OK). However, if you see a kernel argument that looks out of place (note that the values at all other argument indexes are very similar), you might want to be suspicious.

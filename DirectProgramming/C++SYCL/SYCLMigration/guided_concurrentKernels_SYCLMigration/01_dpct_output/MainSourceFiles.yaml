@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/MainSrcFiles_placehold'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/MainSrcFiles_placehold'
 Replacements:
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          1833
     Length:          32
     ReplacementText: "#define DPCT_PROFILING_ENABLED\n#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          1885
     Length:          34
     ReplacementText: ''
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          1974
     Length:          0
     ReplacementText: "\n#include <time.h>\n"
@@ -28,7 +28,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2073
     Length:          11
     ReplacementText: ''
@@ -37,7 +37,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2138
     Length:          0
     ReplacementText: "  /*\n  DPCT1008:16: clock function is not defined in SYCL. This is a hardware-specific feature. Consult with your hardware vendor to find a replacement.\n  */\n"
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2259
     Length:          0
     ReplacementText: "    /*\n    DPCT1008:17: clock function is not defined in SYCL. This is a hardware-specific feature. Consult with your hardware vendor to find a replacement.\n    */\n"
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2803
     Length:          11
     ReplacementText: ''
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2847
     Length:          0
     ReplacementText: ", const sycl::nd_item<3> &item_ct1,\n         clock_t *s_clocks"
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2887
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2910
     Length:          23
     ReplacementText: 'item_ct1.get_group()'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          2937
     Length:          32
     ReplacementText: ''
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3009
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3034
     Length:          10
     ReplacementText: 'item_ct1.get_local_range(2)'
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3091
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3114
     Length:          0
     ReplacementText: "  /*\n  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3116
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3176
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -154,7 +154,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3210
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -163,7 +163,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3235
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -172,7 +172,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3260
     Length:          0
     ReplacementText: "    /*\n    DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
@@ -181,7 +181,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          3264
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -190,7 +190,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4164
     Length:          14
     ReplacementText: 'dpct::device_info'
@@ -199,25 +199,25 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4209
     Length:          27
-    ReplacementText: 'DPCT_CHECK_ERROR(cuda_device = dpct::dev_mgr::instance().current_device_id())'
+    ReplacementText: 'DPCT_CHECK_ERROR(cuda_device = dpct::get_current_device_id())'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4258
     Length:          49
-    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device_info(deviceProp, dpct::dev_mgr::instance().get_device(cuda_device)))'
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_device(cuda_device).get_device_info(deviceProp))'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4311
     Length:          0
     ReplacementText: "  /*\n  DPCT1051:18: SYCL does not support a device property functionally compatible with concurrentKernels. It was migrated to true. You may need to adjust the value of true for the specific device.\n  */\n"
@@ -226,7 +226,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4318
     Length:          28
     ReplacementText: 'true'
@@ -235,7 +235,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4560
     Length:          0
     ReplacementText: "         /*\n         DPCT1005:19: The SYCL device version is different from CUDA Compute Compatibility. You may need to rewrite this code.\n         */\n"
@@ -244,7 +244,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4580
     Length:          5
     ReplacementText: 'get_major_version()'
@@ -253,7 +253,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4598
     Length:          5
     ReplacementText: 'get_minor_version()'
@@ -262,7 +262,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4616
     Length:          19
     ReplacementText: 'get_max_compute_units()'
@@ -271,7 +271,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4746
     Length:          35
     ReplacementText: 'DPCT_CHECK_ERROR(a = (clock_t *)sycl::malloc_host(nbytes, dpct::get_in_order_queue()))'
@@ -280,7 +280,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          4908
     Length:          33
     ReplacementText: 'DPCT_CHECK_ERROR(d_a = (clock_t *)sycl::malloc_device(nbytes, dpct::get_in_order_queue()))'
@@ -289,7 +289,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5003
     Length:          12
     ReplacementText: 'dpct::queue_ptr'
@@ -298,7 +298,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5034
     Length:          12
     ReplacementText: 'dpct::queue_ptr'
@@ -307,7 +307,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5074
     Length:          12
     ReplacementText: 'dpct::queue_ptr'
@@ -316,7 +316,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5150
     Length:          31
     ReplacementText: 'DPCT_CHECK_ERROR((streams[i]) = dpct::get_current_device().create_queue())'
@@ -325,7 +325,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5222
     Length:          11
     ReplacementText: 'dpct::event_ptr'
@@ -334,7 +334,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5277
     Length:          29
     ReplacementText: 'DPCT_CHECK_ERROR(start_event = new sycl::event())'
@@ -343,7 +343,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5327
     Length:          28
     ReplacementText: 'DPCT_CHECK_ERROR(stop_event = new sycl::event())'
@@ -352,7 +352,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5564
     Length:          11
     ReplacementText: 'dpct::event_ptr'
@@ -361,7 +361,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5607
     Length:          11
     ReplacementText: 'dpct::event_ptr'
@@ -370,7 +370,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5646
     Length:          11
     ReplacementText: 'dpct::event_ptr'
@@ -379,7 +379,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          5730
     Length:          67
     ReplacementText: 'DPCT_CHECK_ERROR(kernelEvent[i] = new sycl::event())'
@@ -388,7 +388,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6256
     Length:          9
     ReplacementText: 'get_max_clock_frequency()'
@@ -397,7 +397,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6278
     Length:          15
     ReplacementText: 'dpct::sync_barrier'
@@ -406,7 +406,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6307
     Length:          1
     ReplacementText: '&dpct::get_in_order_queue()'
@@ -415,16 +415,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6425
     Length:          58
-    ReplacementText: "streams[i]->submit(\n      [&](sycl::handler &cgh) {\n        clock_t * d_a_i_ct0 = &d_a[i];\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, 1), sycl::range<3>(1, 1, 1)), \n          [=](sycl::nd_item<3> item_ct1) {\n            clock_block(d_a_i_ct0, time_clocks);\n          });\n      });"
+    ReplacementText: "streams[i]->submit(\n      [&](sycl::handler &cgh) {\n        auto d_a_i_ct0 = &d_a[i];\n\n        cgh.parallel_for(\n          sycl::nd_range<3>(sycl::range<3>(1, 1, 1), sycl::range<3>(1, 1, 1)), \n          [=](sycl::nd_item<3> item_ct1) {\n            clock_block(d_a_i_ct0, time_clocks);\n          });\n      });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6483
     Length:          1
     ReplacementText: ''
@@ -433,7 +433,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6518
     Length:          0
     ReplacementText: "    /*\n    DPCT1024:20: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n    */\n"
@@ -442,7 +442,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6538
     Length:          43
     ReplacementText: 'DPCT_CHECK_ERROR(*kernelEvent[i] = streams[i]->ext_oneapi_submit_barrier())'
@@ -451,7 +451,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6683
     Length:          61
     ReplacementText: 'DPCT_CHECK_ERROR(streams[nstreams - 1]->ext_oneapi_submit_barrier({*kernelEvent[i]}))'
@@ -460,7 +460,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6927
     Length:          55
     ReplacementText: "streams[nstreams - 1]->submit(\n    [&](sycl::handler &cgh) {\n      sycl::local_accessor<clock_t, 1> s_clocks_acc_ct1(sycl::range<1>(32), cgh);\n\n      cgh.parallel_for(\n        sycl::nd_range<3>(sycl::range<3>(1, 1, 32), sycl::range<3>(1, 1, 32)), \n        [=](sycl::nd_item<3> item_ct1) {\n          sum(d_a, nkernels, item_ct1, s_clocks_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n        });\n    });"
@@ -469,7 +469,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: true
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          6982
     Length:          1
     ReplacementText: ''
@@ -478,7 +478,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+    Offset:          6986
+    Length:          0
+    ReplacementText: "/*\n  DPCT1124:21: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n  */\n  "
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7002
     Length:          15
     ReplacementText: 'DPCT_CHECK_ERROR(streams[nstreams - 1]->memcpy'
@@ -487,7 +496,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7048
     Length:          24
     ReplacementText: ''
@@ -496,7 +505,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7072
     Length:          23
     ReplacementText: ''
@@ -505,7 +514,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7096
     Length:          0
     ReplacementText: ')'
@@ -514,16 +523,16 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7276
     Length:          0
-    ReplacementText: "  /*\n  DPCT1024:21: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1024:22: The original code returned the error code that was further consumed by the program logic. This original code was replaced with 0. You may need to rewrite the program logic consuming the error code.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7294
     Length:          15
     ReplacementText: 'DPCT_CHECK_ERROR(dpct::sync_barrier'
@@ -532,7 +541,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7322
     Length:          1
     ReplacementText: '&dpct::get_in_order_queue()'
@@ -541,7 +550,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7324
     Length:          0
     ReplacementText: ')'
@@ -550,7 +559,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7345
     Length:          32
     ReplacementText: 'DPCT_CHECK_ERROR(stop_event->wait_and_throw())'
@@ -559,7 +568,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7398
     Length:          60
     ReplacementText: 'DPCT_CHECK_ERROR(elapsed_time = (stop_event->get_profiling_info<sycl::info::event_profiling::command_end>() - start_event->get_profiling_info<sycl::info::event_profiling::command_start>()) / 1000000.0f)'
@@ -568,7 +577,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7889
     Length:          29
     ReplacementText: 'dpct::get_current_device().destroy_queue(streams[i])'
@@ -577,7 +586,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          7924
     Length:          32
     ReplacementText: 'dpct::destroy_event(kernelEvent[i])'
@@ -586,7 +595,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          8004
     Length:          29
     ReplacementText: 'dpct::destroy_event(start_event)'
@@ -595,7 +604,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          8037
     Length:          28
     ReplacementText: 'dpct::destroy_event(stop_event)'
@@ -604,7 +613,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          8069
     Length:          15
     ReplacementText: 'sycl::free(a, dpct::get_in_order_queue())'
@@ -613,7 +622,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Offset:          8088
     Length:          13
     ReplacementText: 'dpct::dpct_free(d_a, dpct::get_in_order_queue())'
@@ -623,8 +632,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
+  - MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels/concurrentKernels.cu'
     Digest:          e87a0e1f26318910cfc2c6a46c4a0c6c
+    HasCUDASyntax:   true
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -632,7 +642,7 @@ FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -647,7 +657,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/0_Introduction/concurrentKernels'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/0_Introduction/concurrentKernels'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -686,6 +696,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

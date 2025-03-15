@@ -100,7 +100,7 @@ y_pred = d4p.linear_regression_prediction().compute(X_test, loaded_model).predic
 
 
 np.savetxt("./results/linear_regression_batch_results.csv", y_pred, delimiter =  ",")
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
 
 # In[ ]:

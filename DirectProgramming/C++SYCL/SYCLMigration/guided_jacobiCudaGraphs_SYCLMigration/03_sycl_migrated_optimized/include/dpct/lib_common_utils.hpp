@@ -9,13 +9,18 @@
 #ifndef __DPCT_LIB_COMMON_UTILS_HPP__
 #define __DPCT_LIB_COMMON_UTILS_HPP__
 
-#include <sycl/sycl.hpp>
+#include "compat_service.hpp"
+
 #include <oneapi/mkl.hpp>
-#include "memory.hpp"
-#include "util.hpp"
 
 namespace dpct {
 namespace detail {
+template <typename T> struct lib_data_traits { using type = T; };
+template <typename T> struct lib_data_traits<sycl::vec<T, 2>> {
+  using type = std::complex<T>;
+};
+template <class T> using lib_data_traits_t = typename lib_data_traits<T>::type;
+
 template <typename T> inline auto get_memory(const void *x) {
   T *new_x = reinterpret_cast<T *>(const_cast<void *>(x));
 #ifdef DPCT_USM_LEVEL_NONE
@@ -26,11 +31,14 @@ template <typename T> inline auto get_memory(const void *x) {
 }
 
 template <typename T>
-inline typename DataType<T>::T2 get_value(const T *s, sycl::queue &q) {
-  using Ty = typename DataType<T>::T2;
+inline typename ::dpct::detail::lib_data_traits_t<T> get_value(const T *s,
+                                                               sycl::queue &q) {
+  using Ty = typename ::dpct::detail::lib_data_traits_t<T>;
   Ty s_h;
-  if (get_pointer_attribute(q, s) == pointer_access_attribute::device_only)
-    detail::dpct_memcpy(q, (void *)&s_h, (void *)s, sizeof(T), device_to_host)
+  if (::dpct::cs::detail::get_pointer_attribute(q, s) ==
+      ::dpct::cs::detail::pointer_access_attribute::device_only)
+    ::dpct::cs::memcpy(q, (void *)&s_h, (void *)s, sizeof(T),
+                       ::dpct::cs::memcpy_direction::device_to_host)
         .wait();
   else
     s_h = *reinterpret_cast<const Ty *>(s);
@@ -96,7 +104,22 @@ enum class library_data_t : unsigned char {
   real_int8_4,
   real_int8_32,
   real_uint8_4,
+  real_f8_e4m3,
+  real_f8_e5m2,
   library_data_t_size
+};
+
+enum class compute_type : int {
+  f16,
+  f16_standard,
+  f32,
+  f32_standard,
+  f32_fast_bf16,
+  f32_fast_tf32,
+  f64,
+  f64_standard,
+  i32,
+  i32_standard,
 };
 
 namespace detail {
@@ -153,6 +176,57 @@ inline constexpr std::size_t library_data_size[] = {
     8,                                    // real_int8_32
     8                                     // real_uint8_4
 };
+
+template <class func_t, typename... args_t>
+std::invoke_result_t<func_t, args_t...>
+catch_batch_error(int *has_execption, const std::string &api_names,
+                  sycl::queue exec_queue, int *info, int *dev_info,
+                  int batch_size, func_t &&f, args_t &&...args) {
+  try {
+    return f(std::forward<args_t>(args)...);
+  } catch (oneapi::mkl::lapack::batch_error const &be) {
+    std::cerr << "Unexpected exception caught during call to API(s): "
+              << api_names << std::endl
+              << "reason: " << be.what() << std::endl
+              << "number: " << be.info() << std::endl;
+    if (be.info() < 0 && info)
+      *info = be.info();
+    int i = 0;
+    auto &ids = be.ids();
+    std::vector<int> info_vec(batch_size, 0);
+    for (auto const &e : be.exceptions()) {
+      try {
+        std::rethrow_exception(e);
+      } catch (oneapi::mkl::lapack::exception &e) {
+        std::cerr << "Exception in problem: " << ids[i] << std::endl
+                  << "reason: " << e.what() << std::endl
+                  << "info: " << e.info() << std::endl;
+        info_vec[ids[i]] = e.info();
+        i++;
+      }
+    }
+    if (dev_info)
+      exec_queue.memcpy(dev_info, info_vec.data(), batch_size * sizeof(int))
+          .wait();
+  } catch (sycl::exception const &e) {
+    std::cerr << "Caught synchronous SYCL exception:" << std::endl
+              << "reason: " << e.what() << std::endl;
+    if (dev_info)
+      exec_queue.memset(dev_info, 0, batch_size * sizeof(int)).wait();
+  }
+  if (has_execption)
+    *has_execption = 1;
+  return {};
+}
+
+template <typename ret_t, typename... args_t>
+ret_t catch_batch_error_f(int *has_execption, const std::string &api_names,
+                          sycl::queue exec_queue, int *info, int *dev_info,
+                          int batch_size, ret_t (*f)(args_t...),
+                          args_t &&...args) {
+  return catch_batch_error(has_execption, api_names, exec_queue, info, dev_info,
+                           batch_size, f, args...);
+}
 } // namespace detail
 
 #ifdef DPCT_USM_LEVEL_NONE

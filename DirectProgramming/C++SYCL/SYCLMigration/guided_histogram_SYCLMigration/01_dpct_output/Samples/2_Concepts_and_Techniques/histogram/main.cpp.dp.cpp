@@ -73,8 +73,8 @@ int main(int argc, char **argv) {
   // Gflops/s
   int dev = findCudaDevice(argc, (const char **)argv);
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(dev))));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_device(dev).get_device_info(deviceProp)));
 
   printf("CUDA device [%s] has %d Multi-Processors, Compute %d.%d\n",
          /*

@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
   double *d_b, *d_x, *d_x_new;
   dpct::queue_ptr stream1;
   /*
-  DPCT1025:50: The SYCL queue is created ignoring the flag and priority options.
+  DPCT1025:61: The SYCL queue is created ignoring the flag and priority options.
   */
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1 = dpct::get_current_device().create_queue()));
@@ -159,17 +159,17 @@ int main(int argc, char **argv) {
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1->memset(d_x_new, 0, sizeof(double) * N_ROWS)));
   /*
-  DPCT1124:51: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
-  origin API might be synchronous, depends on the type of operand memory, so you
-  may need to call wait() on event return by memcpy API to ensure
+  DPCT1124:62: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
   synchronization behavior.
   */
   checkCudaErrors(DPCT_CHECK_ERROR(
       stream1->memcpy(d_A, A, sizeof(float) * N_ROWS * N_ROWS)));
   /*
-  DPCT1124:52: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
-  origin API might be synchronous, depends on the type of operand memory, so you
-  may need to call wait() on event return by memcpy API to ensure
+  DPCT1124:63: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
   synchronization behavior.
   */
   checkCudaErrors(

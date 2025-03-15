@@ -20,7 +20,6 @@
 #include <tuple>
 #include <utility>
 
-#include "../dpct.hpp"
 #define _DPCT_GCC_VERSION                                                      \
   (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 
@@ -58,12 +57,39 @@ template <typename _Op> struct mark_functor_const {
   }
 };
 
-template <typename T>
-__dpct_inline__ ::std::enable_if_t<::std::is_unsigned_v<T>, T>
-bfe(T source, uint32_t bit_start, uint32_t num_bits) {
-  const T MASK = (T{1} << num_bits) - 1;
-  return (source >> bit_start) & MASK;
-}
+// Forward declare key_value_pair to avoid creating cyclic dependency between
+// iterators.h and functional.h.
+template <typename _KeyTp, typename _ValueTp> class key_value_pair;
+
+// Returns the smaller of two key_value_pair objects based on their value
+// member. If value elements compare equal, then the pair with the lower key is
+// returned.
+struct argmin {
+  template <typename _ValueTp, typename _KeyTp>
+  key_value_pair<_KeyTp, _ValueTp>
+  operator()(const key_value_pair<_KeyTp, _ValueTp> &lhs,
+             const key_value_pair<_KeyTp, _ValueTp> &rhs) const {
+    return (lhs.value < rhs.value) ||
+                   (lhs.value == rhs.value && lhs.key < rhs.key)
+               ? lhs
+               : rhs;
+  }
+};
+
+// Returns the larger of two key_value_pair objects based on their value member.
+// If value elements compare equal, then the pair with the lower key is
+// returned.
+struct argmax {
+  template <typename _ValueTp, typename _KeyTp>
+  key_value_pair<_KeyTp, _ValueTp>
+  operator()(const key_value_pair<_KeyTp, _ValueTp> &lhs,
+             const key_value_pair<_KeyTp, _ValueTp> &rhs) const {
+    return (lhs.value > rhs.value) ||
+                   (lhs.value == rhs.value && lhs.key < rhs.key)
+               ? lhs
+               : rhs;
+  }
+};
 
 namespace internal {
 

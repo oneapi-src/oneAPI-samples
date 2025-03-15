@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.4.0)
 if(NVIDIA_GPU)
-        set(CMAKE_CXX_COMPILER "clang++")
+	set(CMAKE_CXX_COMPILER "clang++")
 else()
         set(CMAKE_CXX_COMPILER "icpx")
 endif()

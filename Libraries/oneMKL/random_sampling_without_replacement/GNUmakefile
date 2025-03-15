@@ -9,10 +9,9 @@ run: lottery lottery_usm lottery_device_api
 		./lottery_usm
 		./lottery_device_api
 
-MKL_COPTS = -DMKL_ILP64  -qmkl=sequential
-MKL_LIBS  = -lsycl -lOpenCL -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64  -qmkl -qmkl-sycl-impl=rng
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations $(MKL_LIBS)
+DPCPP_OPTS = $(MKL_COPTS) -fsycl-device-code-split=per_kernel -fno-sycl-early-optimizations
 
 lottery: lottery.cpp
 		icpx $< -fsycl -o $@ $(DPCPP_OPTS)

@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
   printf("Allocating GPU memory...\n");
   checkCudaErrors(
       DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
-                           QRNG_DIMENSIONS * N, dpct::get_default_queue())));
+                           QRNG_DIMENSIONS * N, dpct::get_in_order_queue())));
 
   printf("Allocating CPU memory...\n");
   h_OutputGPU = (float *)malloc(QRNG_DIMENSIONS * N * sizeof(float));
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
 
   printf("Testing QRNG...\n\n");
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
           .wait()));
   int numIterations = 20;
@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 
   printf("\nReading GPU results...\n");
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
           .wait()));
 
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
 
   printf("\nTesting inverseCNDgpu()...\n\n");
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memset(d_Output, 0, QRNG_DIMENSIONS * N * sizeof(float))
           .wait()));
 
@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
 
   printf("Reading GPU results...\n");
   checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_default_queue()
+      dpct::get_in_order_queue()
           .memcpy(h_OutputGPU, d_Output, QRNG_DIMENSIONS * N * sizeof(float))
           .wait()));
 
@@ -193,7 +193,7 @@ int main(int argc, char **argv) {
   sdkDeleteTimer(&hTimer);
   free(h_OutputGPU);
   checkCudaErrors(
-      DPCT_CHECK_ERROR(sycl::free(d_Output, dpct::get_default_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Output, dpct::get_in_order_queue())));
 
   exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

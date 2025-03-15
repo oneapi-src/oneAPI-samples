@@ -278,5 +278,5 @@ print("Data Parallel Extension for NumPy accuracy:", accuracy)
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 

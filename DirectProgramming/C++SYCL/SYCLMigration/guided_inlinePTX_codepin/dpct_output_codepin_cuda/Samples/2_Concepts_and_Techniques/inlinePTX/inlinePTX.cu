@@ -88,15 +88,15 @@ dpctexp::codepin::get_ptr_size_map()[d_ptr] = N * sizeof(int);
     dim3 cudaBlockSize(256,1,1);
     dim3 cudaGridSize((N + cudaBlockSize.x - 1) / cudaBlockSize.x, 1, 1);
     dpctexp::codepin::gen_prolog_API_CP(
-        "/nfs/site/home/sselmax/Avijit/cuda-samples/Samples/"
+        "sequence_gpu:/nfs/site/home/abagx/Avijit/cuda-samples/Samples/"
         "2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu:86:5",
         0, "d_ptr", d_ptr, "N", N);
 sequence_gpu<<<cudaGridSize, cudaBlockSize>>>(d_ptr, N);
     dpctexp::codepin::gen_epilog_API_CP(
-        "/nfs/site/home/sselmax/Avijit/cuda-samples/Samples/"
+        "sequence_gpu:/nfs/site/home/abagx/Avijit/cuda-samples/Samples/"
         "2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu:86:5",
         0, "d_ptr", d_ptr, "N", N);
-//checkCudaErrors(cudaGetLastError());
+checkCudaErrors(cudaGetLastError());
     checkCudaErrors(cudaDeviceSynchronize());
 
     sequence_cpu(h_ptr, N);

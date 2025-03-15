@@ -20,15 +20,15 @@ This sample also provide an Analysis script to give users a quick performance an
 |:---                     |:---
 | OS                      | Ubuntu* 20.04
 | Hardware                | Intel® Xeon® Scalable processor family or newer
-| Software                | Intel® AI Analytics Toolkit (AI Kit)
+| Software                | AI Tools
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the AI Tools for Linux**](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html) for AI Tools installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 
@@ -44,7 +44,7 @@ The necessary tools and components are already installed in the environment. You
 ### Jupyter Notebooks  
 Jupyter Notebooks help users analyze the performance benefit from using Intel® Optimization for TensorFlow* with the oneDNN library.
 
->**Note**: The notebooks are released with the Intel® AI Analytics Toolkit (AI Kit), and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.
+>**Note**: The notebooks are released with the AI Tools, and they are under the /opt/intel/oneapi/modelzoo/latest/models/docs/notebooks/perf_analysis folder.
 
 You can find the Jupyter Notebooks in Model Zoo for Intel® Architecture GitHub using the links in the table below.
 
@@ -230,7 +230,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 >**Note**: Run the Jupyter Notebooks on the login node of the Intel® DevCloud.
 
-1. Copy the Model Zoo from your AI Kit installation path.
+1. Copy the Model Zoo from your AI Tools installation path.
    ```
    $cp -rf /opt/intel/oneapi/modelzoo/latest/models ~/
    ```

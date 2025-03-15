@@ -51,7 +51,7 @@
 #define MAX_OPTIONS (1024 * 1024)
 
 // Preprocessed input option data
-typedef struct dpct_type_164939 {
+typedef struct dpct_type_642279 {
   real S;
   real X;
   real MuByT;
@@ -80,9 +80,7 @@ inline double endCallValue(double S, double X, double r,
 // per option. It is fastest when the number of thread blocks times the work per
 // block is high enough to keep the GPU busy.
 ////////////////////////////////////////////////////////////////////////////////
-
 static void MonteCarloOneBlockPerOption(
-
     oneapi::mkl::rng::device::philox4x32x10<1> *__restrict rngStates,
     const __TOptionData *__restrict d_OptionData,
     __TOptionValue *__restrict d_CallValue, int pathN, int optionN,
@@ -98,7 +96,6 @@ static void MonteCarloOneBlockPerOption(
             item_ct1.get_group(2) * item_ct1.get_local_range(2);
 
   // Copy random number state to local memory for efficiency
-
   oneapi::mkl::rng::device::philox4x32x10<1> localState = rngStates[tid];
   for (int optionIndex = item_ct1.get_group(2); optionIndex < optionN;
        optionIndex += item_ct1.get_group_range(2)) {
@@ -118,7 +115,7 @@ static void MonteCarloOneBlockPerOption(
 #pragma unroll 8
       for (int i = iSum; i < pathN; i += SUM_N) {
         auto r = oneapi::mkl::rng::device::generate(dist, localState);
-        real callValue = endCallValue(S, X, r, MuByT, VBySqrtT);
+	real callValue = endCallValue(S, X, r, MuByT, VBySqrtT);
         sumCall.Expected += callValue;
         sumCall.Confidence += callValue * callValue;
       }
@@ -129,20 +126,21 @@ static void MonteCarloOneBlockPerOption(
 
     // Reduce shared memory accumulators
     // and write final result to global memory
-
     item_ct1.barrier();
     sumReduce<real, SUM_N, THREAD_N>(s_SumCall, s_Sum2Call, cta, tile32,
                                      &d_CallValue[optionIndex], item_ct1);
   }
 }
 
-static void rngSetupStates(oneapi::mkl::rng::device::philox4x32x10<1> *rngState,
-                           int device_id, const sycl::nd_item<3> &item_ct1) {
+static void rngSetupStates(
+    oneapi::mkl::rng::device::philox4x32x10<1> *rngState,
+    int device_id, const sycl::nd_item<3> &item_ct1) {
   // determine global thread id
   int tid = item_ct1.get_local_id(2) +
             item_ct1.get_group(2) * item_ct1.get_local_range(2);
   // Each threadblock gets different seed,
   // Threads within a threadblock get different sequence numbers
+   
   rngState[tid] = oneapi::mkl::rng::device::philox4x32x10<1>(
       item_ct1.get_group(2) + item_ct1.get_group_range(2) * device_id,
       {0, static_cast<std::uint64_t>((item_ct1.get_local_id(2)) * 8)});
@@ -153,37 +151,38 @@ static void rngSetupStates(oneapi::mkl::rng::device::philox4x32x10<1> *rngState,
 ////////////////////////////////////////////////////////////////////////////////
 
 extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
-  
+  checkCudaErrors(
       DPCT_CHECK_ERROR(plan->d_OptionData = (void *)sycl::malloc_device(
                            sizeof(__TOptionData) * (plan->optionCount),
-                           dpct::get_in_order_queue()));
-  
+                           dpct::get_in_order_queue())));
+  checkCudaErrors(
       DPCT_CHECK_ERROR(plan->d_CallValue = (void *)sycl::malloc_device(
                            sizeof(__TOptionValue) * (plan->optionCount),
-                           dpct::get_in_order_queue()));
-  DPCT_CHECK_ERROR(
+                           dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
       plan->h_OptionData =
           (void *)sycl::malloc_host(sizeof(__TOptionData) * (plan->optionCount),
-                                    dpct::get_in_order_queue()));
+                                    dpct::get_in_order_queue())));
   // Allocate internal device memory
-  
-  DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
-                           (plan->optionCount), dpct::get_in_order_queue()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(plan->h_CallValue = sycl::malloc_host<__TOptionValue>(
+                           (plan->optionCount), dpct::get_in_order_queue())));
   // Allocate states for pseudo random number generators
-    DPCT_CHECK_ERROR(
+
+   DPCT_CHECK_ERROR(
       plan->rngStates = sycl::malloc_device<oneapi::mkl::rng::device::philox4x32x10<1>>(
-          plan->gridSize * THREAD_N, dpct::get_in_order_queue()));
+          plan->gridSize * THREAD_N, dpct::get_default_queue()));
     DPCT_CHECK_ERROR(
-      dpct::get_in_order_queue()
+      dpct::get_default_queue()
           .memset(plan->rngStates, 0,
                   plan->gridSize * THREAD_N *
                       sizeof(oneapi::mkl::rng::device::philox4x32x10<1>))
           .wait());
 
   // place each device pathN random numbers apart on the random number sequence
-  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+  dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
     auto plan_rngStates_ct0 = plan->rngStates;
-    int plan_device_ct1 = plan->device;
+    auto plan_device_ct1 = plan->device;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
                                            sycl::range<3>(1, 1, THREAD_N),
@@ -212,15 +211,16 @@ extern "C" void closeMonteCarloGPU(TOptionPlan *plan) {
         (float)(exp(-RT) * 1.96 * stdDev / sqrt(pathN));
   }
 
-  DPCT_CHECK_ERROR(dpct::dpct_free(plan->rngStates, dpct::get_in_order_queue()));
-  DPCT_CHECK_ERROR(
-      dpct::dpct_free(plan->h_CallValue, dpct::get_in_order_queue()));
-  DPCT_CHECK_ERROR(
-      dpct::dpct_free(plan->h_OptionData, dpct::get_in_order_queue()));
-  DPCT_CHECK_ERROR(
-      dpct::dpct_free(plan->d_CallValue, dpct::get_in_order_queue()));
-  DPCT_CHECK_ERROR(
-      dpct::dpct_free(plan->d_OptionData, dpct::get_in_order_queue()));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::dpct_free(plan->rngStates, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_CallValue, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      sycl::free(plan->h_OptionData, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::dpct_free(plan->d_CallValue, dpct::get_in_order_queue())));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::dpct_free(plan->d_OptionData, dpct::get_in_order_queue())));
 }
 
 // Main computations
@@ -246,27 +246,22 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
     h_OptionData[i].VBySqrtT = (real)VBySqrtT;
   }
 
-  DPCT_CHECK_ERROR(
+  checkCudaErrors(DPCT_CHECK_ERROR(
       stream->memcpy(plan->d_OptionData, h_OptionData,
-                     plan->optionCount * sizeof(__TOptionData)));
+                     plan->optionCount * sizeof(__TOptionData))));
 
   stream->submit([&](sycl::handler &cgh) {
-
     sycl::local_accessor<real, 1> s_SumCall_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
-
     sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
-    //dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
-    //    *plan_rngStates_ct0 = plan->rngStates;
     auto plan_rngStates_ct0 = plan->rngStates;
     const __TOptionData *plan_d_OptionData_ct1 =
         (__TOptionData *)(plan->d_OptionData);
-    __TOptionValue *plan_d_CallValue_ct2 =
-        (__TOptionValue *)(plan->d_CallValue);
-    int plan_pathN_ct3 = plan->pathN;
-    int plan_optionCount_ct4 = plan->optionCount;
+    auto plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);
+    auto plan_pathN_ct3 = plan->pathN;
+    auto plan_optionCount_ct4 = plan->optionCount;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
@@ -283,9 +278,9 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
         });
   });
 
-  DPCT_CHECK_ERROR(
+  checkCudaErrors(DPCT_CHECK_ERROR(
       stream->memcpy(h_CallValue, plan->d_CallValue,
-                     plan->optionCount * sizeof(__TOptionValue)));
+                     plan->optionCount * sizeof(__TOptionValue))));
 
   // cudaDeviceSynchronize();
 }

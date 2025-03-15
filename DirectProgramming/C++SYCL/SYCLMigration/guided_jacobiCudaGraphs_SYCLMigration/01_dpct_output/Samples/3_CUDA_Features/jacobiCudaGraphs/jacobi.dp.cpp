@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -209,10 +203,18 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
     const float *A, const double *b, const float conv_threshold,
     const int max_iter, double *x, double *x_new, dpct::queue_ptr stream) {
   // CTA size
-  sycl::range<3> nthreads(1, 1, 256);
+  dpct::dim3 nthreads(256, 1, 1);
   // grid size
-  sycl::range<3> nblocks(1, 1, (N_ROWS / ROWS_PER_CTA) + 2);
+  dpct::dim3 nblocks((N_ROWS / ROWS_PER_CTA) + 2, 1, 1);
+  /*
+  DPCT1119:33: Migration of cudaGraph_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   cudaGraph_t graph;
+  /*
+  DPCT1119:34: Migration of cudaGraphExec_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   cudaGraphExec_t graphExec = NULL;
 
   double sum = 0.0;
@@ -220,13 +222,17 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   checkCudaErrors(DPCT_CHECK_ERROR(
       d_sum = sycl::malloc_device<double>(1, dpct::get_in_order_queue())));
 
+  /*
+  DPCT1119:35: Migration of cudaGraphNode_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   std::vector<cudaGraphNode_t> nodeDependencies;
+  /*
+  DPCT1119:36: Migration of cudaGraphNode_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   cudaGraphNode_t memcpyNode, jacobiKernelNode, memsetNode;
-  dpct::pitched_data memcpyParams_from_data_ct1, memcpyParams_to_data_ct1;
-  sycl::id<3> memcpyParams_from_pos_ct1(0, 0, 0),
-      memcpyParams_to_pos_ct1(0, 0, 0);
-  sycl::range<3> memcpyParams_size_ct1(1, 1, 1);
-  dpct::memcpy_direction memcpyParams_direction_ct1;
+  dpct::memcpy_parameter memcpyParams = {};
   cudaMemsetParams memsetParams = {0};
 
   memsetParams.dst = (void *)d_sum;
@@ -238,18 +244,18 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   memsetParams.height = 1;
 
   /*
-  DPCT1007:30: Migration of cudaGraphCreate is not supported.
+  DPCT1007:37: Migration of cudaGraphCreate is not supported.
   */
   checkCudaErrors(cudaGraphCreate(&graph, 0));
   /*
-  DPCT1007:31: Migration of cudaGraphAddMemsetNode is not supported.
+  DPCT1007:38: Migration of cudaGraphAddMemsetNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemsetNode(&memsetNode, graph, NULL, 0, &memsetParams));
   nodeDependencies.push_back(memsetNode);
 
   /*
-  DPCT1082:32: Migration of cudaKernelNodeParams type is not supported.
+  DPCT1082:39: Migration of cudaKernelNodeParams type is not supported.
   */
   cudaKernelNodeParams NodeParams0, NodeParams1;
   NodeParams0.func = (void *)JacobiMethod;
@@ -262,7 +268,7 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   NodeParams0.extra = NULL;
 
   /*
-  DPCT1007:33: Migration of cudaGraphAddKernelNode is not supported.
+  DPCT1007:40: Migration of cudaGraphAddKernelNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddKernelNode(&jacobiKernelNode, graph, nodeDependencies.data(),
@@ -271,24 +277,25 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   nodeDependencies.clear();
   nodeDependencies.push_back(jacobiKernelNode);
 
-  memcpyParams_from_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_from_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_from_data_ct1 = dpct::pitched_data(d_sum, sizeof(double), 1, 1);
-  memcpyParams_to_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_to_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_to_data_ct1 = dpct::pitched_data(&sum, sizeof(double), 1, 1);
-  memcpyParams_size_ct1 = sycl::range<3>(sizeof(double), 1, 1);
-  memcpyParams_direction_ct1 = dpct::device_to_host;
+  memcpyParams.from.image = NULL;
+  memcpyParams.from.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.from.pitched = dpct::pitched_data(d_sum, sizeof(double), 1, 1);
+  memcpyParams.to.image = NULL;
+  memcpyParams.to.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.to.pitched = dpct::pitched_data(&sum, sizeof(double), 1, 1);
+  memcpyParams.size = sycl::range<3>(sizeof(double), 1, 1);
+  memcpyParams.direction = dpct::device_to_host;
 
   /*
-  DPCT1007:34: Migration of cudaGraphAddMemcpyNode is not supported.
+  DPCT1007:41: Migration of cudaGraphAddMemcpyNode is not supported.
   */
   checkCudaErrors(
       cudaGraphAddMemcpyNode(&memcpyNode, graph, nodeDependencies.data(),
                              nodeDependencies.size(), &memcpyParams));
 
   /*
-  DPCT1007:35: Migration of cudaGraphInstantiate is not supported.
+  DPCT1119:42: Migration of cudaGraphInstantiate is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
   */
   checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
 
@@ -304,13 +311,14 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
   int k = 0;
   for (k = 0; k < max_iter; k++) {
     /*
-    DPCT1007:36: Migration of cudaGraphExecKernelNodeSetParams is not supported.
+    DPCT1007:43: Migration of cudaGraphExecKernelNodeSetParams is not supported.
     */
     checkCudaErrors(cudaGraphExecKernelNodeSetParams(
         graphExec, jacobiKernelNode,
         ((k & 1) == 0) ? &NodeParams0 : &NodeParams1));
     /*
-    DPCT1007:37: Migration of cudaGraphLaunch is not supported.
+    DPCT1119:44: Migration of cudaGraphLaunch is not supported, please try to
+    remigrate with option: --use-experimental-features=graph.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, stream));
     checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
@@ -318,21 +326,21 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
     if (sum <= conv_threshold) {
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
-      nblocks[2] = (N_ROWS / nthreads[2]) + 1;
+      nblocks.x = (N_ROWS / nthreads.x) + 1;
       /*
       DPCT1083:4: The size of local memory in the migrated code may be different
       from the original code. Check that the allocated memory size in the
       migrated code is correct.
       */
-      size_t sharedMemSize = ((nthreads[2] / 32) + 1) * sizeof(double);
+      size_t sharedMemSize = ((nthreads.x / 32) + 1) * sizeof(double);
       if ((k & 1) == 0) {
         /*
         DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
         limit. To get the device limit, query info::device::max_work_group_size.
         Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -354,8 +362,8 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
         limit. To get the device limit, query info::device::max_work_group_size.
         Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -373,6 +381,12 @@ double JacobiMethodGpuCudaGraphExecKernelSetParams(
         });
       }
 
+      /*
+      DPCT1124:45: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
+      */
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
       checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
@@ -393,10 +407,18 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
                                           double *x_new,
                                           dpct::queue_ptr stream) {
   // CTA size
-  sycl::range<3> nthreads(1, 1, 256);
+  dpct::dim3 nthreads(256, 1, 1);
   // grid size
-  sycl::range<3> nblocks(1, 1, (N_ROWS / ROWS_PER_CTA) + 2);
+  dpct::dim3 nblocks((N_ROWS / ROWS_PER_CTA) + 2, 1, 1);
+  /*
+  DPCT1119:46: Migration of cudaGraph_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   cudaGraph_t graph;
+  /*
+  DPCT1119:47: Migration of cudaGraphExec_t is not supported, please try to
+  remigrate with option: --use-experimental-features=graph.
+  */
   cudaGraphExec_t graphExec = NULL;
 
   double sum = 0.0;
@@ -407,10 +429,11 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
   int k = 0;
   for (k = 0; k < max_iter; k++) {
     /*
-    DPCT1027:38: The call to cudaStreamBeginCapture was replaced with 0 because
-    SYCL currently does not support capture operations on queues.
+    DPCT1119:48: Migration of cudaStreamBeginCapture is not supported, please
+    try to remigrate with option: --use-experimental-features=graph.
     */
-    checkCudaErrors(0);
+    checkCudaErrors(
+        cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal));
     checkCudaErrors(DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
     if ((k & 1) == 0) {
       /*
@@ -418,18 +441,19 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:46: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:60: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:47: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:61: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -453,18 +477,19 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:48: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:62: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:49: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:63: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -483,43 +508,58 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
             });
       });
     }
+    /*
+    DPCT1124:49: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+    the origin API might be synchronous, it depends on the type of operand
+    memory, so you may need to call wait() on event return by memcpy API to
+    ensure synchronization behavior.
+    */
     checkCudaErrors(
         DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
     /*
-    DPCT1027:39: The call to cudaStreamEndCapture was replaced with 0 because
-    SYCL currently does not support capture operations on queues.
+    DPCT1119:50: Migration of cudaStreamEndCapture is not supported, please try
+    to remigrate with option: --use-experimental-features=graph.
     */
-    checkCudaErrors(0);
+    checkCudaErrors(cudaStreamEndCapture(stream, &graph));
 
     if (graphExec == NULL) {
       /*
-      DPCT1007:40: Migration of cudaGraphInstantiate is not supported.
+      DPCT1119:51: Migration of cudaGraphInstantiate is not supported, please
+      try to remigrate with option: --use-experimental-features=graph.
       */
       checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
     } else {
+      /*
+      DPCT1007:52: Migration of cudaGraphExecUpdateResult is not supported.
+      */
       cudaGraphExecUpdateResult updateResult_out;
       /*
-      DPCT1007:41: Migration of cudaGraphExecUpdate is not supported.
+      DPCT1119:53: Migration of cudaGraphExecUpdate is not supported, please try
+      to remigrate with option: --use-experimental-features=graph.
       */
       checkCudaErrors(
           cudaGraphExecUpdate(graphExec, graph, NULL, &updateResult_out));
       if (updateResult_out != cudaGraphExecUpdateSuccess) {
         if (graphExec != NULL) {
           /*
-          DPCT1007:42: Migration of cudaGraphExecDestroy is not supported.
+          DPCT1119:54: Migration of cudaGraphExecDestroy is not supported,
+          please try to remigrate with option:
+          --use-experimental-features=graph.
           */
           checkCudaErrors(cudaGraphExecDestroy(graphExec));
         }
         printf("k = %d graph update failed with error - %d\n", k,
                updateResult_out);
         /*
-        DPCT1007:43: Migration of cudaGraphInstantiate is not supported.
+        DPCT1119:55: Migration of cudaGraphInstantiate is not supported, please
+        try to remigrate with option: --use-experimental-features=graph.
         */
         checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
       }
     }
     /*
-    DPCT1007:44: Migration of cudaGraphLaunch is not supported.
+    DPCT1119:56: Migration of cudaGraphLaunch is not supported, please try to
+    remigrate with option: --use-experimental-features=graph.
     */
     checkCudaErrors(cudaGraphLaunch(graphExec, stream));
     checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
@@ -527,21 +567,21 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
     if (sum <= conv_threshold) {
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
-      nblocks[2] = (N_ROWS / nthreads[2]) + 1;
+      nblocks.x = (N_ROWS / nthreads.x) + 1;
       /*
       DPCT1083:9: The size of local memory in the migrated code may be different
       from the original code. Check that the allocated memory size in the
       migrated code is correct.
       */
-      size_t sharedMemSize = ((nthreads[2] / 32) + 1) * sizeof(double);
+      size_t sharedMemSize = ((nthreads.x / 32) + 1) * sizeof(double);
       if ((k & 1) == 0) {
         /*
         DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the
         limit. To get the device limit, query info::device::max_work_group_size.
         Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -563,8 +603,8 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
         the limit. To get the device limit, query
         info::device::max_work_group_size. Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -582,6 +622,12 @@ double JacobiMethodGpuCudaGraphExecUpdate(const float *A, const double *b,
         });
       }
 
+      /*
+      DPCT1124:57: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
+      */
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
       checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
@@ -600,9 +646,9 @@ double JacobiMethodGpu(const float *A, const double *b,
                        const float conv_threshold, const int max_iter,
                        double *x, double *x_new, dpct::queue_ptr stream) {
   // CTA size
-  sycl::range<3> nthreads(1, 1, 256);
+  dpct::dim3 nthreads(256, 1, 1);
   // grid size
-  sycl::range<3> nblocks(1, 1, (N_ROWS / ROWS_PER_CTA) + 2);
+  dpct::dim3 nblocks((N_ROWS / ROWS_PER_CTA) + 2, 1, 1);
 
   double sum = 0.0;
   double *d_sum;
@@ -618,18 +664,19 @@ double JacobiMethodGpu(const float *A, const double *b,
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:50: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:64: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:51: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:65: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -653,18 +700,19 @@ double JacobiMethodGpu(const float *A, const double *b,
       limit. To get the device limit, query info::device::max_work_group_size.
       Adjust the work-group size if needed.
       */
-      dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});
+      dpct::get_device(dpct::get_device_id(stream->get_device()))
+          .has_capability_or_fail({sycl::aspect::fp64});
 
       stream->submit([&](sycl::handler &cgh) {
         /*
-        DPCT1101:52: 'N_ROWS' expression was replaced with a value. Modify
+        DPCT1101:66: 'N_ROWS' expression was replaced with a value. Modify
         the code to use the original expression, provided in comments, if it
         is correct.
         */
         sycl::local_accessor<double, 1> x_shared_acc_ct1(
             sycl::range<1>(512 /*N_ROWS*/), cgh);
         /*
-        DPCT1101:53: 'ROWS_PER_CTA + 1' expression was replaced with a
+        DPCT1101:67: 'ROWS_PER_CTA + 1' expression was replaced with a
         value. Modify the code to use the original expression, provided in
         comments, if it is correct.
         */
@@ -683,6 +731,12 @@ double JacobiMethodGpu(const float *A, const double *b,
             });
       });
     }
+    /*
+    DPCT1124:58: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+    the origin API might be synchronous, it depends on the type of operand
+    memory, so you may need to call wait() on event return by memcpy API to
+    ensure synchronization behavior.
+    */
     checkCudaErrors(
         DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
     checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
@@ -690,21 +744,21 @@ double JacobiMethodGpu(const float *A, const double *b,
     if (sum <= conv_threshold) {
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memset(d_sum, 0, sizeof(double))));
-      nblocks[2] = (N_ROWS / nthreads[2]) + 1;
+      nblocks.x = (N_ROWS / nthreads.x) + 1;
       /*
       DPCT1083:14: The size of local memory in the migrated code may be
       different from the original code. Check that the allocated memory size in
       the migrated code is correct.
       */
-      size_t sharedMemSize = ((nthreads[2] / 32) + 1) * sizeof(double);
+      size_t sharedMemSize = ((nthreads.x / 32) + 1) * sizeof(double);
       if ((k & 1) == 0) {
         /*
         DPCT1049:13: The work-group size passed to the SYCL kernel may exceed
         the limit. To get the device limit, query
         info::device::max_work_group_size. Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -726,8 +780,8 @@ double JacobiMethodGpu(const float *A, const double *b,
         the limit. To get the device limit, query
         info::device::max_work_group_size. Adjust the work-group size if needed.
         */
-        dpct::has_capability_or_fail(stream->get_device(),
-                                     {sycl::aspect::fp64});
+        dpct::get_device(dpct::get_device_id(stream->get_device()))
+            .has_capability_or_fail({sycl::aspect::fp64});
 
         stream->submit([&](sycl::handler &cgh) {
           sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
@@ -745,6 +799,12 @@ double JacobiMethodGpu(const float *A, const double *b,
         });
       }
 
+      /*
+      DPCT1124:59: cudaMemcpyAsync is migrated to asynchronous memcpy API. While
+      the origin API might be synchronous, it depends on the type of operand
+      memory, so you may need to call wait() on event return by memcpy API to
+      ensure synchronization behavior.
+      */
       checkCudaErrors(
           DPCT_CHECK_ERROR(stream->memcpy(&sum, d_sum, sizeof(double))));
       checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));

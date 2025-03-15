@@ -1,5 +1,5 @@
 {
-    "guid": "E38A3DC6-67AC-4254-9295-1A5A34CB5F0C",	
+    "guid": "AF87442D-88D1-4771-9573-51C8855F716C",	
     "name": "guided_histogram_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample implements 64-bin histogram calculation of arbitrary-sized 8-bit data array.",

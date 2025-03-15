@@ -52,7 +52,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
                                     sycl::access::address_space::global_space> atomic_counter { count_acc[0] };
                 size_t count = 0;
 
-                // Create an object of basic random numer generator (engine)
+                // Create an object of basic random number generator (engine)
                 mkl::rng::device::philox4x32x10<vec_size> engine(seed, id_global * count_per_thread * vec_size);
                 // Create an object of distribution (by default float, a = 0.0f, b = 1.0f)
                 mkl::rng::device::uniform distr;

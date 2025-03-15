@@ -3,10 +3,14 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
+#include <sycl/sycl.hpp>
 #include <vector>
+
+template <typename AccT> auto get_accessor_pointer(const AccT &acc) {
+  return acc.template get_multi_ptr<sycl::access::decorated::no>().get();
+}
 
 int main() {
   constexpr size_t N = 4096 * 4096;
@@ -56,9 +60,9 @@ int main() {
             histogram[k] = 0;
           }
           for (int k = 0; k < BLOCK_SIZE; k++) {
-            unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * BLOCK_SIZE +
-                        sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
+            unsigned long x = sg.load(
+                get_accessor_pointer(macc) + group * gSize * BLOCK_SIZE +
+                sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
 #pragma unroll
             for (int i = 0; i < 8; i++) {
               unsigned int c = x & 0x1FU;

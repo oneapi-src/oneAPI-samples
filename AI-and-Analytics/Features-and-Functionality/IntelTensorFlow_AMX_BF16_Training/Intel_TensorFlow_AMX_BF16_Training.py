@@ -209,7 +209,7 @@ plt.xlabel("Test Case")
 plt.ylabel("Speedup")
 plt.bar(["FP32", "BF16 no AMX"], [speedup_from_fp32, speedup_from_bf16])
 
-print('[CODE_SAMPLE_COMPLETED_SUCCESFULLY]')
+print('[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]')
 
 
 # # run inference

@@ -72,7 +72,7 @@ void BlackScholes<DATA_TYPE>::body() {
     DATA_TYPE* h_put_result_local = this->h_put_result;
 
     black_scholes_queue->parallel_for<k_BlackScholes<DATA_TYPE, block_size>>(sycl::nd_range(sycl::range<1>(opt_n / block_size), sycl::range<1>(wg_size)),
-                [=](sycl::nd_item<1> item) [[intel::kernel_args_restrict]] [[intel::reqd_sub_group_size(sg_size)]] {
+                [=](sycl::nd_item<1> item) [[intel::kernel_args_restrict]] [[sycl::reqd_sub_group_size(sg_size)]] {
                         auto local_id = item.get_local_linear_id();
                         auto group_id = item.get_group_linear_id();
 #pragma unroll

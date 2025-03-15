@@ -44,38 +44,12 @@
 
 // This is a kernel that does no real work but runs at least for a specified
 // number of clocks
-void clock_block(clock_t *d_o, clock_t clock_count) {
-  /*
-  DPCT1008:16: clock function is not defined in SYCL. This is a
-  hardware-specific feature. Consult with your hardware vendor to find a
-  replacement.
-  */
-  unsigned int start_clock = (unsigned int)clock();
-
-  clock_t clock_offset = 0;
-
-  while (clock_offset < clock_count) {
-    /*
-    DPCT1008:17: clock function is not defined in SYCL. This is a
-    hardware-specific feature. Consult with your hardware vendor to find a
-    replacement.
-    */
-    unsigned int end_clock = (unsigned int)clock();
-
-    // The code below should work like
-    // this (thanks to modular arithmetics):
-    //
-    // clock_offset = (clock_t) (end_clock > start_clock ?
-    //                           end_clock - start_clock :
-    //                           end_clock + (0xffffffffu - start_clock));
-    //
-    // Indeed, let m = 2^32 then
-    // end - start = end + m - start (mod m).
-
-    clock_offset = (clock_t)(end_clock - start_clock);
+void count_block(long *d_o, sycl::nd_item<3> &item_ct1) {
+  for (int i = item_ct1.get_local_id(2); i < 23000;
+       i+=1) {
+    auto dummy = sycl::sin((float)i) + sycl::cos((float)i);
+    d_o[0] = d_o[0] + i;    
   }
-
-  d_o[0] = clock_offset;
 }
 
 // Single warp reduction kernel
@@ -137,11 +111,11 @@ int main(int argc, char **argv) {
   cuda_device = findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      cuda_device = dpct::dev_mgr::instance().current_device_id()));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(cuda_device = dpct::get_current_device_id()));
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(cuda_device))));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      dpct::get_device(cuda_device).get_device_info(deviceProp)));
 
   /*
   DPCT1051:18: SYCL does not support a device property functionally compatible
@@ -162,13 +136,13 @@ int main(int argc, char **argv) {
          deviceProp.get_max_compute_units());
 
   // allocate host memory
-  clock_t *a = 0;  // pointer to the array data in host memory
+  long *a = 0;  // pointer to the array data in host memory
   checkCudaErrors(DPCT_CHECK_ERROR(
-      a = (clock_t *)sycl::malloc_host(nbytes, dpct::get_in_order_queue())));
+      a = (long *)sycl::malloc_host(nbytes, dpct::get_in_order_queue())));
 
   // allocate device memory
-  clock_t *d_a = 0;  // pointers to data and init value in the device memory
-  checkCudaErrors(DPCT_CHECK_ERROR(d_a = (clock_t *)sycl::malloc_device(
+  long *d_a = 0;  // pointers to data and init value in the device memory
+  checkCudaErrors(DPCT_CHECK_ERROR(d_a = (long *)sycl::malloc_device(
                                        nbytes, dpct::get_in_order_queue())));
 
   // allocate and initialize an array of stream handles
@@ -197,14 +171,14 @@ int main(int argc, char **argv) {
 
   //////////////////////////////////////////////////////////////////////
   // time execution with nkernels streams
-  clock_t total_clocks = 0;
+  long total_clocks = 0;
 #if defined(__arm__) || defined(__aarch64__)
   // the kernel takes more time than the channel reset time on arm archs, so to
   // prevent hangs reduce time_clocks.
-  clock_t time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 100));
+  long time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 100));
 #else
-  clock_t time_clocks =
-      (clock_t)(kernel_time * deviceProp.get_max_clock_frequency());
+  long time_clocks =
+      (long)(kernel_time * deviceProp.get_max_clock_frequency());
 #endif
 
   dpct::sync_barrier(start_event, &dpct::get_in_order_queue());
@@ -212,12 +186,12 @@ int main(int argc, char **argv) {
   // queue nkernels in separate streams and record when they are done
   for (int i = 0; i < nkernels; ++i) {
     streams[i]->submit([&](sycl::handler &cgh) {
-      clock_t *d_a_i_ct0 = &d_a[i];
+      auto d_a_i_ct0 = &d_a[i];
 
       cgh.parallel_for(
           sycl::nd_range<3>(sycl::range<3>(1, 1, 1), sycl::range<3>(1, 1, 1)),
           [=](sycl::nd_item<3> item_ct1) {
-            clock_block(d_a_i_ct0, time_clocks);
+            count_block(d_a_i_ct0, item_ct1);
           });
     });
     total_clocks += time_clocks;
@@ -248,6 +222,12 @@ int main(int argc, char **argv) {
                   .get());
         });
   });
+  /*
+  DPCT1124:21: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(
       DPCT_CHECK_ERROR(streams[nstreams - 1]->memcpy(a, d_a, sizeof(clock_t))));
 
@@ -256,7 +236,7 @@ int main(int argc, char **argv) {
 
   // in this sample we just wait until the GPU is done
   /*
-  DPCT1024:21: The original code returned the error code that was further
+  DPCT1024:22: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */

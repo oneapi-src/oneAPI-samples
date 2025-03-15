@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <iostream>
+#include <sycl/sycl.hpp>
 int main() {
   constexpr int N = 256 * 256;
   constexpr int M = 512;

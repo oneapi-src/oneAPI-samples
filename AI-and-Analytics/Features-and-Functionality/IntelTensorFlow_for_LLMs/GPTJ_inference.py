@@ -6,10 +6,13 @@
 # This notebook uses HuggingFace's GPT-J model to perform text generation on Intel Xeon
 
 # ## Model :GPT-J (6B)
-#  **[GPT-J(6B)] (https://huggingface.co/EleutherAI/gpt-j-6b): released in March 2021.It was the largest open source GPT-3-style language model in the world at the time of release.**
-#
-#  **GPT-J is similar to ChatGPT in ability, although it does not function as a chat bot, only as a text predictor.   Developed using Mesh     Tranformer & xmap in JAX**
-#
+#  **[GPT-J(6B)] (https://huggingface.co/EleutherAI/gpt-j-6b): released in March 2021.
+# 
+# It was the largest open source GPT-3-style language model in the world at the time of release.**
+# 
+#  **GPT-J is similar to ChatGPT in ability, although it does not function as a chat bot, only as a text predictor.
+#   Developed using Mesh Tranformer & xmap in JAX**
+# 
 #  *The model consists of :
 # >
 #      - 28 layers
@@ -17,8 +20,9 @@
 #      - Feedforward dimension of 16384
 #      - 16 heads, each with a dimension of 256.*
 # >
+# 
 # The model is trained with a tokenization vocabulary of 50257, using the same set of Byte Pair Encoding(BPEs) as GPT-2/GPT-3.*
-#
+# 
 
 # In[1]:
 
@@ -136,8 +140,8 @@ complete_my_thought(input_sentence4)
 complete_my_thought(input_sentence5)
 
 
-# In[ ]:
+# In[14]:
 
 
-
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
