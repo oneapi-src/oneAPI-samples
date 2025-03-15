@@ -20,13 +20,13 @@ In this sample, you will run a distributed Linear Regression model with oneDAL D
 |:---               |:---
 | OS                | Ubuntu* 18.04 or higher
 | Hardware          | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software          | Intel® AI Analytics Toolkit (AI Kit)
+| Software          | AI Tools
 
 ## Key Implementation Details
 
-The sample demonstrates how to use software products that are powered by [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/en-us/oneapi/ai-kit).
+The sample demonstrates how to use software products that are powered by [Intel® oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) and the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
-The sample assumes you have a working version of the Intel® MPI Library, Daal4py, and scikit-learn installed inside a conda environment (similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the AI Kit.)
+The sample assumes you have a working version of the Intel® MPI Library, Daal4py, and scikit-learn installed inside a conda environment (similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the AI Tools.)
 
 ## Set Environment Variables
 
@@ -34,9 +34,9 @@ When working with the command-line interface (CLI), you should configure the one
 
 ## Build the `Intel® Python Daal4py Distributed Linear Regression` Sample
 
-You can refer to the *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* for post-installation steps and scripts.
+You can refer to the *[Get Started with the AI Tools for Linux*](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html)* for post-installation steps and scripts.
 
-The Intel® oneAPI Data Analytics Library is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+The Intel® oneAPI Data Analytics Library is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 > **Note**: If you have not already done so, set up your CLI
 > environment by sourcing  the `setvars` script in the root of your oneAPI installation.
@@ -52,7 +52,7 @@ The Intel® oneAPI Data Analytics Library is ready for use once you finish the I
 
 #### Activate Conda with Root Access
 
-By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
+By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
 
 ```
 source activate base

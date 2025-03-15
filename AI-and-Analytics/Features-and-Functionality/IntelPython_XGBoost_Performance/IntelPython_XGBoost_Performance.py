@@ -3,7 +3,7 @@
 
 # # XGBoost Performance Comparison 
 
-# In this example we will train a XGBoost model and predict the results to show off Intel's optimizations for XGBoost used for increased performance. Intel optimized XGBoost is shipped as a part of the Intel® oneAPI AI Analytics Toolkit.
+# In this example we will train a XGBoost model and predict the results to show off Intel's optimizations for XGBoost used for increased performance. Intel optimized XGBoost is shipped as a part of the AI Tools.
 # 
 # This example is a Jupyter Notebook version of a XGBoost example seen in this Medium blog using the popular Higgs dataset: 
 # https://medium.com/intel-analytics-software/new-optimizations-for-cpu-in-xgboost-1-1-81144ea21115
@@ -14,7 +14,7 @@
 
 # This example is executed in two Anaconda environments. 
 # 
-# The first environment is the latest [Intel® oneAPI AI Analytics Toolkit](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html) base environment, which includes data analytics and machine learning workflows and Intel optimizations for XGboost. See [here](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html) for more installation information.
+# The first environment is the latest [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html) base environment, which includes data analytics and machine learning workflows and Intel optimizations for XGboost. See [here](https://software.intel.com/content/www/us/en/develop/articles/installing-ai-kit-with-conda.html) for more installation information.
 
 # The second environment is a clone of the first environment using commands:
 

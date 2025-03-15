@@ -19,14 +19,14 @@ Intel® Distribution of Modin* uses HDK to speed up your Pandas notebooks, scrip
 | :---                              | :---
 | OS                                | 64-bit Ubuntu* 18.04 or higher
 | Hardware                          | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software                          | Intel® AI Analytics Toolkit (AI Kit) (Python version 3.8 or newer, Intel® Distribution of Modin*) <br> Intel® Extension for Scikit-learn* <br> NumPy
+| Software                          | AI Tools (Python version 3.8 or newer, Intel® Distribution of Modin*) <br> Intel® Extension for Scikit-learn* <br> NumPy
 
-The Intel® Distribution of Modin* and Intel® Extension for Scikit-learn* libraries are available together in [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The Intel® Distribution of Modin* and Intel® Extension for Scikit-learn* libraries are available together in [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 
 ## Key Implementation Details
 
-This end-to-end workload sample code is implemented for CPU using the Python language. Once you have installed AI Kit, the Conda environment is prepared with Python version 3.8 (or newer), Intel Distribution of Modin*, Intel® Extension for Scikit-Learn, and NumPy. 
+This end-to-end workload sample code is implemented for CPU using the Python language. Once you have installed AI Tools, the Conda environment is prepared with Python version 3.8 (or newer), Intel Distribution of Modin*, Intel® Extension for Scikit-Learn, and NumPy. 
 
 In this sample, you will use Intel® Distribution of Modin* to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression-based model to find the relation between education and total income earned in the US.
 
@@ -36,11 +36,11 @@ The data transformation stage normalizes the income to yearly inflation, balance
 
 
 ## Configure the Development Environment
-If you do not already have the AI Kit installed, then download an online or offline installer for the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html) or install the AI Kit using Conda.
+If you do not already have the AI Tools installed, then download an online or offline installer for the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html) or install the AI Tools using Conda.
 
->**Note**: See [Install Intel® AI Analytics Toolkit via Conda*](https://software.intel.com/content/www/us/en/develop/documentation/installation-guide-for-intel-oneapi-toolkits-linux/top/installation/install-using-package-managers/conda/install-intel-ai-analytics-toolkit-via-conda.html) in the *Intel® oneAPI Toolkits Installation Guide for Linux* OS* for information on Conda installation and configuration.
+>**Note**: See [Install AI Tools via Conda*](https://software.intel.com/content/www/us/en/develop/documentation/installation-guide-for-intel-oneapi-toolkits-linux/top/installation/install-using-package-managers/conda/install-intel-ai-analytics-toolkit-via-conda.html) in the *Intel® oneAPI Toolkits Installation Guide for Linux* OS* for information on Conda installation and configuration.
 
-The Intel® Distribution of Modin* and the Intel® Extension for Scikit-learn* are ready to use after AI Kit installation with the Conda Package Manager.
+The Intel® Distribution of Modin* and the Intel® Extension for Scikit-learn* are ready to use after AI Tools installation with the Conda Package Manager.
 
 ## Set Environment Variables
 
