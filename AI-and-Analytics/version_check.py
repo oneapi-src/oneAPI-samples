@@ -1,5 +1,5 @@
-#import importlib
 from importlib import util
+
 tensorflow_found = util.find_spec("tensorflow") is not None
 pytorch_found = util.find_spec("torch") is not None
 pytorch_ext_found = util.find_spec("intel_extension_for_pytorch") is not None
@@ -18,12 +18,11 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class arch_checker:
-
     def __init__(self):
         cpuinfo_found = util.find_spec("cpuinfo") is not None
         if cpuinfo_found == False:
             self.arch = 'None'
-            print("please install py-cpuinfo")
+            print("Please install py-cpuinfo")
             return
         from cpuinfo import get_cpu_info
         info = get_cpu_info()
@@ -41,13 +40,10 @@ class arch_checker:
         return
 
 if tensorflow_found == True:
-
     import tensorflow as tf
-
     import os
 
     def get_mkl_enabled_flag():
-
         mkl_enabled = False
         major_version = int(tf.__version__.split(".")[0])
         minor_version = int(tf.__version__.split(".")[1])
@@ -63,69 +59,69 @@ if tensorflow_found == True:
             mkl_enabled = tf.pywrap_tensorflow.IsMklEnabled()
         return mkl_enabled
 
-    print ("TensorTlow version: ", tf.__version__)
-    print("MKL enabled :", get_mkl_enabled_flag())
+    print(f"TensorTlow version: {tf.__version__}")
+    print(f"MKL enabled: {get_mkl_enabled_flag()}")
     if tensorflow_ext_found == True:
         import intel_extension_for_tensorflow as itex
-        print("itex_version : ", itex.__version__)
+        print(f"itex_version: {itex.__version__}")
 
 if pytorch_found == True:
     import torch
-    print("PyTorch Version: ", torch.__version__)
+    print(f"PyTorch version: {torch.__version__}")
     mkldnn_enabled = torch.backends.mkldnn.is_available()
     mkl_enabled = torch.backends.mkl.is_available()
     openmp_enabled = torch.backends.openmp.is_available()
-    print('mkldnn : {0},  mkl : {1}, openmp : {2}'.format(mkldnn_enabled, mkl_enabled, openmp_enabled))
+    print(f'mkldnn: {mkldnn_enabled}, mkl: {mkl_enabled}, openmp: {openmp_enabled}')
     print(torch.__config__.show())
 
     if pytorch_ext_found == True:
         import intel_extension_for_pytorch as ipex
-        print("ipex_verion : ",ipex.__version__)
+        print(f"ipex_version: {ipex.__version__}")
 
 if xgboost_found == True:
     import xgboost as xgb
-    print("XGBoost Version: ", xgb.__version__)
+    print(f"XGBoost version: {xgb.__version__}")
 
 if modin_found == True:
     import modin
     import modin.config as cfg
     major_version = int(modin.__version__.split(".")[0])
     minor_version = int(modin.__version__.split(".")[1])
-    print("Modin Version: ", modin.__version__)
+    print(f"Modin version: {modin.__version__}")
     cfg_engine = ''
     if minor_version > 12 and major_version == 0:
         cfg_engine = cfg.StorageFormat.get()
 
     else:
         cfg_engine = cfg.Engine.get()
-    print("Modin Engine: ", cfg_engine)
+    print(f"Modin Engine: {cfg_engine}")
 
 if sklearn_found == True:
     import sklearn
-    print("scikit learn Version: ", sklearn.__version__)
+    print(f"scikit-learn version: {sklearn.__version__}")
     if sklearnex_found == True:
         import sklearnex
-        print("have scikit learn ext 2021.4 : ", sklearnex._utils.get_sklearnex_version((2021, 'P', 400)))
+        print(f"scikit-learn ext 2021.4 installed: {sklearnex._utils.get_sklearnex_version((2021, 'P', 400))}")
 
 if inc_found == True:
     import neural_compressor as inc
-    print("neural_compressor version {}".format(inc.__version__))
+    print(f"neural_compressor version: {inc.__version__}")
 
 if torchccl_found == True:
     import oneccl_bindings_for_pytorch as torchccl
-    print("oneCCL Bindings version {}".format(torchccl.__version__))
+    print(f"oneCCL Bindings version: {torchccl.__version__}")
 
 if dpctl_found == True:
     import dpctl as dpctl
-    print("DPCTL version {}".format(dpctl.__version__))
+    print(f"DPCTL version: {dpctl.__version__}")
 
 if numba_dpex_found == True:
     import numba_dpex as dpex
-    print("numba_dpex version {}".format(dpex.__version__))
+    print(f"numba_dpex version: {dpex.__version__}")
 
 if dpnp_found == True:
     import dpnp as np
-    print("dpnp version {}".format(np.__version__))
+    print(f"dpnp version: {np.__version__}")
 
 checker = arch_checker()
-print("Arch : ", checker.arch)
+print(f"Arch: {checker.arch}")
