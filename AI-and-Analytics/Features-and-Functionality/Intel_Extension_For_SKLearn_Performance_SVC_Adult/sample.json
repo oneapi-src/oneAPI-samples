@@ -13,11 +13,14 @@
         "env": [
           "source /intel/oneapi/intelpython/bin/activate",
           "conda activate base",
-          "pip install -r requirements.txt"
+          "pip install uv",
+          "uv python pin $(which python)",
+          "uv venv --system-site-packages",
+          "uv sync"
         ],
         "id": "skelarnex_svc",
         "steps": [
-          "python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py"
+          "uv run python Intel_Extension_for_SKLearn_Performance_SVC_Adult.py"
         ]
       }
     ]

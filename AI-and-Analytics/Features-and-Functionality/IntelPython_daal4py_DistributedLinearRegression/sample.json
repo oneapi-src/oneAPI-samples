@@ -13,13 +13,17 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"pip install -r requirements.txt"
+                "source /intel/oneapi/intelpython/bin/activate", 
+                "conda activate base", 
+                "pip install uv", 
+                "uv python pin $(which python)", 
+                "uv venv --system-site-packages", 
+                "uv sync"
 			],
 			"id": "idp_d4p_Linear_Regression_Dist",
 			"steps": [
-				"python download_data.py",
-				"mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py"
+				"uv run python download_data.py",
+				"uv run mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py"
 			]
 		}]
 	},

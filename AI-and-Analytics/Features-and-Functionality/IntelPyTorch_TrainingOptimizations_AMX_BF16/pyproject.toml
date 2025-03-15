@@ -1,0 +1,13 @@
+[project]
+name = "intelpytorch-trainingoptimizations-amx-bf16"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.10.1",
+    "notebook>=7.3.2",
+    "py-cpuinfo>=9.0.0",
+    "transformers>=4.49.0",
+]

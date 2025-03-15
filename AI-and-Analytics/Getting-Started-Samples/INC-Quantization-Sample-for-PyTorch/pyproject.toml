@@ -1,0 +1,13 @@
+[project]
+name = "inc-quantization-sample-for-pytorch"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=2.4.0",
+    "ipykernel>=6.29.5",
+    "neural-compressor==2.1",
+    "notebook>=7.3.2",
+    "transformers>=4.27.4",
+]

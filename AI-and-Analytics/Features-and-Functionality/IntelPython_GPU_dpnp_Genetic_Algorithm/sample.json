@@ -9,18 +9,21 @@
   "os":["linux"],
   "targetDevice": ["GPU"],
   "ciTests": {
-  	"linux": [
+    "linux": [
     {
-  		"env": [
+      "env": [
         "source /intel/oneapi/intelpython/bin/activate",
         "conda activate base",
-        "pip install -r requirements.txt"
+        "pip install uv",
+        "uv python pin $(which python)",
+        "uv venv --system-site-packages",
+        "uv sync"
       ],
-  		"id": "idp_ga_dpnp_py",
-  		"steps": [
-         "python IntelPython_GPU_dpnp_Genetic_Algorithm.py" 
-  		 ]
-  	}
+      "id": "idp_ga_dpnp_py",
+      "steps": [
+         "uv run python IntelPython_GPU_dpnp_Genetic_Algorithm.py"
+      ]
+    }
     ]
 },
 "expertise": "Code Optimization"

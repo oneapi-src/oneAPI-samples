@@ -1,0 +1,10 @@
+[project]
+name = "inteltensorflow-textgeneration-with-lstm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "notebook>=7.3.2",
+    "requests>=2.32.3",
+]

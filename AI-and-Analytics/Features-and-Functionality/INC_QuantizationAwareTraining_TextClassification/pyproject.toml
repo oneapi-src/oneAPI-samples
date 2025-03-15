@@ -1,0 +1,16 @@
+[project]
+name = "inc-quantizationawaretraining-textclassification"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.4.0",
+    "datasets>=3.3.2",
+    "evaluate>=0.4.3",
+    "neural-compressor>=3.2",
+    "optimum[neural-compressor]>=1.24.0",
+    "torch==2.5.0",
+    "torchvision==0.20.0",
+    "transformers>=4.45.2",
+]

@@ -1,0 +1,19 @@
+[project]
+name = "jobrecommendationsystem"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.4.0",
+    "datasets>=3.3.2",
+    "jinja2>=3.1.5",
+    "matplotlib>=3.10.1",
+    "nltk>=3.9.1",
+    "numpy==1.26.4",
+    "seaborn>=0.13.2",
+    "sentence-transformers>=3.4.1",
+    "spacy>=3.8.4",
+    "transformers>=4.49.0",
+    "wordcloud>=1.9.4",
+]

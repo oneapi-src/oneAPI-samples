@@ -9,17 +9,22 @@
   "os":["linux"],
   "targetDevice": ["CPU"],
   "ciTests": {
-  	"linux": [
+    "linux": [
     {
-  		"id": "idp_xgb_performance",
-  		"steps": [
-         	"source /intel/oneapi/intelpython/bin/activate",
-          "python IntelPython_XGBoost_Performance.py",
-          "conda remove xgboost --y",
-          "pip install -r requirements.txt",
-          "python IntelPython_XGBoost_Performance.py"		 
-  		 ]
-  	}
+      "env": [
+        "source /intel/oneapi/intelpython/bin/activate",
+        "conda activate base"
+      ],
+      "id": "idp_xgb_performance",
+      "steps": [
+        "python IntelPython_XGBoost_Performance.py",
+        "pip install uv",
+        "uv python pin $(which python)",
+        "uv venv --system-site-packages",
+        "uv sync",
+        "uv run python IntelPython_XGBoost_Performance.py"
+      ]
+    }
     ]
 },
 "expertise": "Code Optimization"
