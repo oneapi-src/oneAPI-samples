@@ -38,7 +38,7 @@
 static dpct::constant_memory<float, 1> c_Kernel(KERNEL_LENGTH);
 
 extern "C" void setConvolutionKernel(float *h_Kernel) {
-  dpct::get_default_queue()
+  dpct::get_in_order_queue()
       .memcpy(c_Kernel.get_ptr(), h_Kernel, KERNEL_LENGTH * sizeof(float))
       .wait();
 }
@@ -54,10 +54,11 @@ extern "C" void setConvolutionKernel(float *h_Kernel) {
 void convolutionRowsKernel(float *d_Dst, float *d_Src, int imageW,
                                       int imageH, int pitch,
                                       const sycl::nd_item<3> &item_ct1,
-                                      float *c_Kernel,
-                                      sycl::local_accessor<float, 2> s_Data) {
+                                      float const *c_Kernel,
+                                      float s_Data[4/*ROWS_BLOCKDIM_Y*/][160/*(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
+                              ROWS_BLOCKDIM_X*/]) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
 
   // Offset to the left halo edge
   const int baseX =
@@ -128,39 +129,41 @@ extern "C" void convolutionRowsGPU(float *d_Dst, float *d_Src, int imageW,
   assert(imageW % (ROWS_RESULT_STEPS * ROWS_BLOCKDIM_X) == 0);
   assert(imageH % ROWS_BLOCKDIM_Y == 0);
 
-  sycl::range<3> blocks(1, imageH / ROWS_BLOCKDIM_Y,
-                        imageW / (ROWS_RESULT_STEPS * ROWS_BLOCKDIM_X));
-  sycl::range<3> threads(1, ROWS_BLOCKDIM_Y, ROWS_BLOCKDIM_X);
+  dpct::dim3 blocks(imageW / (ROWS_RESULT_STEPS * ROWS_BLOCKDIM_X),
+                    imageH / ROWS_BLOCKDIM_Y);
+  dpct::dim3 threads(ROWS_BLOCKDIM_X, ROWS_BLOCKDIM_Y);
 
-  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+  {
     c_Kernel.init();
 
-    auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
+      auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
 
-    /*
-    DPCT1101:16: 'ROWS_BLOCKDIM_Y' expression was replaced with a value.
-    Modify the code to use the original expression, provided in comments, if
-    it is correct.
-    */
-    /*
-    DPCT1101:17: '(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
+      /*
+      DPCT1101:16: 'ROWS_BLOCKDIM_Y' expression was replaced with a value.
+      Modify the code to use the original expression, provided in comments, if
+      it is correct.
+      */
+      /*
+      DPCT1101:17: '(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
                             ROWS_BLOCKDIM_X' expression was replaced with a
-    value. Modify the code to use the original expression, provided in
-    comments, if it is correct.
-    */
-    sycl::local_accessor<float, 2> s_Data_acc_ct1(
-        sycl::range<2>(4 /*ROWS_BLOCKDIM_Y*/,
-                       160 /*(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
-ROWS_BLOCKDIM_X*/),
-        cgh);
+      value. Modify the code to use the original expression, provided in
+      comments, if it is correct.
+      */
+      sycl::local_accessor<float[4 /*ROWS_BLOCKDIM_Y*/][160 /*(ROWS_RESULT_STEPS
+                              + 2 * ROWS_HALO_STEPS) * ROWS_BLOCKDIM_X*/
+      ],
+                           0>
+          s_Data_acc_ct1(cgh);
 
-    cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
-                     [=](sycl::nd_item<3> item_ct1) {
-                       convolutionRowsKernel(d_Dst, d_Src, imageW, imageH,
-                                             imageW, item_ct1, c_Kernel_ptr_ct1,
-                                             s_Data_acc_ct1);
-                     });
-  });
+      cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
+                       [=](sycl::nd_item<3> item_ct1) {
+                         convolutionRowsKernel(
+                             d_Dst, d_Src, imageW, imageH, imageW, item_ct1,
+                             c_Kernel_ptr_ct1, s_Data_acc_ct1);
+                       });
+    });
+  }
   getLastCudaError("convolutionRowsKernel() execution failed\n");
 }
 
@@ -175,10 +178,13 @@ ROWS_BLOCKDIM_X*/),
 void convolutionColumnsKernel(float *d_Dst, float *d_Src, int imageW,
                                          int imageH, int pitch,
                                          const sycl::nd_item<3> &item_ct1,
-                                         float *c_Kernel,
-                                         sycl::local_accessor<float, 2> s_Data) {
+                                         float const *c_Kernel,
+                                         float s_Data[16/*COLUMNS_BLOCKDIM_X*/][81/*(COLUMNS_RESULT_STEPS +
+                                               2 * COLUMNS_HALO_STEPS) *
+                                                  COLUMNS_BLOCKDIM_Y +
+                                              1*/]) {
   // Handle to thread block group
-  auto cta = item_ct1.get_group();
+  sycl::group<3> cta = item_ct1.get_group();
 
   // Offset to the upper halo edge
   const int baseX =
@@ -254,39 +260,45 @@ extern "C" void convolutionColumnsGPU(float *d_Dst, float *d_Src, int imageW,
   assert(imageW % COLUMNS_BLOCKDIM_X == 0);
   assert(imageH % (COLUMNS_RESULT_STEPS * COLUMNS_BLOCKDIM_Y) == 0);
 
-  sycl::range<3> blocks(1, imageH / (COLUMNS_RESULT_STEPS * COLUMNS_BLOCKDIM_Y),
-                        imageW / COLUMNS_BLOCKDIM_X);
-  sycl::range<3> threads(1, COLUMNS_BLOCKDIM_Y, COLUMNS_BLOCKDIM_X);
+  dpct::dim3 blocks(imageW / COLUMNS_BLOCKDIM_X,
+                    imageH / (COLUMNS_RESULT_STEPS * COLUMNS_BLOCKDIM_Y));
+  dpct::dim3 threads(COLUMNS_BLOCKDIM_X, COLUMNS_BLOCKDIM_Y);
 
-  dpct::get_default_queue().submit([&](sycl::handler &cgh) {
+  {
     c_Kernel.init();
 
-    auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
+    dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
+      auto c_Kernel_ptr_ct1 = c_Kernel.get_ptr();
 
-    /*
-    DPCT1101:18: 'COLUMNS_BLOCKDIM_X' expression was replaced with a value.
-    Modify the code to use the original expression, provided in comments, if
-    it is correct.
-    */
-    /*
-    DPCT1101:19: '(COLUMNS_RESULT_STEPS +
+      /*
+      DPCT1101:18: 'COLUMNS_BLOCKDIM_X' expression was replaced with a value.
+      Modify the code to use the original expression, provided in comments, if
+      it is correct.
+      */
+      /*
+      DPCT1101:19: '(COLUMNS_RESULT_STEPS +
                                              2 * COLUMNS_HALO_STEPS) *
                                                 COLUMNS_BLOCKDIM_Y +
                                             1' expression was replaced with a
-    value. Modify the code to use the original expression, provided in
-    comments, if it is correct.
-    */
-    sycl::local_accessor<float, 2> s_Data_acc_ct1(
-        sycl::range<2>(16 /*COLUMNS_BLOCKDIM_X*/, 81 /*(COLUMNS_RESULT_STEPS
-    + 2 * COLUMNS_HALO_STEPS) * COLUMNS_BLOCKDIM_Y +
-    1*/), cgh);
+      value. Modify the code to use the original expression, provided in
+      comments, if it is correct.
+      */
+      sycl::local_accessor<
+          float[16 /*COLUMNS_BLOCKDIM_X*/]
+               [81 /*(COLUMNS_RESULT_STEPS +
+   2 * COLUMNS_HALO_STEPS) *
+      COLUMNS_BLOCKDIM_Y +
+  1*/],
+          0>
+          s_Data_acc_ct1(cgh);
 
-    cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
-                     [=](sycl::nd_item<3> item_ct1) {
-                       convolutionColumnsKernel(
-                           d_Dst, d_Src, imageW, imageH, imageW, item_ct1,
-                           c_Kernel_ptr_ct1, s_Data_acc_ct1);
-                     });
-  });
+      cgh.parallel_for(sycl::nd_range<3>(blocks * threads, threads),
+                       [=](sycl::nd_item<3> item_ct1) {
+                         convolutionColumnsKernel(
+                             d_Dst, d_Src, imageW, imageH, imageW, item_ct1,
+                             c_Kernel_ptr_ct1, s_Data_acc_ct1);
+                       });
+    });
+  }
   getLastCudaError("convolutionColumnsKernel() execution failed\n");
 }

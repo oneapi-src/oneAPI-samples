@@ -89,12 +89,15 @@ dpctexp::codepin::get_ptr_size_map()[d_ptr] = N * sizeof(int);
     checkCudaErrors(DPCT_CHECK_ERROR(
         h_ptr = sycl::malloc_host<int>(N, dpct::get_in_order_queue())));
 
-    sycl::range<3> cudaBlockSize(1, 1, 256);
-    sycl::range<3> cudaGridSize(1, 1,
-                                (N + cudaBlockSize[2] - 1) / cudaBlockSize[2]);
-
+    dpct::dim3 cudaBlockSize(256, 1, 1);
+    dpct::dim3 cudaGridSize((N + cudaBlockSize.x - 1) / cudaBlockSize.x, 1, 1);
+    /*
+    DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
     dpctexp::codepin::gen_prolog_API_CP(
-        "/nfs/site/home/sselmax/Avijit/cuda-samples/Samples/"
+        "sequence_gpu:/nfs/site/home/abagx/Avijit/cuda-samples/Samples/"
         "2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu:86:5",
         &dpct::get_in_order_queue(), "d_ptr", d_ptr, "N", N);
     dpct::get_in_order_queue().parallel_for(
@@ -102,9 +105,12 @@ dpctexp::codepin::get_ptr_size_map()[d_ptr] = N * sizeof(int);
         [=](sycl::nd_item<3> item_ct1) {
             sequence_gpu(d_ptr, N, item_ct1);
         });
-
+    /*
+    DPCT1010:15: SYCL uses exceptions to report errors and does not use the
+    error codes. The call was replaced with 0. You need to rewrite this code.
+    */
     dpctexp::codepin::gen_epilog_API_CP(
-        "/nfs/site/home/sselmax/Avijit/cuda-samples/Samples/"
+        "sequence_gpu:/nfs/site/home/abagx/Avijit/cuda-samples/Samples/"
         "2_Concepts_and_Techniques/inlinePTX/inlinePTX.cu:86:5",
         &dpct::get_in_order_queue(), "d_ptr", d_ptr, "N", N);
 checkCudaErrors(0);

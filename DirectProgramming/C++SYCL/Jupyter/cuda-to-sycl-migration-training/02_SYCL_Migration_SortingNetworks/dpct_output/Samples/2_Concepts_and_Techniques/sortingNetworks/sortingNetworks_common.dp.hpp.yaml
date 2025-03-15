@@ -29,8 +29,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/rkris11/work/git/cuda-samples/Samples/2_Concepts_and_Techniques/sortingNetworks/sortingNetworks_common.cuh'
-    Digest:          95398843ac58eeeeb2dff34595645e1e
+  - MainSourceFile:  ''
+    Digest:          ''
+    HasCUDASyntax:   false
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -92,6 +93,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

@@ -20,9 +20,9 @@ XGBoost is a widely used gradient boosting library in the classical machine lear
 |:---             |:---
 | OS              | Ubuntu* 18.04 or higher
 | Hardware        | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software        | XGBoost model <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software        | XGBoost model <br> AI Tools
 
-This sample code is implemented for CPU using the Python language. The sample assumes you have XGboost, Daal4py, and Matplotlib installed inside a conda environment. Installing the Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit) should suffice in most cases.
+This sample code is implemented for CPU using the Python language. The sample assumes you have XGboost, Daal4py, and Matplotlib installed inside a conda environment. Installing the Intel® Distribution for Python* as part of the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html) should suffice in most cases.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -30,7 +30,7 @@ You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi)
 
 In this sample, you will run an XGBoost model with Daal4py prediction and XGBoost API prediction to see the performance benefit of Daal4py gradient boosting prediction. You will also learn how to port a pre-trained XGBoost model to Daal4py prediction.
 
-XGBoost* is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+XGBoost* is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 ## Set Environment Variables
 
@@ -52,7 +52,7 @@ When working with the command-line interface (CLI), you should configure the one
 
 #### Activate Conda with Root Access
 
-By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
+By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
 
 ```
 source activate base
@@ -128,7 +128,7 @@ daal4py accuracy score: 0.99
 All looks good!
 speedup: 0.3892766452116991
 Accuracy Difference 0.0
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## License

@@ -1,5 +1,5 @@
 {
-    "guid": "F6F3F4F5-3EB3-4624-A769-7D6CDB891DEF",	
+    "guid": "8AEF8548-CF5B-4834-AD64-6430B7E5C5DF",	
     "name": "EigenValues Sample",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample demonstrates a parallel implementation of a bisection algorithm for the computation of all eigenvalues of a tridiagonal symmetric matrix of arbitrary size.",

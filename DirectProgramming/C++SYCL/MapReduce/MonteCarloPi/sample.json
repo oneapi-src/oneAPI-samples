@@ -1,17 +1,38 @@
 {
     "name": "Monte Carlo Pi",
-    "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/Map Reduce"],
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL/Map Reduce"
+    ],
     "description": "Monte Carlo procedure for estimating Pi",
-    "os": ["linux", "windows"],
-    "builder": ["ide", "cmake"],
-    "languages": [{"cpp":{}}],
-    "toolchain": ["dpcpp"],
+    "os": [
+        "linux",
+        "windows"
+    ],
+    "builder": [
+        "ide",
+        "cmake"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "toolchain": [
+        "dpcpp"
+    ],
     "guid": "393622C0-7D69-4ECC-B9B1-4077316A135B",
-    "targetDevice": [ "CPU", "GPU" ],
-    "gpuRequired": ["gen9","pvc"],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
+    "gpuRequired": [
+        "gen9",
+        "pvc"
+    ],
     "ciTests": {
         "linux": [
             {
+                "id": "test",
                 "steps": [
                     "mkdir build",
                     "cd build",
@@ -22,8 +43,9 @@
                 ]
             }
         ],
-        "windows": [ 
-            { 
+        "windows": [
+            {
+                "id": "test",
                 "steps": [
                     "MSBuild MonteCarloPi.sln /t:Rebuild /p:Configuration=\"Release\"",
                     "cd x64/Release",

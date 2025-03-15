@@ -9,7 +9,6 @@
 #ifndef __DPCT_MEMORY_H__
 #define __DPCT_MEMORY_H__
 
-#include <sycl/sycl.hpp>
 #include <oneapi/dpl/memory>
 #include "functional.h"
 
@@ -27,7 +26,7 @@ struct make_allocatable
 template <>
 struct make_allocatable<void>
 {
-  using type = dpct::byte_t;
+  using type = ::dpct::cs::byte_t;
 };
 
 #if defined(__LIBSYCL_MAJOR_VERSION) && defined(__LIBSYCL_MINOR_VERSION) &&    \
@@ -221,14 +220,14 @@ public:
 
 template <sycl::access_mode Mode, typename Allocator>
 class device_pointer<void, Mode, Allocator>
-    : public device_pointer_base<dpct::byte_t, Allocator,
+    : public device_pointer_base<::dpct::cs::byte_t, Allocator,
                                  device_pointer<void, Mode, Allocator>> {
 private:
   using base_type =
-      device_pointer_base<dpct::byte_t, Allocator, device_pointer>;
+      device_pointer_base<::dpct::cs::byte_t, Allocator, device_pointer>;
 
 public:
-  using value_type = dpct::byte_t;
+  using value_type = ::dpct::cs::byte_t;
   using difference_type = std::make_signed<std::size_t>::type;
   using pointer = void *;
   using reference = value_type &;
@@ -301,9 +300,10 @@ public:
     return *this;
   }
   operator device_pointer<void>() {
-    auto converted_buf = (this->buffer)
-                             .template reinterpret<dpct::byte_t>(sycl::range<1>(
-                                 sizeof(value_type) * this->buffer.size()));
+    auto converted_buf =
+        (this->buffer)
+            .template reinterpret<::dpct::cs::byte_t>(
+                sycl::range<1>(sizeof(value_type) * this->buffer.size()));
     return device_pointer<void>(converted_buf, this->idx);
   }
   // include operators from base class
@@ -331,7 +331,7 @@ public:
 
   device_pointer_base(ValueType *p) : ptr(p) {}
   device_pointer_base(const std::size_t count) {
-    sycl::queue default_queue = dpct::get_default_queue();
+    sycl::queue default_queue = ::dpct::cs::get_default_queue();
     ptr = static_cast<ValueType *>(sycl::malloc_shared(
         count, default_queue.get_device(), default_queue.get_context()));
   }
@@ -364,12 +364,13 @@ public:
 
 template <>
 class device_pointer<void>
-    : public device_pointer_base<dpct::byte_t, device_pointer<void>> {
+    : public device_pointer_base<::dpct::cs::byte_t, device_pointer<void>> {
 private:
-  using base_type = device_pointer_base<dpct::byte_t, device_pointer<void>>;
+  using base_type =
+      device_pointer_base<::dpct::cs::byte_t, device_pointer<void>>;
 
 public:
-  using value_type = dpct::byte_t;
+  using value_type = ::dpct::cs::byte_t;
   using difference_type = std::make_signed<std::size_t>::type;
   using pointer = void *;
   using reference = value_type &;
@@ -821,7 +822,7 @@ void *malloc_base(PolicyOrTag &&policy_or_tag, const ::std::size_t num_bytes) {
                       decayed_policy_or_tag_t>) {
       q = policy_or_tag.queue();
     } else {
-      q = get_default_queue();
+      q = ::dpct::cs::get_default_queue();
     }
     return sycl::malloc_shared(num_bytes, q);
   }
@@ -857,7 +858,7 @@ void free(PolicyOrTag &&policy_or_tag, Pointer ptr) {
                       decayed_policy_or_tag_t>) {
       q = policy_or_tag.queue();
     } else {
-      q = get_default_queue();
+      q = ::dpct::cs::get_default_queue();
     }
     sycl::free(ptr, q);
   }
@@ -891,10 +892,10 @@ template <typename T>
 device_pointer<T> device_new(device_pointer<void> p, const T &value,
                              const std::size_t count) {
   auto converted_buf = p.buffer.template reinterpret<T>(sycl::range<1>(count));
-  ::std::uninitialized_fill(
-      oneapi::dpl::execution::make_device_policy(dpct::get_default_queue()),
-      oneapi::dpl::begin(converted_buf),
-      oneapi::dpl::end(converted_buf), value);
+  ::std::uninitialized_fill(oneapi::dpl::execution::make_device_policy(
+                                ::dpct::cs::get_default_queue()),
+                            oneapi::dpl::begin(converted_buf),
+                            oneapi::dpl::end(converted_buf), value);
   return device_pointer<T>(converted_buf, p.idx);
 }
 // buffer manages lifetime
@@ -904,13 +905,13 @@ template <typename T>
 device_pointer<T> device_new(device_pointer<void> p, const T &value,
                              const std::size_t count = 1) {
   dpct::device_pointer<T> converted_p(static_cast<T *>(p.get()));
-  ::std::uninitialized_fill(
-      oneapi::dpl::execution::make_device_policy(dpct::get_default_queue()),
-      converted_p, converted_p + count, value);
+  ::std::uninitialized_fill(oneapi::dpl::execution::make_device_policy(
+                                ::dpct::cs::get_default_queue()),
+                            converted_p, converted_p + count, value);
   return converted_p;
 }
 template <typename T> void free_device(device_pointer<T> ptr) {
-  sycl::free(ptr.get(), dpct::get_default_queue());
+  sycl::free(ptr.get(), ::dpct::cs::get_default_queue());
 }
 #endif
 template <typename T>
@@ -926,7 +927,8 @@ device_pointer<T> device_new(const std::size_t count = 1) {
 template <typename T>
 typename std::enable_if<!std::is_trivially_destructible<T>::value, void>::type
 device_delete(device_pointer<T> p, const std::size_t count = 1) {
-  ::std::destroy(oneapi::dpl::execution::make_device_policy(dpct::get_default_queue()),
+  ::std::destroy(oneapi::dpl::execution::make_device_policy(
+                     ::dpct::cs::get_default_queue()),
                  p, p + count);
   free_device(p);
 }

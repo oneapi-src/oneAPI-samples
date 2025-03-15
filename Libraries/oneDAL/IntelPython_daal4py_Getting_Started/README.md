@@ -3,7 +3,7 @@
 
 # `Intel Python daal4py Getting Started` Sample
 
-This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL). It demonstrates how to use software products that can be found in the [oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This Getting Started sample code show how to do batch linear regression using the python API package daal4py from oneAPI Data Analytics Library (oneDAL). It demonstrates how to use software products that can be found in the [oneAPI Data Analytics Library (oneDAL)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html) or the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 | Optimized for                     | Description
 | :---                              | :---
@@ -20,7 +20,7 @@ daal4py is a simplified API to the Intel® Data Analytics Acceleration Library (
 In this sample, you will run a batch Linear Regression model with oneDAL daal4py library memory objects. You will also learn how to train a model and save the information to a file.
 
 ## Key Implementation Details
-This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [Intel&reg; AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit).
+This Getting Started sample code is implemented for CPU using the Python language. The example assumes you have daal4py and scikit-learn installed inside a conda environment, similar to what is delivered with the installation of the Intel&reg; Distribution for Python* as part of the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 ## License
 Code samples are licensed under the MIT license. See
@@ -47,7 +47,7 @@ After learning how to use the extensions for Intel oneAPI Toolkits, return to th
 
 ## Building daal4py for CPU
 
-oneAPI Data Analytics Library is ready for use once you finish the Intel&reg; AI Analytics Toolkit installation and have run the post installation script.
+oneAPI Data Analytics Library is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
@@ -64,7 +64,7 @@ source activate base
 
 ### Activate conda environment Without Root Access (Optional)
 
-By default, the Intel&reg; AI Analytics Toolkit is installed in the ‘inteloneapi’ folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
+By default, the AI Tools is installed in the ‘inteloneapi’ folder, which requires root privileges to manage it. If you would like to bypass using root access to manage your conda environment, then you can clone your desired conda environment using the following command:
 
 #### On a Linux* System
 ```

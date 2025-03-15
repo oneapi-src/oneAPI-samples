@@ -18,10 +18,9 @@ endif
 # setting initial random number generation on host
 init_on_host ?= 0
 
-MKL_COPTS = -DMKL_ILP64 $(GENERATOR) -qmkl=sequential -Wall -Wformat-security -Werror=format-security
-MKL_LIBS  = -lpthread -lm -ldl
+MKL_COPTS = -DMKL_ILP64 $(GENERATOR) -qmkl -qmkl-sycl-impl=rng -Wall -Wformat-security -Werror=format-security
 
-DPCPP_OPTS = $(MKL_COPTS) -fsycl -DINIT_ON_HOST=$(init_on_host) $(MKL_LIBS)
+DPCPP_OPTS = $(MKL_COPTS) -fsycl -DINIT_ON_HOST=$(init_on_host)
 
 montecarlo: src/montecarlo_main.cpp
 	icpx $< -o $@ $(DPCPP_OPTS)

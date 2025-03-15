@@ -4,10 +4,10 @@ all: binomial_sycl.exe
 	INIT_ON_HOST=/DINIT_ON_HOST=1
 !endif
 
-DPCPP_OPTS=-O3 /I"$(MKLROOT)\include" /DMKL_ILP64 /DVERBOSE=1 /DSMALL_OPT_N=0 /DREPORT_COLD=1 /DREPORT_WARM=1 $(INIT_ON_HOST) -fsycl -qmkl -lOpenCL
+DPCPP_OPTS=-O3 /I"$(MKLROOT)\include" /DMKL_ILP64 /DVERBOSE=1 /DSMALL_OPT_N=0 /DREPORT_COLD=1 /DREPORT_WARM=1 $(INIT_ON_HOST) -fsycl /Qmkl /Qmkl-sycl-impl=rng OpenCL.lib
 
 binomial_sycl.exe: src\binomial_sycl.cpp src\binomial_main.cpp src\binomial.hpp
-	icpx $(DPCPP_OPTS) /DVERBOSE=1 /DSMALL_OPT_N=0 /DREPORT_COLD=1 /DREPORT_WARM=1 src\binomial_sycl.cpp src\binomial_main.cpp /obinomial_sycl.exe
+	icx $(DPCPP_OPTS) /DVERBOSE=1 /DSMALL_OPT_N=0 /DREPORT_COLD=1 /DREPORT_WARM=1 src\binomial_sycl.cpp src\binomial_main.cpp /obinomial_sycl.exe
 
 clean:
 	del /q binomial_sycl.exe

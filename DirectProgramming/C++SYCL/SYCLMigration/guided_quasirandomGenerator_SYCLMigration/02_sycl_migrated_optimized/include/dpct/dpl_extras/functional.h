@@ -20,9 +20,76 @@
 #include <tuple>
 #include <utility>
 
+#define _DPCT_GCC_VERSION                                                      \
+  (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+
+// Portability "#pragma" definition
+#ifdef _MSC_VER
+#define _DPCT_PRAGMA(x) __pragma(x)
+#else
+#define _DPCT_PRAGMA(x) _Pragma(#x)
+#endif
+
+// Enable loop unrolling pragmas where supported
+#if (__INTEL_COMPILER ||                                                       \
+     (!defined(__INTEL_COMPILER) && _DPCT_GCC_VERSION >= 80000))
+#define _DPCT_PRAGMA_UNROLL _DPCT_PRAGMA(unroll)
+#else // no pragma unroll
+#define _DPCT_PRAGMA_UNROLL
+#endif
+
 namespace dpct {
 
 struct null_type {};
+
+// Function object to wrap user defined functors to provide compile time "const"
+// workaround for user function objects.
+// The SYCL spec (4.12) states that writing to a function object during a SYCL
+// kernel is undefined behavior.  This wrapper is provided as a compile-time
+// work around, but functors used in SYCL kernels must be `const` in practice.
+template <typename _Op> struct mark_functor_const {
+  mutable _Op op;
+  mark_functor_const() : op() {}
+  mark_functor_const(const _Op &__op) : op(__op) {}
+  mark_functor_const(_Op &&__op) : op(::std::move(__op)) {}
+  template <typename... _T> auto operator()(_T &&...x) const {
+    return op(std::forward<_T>(x)...);
+  }
+};
+
+// Forward declare key_value_pair to avoid creating cyclic dependency between
+// iterators.h and functional.h.
+template <typename _KeyTp, typename _ValueTp> class key_value_pair;
+
+// Returns the smaller of two key_value_pair objects based on their value
+// member. If value elements compare equal, then the pair with the lower key is
+// returned.
+struct argmin {
+  template <typename _ValueTp, typename _KeyTp>
+  key_value_pair<_KeyTp, _ValueTp>
+  operator()(const key_value_pair<_KeyTp, _ValueTp> &lhs,
+             const key_value_pair<_KeyTp, _ValueTp> &rhs) const {
+    return (lhs.value < rhs.value) ||
+                   (lhs.value == rhs.value && lhs.key < rhs.key)
+               ? lhs
+               : rhs;
+  }
+};
+
+// Returns the larger of two key_value_pair objects based on their value member.
+// If value elements compare equal, then the pair with the lower key is
+// returned.
+struct argmax {
+  template <typename _ValueTp, typename _KeyTp>
+  key_value_pair<_KeyTp, _ValueTp>
+  operator()(const key_value_pair<_KeyTp, _ValueTp> &lhs,
+             const key_value_pair<_KeyTp, _ValueTp> &rhs) const {
+    return (lhs.value > rhs.value) ||
+                   (lhs.value == rhs.value && lhs.key < rhs.key)
+               ? lhs
+               : rhs;
+  }
+};
 
 namespace internal {
 
@@ -360,6 +427,56 @@ private:
   OutKeyT mask;
   uint_type_t flip_sign;
   uint_type_t flip_key;
+};
+
+// Unary operator that returns reference to its argument. Ported from
+// oneDPL: oneapi/dpl/pstl/utils.h
+struct no_op_fun {
+  template <typename Tp> Tp &&operator()(Tp &&a) const {
+    return ::std::forward<Tp>(a);
+  }
+};
+
+// Unary functor which composes a pair of functors by calling them in succession
+// on an input
+template <typename FunctorInner, typename FunctorOuter>
+struct __composition_functor {
+  __composition_functor(FunctorInner in, FunctorOuter out)
+      : _in(in), _out(out) {}
+  template <typename T> T operator()(const T &i) const {
+    return _out(_in(i));
+  }
+  FunctorInner _in;
+  FunctorOuter _out;
+};
+
+// Unary functor which maps an index of a ROI into a 2D flattened array
+template <typename OffsetT> struct __roi_2d_index_functor {
+  __roi_2d_index_functor(const OffsetT &num_cols,
+                         const ::std::size_t &row_stride)
+      : _num_cols(num_cols), _row_stride(row_stride) {}
+
+  template <typename Index> Index operator()(const Index &i) const {
+    return _row_stride * (i / _num_cols) + (i % _num_cols);
+  }
+
+  OffsetT _num_cols;
+  ::std::size_t _row_stride;
+};
+
+// Unary functor which maps and index into an interleaved array by its active
+// channel
+template <typename OffsetT> struct __interleaved_index_functor {
+  __interleaved_index_functor(const OffsetT &total_channels,
+                              const OffsetT &active_channel)
+      : _total_channels(total_channels), _active_channel(active_channel) {}
+
+  template <typename Index> Index operator()(const Index &i) const {
+    return i * _total_channels + _active_channel;
+  }
+
+  OffsetT _total_channels;
+  OffsetT _active_channel;
 };
 
 } // end namespace internal

@@ -33,6 +33,8 @@
 
 /* Computation of Gerschgorin interval for symmetric, tridiagonal matrix */
 
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>

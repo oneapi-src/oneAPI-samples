@@ -9,31 +9,43 @@
 #ifndef __DPCT_LIB_COMMON_UTILS_HPP__
 #define __DPCT_LIB_COMMON_UTILS_HPP__
 
-#include <oneapi/mkl.hpp>
-#include <sycl/sycl.hpp>
+#include "compat_service.hpp"
 
-#include "memory.hpp"
-#include "util.hpp"
+#include <oneapi/mkl.hpp>
 
 namespace dpct {
 namespace detail {
-template <typename T>
-inline auto get_memory(T *x) {
+template <typename T> struct lib_data_traits { using type = T; };
+template <typename T> struct lib_data_traits<sycl::vec<T, 2>> {
+  using type = std::complex<T>;
+};
+template <class T> using lib_data_traits_t = typename lib_data_traits<T>::type;
+
+template <typename T> inline auto get_memory(const void *x) {
+  T *new_x = reinterpret_cast<T *>(const_cast<void *>(x));
 #ifdef DPCT_USM_LEVEL_NONE
-  return dpct::get_buffer<std::remove_cv_t<T>>(x);
+  return dpct::get_buffer<std::remove_cv_t<T>>(new_x);
 #else
-  return x;
+  return new_x;
 #endif
 }
 
 template <typename T>
-inline typename DataType<T>::T2 get_value(const T *s, sycl::queue &q) {
-  using Ty = typename DataType<T>::T2;
+inline typename ::dpct::detail::lib_data_traits_t<T> get_value(const T *s,
+                                                               sycl::queue &q) {
+  using Ty = typename ::dpct::detail::lib_data_traits_t<T>;
   Ty s_h;
-  detail::dpct_memcpy(q, (void *)&s_h, (void *)s, sizeof(T), automatic).wait();
+  if (::dpct::cs::detail::get_pointer_attribute(q, s) ==
+      ::dpct::cs::detail::pointer_access_attribute::device_only)
+    ::dpct::cs::memcpy(q, (void *)&s_h, (void *)s, sizeof(T),
+                       ::dpct::cs::memcpy_direction::device_to_host)
+        .wait();
+  else
+    s_h = *reinterpret_cast<const Ty *>(s);
   return s_h;
 }
-}  // namespace detail
+} // namespace detail
+
 enum class version_field : int { major, minor, update, patch };
 
 /// Returns the requested field of Intel(R) oneAPI Math Kernel Library version.
@@ -41,9 +53,8 @@ enum class version_field : int { major, minor, update, patch };
 /// \param result The result value.
 inline void mkl_get_version(version_field field, int *result) {
 #ifndef __INTEL_MKL__
-  throw std::runtime_error(
-      "The oneAPI Math Kernel Library (oneMKL) Interfaces "
-      "Project does not support this API.");
+  throw std::runtime_error("The oneAPI Math Kernel Library (oneMKL) Interfaces "
+                           "Project does not support this API.");
 #else
   MKLVersion version;
   mkl_get_version(&version);
@@ -93,7 +104,22 @@ enum class library_data_t : unsigned char {
   real_int8_4,
   real_int8_32,
   real_uint8_4,
+  real_f8_e4m3,
+  real_f8_e5m2,
   library_data_t_size
+};
+
+enum class compute_type : int {
+  f16,
+  f16_standard,
+  f32,
+  f32_standard,
+  f32_fast_bf16,
+  f32_fast_tf32,
+  f64,
+  f64_standard,
+  i32,
+  i32_standard,
 };
 
 namespace detail {
@@ -118,39 +144,105 @@ inline constexpr std::uint64_t get_type_combination_id(FirstT FirstVal,
 }
 
 inline constexpr std::size_t library_data_size[] = {
-    8 * sizeof(float),                     // real_float
-    8 * sizeof(std::complex<float>),       // complex_float
-    8 * sizeof(double),                    // real_double
-    8 * sizeof(std::complex<double>),      // complex_double
-    8 * sizeof(sycl::half),                // real_half
-    8 * sizeof(std::complex<sycl::half>),  // complex_half
-    16,                                    // real_bfloat16
-    16 * 2,                                // complex_bfloat16
-    4,                                     // real_int4
-    4 * 2,                                 // complex_int4
-    4,                                     // real_uint4
-    4 * 2,                                 // complex_uint4
-    8,                                     // real_int8
-    8 * 2,                                 // complex_int8
-    8,                                     // real_uint8
-    8 * 2,                                 // complex_uint8
-    16,                                    // real_int16
-    16 * 2,                                // complex_int16
-    16,                                    // real_uint16
-    16 * 2,                                // complex_uint16
-    32,                                    // real_int32
-    32 * 2,                                // complex_int32
-    32,                                    // real_uint32
-    32 * 2,                                // complex_uint32
-    64,                                    // real_int64
-    64 * 2,                                // complex_int64
-    64,                                    // real_uint64
-    64 * 2,                                // complex_uint64
-    8,                                     // real_int8_4
-    8,                                     // real_int8_32
-    8                                      // real_uint8_4
+    8 * sizeof(float),                    // real_float
+    8 * sizeof(std::complex<float>),      // complex_float
+    8 * sizeof(double),                   // real_double
+    8 * sizeof(std::complex<double>),     // complex_double
+    8 * sizeof(sycl::half),               // real_half
+    8 * sizeof(std::complex<sycl::half>), // complex_half
+    16,                                   // real_bfloat16
+    16 * 2,                               // complex_bfloat16
+    4,                                    // real_int4
+    4 * 2,                                // complex_int4
+    4,                                    // real_uint4
+    4 * 2,                                // complex_uint4
+    8,                                    // real_int8
+    8 * 2,                                // complex_int8
+    8,                                    // real_uint8
+    8 * 2,                                // complex_uint8
+    16,                                   // real_int16
+    16 * 2,                               // complex_int16
+    16,                                   // real_uint16
+    16 * 2,                               // complex_uint16
+    32,                                   // real_int32
+    32 * 2,                               // complex_int32
+    32,                                   // real_uint32
+    32 * 2,                               // complex_uint32
+    64,                                   // real_int64
+    64 * 2,                               // complex_int64
+    64,                                   // real_uint64
+    64 * 2,                               // complex_uint64
+    8,                                    // real_int8_4
+    8,                                    // real_int8_32
+    8                                     // real_uint8_4
 };
-}  // namespace detail
-}  // namespace dpct
 
-#endif  // __DPCT_LIB_COMMON_UTILS_HPP__
+template <class func_t, typename... args_t>
+std::invoke_result_t<func_t, args_t...>
+catch_batch_error(int *has_execption, const std::string &api_names,
+                  sycl::queue exec_queue, int *info, int *dev_info,
+                  int batch_size, func_t &&f, args_t &&...args) {
+  try {
+    return f(std::forward<args_t>(args)...);
+  } catch (oneapi::mkl::lapack::batch_error const &be) {
+    std::cerr << "Unexpected exception caught during call to API(s): "
+              << api_names << std::endl
+              << "reason: " << be.what() << std::endl
+              << "number: " << be.info() << std::endl;
+    if (be.info() < 0 && info)
+      *info = be.info();
+    int i = 0;
+    auto &ids = be.ids();
+    std::vector<int> info_vec(batch_size, 0);
+    for (auto const &e : be.exceptions()) {
+      try {
+        std::rethrow_exception(e);
+      } catch (oneapi::mkl::lapack::exception &e) {
+        std::cerr << "Exception in problem: " << ids[i] << std::endl
+                  << "reason: " << e.what() << std::endl
+                  << "info: " << e.info() << std::endl;
+        info_vec[ids[i]] = e.info();
+        i++;
+      }
+    }
+    if (dev_info)
+      exec_queue.memcpy(dev_info, info_vec.data(), batch_size * sizeof(int))
+          .wait();
+  } catch (sycl::exception const &e) {
+    std::cerr << "Caught synchronous SYCL exception:" << std::endl
+              << "reason: " << e.what() << std::endl;
+    if (dev_info)
+      exec_queue.memset(dev_info, 0, batch_size * sizeof(int)).wait();
+  }
+  if (has_execption)
+    *has_execption = 1;
+  return {};
+}
+
+template <typename ret_t, typename... args_t>
+ret_t catch_batch_error_f(int *has_execption, const std::string &api_names,
+                          sycl::queue exec_queue, int *info, int *dev_info,
+                          int batch_size, ret_t (*f)(args_t...),
+                          args_t &&...args) {
+  return catch_batch_error(has_execption, api_names, exec_queue, info, dev_info,
+                           batch_size, f, args...);
+}
+} // namespace detail
+
+#ifdef DPCT_USM_LEVEL_NONE
+/// Cast a "rvalue reference to a temporary object" to an "lvalue reference to
+/// that temporary object".
+/// CAUTION:
+/// The returned lvalue reference is available only before the last step in
+/// evaluating the full-expression that contains this function call.
+/// \param [in] temporary_object The rvalue reference to a temporary object.
+/// \returns The lvalue reference to that temporary object.
+template <typename T>
+inline typename std::enable_if_t<std::is_rvalue_reference_v<T &&>, T &>
+rvalue_ref_to_lvalue_ref(T &&temporary_object) {
+  return temporary_object;
+}
+#endif
+} // namespace dpct
+
+#endif // __DPCT_LIB_COMMON_UTILS_HPP__

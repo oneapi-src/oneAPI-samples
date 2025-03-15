@@ -1,9 +1,3 @@
-//=========================================================
-// Modifications Copyright © 2022 Intel Corporation
-//
-// SPDX-License-Identifier: BSD-3-Clause
-//=========================================================
-
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,11 +30,6 @@
 #include <helper_cuda.h>
 #include <vector>
 #include <chrono>
-#include <chrono>
-
-using Time = std::chrono::steady_clock;
-using ms = std::chrono::milliseconds;
-using float_ms = std::chrono::duration<float, ms::period>;
 
 #define THREADS_PER_BLOCK 512
 #define GRAPH_LAUNCH_ITERATIONS 3
@@ -206,9 +195,9 @@ void myHostNodeCallback(void *data) {
 void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
                       double *result_d, size_t inputSize, size_t numOfBlocks) {
   dpct::queue_ptr streamForGraph;
-  cudaGraph_t graph;
-  std::vector<cudaGraphNode_t> nodeDependencies;
-  cudaGraphNode_t memcpyNode, kernelNode, memsetNode;
+  dpct::experimental::command_graph_ptr graph;
+  std::vector<dpct::experimental::node_ptr> nodeDependencies;
+  dpct::experimental::node_ptr memcpyNode, kernelNode, memsetNode;
   double result_h = 0.0;
 
   checkCudaErrors(DPCT_CHECK_ERROR(
@@ -218,23 +207,19 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   DPCT1082:23: Migration of cudaKernelNodeParams type is not supported.
   */
   cudaKernelNodeParams kernelNodeParams = {0};
-  dpct::pitched_data memcpyParams_from_data_ct1, memcpyParams_to_data_ct1;
-  sycl::id<3> memcpyParams_from_pos_ct1(0, 0, 0),
-      memcpyParams_to_pos_ct1(0, 0, 0);
-  sycl::range<3> memcpyParams_size_ct1(1, 1, 1);
-  dpct::memcpy_direction memcpyParams_direction_ct1;
+  dpct::memcpy_parameter memcpyParams = {};
   cudaMemsetParams memsetParams = {0};
 
-  memcpyParams_from_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_from_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_from_data_ct1 =
+  memcpyParams.from.image = NULL;
+  memcpyParams.from.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.from.pitched =
       dpct::pitched_data(inputVec_h, sizeof(float) * inputSize, inputSize, 1);
-  memcpyParams_to_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_to_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_to_data_ct1 =
+  memcpyParams.to.image = NULL;
+  memcpyParams.to.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.to.pitched =
       dpct::pitched_data(inputVec_d, sizeof(float) * inputSize, inputSize, 1);
-  memcpyParams_size_ct1 = sycl::range<3>(sizeof(float) * inputSize, 1, 1);
-  memcpyParams_direction_ct1 = dpct::host_to_device;
+  memcpyParams.size = sycl::range<3>(sizeof(float) * inputSize, 1, 1);
+  memcpyParams.direction = dpct::host_to_device;
 
   memsetParams.dst = (void *)outputVec_d;
   memsetParams.value = 0;
@@ -265,8 +250,8 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
                          &numOfBlocks};
 
   kernelNodeParams.func = (void *)reduce;
-  kernelNodeParams.gridDim = sycl::range<3>(1, 1, numOfBlocks);
-  kernelNodeParams.blockDim = sycl::range<3>(1, 1, THREADS_PER_BLOCK);
+  kernelNodeParams.gridDim = dpct::dim3(numOfBlocks, 1, 1);
+  kernelNodeParams.blockDim = dpct::dim3(THREADS_PER_BLOCK, 1, 1);
   kernelNodeParams.sharedMemBytes = 0;
   kernelNodeParams.kernelParams = (void **)kernelArgs;
   kernelNodeParams.extra = NULL;
@@ -297,8 +282,8 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
 
   memset(&kernelNodeParams, 0, sizeof(kernelNodeParams));
   kernelNodeParams.func = (void *)reduceFinal;
-  kernelNodeParams.gridDim = sycl::range<3>(1, 1, 1);
-  kernelNodeParams.blockDim = sycl::range<3>(1, 1, THREADS_PER_BLOCK);
+  kernelNodeParams.gridDim = dpct::dim3(1, 1, 1);
+  kernelNodeParams.blockDim = dpct::dim3(THREADS_PER_BLOCK, 1, 1);
   kernelNodeParams.sharedMemBytes = 0;
   void *kernelArgs2[3] = {(void *)&outputVec_d, (void *)&result_d,
                           &numOfBlocks};
@@ -316,16 +301,15 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
 
   memset(&memcpyParams, 0, sizeof(memcpyParams));
 
-  memcpyParams_from_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_from_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_from_data_ct1 =
+  memcpyParams.from.image = NULL;
+  memcpyParams.from.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.from.pitched =
       dpct::pitched_data(result_d, sizeof(double), 1, 1);
-  memcpyParams_to_data_ct1 = (NULL)->to_pitched_data();
-  memcpyParams_to_pos_ct1 = sycl::id<3>(0, 0, 0);
-  memcpyParams_to_data_ct1 =
-      dpct::pitched_data(&result_h, sizeof(double), 1, 1);
-  memcpyParams_size_ct1 = sycl::range<3>(sizeof(double), 1, 1);
-  memcpyParams_direction_ct1 = dpct::device_to_host;
+  memcpyParams.to.image = NULL;
+  memcpyParams.to.pos = sycl::id<3>(0, 0, 0);
+  memcpyParams.to.pitched = dpct::pitched_data(&result_h, sizeof(double), 1, 1);
+  memcpyParams.size = sycl::range<3>(sizeof(double), 1, 1);
+  memcpyParams.direction = dpct::device_to_host;
   /*
   DPCT1007:30: Migration of cudaGraphAddMemcpyNode is not supported.
   */
@@ -335,7 +319,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   nodeDependencies.clear();
   nodeDependencies.push_back(memcpyNode);
 
-  cudaGraphNode_t hostNode;
+  dpct::experimental::node_ptr hostNode;
   cudaHostNodeParams hostParams = {0};
   hostParams.fn = myHostNodeCallback;
   callBackData_t hostFnData;
@@ -350,7 +334,7 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
                                        nodeDependencies.data(),
                                        nodeDependencies.size(), &hostParams));
 
-  cudaGraphNode_t *nodes = NULL;
+  dpct::experimental::node_ptr *nodes = NULL;
   size_t numNodes = 0;
   /*
   DPCT1007:32: Migration of cudaGraphGetNodes is not supported.
@@ -358,56 +342,45 @@ void cudaGraphsManual(float *inputVec_h, float *inputVec_d, double *outputVec_d,
   checkCudaErrors(cudaGraphGetNodes(graph, nodes, &numNodes));
   printf("\nNum of nodes in the graph created manually = %zu\n", numNodes);
 
-  cudaGraphExec_t graphExec;
-  /*
-  DPCT1007:33: Migration of cudaGraphInstantiate is not supported.
-  */
-  checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
+  dpct::experimental::command_graph_exec_ptr graphExec;
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      graphExec = new sycl::ext::oneapi::experimental::command_graph<
+          sycl::ext::oneapi::experimental::graph_state::executable>(
+          graph->finalize())));
 
-  cudaGraph_t clonedGraph;
-  cudaGraphExec_t clonedGraphExec;
+  dpct::experimental::command_graph_ptr clonedGraph;
+  dpct::experimental::command_graph_exec_ptr clonedGraphExec;
   /*
-  DPCT1007:34: Migration of cudaGraphClone is not supported.
+  DPCT1007:33: Migration of cudaGraphClone is not supported.
   */
   checkCudaErrors(cudaGraphClone(&clonedGraph, graph));
-  /*
-  DPCT1007:35: Migration of cudaGraphInstantiate is not supported.
-  */
-  checkCudaErrors(
-      cudaGraphInstantiate(&clonedGraphExec, clonedGraph, NULL, NULL, 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      clonedGraphExec = new sycl::ext::oneapi::experimental::command_graph<
+          sycl::ext::oneapi::experimental::graph_state::executable>(
+          clonedGraph->finalize())));
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
-    /*
-    DPCT1007:36: Migration of cudaGraphLaunch is not supported.
-    */
-    checkCudaErrors(cudaGraphLaunch(graphExec, streamForGraph));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(streamForGraph->ext_oneapi_graph(*graphExec)));
   }
 
   checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   printf("Cloned Graph Output.. \n");
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
-    /*
-    DPCT1007:37: Migration of cudaGraphLaunch is not supported.
-    */
-    checkCudaErrors(cudaGraphLaunch(clonedGraphExec, streamForGraph));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(streamForGraph->ext_oneapi_graph(*clonedGraphExec)));
   }
   checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
+  checkCudaErrors(DPCT_CHECK_ERROR(delete (graphExec)));
+  checkCudaErrors(DPCT_CHECK_ERROR(delete (clonedGraphExec)));
   /*
-  DPCT1007:38: Migration of cudaGraphExecDestroy is not supported.
-  */
-  checkCudaErrors(cudaGraphExecDestroy(graphExec));
-  /*
-  DPCT1007:39: Migration of cudaGraphExecDestroy is not supported.
-  */
-  checkCudaErrors(cudaGraphExecDestroy(clonedGraphExec));
-  /*
-  DPCT1007:40: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:34: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(graph));
   /*
-  DPCT1007:41: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:35: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(clonedGraph));
   checkCudaErrors(DPCT_CHECK_ERROR(
@@ -422,7 +395,7 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   std::chrono::time_point<std::chrono::steady_clock> forkStreamEvent_ct1;
   std::chrono::time_point<std::chrono::steady_clock> memsetEvent1_ct1;
   std::chrono::time_point<std::chrono::steady_clock> memsetEvent2_ct1;
-  cudaGraph_t graph;
+  dpct::experimental::command_graph_ptr graph;
   double result_h = 0.0;
 
   checkCudaErrors(
@@ -438,19 +411,16 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   checkCudaErrors(DPCT_CHECK_ERROR(memsetEvent1 = new sycl::event()));
   checkCudaErrors(DPCT_CHECK_ERROR(memsetEvent2 = new sycl::event()));
 
-  /*
-  DPCT1027:42: The call to cudaStreamBeginCapture was replaced with 0 because
-  SYCL currently does not support capture operations on queues.
-  */
-  checkCudaErrors(0);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::experimental::begin_recording(stream1)));
 
   /*
-  DPCT1012:43: Detected kernel execution time measurement pattern and generated
+  DPCT1012:36: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:44: The original code returned the error code that was further
+  DPCT1024:37: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
@@ -462,6 +432,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream3->ext_oneapi_submit_barrier({*forkStreamEvent})));
 
+  /*
+  DPCT1124:38: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(
       stream1->memcpy(inputVec_d, inputVec_h, sizeof(float) * inputSize)));
 
@@ -469,12 +445,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
       stream2->memset(outputVec_d, 0, sizeof(double) * numOfBlocks)));
 
   /*
-  DPCT1012:45: Detected kernel execution time measurement pattern and generated
+  DPCT1012:39: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:46: The original code returned the error code that was further
+  DPCT1024:40: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
@@ -485,12 +461,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream3->memset(result_d, 0, sizeof(double))));
   /*
-  DPCT1012:47: Detected kernel execution time measurement pattern and generated
+  DPCT1012:41: Detected kernel execution time measurement pattern and generated
   an initial code for time measurements in SYCL. You can change the way time is
   measured depending on your goals.
   */
   /*
-  DPCT1024:48: The original code returned the error code that was further
+  DPCT1024:42: The original code returned the error code that was further
   consumed by the program logic. This original code was replaced with 0. You may
   need to rewrite the program logic consuming the error code.
   */
@@ -507,11 +483,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   Adjust the work-group size if needed.
   */
   {
-    dpct::has_capability_or_fail(stream1->get_device(), {sycl::aspect::fp64});
+    dpct::get_device(dpct::get_device_id(stream1->get_device()))
+        .has_capability_or_fail({sycl::aspect::fp64});
 
     stream1->submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:61: 'THREADS_PER_BLOCK' expression was replaced with a value.
+      DPCT1101:49: 'THREADS_PER_BLOCK' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
@@ -539,11 +516,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   Adjust the work-group size if needed.
   */
   {
-    dpct::has_capability_or_fail(stream1->get_device(), {sycl::aspect::fp64});
+    dpct::get_device(dpct::get_device_id(stream1->get_device()))
+        .has_capability_or_fail({sycl::aspect::fp64});
 
     stream1->submit([&](sycl::handler &cgh) {
       /*
-      DPCT1101:62: 'THREADS_PER_BLOCK' expression was replaced with a value.
+      DPCT1101:50: 'THREADS_PER_BLOCK' expression was replaced with a value.
       Modify the code to use the original expression, provided in comments, if
       it is correct.
       */
@@ -560,6 +538,12 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
           });
     });
   }
+  /*
+  DPCT1124:43: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(
       DPCT_CHECK_ERROR(stream1->memcpy(&result_h, result_d, sizeof(double))));
 
@@ -568,75 +552,61 @@ void cudaGraphsUsingStreamCapture(float *inputVec_h, float *inputVec_d,
   hostFnData.fn_name = "cudaGraphsUsingStreamCapture";
   cudaHostFn_t fn = myHostNodeCallback;
   /*
-  DPCT1007:49: Migration of cudaLaunchHostFunc is not supported.
+  DPCT1007:44: Migration of cudaLaunchHostFunc is not supported.
   */
   checkCudaErrors(cudaLaunchHostFunc(stream1, fn, &hostFnData));
-  /*
-  DPCT1027:50: The call to cudaStreamEndCapture was replaced with 0 because SYCL
-  currently does not support capture operations on queues.
-  */
-  checkCudaErrors(0);
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::experimental::end_recording(stream1, &graph)));
 
-  cudaGraphNode_t *nodes = NULL;
+  dpct::experimental::node_ptr *nodes = NULL;
   size_t numNodes = 0;
   /*
-  DPCT1007:51: Migration of cudaGraphGetNodes is not supported.
+  DPCT1007:45: Migration of cudaGraphGetNodes is not supported.
   */
   checkCudaErrors(cudaGraphGetNodes(graph, nodes, &numNodes));
   printf("\nNum of nodes in the graph created using stream capture API = %zu\n",
          numNodes);
 
-  cudaGraphExec_t graphExec;
-  /*
-  DPCT1007:52: Migration of cudaGraphInstantiate is not supported.
-  */
-  checkCudaErrors(cudaGraphInstantiate(&graphExec, graph, NULL, NULL, 0));
+  dpct::experimental::command_graph_exec_ptr graphExec;
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      graphExec = new sycl::ext::oneapi::experimental::command_graph<
+          sycl::ext::oneapi::experimental::graph_state::executable>(
+          graph->finalize())));
 
-  cudaGraph_t clonedGraph;
-  cudaGraphExec_t clonedGraphExec;
+  dpct::experimental::command_graph_ptr clonedGraph;
+  dpct::experimental::command_graph_exec_ptr clonedGraphExec;
   /*
-  DPCT1007:53: Migration of cudaGraphClone is not supported.
+  DPCT1007:46: Migration of cudaGraphClone is not supported.
   */
   checkCudaErrors(cudaGraphClone(&clonedGraph, graph));
-  /*
-  DPCT1007:54: Migration of cudaGraphInstantiate is not supported.
-  */
-  checkCudaErrors(
-      cudaGraphInstantiate(&clonedGraphExec, clonedGraph, NULL, NULL, 0));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+      clonedGraphExec = new sycl::ext::oneapi::experimental::command_graph<
+          sycl::ext::oneapi::experimental::graph_state::executable>(
+          clonedGraph->finalize())));
 
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
-    /*
-    DPCT1007:55: Migration of cudaGraphLaunch is not supported.
-    */
-    checkCudaErrors(cudaGraphLaunch(graphExec, streamForGraph));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(streamForGraph->ext_oneapi_graph(*graphExec)));
   }
 
   checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
   printf("Cloned Graph Output.. \n");
   for (int i = 0; i < GRAPH_LAUNCH_ITERATIONS; i++) {
-    /*
-    DPCT1007:56: Migration of cudaGraphLaunch is not supported.
-    */
-    checkCudaErrors(cudaGraphLaunch(clonedGraphExec, streamForGraph));
+    checkCudaErrors(
+        DPCT_CHECK_ERROR(streamForGraph->ext_oneapi_graph(*clonedGraphExec)));
   }
 
   checkCudaErrors(DPCT_CHECK_ERROR(streamForGraph->wait()));
 
+  checkCudaErrors(DPCT_CHECK_ERROR(delete (graphExec)));
+  checkCudaErrors(DPCT_CHECK_ERROR(delete (clonedGraphExec)));
   /*
-  DPCT1007:57: Migration of cudaGraphExecDestroy is not supported.
-  */
-  checkCudaErrors(cudaGraphExecDestroy(graphExec));
-  /*
-  DPCT1007:58: Migration of cudaGraphExecDestroy is not supported.
-  */
-  checkCudaErrors(cudaGraphExecDestroy(clonedGraphExec));
-  /*
-  DPCT1007:59: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:47: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(graph));
   /*
-  DPCT1007:60: Migration of cudaGraphDestroy is not supported.
+  DPCT1007:48: Migration of cudaGraphDestroy is not supported.
   */
   checkCudaErrors(cudaGraphDestroy(clonedGraph));
   checkCudaErrors(
@@ -672,21 +642,10 @@ int main(int argc, char **argv) {
 
   init_input(inputVec_h, size);
 
-  auto startTimer1 = Time::now();
   cudaGraphsManual(inputVec_h, inputVec_d, outputVec_d, result_d, size,
                    maxBlocks);
-  auto stopTimer1 = Time::now();
-  auto Timer_duration1 =
-      std::chrono::duration_cast<float_ms>(stopTimer1 - startTimer1).count();
-  printf("Elapsed Time of CUDA Graphs Manual : %f (ms)\n", Timer_duration1);
-
-  auto startTimer2 = Time::now();
   cudaGraphsUsingStreamCapture(inputVec_h, inputVec_d, outputVec_d, result_d,
                                size, maxBlocks);
-  auto stopTimer2 = Time::now();
-  auto Timer_duration2 =
-      std::chrono::duration_cast<float_ms>(stopTimer2 - startTimer2).count();
-  printf("Elapsed Time CUDA Streamcapture : %f (ms)\n", Timer_duration2);
 
   checkCudaErrors(DPCT_CHECK_ERROR(
       dpct::dpct_free(inputVec_d, dpct::get_in_order_queue())));

@@ -1,0 +1,2 @@
+add_subdirectory(01_onemkl_sycl_gemm)
+add_subdirectory(02_onemkl_openmp_axpy)

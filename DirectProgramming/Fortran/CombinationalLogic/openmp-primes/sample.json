@@ -1,48 +1,63 @@
 {
-  "guid": "6e0828c5-bed5-447a-bab6-7fa251626d54",
-  "name": "OpenMP* Primes",
-  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Combinational Logic"],
-  "description": "Fortran Tutorial - Using OpenMP* (OMP)",
-  "toolchain": [ "ifx" ],
-  "languages": [ { "fortran": {} } ],
-  "targetDevice": [ "CPU" ],
-  "os": [ "linux", "windows" ],
-  "builder": [ "make" ],
-  "ciTests":{
-    "linux": [
-      {
-        "id": "ifx_release_cpu",
-        "steps": [
-          "make release",
-          "make run",
-          "make clean"
-        ]
-       },
-       {
-        "id": "ifx_debug_cpu",
-        "steps": [
-          "make debug",
-          "make debug_run",
-          "make clean"
-        ]
-       }
+    "guid": "6e0828c5-bed5-447a-bab6-7fa251626d54",
+    "name": "OpenMP* Primes",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/Fortran/Combinational Logic"
     ],
-    "windows": [
-       {
-        "id": "ifx_release_cpu",
-        "steps": [
-          "build.bat",
-          "run.bat"
+    "description": "Fortran Tutorial - Using OpenMP* (OMP)",
+    "toolchain": [
+        "ifx"
+    ],
+    "languages": [
+        {
+            "fortran": {}
+        }
+    ],
+    "targetDevice": [
+        "CPU"
+    ],
+    "os": [
+        "linux",
+        "windows"
+    ],
+    "builder": [
+        "make"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "ifx_release_cpu",
+                "steps": [
+                    "make release",
+                    "make run",
+                    "make clean"
+                ]
+            },
+            {
+                "id": "ifx_debug_cpu",
+                "steps": [
+                    "make debug",
+                    "make debug_run",
+                    "make clean"
+                ]
+            }
+        ],
+        "windows": [
+            {
+                "id": "ifx_release_cpu",
+                "steps": [
+                    "build.bat",
+                    "run.bat"
+                ]
+            },
+            {
+                "id": "ifx_debug_cpu",
+                "steps": [
+                    "build.bat",
+                    "debug_run.bat"
+                ]
+            }
         ]
-       },
-       {
-        "id": "ifx_debug_cpu",
-        "steps": [
-          "build.bat",
-          "debug_run.bat"
-        ]
-       }
-    ]
-  },
-  "expertise": "Concepts and Functionality"
+    },
+    "expertise": "Concepts and Functionality"
 }

@@ -9,16 +9,13 @@
 #ifndef __DPCT_HPP__
 #define __DPCT_HPP__
 
+#include <sycl/sycl.hpp>
+#include <iostream>
 #include <limits.h>
 #include <math.h>
 
-#include <iostream>
-#include <sycl/sycl.hpp>
-
-template <class... Args>
-class dpct_kernel_name;
-template <int Arg>
-class dpct_kernel_scalar;
+template <class... Args> class dpct_kernel_name;
+template <int Arg> class dpct_kernel_scalar;
 
 #include "atomic.hpp"
 #include "device.hpp"
@@ -27,6 +24,11 @@ class dpct_kernel_scalar;
 #include "math.hpp"
 #include "memory.hpp"
 #include "util.hpp"
+
+#include "bindless_images.hpp"
+#include "graph.hpp"
+
+#define USE_DPCT_HELPER 1
 
 #if defined(_MSC_VER)
 #define __dpct_align__(n) __declspec(align(n))
@@ -42,24 +44,24 @@ class dpct_kernel_scalar;
 #define __dpct_noinline__ __attribute__((noinline))
 #endif
 
-#define DPCT_COMPATIBILITY_TEMP (600)
+#define DPCT_COMPATIBILITY_TEMP (900)
 
-namespace dpct {
+namespace dpct{
 enum error_code { success = 0, default_error = 999 };
 }
 
-#define DPCT_CHECK_ERROR(expr)            \
-  [&]() {                                 \
-    try {                                 \
-      expr;                               \
-      return dpct::success;               \
-    } catch (std::exception const &e) {   \
-      std::cerr << e.what() << std::endl; \
-      return dpct::default_error;         \
-    }                                     \
+#define DPCT_CHECK_ERROR(expr)                                                 \
+  [&]() {                                                                      \
+    try {                                                                      \
+      expr;                                                                    \
+      return dpct::success;                                                    \
+    } catch (std::exception const &e) {                                        \
+      std::cerr << e.what() << std::endl;                                      \
+      return dpct::default_error;                                              \
+    }                                                                          \
   }()
 
 #define DPCT_PI_F (3.14159274101257f)
 #define DPCT_PI (3.141592653589793115998)
 
-#endif  // __DPCT_HPP__
+#endif // __DPCT_HPP__

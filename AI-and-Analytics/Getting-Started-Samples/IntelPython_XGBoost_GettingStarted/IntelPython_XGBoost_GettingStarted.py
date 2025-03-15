@@ -13,7 +13,7 @@
 
 # # XGBoost Getting Started Example on Linear Regression
 # ## Importing and Organizing Data
-# In this example we will be predicting prices of houses in California based on the features of each house using Intel optimized XGBoost shipped as a part of the oneAPI AI Analytics Toolkit.
+# In this example we will be predicting prices of houses in California based on the features of each house using Intel optimized XGBoost shipped as a part of the AI Tools.
 # Let's start by **importing** all necessary data and packages.
 
 # In[3]:
@@ -93,7 +93,7 @@ pd.DataFrame(preds).to_csv('foo.csv',index=False)
 # In[9]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
 
 # In[ ]:

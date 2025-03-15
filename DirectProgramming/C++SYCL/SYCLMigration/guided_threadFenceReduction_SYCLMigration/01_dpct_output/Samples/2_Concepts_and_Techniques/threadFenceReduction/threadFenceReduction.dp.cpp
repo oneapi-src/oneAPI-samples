@@ -1,4 +1,4 @@
-#define DPCT_COMPAT_RT_VERSION 12020
+#define DPCT_COMPAT_RT_VERSION 12040
 /* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -127,8 +127,8 @@ int main(int argc, char **argv) {
 
   dev = findCudaDevice(argc, (const char **)argv);
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(dev))));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_device(dev).get_device_info(deviceProp)));
 
   printf("GPU Device supports SM %d.%d compute capability\n\n",
          /*
@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
   print_NVCC_min_spec(sSDKsample, "2.2", "Version 185");
   exit(EXIT_SUCCESS);
 #endif
-//printf(bTestResult ? "Test passed\n" : "Test failed!\n");
+
   exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

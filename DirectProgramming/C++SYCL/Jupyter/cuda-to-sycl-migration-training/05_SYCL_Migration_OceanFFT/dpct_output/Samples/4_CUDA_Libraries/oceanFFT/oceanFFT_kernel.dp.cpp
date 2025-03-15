@@ -26,9 +26,9 @@
  */
 
 ///////////////////////////////////////////////////////////////////////////////
+#include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <dpct/fft_utils.hpp>
-#include <sycl/sycl.hpp>
 
 // Round a / b to nearest higher integer value
 int cuda_iDivUp(int a, int b) { return (a + (b - 1)) / b; }
@@ -146,15 +146,15 @@ extern "C" void cudaGenerateSpectrumKernel(sycl::float2 *d_h0,
                                            unsigned int out_width,
                                            unsigned int out_height,
                                            float animTime, float patchSize) {
-  sycl::range<3> block(1, 8, 8);
-  sycl::range<3> grid(1, cuda_iDivUp(out_height, block[1]),
-                      cuda_iDivUp(out_width, block[2]));
+  dpct::dim3 block(8, 8, 1);
+  dpct::dim3 grid(cuda_iDivUp(out_width, block.x),
+                  cuda_iDivUp(out_height, block.y), 1);
   /*
   DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
-  dpct::get_default_queue().parallel_for(
+  dpct::get_in_order_queue().parallel_for(
       sycl::nd_range<3>(grid * block, block), [=](sycl::nd_item<3> item_ct1) {
         generateSpectrumKernel(d_h0, d_ht, in_width, out_width, out_height,
                                animTime, patchSize, item_ct1);
@@ -165,16 +165,15 @@ extern "C" void cudaUpdateHeightmapKernel(float *d_heightMap,
                                           sycl::float2 *d_ht,
                                           unsigned int width,
                                           unsigned int height, bool autoTest) {
-  sycl::range<3> block(1, 8, 8);
-  sycl::range<3> grid(1, cuda_iDivUp(height, block[1]),
-                      cuda_iDivUp(width, block[2]));
+  dpct::dim3 block(8, 8, 1);
+  dpct::dim3 grid(cuda_iDivUp(width, block.x), cuda_iDivUp(height, block.y), 1);
   if (autoTest) {
     /*
     DPCT1049:1: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().parallel_for(
+    dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(grid * block, block), [=](sycl::nd_item<3> item_ct1) {
           updateHeightmapKernel_y(d_heightMap, d_ht, width, item_ct1);
         });
@@ -184,7 +183,7 @@ extern "C" void cudaUpdateHeightmapKernel(float *d_heightMap,
     limit. To get the device limit, query info::device::max_work_group_size.
     Adjust the work-group size if needed.
     */
-    dpct::get_default_queue().parallel_for(
+    dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(grid * block, block), [=](sycl::nd_item<3> item_ct1) {
           updateHeightmapKernel(d_heightMap, d_ht, width, item_ct1);
         });
@@ -194,15 +193,15 @@ extern "C" void cudaUpdateHeightmapKernel(float *d_heightMap,
 extern "C" void cudaCalculateSlopeKernel(float *hptr, sycl::float2 *slopeOut,
                                          unsigned int width,
                                          unsigned int height) {
-  sycl::range<3> block(1, 8, 8);
-  sycl::range<3> grid2(1, cuda_iDivUp(height, block[1]),
-                       cuda_iDivUp(width, block[2]));
+  dpct::dim3 block(8, 8, 1);
+  dpct::dim3 grid2(cuda_iDivUp(width, block.x), cuda_iDivUp(height, block.y),
+                   1);
   /*
   DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
   limit. To get the device limit, query info::device::max_work_group_size.
   Adjust the work-group size if needed.
   */
-  dpct::get_default_queue().parallel_for(
+  dpct::get_in_order_queue().parallel_for(
       sycl::nd_range<3>(grid2 * block, block), [=](sycl::nd_item<3> item_ct1) {
         calculateSlopeKernel(hptr, slopeOut, width, height, item_ct1);
       });

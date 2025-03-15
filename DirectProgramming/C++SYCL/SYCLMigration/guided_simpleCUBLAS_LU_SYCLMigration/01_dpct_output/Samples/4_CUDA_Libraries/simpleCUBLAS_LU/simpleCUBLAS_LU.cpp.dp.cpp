@@ -57,7 +57,7 @@
 #define BATCH_SIZE 10000
 
 // use double precision data type
-//#define DOUBLE_PRECISION /* comment this to use single precision */
+#define DOUBLE_PRECISION /* comment this to use single precision */
 #ifdef DOUBLE_PRECISION
 #define DATA_TYPE double
 #define MAX_ERROR 1e-15
@@ -72,22 +72,19 @@
 // helper functions
 
 // wrapper around cublas<t>getrfBatched()
-int cublasXgetrfBatched(dpct::queue_ptr handle, int n, DATA_TYPE *const A[],
-                        int lda, int *P, int *info, int batchSize) try {
+int cublasXgetrfBatched(dpct::blas::descriptor_ptr handle, int n,
+                        DATA_TYPE *const A[], int lda, int *P, int *info,
+                        int batchSize) try {
 #ifdef DOUBLE_PRECISION
   /*
   DPCT1047:14: The meaning of P in the dpct::getrf_batch_wrapper is different
   from the cublasDgetrfBatched. You may need to check the migrated code.
   */
-  return DPCT_CHECK_ERROR(dpct::getrf_batch_wrapper(
-      *handle, n, const_cast<double **>(A), lda, P, info, batchSize));
+  return DPCT_CHECK_ERROR(dpct::getrf_batch_wrapper(handle->get_queue(), n,
+                                                    const_cast<double **>(A),
+                                                    lda, P, info, batchSize));
 #else
-  /*
-  DPCT1047:14: The meaning of P in the dpct::getrf_batch_wrapper is different
-  from the cublasSgetrfBatched. You may need to check the migrated code.
-  */
-  return DPCT_CHECK_ERROR(dpct::getrf_batch_wrapper(
-      *handle, n, const_cast<float **>(A), lda, P, info, batchSize));
+  return cublasSgetrfBatched(handle, n, A, lda, P, info, batchSize);
 #endif
 }
 catch (sycl::exception const &exc) {
@@ -247,7 +244,7 @@ void getPmatFromPivot(DATA_TYPE* Pmat, int* P) {
 int main(int argc, char **argv) try {
   // cuBLAS variables
   int status;
-  dpct::queue_ptr handle;
+  dpct::blas::descriptor_ptr handle;
 
   // host variables
   size_t matSize = N * N * sizeof(DATA_TYPE);
@@ -279,7 +276,7 @@ int main(int argc, char **argv) try {
   }
 
   // initialize cuBLAS
-  status = DPCT_CHECK_ERROR(handle = &dpct::get_in_order_queue());
+  status = DPCT_CHECK_ERROR(handle = new dpct::blas::descriptor());
   if (status != 0) {
     printf("> ERROR: cuBLAS initialization failed..\n");
     return (EXIT_FAILURE);
@@ -306,7 +303,7 @@ int main(int argc, char **argv) try {
 
   // allocate memory for device variables
   checkCudaErrors(
-      DPCT_CHECK_ERROR(d_Aarray = (float *)sycl::malloc_device(
+      DPCT_CHECK_ERROR(d_Aarray = (double *)sycl::malloc_device(
                            BATCH_SIZE * matSize, dpct::get_in_order_queue())));
   checkCudaErrors(
       DPCT_CHECK_ERROR(d_pivotArray = sycl::malloc_device<int>(
@@ -315,7 +312,7 @@ int main(int argc, char **argv) try {
       d_infoArray =
           sycl::malloc_device<int>(BATCH_SIZE, dpct::get_in_order_queue())));
   checkCudaErrors(DPCT_CHECK_ERROR(
-      d_ptr_array = (float **)sycl::malloc_device(
+      d_ptr_array = (double **)sycl::malloc_device(
           BATCH_SIZE * sizeof(DATA_TYPE *), dpct::get_in_order_queue())));
 
   // fill matrix with random data
@@ -434,7 +431,7 @@ int main(int argc, char **argv) try {
   if (h_AarrayInput) free(h_AarrayInput);
 
   // destroy cuBLAS handle
-  status = DPCT_CHECK_ERROR(handle = nullptr);
+  status = DPCT_CHECK_ERROR(delete (handle));
   if (status != 0) {
     printf("> ERROR: cuBLAS uninitialization failed..\n");
     return (EXIT_FAILURE);

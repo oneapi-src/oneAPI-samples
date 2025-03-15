@@ -36,7 +36,7 @@ double estimate_pi(sycl::queue& q, size_t n_points) {
 
     // Step 1. Generate n_points * 2 random numbers
     // 1.1. Generator initialization
-    // Create an object of basic random numer generator (engine)
+    // Create an object of basic random number generator (engine)
     mkl::rng::philox4x32x10 engine(q, seed);
     // Create an object of distribution (by default float, a = 0.0f, b = 1.0f)
     mkl::rng::uniform distr;

@@ -1,5 +1,5 @@
 {
-    "guid": "225B484F-632E-4B4C-9D4C-C88158EAA2CB",
+    "guid": "D0F3E73E-B0EE-4CF5-A30E-6C23800E99BD",
     "name": "Simple Cuda Graphs Sample",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "Migration of simpleCudaGraphs from CUDA to SYCL, demonstrates usage of Taskflow programming model and SYCL Graph extension in place of CUDA Graph APIs",
