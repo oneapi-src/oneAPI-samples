@@ -22,7 +22,7 @@ MOMENTUM = 0.9
 DOWNLOAD = True
 DATA = 'datasets/cifar10/'
 
-os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_BF16"
+os.environ["ONEDNN_MAX_CPU_ISA"] = "AVX512_CORE_AMX"
 
 """
 Function to run a test case
@@ -56,7 +56,7 @@ def trainModel(train_loader, modelName="myModel", dataType="fp32"):
     for batch_idx, (data, target) in enumerate(train_loader):
         optimizer.zero_grad()
         if "bf16" == dataType:
-            with torch.amp.autocast('cpu'):   # Auto Mixed Precision
+            with torch.cpu.amp.autocast():   # Auto Mixed Precision
                 # Setting memory_format to torch.channels_last could improve performance with 4D input data. This is optional.
                 data = data.to(memory_format=torch.channels_last)
                 output = model(data)
@@ -87,6 +87,22 @@ def trainModel(train_loader, modelName="myModel", dataType="fp32"):
 Perform all types of training in main function
 """
 def main():
+    # Check if hardware supports AMX
+    import sys
+    sys.path.append('../../')
+    import version_check
+    from cpuinfo import get_cpu_info
+    info = get_cpu_info()
+    flags = info['flags']
+    amx_supported = False
+    for flag in flags:
+        if "amx" in flag:
+            amx_supported = True
+            break
+    if not amx_supported:
+        print("AMX is not supported on current hardware. Code sample cannot be run.\n")
+        return
+    
     # Load dataset
     transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize((224, 224)),
@@ -105,12 +121,35 @@ def main():
     )
 
     # Train models and acquire training times
-    print("Training model with BF16 with AVX512")
-    bf16_avx512_training_time = trainModel(train_loader, modelName="bf16_noAmx", dataType="bf16")
+    print("Training model with FP32")
+    fp32_training_time = trainModel(train_loader, modelName="fp32", dataType="fp32")
+    print("Training model with BF16 with AMX")
+    bf16_withAmx_training_time = trainModel(train_loader, modelName="bf16_withAmx", dataType="bf16")
 
-    # Save variable
-    with open('bf16_avx512_training_time.txt', 'w') as f:
-        f.write(str(bf16_avx512_training_time))
+    # Training time results
+    print("Summary")
+    print("FP32 training time: %.3f" %fp32_training_time)
+    print("BF16 with AMX training time: %.3f" %bf16_withAmx_training_time)
+
+    # Create bar chart with training time results
+    plt.figure()
+    plt.title("ResNet Training Time")
+    plt.xlabel("Test Case")
+    plt.ylabel("Training Time (seconds)")
+    plt.bar(["FP32", "BF16 w/AMX"], [fp32_training_time, bf16_withAmx_training_time])
+
+    # Calculate speedup when using AMX
+    speedup_from_fp32 = fp32_training_time / bf16_withAmx_training_time
+    print("BF16 with AMX is %.2fX faster than FP32" %speedup_from_fp32)
+
+    # Create bar chart with speedup results
+    plt.figure()
+    plt.title("AMX Speedup")
+    plt.xlabel("Test Case")
+    plt.ylabel("Speedup")
+    plt.bar(["FP32", "BF16 w/AMX"], [1, speedup_from_fp32])
+    
+    plt.show()
 
 if __name__ == '__main__':
     main()
