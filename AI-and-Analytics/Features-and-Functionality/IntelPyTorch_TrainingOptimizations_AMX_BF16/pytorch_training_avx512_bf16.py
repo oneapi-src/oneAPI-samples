@@ -56,7 +56,7 @@ def trainModel(train_loader, modelName="myModel", dataType="fp32"):
     for batch_idx, (data, target) in enumerate(train_loader):
         optimizer.zero_grad()
         if "bf16" == dataType:
-            with torch.cpu.amp.autocast():   # Auto Mixed Precision
+            with torch.amp.autocast('cpu'):   # Auto Mixed Precision
                 # Setting memory_format to torch.channels_last could improve performance with 4D input data. This is optional.
                 data = data.to(memory_format=torch.channels_last)
                 output = model(data)
@@ -106,7 +106,11 @@ def main():
 
     # Train models and acquire training times
     print("Training model with BF16 with AVX512")
-    bf16_noAmx_training_time = trainModel(train_loader, modelName="bf16_noAmx", dataType="bf16")
+    bf16_avx512_training_time = trainModel(train_loader, modelName="bf16_noAmx", dataType="bf16")
+
+    # Save variable
+    with open('bf16_noAmx_training_time.txt', 'w') as f:
+        f.write(str(bf16_avx512_training_time))
 
 if __name__ == '__main__':
     main()
