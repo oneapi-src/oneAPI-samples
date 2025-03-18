@@ -109,7 +109,7 @@ def main():
     bf16_avx512_training_time = trainModel(train_loader, modelName="bf16_noAmx", dataType="bf16")
 
     # Save variable
-    with open('bf16_noAmx_training_time.txt', 'w') as f:
+    with open('bf16_avx512_training_time.txt', 'w') as f:
         f.write(str(bf16_avx512_training_time))
 
 if __name__ == '__main__':
