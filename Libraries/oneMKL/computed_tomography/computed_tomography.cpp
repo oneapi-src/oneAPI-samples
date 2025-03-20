@@ -241,12 +241,14 @@ int main(int argc, char **argv) {
     // evaluate the mean error, pixel by pixel in the reconstructed image
     padded_matrix errors(main_queue);
     const double mean_error = compute_errors(errors, S, original, reconstruction);
-    std::cout << "The mean error in the reconstruction image is " << mean_error
+    std::cout << "The normalized mean difference between the reconstructed "
+              << "image and the original image is " << 100*mean_error << "%."
               << std::endl;
     if (mean_error / max_input_value > arbitrary_error_threshold) {
-        std::cerr << "The mean error exceeds the (arbitrarily-chosen) "
-                  << "threshold of " << 100.0*arbitrary_error_threshold
-                  << "% of the original image's maximum gray-scale value"
+        std::cerr << "The normalized mean difference exceeds the "
+                  << "(arbitrarily-chosen) threshold of "
+                  << 100.0*arbitrary_error_threshold
+                  << "% of the original image's maximum gray-scale value."
                   << std::endl;
         if (std::fabs(p * S_to_D - q) > 0.2*std::max(p*S_to_D, double(q))) {
             std::cerr << "It is recommended to use values of p and q such that "
@@ -263,7 +265,7 @@ int main(int argc, char **argv) {
                       << "one another to reduce interpolation errors."
                       << std::endl;
         }
-        std::cerr << "Saving local errors in " << errors_bmpname
+        std::cerr << "Saving local errors in " << errors_bmpname << "."
                   << std::endl;
         // same relevant pixel indices for errors as for reconstruction
         bmp_write(errors_bmpname, errors, i_range, j_range);
