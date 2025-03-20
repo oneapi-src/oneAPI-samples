@@ -32,7 +32,7 @@ using complex_t = std::complex<double>;
 // This sample takes the side length of the input image's pixels as unit length
 constexpr double in_pix_len = 1.0;
 
-// A transparent matrix structure accouting for minimal padding as required for
+// A transparent matrix structure accounting for minimal padding as required for
 // - either a batch of h real 1D in-place DFTs of length w;
 // - or one real 2D in-place DFT of lengths {h, w}.
 // For such operations (real in-place DFTs), data padding is required to store
@@ -43,8 +43,8 @@ struct padded_matrix {
     int h, w;
     padded_matrix(sycl::queue &main_queue) :
         queue{main_queue}, data{nullptr}, h(0), w(0) {}
-    padded_matrix(const padded_matrix &) = delete;
-    padded_matrix &operator=(const padded_matrix &) = delete;
+    padded_matrix(const padded_matrix&) = delete;
+    padded_matrix& operator=(const padded_matrix&) = delete;
     void deallocate() {
         if (data)
             sycl::free(data, queue);
@@ -67,6 +67,212 @@ struct padded_matrix {
         deallocate();
     }
 };
+
+// Routine terminating the application and reporting ad-hoc information.
+void die(const std::string& err) {
+    std::cerr << "Fatal error: " << err << std::endl;
+    std::exit(EXIT_FAILURE);
+}
+
+double
+bmp_read(padded_matrix&, const std::string&);
+
+void
+bmp_write(const std::string&, const padded_matrix&, const int*, const int*);
+
+sycl::event
+acquire_radon(padded_matrix&, double, const padded_matrix&);
+
+void
+reconstruction_from_radon(padded_matrix&, padded_matrix&, double, sycl::event&);
+
+double
+compute_errors(padded_matrix&, double, const padded_matrix&, const padded_matrix&);
+
+int main(int argc, char **argv) {
+    constexpr int default_p = 400;
+    constexpr int default_q = 400;
+    constexpr double default_S_to_D = 1.0;
+    constexpr std::string_view default_original_bmpname = "input.bmp";
+    constexpr std::string_view default_radon_bmpname = "radon.bmp";
+    constexpr std::string_view default_restored_bmpname = "restored.bmp";
+    constexpr std::string_view default_errors_bmpname = "errors.bmp";
+    constexpr int default_crop = 1;
+    constexpr double arbitrary_error_threshold = 0.1;
+    /*----------------------- USAGE INFO START --------------------------------*/
+    const std::string usage_info =
+"\n\
+  Usage:\n\
+  ======\n\
+    " + std::string(argv[0]) + " p q in radon_out restored_out S_to_D err_out crop\n\
+  Inputs:\n\
+  -------\n\
+  p             - number of projection directions considered for the Radon\n\
+                  transform (number of angles spanning a range of M_PI).\n\
+                  p must be a strictly positive integer (default value is " +
+                  std::to_string(default_p) + ").\n\
+  q             - number of samples of the Radon transform for every\n\
+                  projection direction.\n\
+                  q must be a strictly positive integer (default value is " +
+                  std::to_string(default_q) + ").\n\
+  in            - name of the input image used to generate Radon transform data.\n\
+                  The file must be a 24-bit uncompressed bitmap file.\n\
+                  \"" + std::string(default_original_bmpname) + "\" is considered by default.\n\
+  S_to_D        - ratio of the scanning width used for sampling the Radon\n\
+                  transform (for any projection direction) to the diagonal of\n\
+                  the input image.\n\
+                  S_to_D must be a floating-point value larger than or equal\n\
+                  to 1.0 (default value is " +
+                  std::to_string(default_S_to_D) + ").\n\
+  crop          - integer flag indicating whether to crop the generated bitmap\n\
+                  output images to their range of relevance or not. Images are\n\
+                  (resp. are not) cropped if the value is 1 (resp. 0).\n\
+                  The supported values are 0 and 1 (default value is "
+                  + std::to_string(default_crop) + ").\n\
+  Outputs:\n\
+  --------\n\
+  radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the generated Radon\n\
+                  transform data points.\n\
+                  \"" + std::string(default_radon_bmpname) + "\" is used by default.\n\
+  restored_out  - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the image reconstructed\n\
+                  from the Radon transform data points.\n\
+                  \"" + std::string(default_restored_bmpname) + "\" is used by default.\n\
+  err_out       - name of a 24-bit uncompressed bitmap image file storing a\n\
+                  gray-scaled image representing the pixel-wise error in the\n\
+                  restored_out file. This file is created only if the mean\n\
+                  global error is found to exceed "
+                  + std::to_string(100.0*arbitrary_error_threshold) +
+                  "% of the maximum\n\
+                  gray-scale value in the original image.\n\
+                  \"" + std::string(default_errors_bmpname) + "\" is considered by default.\n\
+";
+    /*------------------------ USAGE INFO END --------------------------------*/
+    if (argc > 1 &&
+        (std::strcmp(argv[1], "-h") == 0 || std::strcmp(argv[1], "-H") == 0)) {
+        std::cout << usage_info << std::endl;
+        return EXIT_SUCCESS;
+    }
+    const int p                         = argc > 1 ? std::atoi(argv[1]) :
+                                                     default_p;
+    const int q                         = argc > 2 ? std::atoi(argv[2]) :
+                                                     default_q;
+    const std::string original_bmpname  = argc > 3 ? argv[3] :
+                                                     std::string(default_original_bmpname);
+    const std::string radon_bmpname     = argc > 4 ? argv[4] :
+                                                     std::string(default_radon_bmpname);
+    const std::string restored_bmpname  = argc > 5 ? argv[5] :
+                                                     std::string(default_restored_bmpname);
+    const double S_to_D                 = argc > 6 ? std::atof(argv[6]) :
+                                                     default_S_to_D;
+    const std::string errors_bmpname    = argc > 7 ? argv[7] :
+                                                     std::string(default_errors_bmpname);
+    const int crop                      = argc > 8 ? std::atoi(argv[8]) :
+                                                     default_crop;
+    // validate numerical input arguments
+    if (argc > 9 || p <= 0 || q <= 0 || S_to_D < 1.0 || crop < 0 || crop > 1) {
+        die("invalid usage.\n" + usage_info);
+    }
+    // range of pixel indices to consider when exporting an image.
+    int i_range[2] = {std::numeric_limits<int>::lowest(),
+                      std::numeric_limits<int>::max()};
+    int j_range[2] = {std::numeric_limits<int>::lowest(),
+                      std::numeric_limits<int>::max()};
+
+    // Create execution queue.
+    sycl::queue main_queue;
+    try {
+        // This sample requires double-precision floating-point arithmetic:
+        main_queue = sycl::queue(sycl::aspect_selector({sycl::aspect::fp64}));
+    } catch (sycl::exception &e) {
+        std::cerr << "Could not find any device with double precision support."
+                  << "Exiting." << std::endl;
+        return 0;
+    }
+    // read input image and convert it to gray-scale values
+    std::cout << "Reading original image from " << original_bmpname << std::endl;
+    padded_matrix original(main_queue);
+    const double max_input_value = bmp_read(original, original_bmpname);
+    // diagonal D of original image
+    const double ww = original.w*in_pix_len;
+    const double hh = original.h*in_pix_len;
+    const double D = std::hypot(hh, ww);
+    // scanning width S
+    const double S = S_to_D * D;
+    // Compute samples of the radon transform
+    padded_matrix radon_image(main_queue);
+    radon_image.allocate(p, q);
+    if (!radon_image.data)
+        die("cannot allocate memory for Radon projection");
+    std::cout << "Generating Radon transform data from "
+              << original_bmpname << std::endl;
+    auto radon_ev = acquire_radon(radon_image, S, original);
+    if (crop == 1) {
+        // values of radon_image.data[i*radon_image.real_padded_width() + j] are
+        // expected to be 0.0 if |(-1.0 + (2.0*j + 1.0)/q)*S_to_D| > 1
+        i_range[0] = 0;
+        i_range[1] = radon_image.h;
+        j_range[0] =
+            static_cast<int>(std::ceil(0.5*((1.0 - 1.0/S_to_D)*q - 1.0)));
+        j_range[1] =
+            static_cast<int>(std::ceil(0.5*((1.0 + 1.0/S_to_D)*q - 1.0)));
+    }
+    std::cout << "Saving Radon transform data in "
+              << radon_bmpname << std::endl;
+    radon_ev.wait(); // make sure it completes before exporting data
+    bmp_write(radon_bmpname, radon_image, i_range, j_range);
+    // reconstruct image from its radon transform samples
+    padded_matrix reconstruction(main_queue);
+    reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
+    if (crop == 1) {
+        // values of reconstruction.data[i*reconstruction.real_padded_width() + j]
+        // are out of the relevant range of comparison if
+        //             |(i - q/2)*S/q| - 0.5*S/q > 0.5*hh
+        // or
+        //             |(j - q/2)*S/q| - 0.5*S/q > 0.5*ww
+        i_range[0] = static_cast<int>(std::ceil(-0.5*hh*q/S + q/2 - 0.5));
+        i_range[1] = static_cast<int>(std::ceil(+0.5*hh*q/S + q/2 + 0.5));
+        j_range[0] = static_cast<int>(std::ceil(-0.5*ww*q/S + q/2 - 0.5));
+        j_range[1] = static_cast<int>(std::ceil(+0.5*ww*q/S + q/2 + 0.5));
+    }
+    std::cout << "Saving restored image in " << restored_bmpname << std::endl;
+    bmp_write(restored_bmpname, reconstruction, i_range, j_range);
+    // evaluate the mean error, pixel by pixel in the reconstructed image
+    padded_matrix errors(main_queue);
+    const double mean_error = compute_errors(errors, S, original, reconstruction);
+    std::cout << "The mean error in the reconstruction image is " << mean_error
+              << std::endl;
+    if (mean_error / max_input_value > arbitrary_error_threshold) {
+        std::cerr << "The mean error exceeds the (arbitrarily-chosen) "
+                  << "threshold of " << 100.0*arbitrary_error_threshold
+                  << "% of the original image's maximum gray-scale value"
+                  << std::endl;
+        if (std::fabs(p * S_to_D - q) > 0.2*std::max(p*S_to_D, double(q))) {
+            std::cerr << "It is recommended to use values of p and q such that "
+                      << "p*S_to_D and q are commensurate." << std::endl;
+        }
+        else if (S / q > 2.0*in_pix_len) {
+            std::cerr << "Consider increasing q (to "
+                      << std::ceil(S/(2.0*in_pix_len)) << " or more) "
+                      << "to alleviate blurring in the reconstructed image."
+                      << std::endl;
+        }
+        else {
+            std::cerr << "Consider increasing S_to_D and q proportionally to "
+                      << "one another to reduce interpolation errors."
+                      << std::endl;
+        }
+        std::cerr << "Saving local errors in " << errors_bmpname
+                  << std::endl;
+        // same relevant pixel indices for errors as for reconstruction
+        bmp_write(errors_bmpname, errors, i_range, j_range);
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
 // Simplified BMP structure.
 // See http://msdn.microsoft.com/en-us/library/dd183392(v=vs.85).aspx
 #pragma pack(push, 1)
@@ -92,15 +298,10 @@ struct bmp_header {
 struct pixel {
     unsigned char b, g, r;
 };
-// Routine terminating the application and reporting ad-hoc information.
-void die(const std::string& err) {
-    std::cerr << "Fatal error: " << err << std::endl;
-    std::exit(EXIT_FAILURE);
-}
 // Routine reading a 24-bit uncompressed bitmap image file and converting it to
 // a gray-scale padded_matrix (array of doubles in [0, 1], 0 is white, 1 is
 // black). The maximum such gray-scale value is returned.
-double bmp_read(padded_matrix &image, const std::string& fname) {
+double bmp_read(padded_matrix& image, const std::string& fname) {
     std::fstream fp;
     fp.open(fname, std::fstream::in | std::fstream::binary);
     if (fp.fail())
@@ -163,7 +364,7 @@ double bmp_read(padded_matrix &image, const std::string& fname) {
 // may be considered artifacts (e.g., due to Gibbs phenomenon) and/or local
 // errors of the reconstruction procedure (e.g., due to the rudimentary spectrum
 // interpolation).
-void bmp_write(const std::string& fname, const padded_matrix &image,
+void bmp_write(const std::string& fname, const padded_matrix& image,
                const int min_max_i[2], const int min_max_j[2]) {
     const int min_i = std::max(min_max_i[0], 0);
     const int max_i = std::min(min_max_i[1], image.h);
@@ -258,8 +459,8 @@ void bmp_write(const std::string& fname, const padded_matrix &image,
 // Returns:
 // --------
 // a sycl::event object tracking the completion of the task.
-sycl::event acquire_radon(padded_matrix &radon_projection,
-                          double scanning_width, const padded_matrix &input) {
+sycl::event acquire_radon(padded_matrix& radon_projection,
+                          double scanning_width, const padded_matrix& input) {
 
     const double hh = input.h*in_pix_len;
     const double ww = input.w*in_pix_len;
@@ -388,7 +589,7 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
         return integral;
     };
 
-    sycl::event ev = radon_projection.queue.submit([&](sycl::handler &cgh) {
+    return radon_projection.queue.submit([&](sycl::handler &cgh) {
         const int p = radon_projection.h;
         const int q = radon_projection.w;
         const int radon_ldw = radon_projection.real_padded_width();
@@ -406,8 +607,6 @@ sycl::event acquire_radon(padded_matrix &radon_projection,
             }
         );
     });
-
-    return ev;
 }
 
 // Routine reconstructing an S-by-S image of q x q pixels from p x q samples of
@@ -722,7 +921,7 @@ double compute_errors(padded_matrix& errors,
     if (!L1_error)
         die("cannot allocate memory for mean global error");
     L1_error[0] = 0.0;
-    auto compute_errors_ev = errors.queue.submit([&](sycl::handler &cgh) {
+    errors.queue.submit([&](sycl::handler &cgh) {
         auto global_integral = sycl::reduction(L1_error, sycl::plus<>());
         double *local_error_data = errors.data;
         const int local_error_ldw = errors.real_padded_width();
@@ -736,193 +935,8 @@ double compute_errors(padded_matrix& errors,
                 sum += mean_err_ij * pixel_length * pixel_length;
             }
         );
-    });
-    compute_errors_ev.wait();
+    }).wait();
     mean_error = L1_error[0]/(hh*ww);
     sycl::free(L1_error, errors.queue);
     return mean_error;
-}
-
-int main(int argc, char **argv) {
-    constexpr int default_p = 400;
-    constexpr int default_q = 400;
-    constexpr double default_S_to_D = 1.0;
-    constexpr std::string_view default_original_bmpname = "input.bmp";
-    constexpr std::string_view default_radon_bmpname = "radon.bmp";
-    constexpr std::string_view default_restored_bmpname = "restored.bmp";
-    constexpr std::string_view default_errors_bmpname = "errors.bmp";
-    constexpr int default_crop = 1;
-    constexpr double arbitrary_error_threshold = 0.1;
-    /*----------------------- USAGE INFO START --------------------------------*/
-    const std::string usage_info =
-"\n\
-  Usage:\n\
-  ======\n\
-    " + std::string(argv[0]) + " p q in radon_out restored_out S_to_D err_out crop\n\
-  Inputs:\n\
-  -------\n\
-  p             - number of projection directions considered for the Radon\n\
-                  transform (number of angles spanning a range of M_PI).\n\
-                  p must be a strictly positive integer (default value is " +
-                  std::to_string(default_p) + ").\n\
-  q             - number of samples of the Radon transform for every\n\
-                  projection direction.\n\
-                  q must be a strictly positive integer (default value is " +
-                  std::to_string(default_q) + ").\n\
-  in            - name of the input image used to generate Radon transform data.\n\
-                  The file must be a 24-bit uncompressed bitmap file.\n\
-                  \"" + std::string(default_original_bmpname) + "\" is considered by default.\n\
-  S_to_D        - ratio of the scanning width used for sampling the Radon\n\
-                  transform (for any projection direction) to the diagonal of\n\
-                  the input image.\n\
-                  S_to_D must be a floating-point value larger than or equal\n\
-                  to 1.0 (default value is " +
-                  std::to_string(default_S_to_D) + ").\n\
-  crop          - integer flag indicating whether to crop the generated bitmap\n\
-                  output images to their range of relevance or not. Images are\n\
-                  (resp. are not) cropped if the value is 1 (resp. 0).\n\
-                  The supported values are 0 and 1 (default value is "
-                  + std::to_string(default_crop) + ").\n\
-  Outputs:\n\
-  --------\n\
-  radon_out     - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the generated Radon\n\
-                  transform data points.\n\
-                  \"" + std::string(default_radon_bmpname) + "\" is used by default.\n\
-  restored_out  - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the image reconstructed\n\
-                  from the Radon transform data points.\n\
-                  \"" + std::string(default_restored_bmpname) + "\" is used by default.\n\
-  err_out       - name of a 24-bit uncompressed bitmap image file storing a\n\
-                  gray-scaled image representing the pixel-wise error in the\n\
-                  restored_out file. This file is created only if the mean\n\
-                  global error is found to exceed "
-                  + std::to_string(100.0*arbitrary_error_threshold) +
-                  "% of the maximum\n\
-                  gray-scale value in the original image.\n\
-                  \"" + std::string(default_errors_bmpname) + "\" is considered by default.\n\
-";
-    /*------------------------ USAGE INFO END --------------------------------*/
-    if (argc > 1 &&
-        (std::strcmp(argv[1], "-h") == 0 || std::strcmp(argv[1], "-H") == 0)) {
-        std::cout << usage_info << std::endl;
-        return EXIT_SUCCESS;
-    }
-    const int p                         = argc > 1 ? std::atoi(argv[1]) :
-                                                     default_p;
-    const int q                         = argc > 2 ? std::atoi(argv[2]) :
-                                                     default_q;
-    const std::string original_bmpname  = argc > 3 ? argv[3] :
-                                                     std::string(default_original_bmpname);
-    const std::string radon_bmpname     = argc > 4 ? argv[4] :
-                                                     std::string(default_radon_bmpname);
-    const std::string restored_bmpname  = argc > 5 ? argv[5] :
-                                                     std::string(default_restored_bmpname);
-    const double S_to_D                 = argc > 6 ? std::atof(argv[6]) :
-                                                     default_S_to_D;
-    const std::string errors_bmpname    = argc > 7 ? argv[7] :
-                                                     std::string(default_errors_bmpname);
-    const int crop                      = argc > 8 ? std::atoi(argv[8]) :
-                                                     default_crop;
-    // validate numerical input arguments
-    if (argc > 9 || p <= 0 || q <= 0 || S_to_D < 1.0 || crop < 0 || crop > 1) {
-        die("invalid usage.\n" + usage_info);
-    }
-    // range of pixel indices to consider when exporting an image.
-    int i_range[2] = {std::numeric_limits<int>::lowest(),
-                      std::numeric_limits<int>::max()};
-    int j_range[2] = {std::numeric_limits<int>::lowest(),
-                      std::numeric_limits<int>::max()};
-
-    // Create execution queue.
-    sycl::queue main_queue;
-    try {
-        // This sample requires double-precision floating-point arithmetic:
-        main_queue = sycl::queue(sycl::aspect_selector({sycl::aspect::fp64}));
-    } catch (sycl::exception &e) {
-        std::cerr << "Could not find any device with double precision support."
-                  << "Exiting." << std::endl;
-        return 0;
-    }
-    // read input image and convert it to gray-scale values
-    std::cout << "Reading original image from " << original_bmpname << std::endl;
-    padded_matrix original(main_queue);
-    const double max_input_value = bmp_read(original, original_bmpname);
-    // diagonal D of original image
-    const double ww = original.w*in_pix_len;
-    const double hh = original.h*in_pix_len;
-    const double D = std::hypot(hh, ww);
-    // scanning width S
-    const double S = S_to_D * D;
-    // Compute samples of the radon transform
-    padded_matrix radon_image(main_queue);
-    radon_image.allocate(p, q);
-    if (!radon_image.data)
-        die("cannot allocate memory for Radon projection");
-    std::cout << "Generating Radon transform data from "
-              << original_bmpname << std::endl;
-    auto radon_ev = acquire_radon(radon_image, S, original);
-    if (crop == 1) {
-        // values of radon_image.data[i*radon_image.real_padded_width() + j] are
-        // expected to be 0.0 if |(-1.0 + (2.0*j + 1.0)/q)*S_to_D| > 1
-        i_range[0] = 0;
-        i_range[1] = radon_image.h;
-        j_range[0] =
-            static_cast<int>(std::ceil(0.5*((1.0 - 1.0/S_to_D)*q - 1.0)));
-        j_range[1] =
-            static_cast<int>(std::ceil(0.5*((1.0 + 1.0/S_to_D)*q - 1.0)));
-    }
-    std::cout << "Saving Radon transform data in "
-              << radon_bmpname << std::endl;
-    radon_ev.wait(); // make sure it completes before exporting data
-    bmp_write(radon_bmpname, radon_image, i_range, j_range);
-    // reconstruct image from its radon transform samples
-    padded_matrix reconstruction(main_queue);
-    reconstruction_from_radon(reconstruction, radon_image, S, radon_ev);
-    if (crop == 1) {
-        // values of reconstruction.data[i*reconstruction.real_padded_width() + j]
-        // are out of the relevant range of comparison if
-        //             |(i - q/2)*S/q| - 0.5*S/q > 0.5*hh
-        // or
-        //             |(j - q/2)*S/q| - 0.5*S/q > 0.5*ww
-        i_range[0] = static_cast<int>(std::ceil(-0.5*hh*q/S + q/2 - 0.5));
-        i_range[1] = static_cast<int>(std::ceil(+0.5*hh*q/S + q/2 + 0.5));
-        j_range[0] = static_cast<int>(std::ceil(-0.5*ww*q/S + q/2 - 0.5));
-        j_range[1] = static_cast<int>(std::ceil(+0.5*ww*q/S + q/2 + 0.5));
-    }
-    std::cout << "Saving restored image in " << restored_bmpname << std::endl;
-    bmp_write(restored_bmpname, reconstruction, i_range, j_range);
-    // evaluate the mean error, pixel by pixel in the reconstructed image
-    padded_matrix errors(main_queue);
-    const double mean_error = compute_errors(errors, S, original, reconstruction);
-    std::cout << "The mean error in the reconstruction image is " << mean_error
-              << std::endl;
-    if (mean_error / max_input_value > arbitrary_error_threshold) {
-        std::cerr << "The mean error exceeds the (arbitrarily-chosen) "
-                  << "threshold of " << 100.0*arbitrary_error_threshold
-                  << "% of the original image's maximum gray-scale value"
-                  << std::endl;
-        if (std::fabs(p * S_to_D - q) > 0.2*std::max(p*S_to_D, double(q))) {
-            std::cerr << "It is recommended to use values of p and q such that "
-                      << "p*S_to_D and q are commensurate." << std::endl;
-        }
-        else if (S / q > 2.0*in_pix_len) {
-            std::cerr << "Consider increasing q (to "
-                      << std::ceil(S/(2.0*in_pix_len)) << " or more) "
-                      << "to alleviate blurring in the reconstructed image."
-                      << std::endl;
-        }
-        else {
-            std::cerr << "Consider increasing S_to_D and q proportionally to "
-                      << "one another to reduce interpolation errors."
-                      << std::endl;
-        }
-        std::cerr << "Saving local errors in " << errors_bmpname
-                  << std::endl;
-        // same relevant pixel indices for errors as for reconstruction
-        bmp_write(errors_bmpname, errors, i_range, j_range);
-        return EXIT_FAILURE;
-    }
-
-    return EXIT_SUCCESS;
 }
