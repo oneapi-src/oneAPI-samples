@@ -6,11 +6,11 @@
 |:---                               |:---
 | OS                                | Linux* Ubuntu 20.04, 20 Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
-| Software                          | Intel&reg; AI Analytics Tookkit, Jupyter Notebooks, Intel DevCloud
+| Software                          | AI Tools, Jupyter Notebooks, Intel DevCloud
 |                                   | pip install seaborn
   
 ## Purpose
-The Jupyter Notebooks in this training are inended to give professors and students an accesible but challenging introduction to machine learning.  It enumerates and describes many commonly used Scikit-learn* allgorithms which are used  daily to address machine learning challenges.  It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the Intel AI Analytics Toolkit powered by oneAPI.
+The Jupyter Notebooks in this training are inended to give professors and students an accesible but challenging introduction to machine learning.  It enumerates and describes many commonly used Scikit-learn* allgorithms which are used  daily to address machine learning challenges.  It has a secondary benefit of demonstrating how to accelerate commonly used Scikit-learn algorithms for Intel CPUs using Intel Extensions for Scikit-learn* which is part of the AI Tools powered by oneAPI.
 
 This workshop is designed to be used on the DevCloud and includes details on submitting batch jobs on the DevCloud environment.
 

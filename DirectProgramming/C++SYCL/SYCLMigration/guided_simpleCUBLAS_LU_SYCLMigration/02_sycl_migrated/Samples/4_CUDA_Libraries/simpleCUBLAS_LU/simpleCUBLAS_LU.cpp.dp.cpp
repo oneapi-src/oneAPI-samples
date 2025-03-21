@@ -45,7 +45,11 @@
 #include <dpct/dpct.hpp>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef NVIDIA_GPU
+#include <dpct/nvi_blas_utils.hpp>
+#else
 #include <dpct/blas_utils.hpp>
+#endif
 
 // cuda libraries and helpers
 #include <helper_cuda.h>

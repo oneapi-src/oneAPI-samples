@@ -8,7 +8,7 @@ The `Intel® Extension for Scikit-learn*: SVC for Adult Data Set` sample uses th
 | Time to complete       | 25 minutes
 | Category               | Concepts and Functionality
 
-The sample demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library (oneDAL)](https://github.com/oneapi-src/oneDAL), [Intel® Extension for Scikit-learn*](https://intel.github.io/scikit-learn-intelex/), and the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The sample demonstrates how to use software products that can be found in the [Intel® oneAPI Data Analytics Library (oneDAL)](https://github.com/oneapi-src/oneDAL), [Intel® Extension for Scikit-learn*](https://intel.github.io/scikit-learn-intelex/), and the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 ## Purpose
 
@@ -22,15 +22,15 @@ The acceleration is achieved through the use of the oneDAL. Patching scikit-lear
 | :---                   | :---
 | OS                     | Ubuntu 20.04 (or newer)
 | Hardware               | Intel Atom® Processors <br> Intel® Core™ Processor Family <br> Intel® Xeon® Processor Family <br> Intel® Xeon® Scalable processor family
-| Software               | Intel® AI Analytics Toolkit (AI Kit)
+| Software               | AI Tools
 
 ### For Local Development Environments
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the AI Tools for Linux**](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html) for AI Tools installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 

@@ -77,7 +77,6 @@
 // CUDA and CUBLAS functions
 #include <helper_functions.h>
 #include <helper_cuda.h>
-#include <cmath>
 
 #ifndef min
 #define min(a, b) ((a < b) ? a : b)
@@ -169,8 +168,7 @@ void initializeCUDA(int argc, char **argv, int &devID, int &iSizeMultiple,
 
   dpct::device_info deviceProp;
 
-  error = DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(devID)));
+  error = DPCT_CHECK_ERROR(dpct::get_device(devID).get_device_info(deviceProp));
 
   printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n", devID,
          /*
@@ -212,8 +210,8 @@ catch (sycl::exception const &exc) {
 int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
   dpct::device_info deviceProp;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(devID))));
+  checkCudaErrors(
+      DPCT_CHECK_ERROR(dpct::get_device(devID).get_device_info(deviceProp)));
 
   int block_size = 32;
 
@@ -259,9 +257,8 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size) {
                            mem_size_C, dpct::get_in_order_queue())));
 
   // setup execution parameters
-  sycl::range<3> threads(1, block_size, block_size);
-  sycl::range<3> grid(1, matrix_size.uiHC / threads[1],
-                      matrix_size.uiWC / threads[2]);
+  dpct::dim3 threads(block_size, block_size);
+  dpct::dim3 grid(matrix_size.uiWC / threads.x, matrix_size.uiHC / threads.y);
 
   // create and start timer
   printf("Computing result using CUBLAS...");

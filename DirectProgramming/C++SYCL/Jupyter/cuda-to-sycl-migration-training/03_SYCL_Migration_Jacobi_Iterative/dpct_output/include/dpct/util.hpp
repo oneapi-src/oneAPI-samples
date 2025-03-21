@@ -31,6 +31,22 @@ T __spirv_GroupNonUniformShuffleUp(__spv::Scope::Flag, T, unsigned) noexcept;
 #endif
 
 namespace dpct {
+/// dim3 is used to store 3 component dimensions.
+class dim3 {
+public:
+  unsigned x, y, z;
+
+  constexpr dim3(unsigned x = 1, unsigned y = 1, unsigned z = 1)
+      : x(x), y(y), z(z) {}
+
+  dim3(const sycl::id<3> &r) : dim3(r[2], r[1], r[0]) {}
+
+  operator sycl::range<3>() const { return sycl::range<3>(z, y, x); }
+};
+
+inline dim3 operator*(const dim3 &a, const dim3 &b) {
+  return dim3{a.x * b.x, a.y * b.y, a.z * b.z};
+}
 
 namespace detail {
 
@@ -56,7 +72,7 @@ struct make_index_sequence
 template <int... Ints>
 struct make_index_sequence<0, Ints...> : public integer_sequence<Ints...> {};
 
-template <typename T> struct DataType { using T2 = T; };
+template <typename T> struct [[deprecated]] DataType { using T2 = T; };
 template <typename T> struct DataType<sycl::vec<T, 2>> {
   using T2 = std::complex<T>;
 };
@@ -471,7 +487,7 @@ T shift_sub_group_left(unsigned int member_mask,
   (void)delta;
   (void)logical_sub_group_size;
   (void)member_mask;
-  throw sycl::exception(sycl::errc::runtime, "Masked version of select_from_sub_group not "
+  throw sycl::exception(sycl::errc::runtime, "Masked version of shift_sub_group_left not "
                         "supported on host device.");
 #endif // __SYCL_DEVICE_ONLY__
 }
@@ -515,9 +531,85 @@ T shift_sub_group_right(unsigned int member_mask,
   (void)delta;
   (void)logical_sub_group_size;
   (void)member_mask;
-  throw sycl::exception(sycl::errc::runtime, "Masked version of select_from_sub_group not "
+  throw sycl::exception(sycl::errc::runtime, "Masked version of shift_sub_group_right not "
                         "supported on host device.");
 #endif // __SYCL_DEVICE_ONLY__
+}
+
+/// Masked version of shift_sub_group_left, which execute masked sub-group
+/// operation. The parameter member_mask indicating the work-items participating
+/// the call. Whether the n-th bit is set to 1 representing whether the
+/// work-item with id n is participating the call. All work-items named in
+/// member_mask must be executed with the same member_mask, or the result is
+/// undefined.
+/// \tparam LogicSubGroupSize Input logical sub_group size
+/// \tparam T Input value type
+/// \param [in] member_mask Input mask
+/// \param [in] g Input sub_group
+/// \param [in] x Input value
+/// \param [in] delta Input delta
+/// \param [in] last_item Index of last thread in logical subgroup
+/// \returns The result
+template <size_t LogicSubGroupSize, typename T>
+T shift_sub_group_left(sycl::sub_group sg, T input, int delta, int last_item,
+                       unsigned member_mask) {
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__NVPTX__)
+  T result;
+  constexpr int cVal = ((32 - LogicSubGroupSize) << 8);
+  SHFL_SYNC(result, member_mask, input, delta, cVal | last_item, down_i32)
+  return result;
+#else
+  if ((1U << sg.get_local_linear_id()) & member_mask) {
+    auto inner = sycl::ext::oneapi::experimental::get_tangle_group(sg);
+    sycl::group_barrier(inner);
+  }
+  auto partition =
+      sycl::ext::oneapi::experimental::get_fixed_size_group<LogicSubGroupSize>(
+          sg);
+  int id = partition.get_local_linear_id();
+  T result = sycl::shift_group_left(partition, input, delta);
+  if ((id + delta) > last_item)
+    result = input;
+  return result;
+#endif
+}
+
+/// Masked version of shift_sub_group_right, which execute masked sub-group
+/// operation. The parameter member_mask indicating the work-items participating
+/// the call. Whether the n-th bit is set to 1 representing whether the
+/// work-item with id n is participating the call. All work-items named in
+/// member_mask must be executed with the same member_mask, or the result is
+/// undefined.
+/// \tparam LogicSubGroupSize Input logical sub_group size
+/// \tparam T Input value type
+/// \param [in] member_mask Input mask
+/// \param [in] g Input sub_group
+/// \param [in] x Input value
+/// \param [in] delta Input delta
+/// \param [in] first_item Index of first lane in logical subgroup
+/// \returns The result
+template <size_t LogicSubGroupSize, typename T>
+T shift_sub_group_right(sycl::sub_group sg, T input, int delta, int first_item,
+                        unsigned member_mask) {
+#if defined(__SYCL_DEVICE_ONLY__) && defined(__NVPTX__)
+  T result;
+  constexpr int cVal = ((32 - LogicSubGroupSize) << 8);
+  SHFL_SYNC(result, member_mask, input, delta, cVal | first_item, up_i32)
+  return result;
+#else
+  if ((1U << sg.get_local_linear_id()) & member_mask) {
+    auto inner = sycl::ext::oneapi::experimental::get_tangle_group(sg);
+    sycl::group_barrier(inner);
+  }
+  auto partition =
+      sycl::ext::oneapi::experimental::get_fixed_size_group<LogicSubGroupSize>(
+          sg);
+  int id = sg.get_local_linear_id();
+  T result = sycl::shift_group_right(partition, input, delta);
+  if ((id - first_item) < delta)
+    result = input;
+  return result;
+#endif
 }
 
 /// Masked version of permute_sub_group_by_xor, which execute masked sub-group
@@ -557,7 +649,7 @@ T permute_sub_group_by_xor(unsigned int member_mask,
   (void)mask;
   (void)logical_sub_group_size;
   (void)member_mask;
-  throw sycl::exception(sycl::errc::runtime, "Masked version of select_from_sub_group not "
+  throw sycl::exception(sycl::errc::runtime, "Masked version of permute_sub_group_by_xor not "
                         "supported on host device.");
 #endif // __SYCL_DEVICE_ONLY__
 }
@@ -619,6 +711,20 @@ inline int get_sycl_language_version() {
 #endif
 }
 
+// Returns the SYCL event status for the SYCL command.
+/// \param [in] event_ptr A pointer points to the SYCL event
+/// \returns The execution result for the SYCL command
+inline int sycl_event_query(sycl::event *event_ptr) {
+  if (event_ptr->get_info<sycl::info::event::command_execution_status>() ==
+      sycl::info::event_command_status::complete) {
+    // The SYCL command has finished running on the SYCL device.
+    return 0;
+  } else {
+    // The SYCL command has not finished running on the SYCL device.
+    return 1;
+  }
+}
+
 namespace experimental {
 /// Synchronize work items from all work groups within a SYCL kernel.
 /// \param [in] item:  Represents a work group.
@@ -628,7 +734,11 @@ namespace experimental {
 /// Note: Please make sure that all the work items of all work groups within
 /// a SYCL kernel can be scheduled actively at the same time on a device.
 template <int dimensions = 3>
-inline void nd_range_barrier(
+[[deprecated(
+    "Please use "
+    "sycl::group_barrier(sycl::ext::oneapi::experimental::root_group G) "
+    "instead.")]] inline void
+nd_range_barrier(
     const sycl::nd_item<dimensions> &item,
     sycl::atomic_ref<unsigned int,
 #ifdef __AMDGPU__
@@ -672,7 +782,11 @@ inline void nd_range_barrier(
 /// Note: Please make sure that all the work items of all work groups within
 /// a SYCL kernel can be scheduled actively at the same time on a device.
 template <>
-inline void nd_range_barrier(
+[[deprecated(
+    "Please use "
+    "sycl::group_barrier(sycl::ext::oneapi::experimental::root_group G) "
+    "instead.")]] inline void
+nd_range_barrier(
     const sycl::nd_item<1> &item,
     sycl::atomic_ref<unsigned int,
 #ifdef __AMDGPU__
@@ -836,8 +950,8 @@ inline int calculate_max_active_wg_per_xecore(int *num_wg, int wg_size,
   int num_wg_threads = std::floor((float)num_threads_ss / num_threads);
 
   // Calculate num_wg
-  *num_wg = std::min(num_wg_slm, num_wg_threads);
-  *num_wg = std::min(*num_wg, max_num_wg);
+  *num_wg = (std::min)(num_wg_slm, num_wg_threads);
+  *num_wg = (std::min)(*num_wg, max_num_wg);
   return ret;
 }
 

@@ -14,7 +14,7 @@
  * relevant terms noted in the comments.
  */
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <iostream>
 #include <limits>
 
@@ -78,7 +78,7 @@ int main() {
     // Create 2D buffers for matrices, buffer c is bound with host memory c_back
     float * dev_a = sycl::malloc_device<float>(M*N, q);
     float * dev_b = sycl::malloc_device<float>(N*P, q);
-    device selected_device = device(gpu_selector_v);
+    device selected_device = device(default_selector_v);
     context devicecontext(selected_device, propList);
     queue q2(devicecontext, selected_device, propList);
     float * dev_c = sycl::malloc_device<float>(M*P, q2);

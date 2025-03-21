@@ -251,7 +251,7 @@ The Intel Fortran Compiler requires that coarray features are enabled by specify
 1. Change to the sample directory.
 2. Build the program using the `-coarray` option.
    ```
-   ifx -o coarray -coarray mcpi_coarray.F90
+   ifx -o coarray -coarray mcpi_coarray_final.F90
    ```
 3. Run the program.
    ```
@@ -276,7 +276,7 @@ Alternately, use the `Makefile` to compile and run the program:
 2. Change to the sample directory.
 3. Build the program using the `/Qcoarray` option.
    ```
-   ifx /exe:coarray /Qcoarray mcpi_coarray.F90
+   ifx /exe:coarray /Qcoarray mcpi_coarray_final.F90
    ```
 4. Run the program.
    ```
@@ -310,7 +310,7 @@ The program can be run with a different number of images; the default is determi
 1. Change to the sample directory.
 2. Build the program using `-coarray-num-images` to set the number of images to four:
    ```
-   ifx -o coarray -coarray-num-images=4 mcpi_coarray.F90
+   ifx -o coarray -coarray -coarray-num-images=4 mcpi_coarray.F90
    ```
 3. Run the program.
    ```

@@ -1,0 +1,1 @@
+add_openmp_example(stream_3D)

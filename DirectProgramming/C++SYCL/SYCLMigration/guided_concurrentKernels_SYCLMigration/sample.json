@@ -1,5 +1,5 @@
 {
-  "guid": "1B0F1520-AFA6-42AC-AB6E-686FC3D87CF7",	
+  "guid": "EE2A151F-6B1F-4FB7-B5C5-4ECED02903CF",	
   "name": "guided_concurrentKernels_SYCLMigration",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample shows the execution of Multiple Kernels on the device at the same time.",

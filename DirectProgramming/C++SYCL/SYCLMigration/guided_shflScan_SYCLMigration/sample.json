@@ -1,5 +1,5 @@
 {
-    "guid": "E46C0CD2-E539-4ACC-8B47-492A6264BD3B",	
+    "guid": "3E87DA8A-2DBE-46DC-BFA1-ED7A946FFB17",	
     "name": "guided_shfl_scan_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample demonstrates the migration of CUDA shuffle intrinsic APIs to SYCL group algorithm to perform a scan operation.",

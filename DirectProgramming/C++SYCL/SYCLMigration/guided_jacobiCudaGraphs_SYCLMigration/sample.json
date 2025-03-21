@@ -1,5 +1,5 @@
 {
-    "guid": "9FEF6F7E-281C-43EC-B6F5-F17686F5CBCA",
+    "guid": "B4838D2F-AE0A-4C3E-BBF2-F072D1406764",
     "name": "Jacobi Cuda Graphs",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "Migration of JacobiCudaGraphs from CUDA to SYCL, demonstrates usage of Taskflow programming model inplace of CUDA Graph API's and optimization of the migrated code",

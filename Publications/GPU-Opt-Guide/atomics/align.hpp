@@ -6,10 +6,10 @@
 #ifndef __ALIGN
 #define __ALIGN 1
 
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sycl/sycl.hpp>
 
 enum class Alignment : size_t {
   Normal = sizeof(void *),

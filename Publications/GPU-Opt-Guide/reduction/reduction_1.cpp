@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <sycl/sycl.hpp>
 #include <unistd.h>
 #include <vector>
 
@@ -899,12 +899,12 @@ int ComputeParallel9(sycl::queue &q, std::vector<int> &data,
                         sg.get_group_id()[0] * sg.get_local_range()[0]) *
                        elements_per_work_item;
             for (int i = 0; i < elements_per_work_item / 8; ++i) {
-	       auto buf_ptr = sycl::address_space_cast<
-		 sycl::access::address_space::global_space,
-		 sycl::access::decorated::yes>(&buf_acc[base + i * 128]);
+              auto buf_ptr = sycl::address_space_cast<
+                  sycl::access::address_space::global_space,
+                  sycl::access::decorated::yes>(&buf_acc[base + i * 128]);
 
-               sum += sg.load<8>(buf_ptr);
-	    }
+              sum += sg.load<8>(buf_ptr);
+            }
             scratch[loc_id] = sum;
             for (int i = work_group_size / 2; i > 0; i >>= 1) {
               item.barrier(sycl::access::fence_space::local_space);

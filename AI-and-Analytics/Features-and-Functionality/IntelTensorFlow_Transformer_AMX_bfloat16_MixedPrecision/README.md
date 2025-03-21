@@ -22,7 +22,7 @@ In this sample, you will run a transformer classification model with bfloat16 mi
 |:---                       |:---
 | OS                        | Ubuntu* 20.04
 | Hardware                  | 4th Gen Intel® Xeon® processors
-| Software                  | Intel® AI Analytics Toolkit (AI Kit)
+| Software                  | AI Tools
 
 The sample assumes Intel® Optimization for TensorFlow* is installed. (See the [Intel® Optimization for TensorFlow* Installation Guide](https://www.intel.com/content/www/us/en/developer/articles/guide/optimization-for-TensorFlow-installation-guide.html) for more information.)
 
@@ -30,9 +30,9 @@ The sample assumes Intel® Optimization for TensorFlow* is installed. (See the [
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux**](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the AI Tools for Linux**](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html) for AI Tools installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 
@@ -77,7 +77,7 @@ When working with the command-line interface (CLI), you should configure the one
     ```
     conda activate tensorflow
     ```
-   By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
+   By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
 
@@ -130,7 +130,7 @@ The following image shows a typical example of JIT Kernel Time breakdown file an
 
 ## Further Reading
 
-Explore *[Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux/top.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
+Explore *[Get Started with the AI Tools for Linux*](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html)* to find out how you can achieve performance gains for popular deep-learning and machine-learning frameworks through Intel optimizations.
 
 ## License
 

@@ -1,1 +1,0 @@
-add_example(stream_cross_tile)

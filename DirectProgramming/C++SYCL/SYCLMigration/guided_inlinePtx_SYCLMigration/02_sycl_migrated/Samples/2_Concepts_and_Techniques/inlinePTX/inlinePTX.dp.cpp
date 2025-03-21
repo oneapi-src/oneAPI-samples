@@ -85,9 +85,8 @@ int main(int argc, char **argv)
     DPCT_CHECK_ERROR(
         h_ptr = sycl::malloc_host<int>(N, dpct::get_in_order_queue()));
 
-    sycl::range<3> cudaBlockSize(1, 1, 256);
-    sycl::range<3> cudaGridSize(1, 1,
-                                (N + cudaBlockSize[2] - 1) / cudaBlockSize[2]);
+    dpct::dim3 cudaBlockSize(256, 1, 1);
+    dpct::dim3 cudaGridSize((N + cudaBlockSize.x - 1) / cudaBlockSize.x, 1, 1);
 
     dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize),

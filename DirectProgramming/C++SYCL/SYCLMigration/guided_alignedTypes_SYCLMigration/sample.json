@@ -1,5 +1,5 @@
 {
-  "guid": "35CA1763-E3E0-48A0-A2BF-AF0E52873B0C",
+  "guid": "F20CE788-A371-47A7-96D7-04A313608C80",
   "name": "alignedTypes",
   "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample demonstrates the access speed gap of aligned & misaligned types",

@@ -1,7 +1,7 @@
 if(INTEL_MAX_GPU)
   #To build for Intel® Data Center GPU Max 1550 or 1100
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -fsycl-targets=intel_gpu_pvc -D INTEL_MAX_GPU")
-  set(CMAKE_EXE_LINKER_FLAGS "-qmkl ${CMAKE_EXE_LINKER_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -fsycl-targets=intel_gpu_pvc -D INTEL_MAX_GPU -qmkl")
+  set(CMAKE_EXE_LINKER_FLAGS "-qmkl -qmkl-sycl-impl=lapack ${CMAKE_EXE_LINKER_FLAGS}")
 elseif (NVIDIA_GPU)
   #To build for Nvidia GPU like P100, A100, H100 ...
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -fsycl-targets=nvptx64-nvidia-cuda -D NVIDIA_GPU")
@@ -9,12 +9,12 @@ elseif (NVIDIA_GPU)
   include_directories($ENV{ONEMKL_INSTALL_DIR}/include/)
 elseif(FLOAT_TYPE)
   #To build for Gen11 as it doesn't support double precision
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -D FLOAT_TYPE")
-  set(CMAKE_EXE_LINKER_FLAGS "-qmkl ${CMAKE_EXE_LINKER_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -D FLOAT_TYPE -qmkl")
+  set(CMAKE_EXE_LINKER_FLAGS "-qmkl -qmkl-sycl-impl=lapack ${CMAKE_EXE_LINKER_FLAGS}")
 else()
   #To build for Intel® UHD Graphics, Intel® Gen9, Gen11, Xeon CPU 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl ")
-set(CMAKE_EXE_LINKER_FLAGS "-qmkl ${CMAKE_EXE_LINKER_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -qmkl")
+set(CMAKE_EXE_LINKER_FLAGS "-qmkl -qmkl-sycl-impl=lapack ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/02_sycl_migrated/Common/)

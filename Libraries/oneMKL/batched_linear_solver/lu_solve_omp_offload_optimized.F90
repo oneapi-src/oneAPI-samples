@@ -21,10 +21,9 @@
 !         lu_solve_omp_offload_ex3_timer.F90 -o lu_solve_ex3_timer
 !
 ! Compile for GPU:
-!     ifx -i8 -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -fsycl -free \
-!         lu_solve_omp_offload_ex3_timer.F90 -o lu_solve_ex3_omp_timer \
-!         -L${MKLROOT}/lib/intel64 -lmkl_sycl -lmkl_intel_ilp64 \
-!         -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl
+!     ifx -i8 -DMKL_ILP64 -qopenmp -fopenmp-targets=spir64 -free \
+!         -qmkl -qmkl-sycl-impl=lapack \
+!         lu_solve_omp_offload_ex3_timer.F90 -o lu_solve_ex3_omp_timer
 !
 ! Compile with -DSP to use single precision instead of double precision.
 !

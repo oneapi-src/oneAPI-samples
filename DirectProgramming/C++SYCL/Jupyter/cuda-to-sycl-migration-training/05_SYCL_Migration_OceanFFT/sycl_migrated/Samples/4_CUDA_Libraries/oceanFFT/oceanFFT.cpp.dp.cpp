@@ -46,26 +46,25 @@
 #endif
 
 // includes
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <dpct/fft_utils.hpp>
+
 #include <helper_cuda.h>
 #include <helper_functions.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <dpct/dpct.hpp>
-#include <dpct/fft_utils.hpp>
-#include <sycl/sycl.hpp>
-
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 const char *sSDKsample = "SYCL FFT Ocean Simulation";
 
-#define SYCLRT_SQRT_HALF_F 0.707106781f
 #define MAX_EPSILON 0.10f
 #define THRESHOLD 0.15f
 #define REFRESH_DELAY 10  // ms
-
+#define SYCLRT_SQRT_HALF_F 0.707106781f
 ////////////////////////////////////////////////////////////////////////////////
 // constants
 unsigned int windowW = 512, windowH = 512;
@@ -74,7 +73,6 @@ const unsigned int meshSize = 256;
 const unsigned int spectrumW = meshSize + 4;
 const unsigned int spectrumH = meshSize + 1;
 
-bool animate = true;
 
 // FFT data
 dpct::fft::fft_engine_ptr fftPlan;
@@ -130,8 +128,6 @@ extern "C" void cudaCalculateSlopeKernel(float *h, sycl::float2 *slopeOut,
 // forward declarations
 void runAutoTest(int argc, char **argv);
 
-// rendering callbacks
-void timerEvent(int value);
 
 // Cuda functionality
 void runCudaTest(char *exec_path);
@@ -147,17 +143,16 @@ int main(int argc, char **argv) {
 
   // check for command line arguments
   if (checkCmdLineFlag(argc, (const char **)argv, "qatest")) {
-    animate = false;
-    fpsLimit = frameCheckNumber;
+    //fpsLimit = frameCheckNumber;
     runAutoTest(argc, argv);
-  } /* else {
-     printf(
-         "[%s]\n\n"
-         "Left mouse button          - rotate\n"
-         "Middle mouse button        - pan\n"
-         "Right mouse button         - zoom\n"
-         "'w' key                    - toggle wireframe\n",
-         sSDKsample);
+  } /*else {
+    printf(
+        "[%s]\n\n"
+        "Left mouse button          - rotate\n"
+        "Middle mouse button        - pan\n"
+        "Right mouse button         - zoom\n"
+        "'w' key                    - toggle wireframe\n",
+        sSDKsample);
 
      runGraphicsTest(argc, argv);
    }*/
@@ -171,62 +166,34 @@ int main(int argc, char **argv) {
 void runAutoTest(int argc, char **argv) {
   printf("%s Starting...\n\n", argv[0]);
 
-  dpct::err0 error;
-  //int devID = 0;
-
-  //devID = findCudaDevice(argc, (const char **)argv);
-
-  int devID = 0;
-  DPCT_CHECK_ERROR(devID = dpct::dev_mgr::instance().current_device_id());
+  // Cuda init
+  int dev = 0; //findCudaDevice(argc, (const char **)argv);
 
   dpct::device_info deviceProp;
-
-  /*
-  DPCT1003:26: Migrated API does not return error code. (*, 0) is inserted. You
-  may need to rewrite this code.
-  */
-  error =
-      (dpct::dev_mgr::instance().get_device(devID).get_device_info(deviceProp),
-       0);
-
-  printf("GPU Device %d: \"%s\" with compute capability %d.%d\n\n", devID,
-         /*
-         DPCT1005:27: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
-         deviceProp.get_name(), deviceProp.get_major_version(),
-         deviceProp.get_minor_version());
-
-
-
-  // checkCudaErrors(DPCT_CHECK_ERROR(
-  //     dpct::dev_mgr::instance().get_device(dev).get_device_info(deviceProp)));
-
+  DPCT_CHECK_ERROR(dpct::get_device(dev).get_device_info(deviceProp));
   printf("Compute capability %d.%d\n", deviceProp.get_major_version(),
          deviceProp.get_minor_version());
 
   // create FFT plan
   DPCT_CHECK_ERROR(
       fftPlan = dpct::fft::fft_engine::create(
-          &dpct::get_default_queue(), meshSize, meshSize,
+          &dpct::get_in_order_queue(), meshSize, meshSize,
           dpct::fft::fft_type::complex_float_to_complex_float));
 
   // allocate memory
   int spectrumSize = spectrumW * spectrumH * sizeof(sycl::float2);
-  
   DPCT_CHECK_ERROR(d_h0 = (sycl::float2 *)sycl::malloc_device(
-                           spectrumSize, dpct::get_default_queue()));
+                           spectrumSize, dpct::get_in_order_queue()));
   h_h0 = (sycl::float2 *)malloc(spectrumSize);
   generate_h0(h_h0);
   DPCT_CHECK_ERROR(
-      dpct::get_default_queue().memcpy(d_h0, h_h0, spectrumSize).wait());
+      dpct::get_in_order_queue().memcpy(d_h0, h_h0, spectrumSize).wait());
 
   int outputSize = meshSize * meshSize * sizeof(sycl::float2);
   DPCT_CHECK_ERROR(d_ht = (sycl::float2 *)sycl::malloc_device(
-                                       outputSize, dpct::get_default_queue()));
-  
+                           outputSize, dpct::get_in_order_queue()));
   DPCT_CHECK_ERROR(d_slope = (sycl::float2 *)sycl::malloc_device(
-                           outputSize, dpct::get_default_queue()));
+                           outputSize, dpct::get_in_order_queue()));
 
   sdkCreateTimer(&timer);
   sdkStartTimer(&timer);
@@ -234,13 +201,10 @@ void runAutoTest(int argc, char **argv) {
 
   runCudaTest(argv[0]);
   printf("Processing time : %f (ms)\n", sdkGetTimerValue(&timer));
-  
-  DPCT_CHECK_ERROR(sycl::free(d_ht, dpct::get_default_queue()));
-  
-  DPCT_CHECK_ERROR(sycl::free(d_slope, dpct::get_default_queue()));
-  
-  DPCT_CHECK_ERROR(sycl::free(d_h0, dpct::get_default_queue()));
-  DPCT_CHECK_ERROR(dpct::fft::fft_engine::destroy(fftPlan));
+   DPCT_CHECK_ERROR(dpct::dpct_free(d_ht, dpct::get_in_order_queue()));
+   DPCT_CHECK_ERROR(dpct::dpct_free(d_slope, dpct::get_in_order_queue()));
+   DPCT_CHECK_ERROR(dpct::dpct_free(d_h0, dpct::get_in_order_queue()));
+   DPCT_CHECK_ERROR(dpct::fft::fft_engine::destroy(fftPlan));
   free(h_h0);
 
   exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -328,10 +292,10 @@ void generate_h0(sycl::float2 *h0) {
 void runCudaTest(char *exec_path) {
   
   DPCT_CHECK_ERROR(g_hptr = sycl::malloc_device<float>(
-                           meshSize * meshSize, dpct::get_default_queue()));
+                           meshSize * meshSize, dpct::get_in_order_queue()));
   
   DPCT_CHECK_ERROR(g_sptr = sycl::malloc_device<sycl::float2>(
-                           meshSize * meshSize, dpct::get_default_queue()));
+                           meshSize * meshSize, dpct::get_in_order_queue()));
 
   // generate wave spectrum in frequency domain
   cudaGenerateSpectrumKernel(d_h0, d_ht, spectrumW, meshSize, meshSize,
@@ -347,7 +311,7 @@ void runCudaTest(char *exec_path) {
 
   {
     float *hptr = (float *)malloc(meshSize * meshSize * sizeof(float));
-    dpct::get_default_queue()
+    dpct::get_in_order_queue()
         .memcpy((void *)hptr, (void *)g_hptr,
                 meshSize * meshSize * sizeof(float))
         .wait();
@@ -369,7 +333,7 @@ void runCudaTest(char *exec_path) {
   {
     sycl::float2 *sptr =
         (sycl::float2 *)malloc(meshSize * meshSize * sizeof(sycl::float2));
-    dpct::get_default_queue()
+    dpct::get_in_order_queue()
         .memcpy((void *)sptr, (void *)g_sptr,
                 meshSize * meshSize * sizeof(sycl::float2))
         .wait();
@@ -385,7 +349,7 @@ void runCudaTest(char *exec_path) {
     free(sptr);
   }
 
-  
-   DPCT_CHECK_ERROR(sycl::free(g_hptr, dpct::get_default_queue()));
-   DPCT_CHECK_ERROR(sycl::free(g_sptr, dpct::get_default_queue()));
+  DPCT_CHECK_ERROR(dpct::dpct_free(g_hptr, dpct::get_in_order_queue()));
+  DPCT_CHECK_ERROR(dpct::dpct_free(g_sptr, dpct::get_in_order_queue()));
 }
+
