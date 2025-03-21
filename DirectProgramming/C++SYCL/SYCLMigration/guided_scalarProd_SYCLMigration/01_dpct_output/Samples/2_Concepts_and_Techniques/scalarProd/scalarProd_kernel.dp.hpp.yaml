@@ -1,7 +1,7 @@
 ---
-MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/dpct_output/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.dp.hpp'
+MainSourceFile:  '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/dpct_output/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.dp.hpp'
 Replacements:
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          1563
     Length:          32
     ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
@@ -10,7 +10,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          1596
     Length:          34
     ReplacementText: ''
@@ -19,7 +19,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2212
     Length:          13
     ReplacementText: 'sycl::mul24(a, b)'
@@ -28,7 +28,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2675
     Length:          11
     ReplacementText: ''
@@ -37,7 +37,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2796
     Length:          0
     ReplacementText: ", const sycl::nd_item<3> &item_ct1,\n                              float *accumResult"
@@ -46,7 +46,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2836
     Length:          16
     ReplacementText: 'sycl::group<3>'
@@ -55,7 +55,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2859
     Length:          23
     ReplacementText: 'item_ct1.get_group()'
@@ -64,7 +64,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          2910
     Length:          38
     ReplacementText: ''
@@ -73,7 +73,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          3268
     Length:          10
     ReplacementText: 'item_ct1.get_group(2)'
@@ -82,7 +82,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          3302
     Length:          9
     ReplacementText: 'item_ct1.get_group_range(2)'
@@ -91,7 +91,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          3829
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -100,7 +100,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          3870
     Length:          10
     ReplacementText: 'item_ct1.get_local_range(2)'
@@ -109,7 +109,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4388
     Length:          0
     ReplacementText: "      /*\n      DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n      */\n"
@@ -118,7 +118,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4394
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -127,7 +127,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4434
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -136,7 +136,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4474
     Length:          10
     ReplacementText: 'item_ct1.get_local_range(2)'
@@ -145,7 +145,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4554
     Length:          0
     ReplacementText: "    /*\n    DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n    */\n"
@@ -154,7 +154,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4558
     Length:          13
     ReplacementText: 'item_ct1.barrier()'
@@ -163,7 +163,7 @@ Replacements:
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
-  - FilePath:        '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
+  - FilePath:        '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
     Offset:          4582
     Length:          11
     ReplacementText: 'item_ct1.get_local_id(2)'
@@ -173,8 +173,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
 MainSourceFilesDigest:
-  - MainSourceFile:  '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd/scalarProd_kernel.cuh'
-    Digest:          05965207fd7a45ffda68e6b665e7be14
+  - MainSourceFile:  ''
+    Digest:          ''
+    HasCUDASyntax:   false
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -182,7 +183,7 @@ FeatureMap:      {}
 CompileTargets:  {}
 OptionMap:
   AnalysisScopePath:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples'
     Specified:       false
   AsyncHandler:
     Value:           'false'
@@ -197,7 +198,7 @@ OptionMap:
     Value:           'false'
     Specified:       false
   CompilationsDir:
-    Value:           '/home/tcs2/Avijit/cuda_2/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd'
+    Value:           '/nfs/site/home/abagx/Avijit/cuda-samples/Samples/2_Concepts_and_Techniques/scalarProd'
     Specified:       true
   CtadEnabled:
     Value:           'false'
@@ -236,6 +237,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

@@ -1,5 +1,5 @@
 {
-    "guid": "932A37FE-8CF0-4E01-8F5C-5159C991DEF9",	
+    "guid": "8EA1BF48-E951-4927-ABCE-40DE700270E5",	
     "name": "guided_simpleAtomicIntrinsics_SYCLMigration",
     "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
     "description": "This sample demonstrates the use of various SYCL arithmetic Atomic Intrinsic functions.",

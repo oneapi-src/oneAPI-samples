@@ -154,7 +154,7 @@ results_filename = "./results/daal4py_Distributed_LinearRegression_results" + st
 np.savetxt(results_filename, predict_result, delimiter =  ",")
 
 d4p.daalfini() # stops the distribution engine
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
 
 # In[ ]:

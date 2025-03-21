@@ -121,8 +121,8 @@ int main(int argc, char **argv) {
 
   dev = 0;
 
-  DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(dev)));
+  
+  DPCT_CHECK_ERROR(dpct::get_device(dev).get_device_info(deviceProp));
 
   printf("GPU Device supports SM %d.%d compute capability\n\n",
          deviceProp.get_major_version(), deviceProp.get_minor_version());

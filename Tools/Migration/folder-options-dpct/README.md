@@ -240,7 +240,7 @@ You’ll also need to change the stream statement in result/foo/main.dp.cpp.
 
 Change:
 ```
-stream_ct1 << z"kernel_main!\n";
+stream_ct1 << "kernel_main!\n";
 ```
 to
 ```

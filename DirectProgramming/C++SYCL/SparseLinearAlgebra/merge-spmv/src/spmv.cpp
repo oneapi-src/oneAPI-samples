@@ -353,7 +353,7 @@ void MergeSparseMatrixVector(queue &q, int compute_units, int work_group_size,
 // Check if two input vectors are equal.
 bool VerifyVectorsAreEqual(float *u, float *v) {
   for (int i = 0; i < n; i++) {
-    if (std::fabs(u[i] - v[i]) > 1E-06) {
+    if (sycl::fabs(u[i] - v[i]) > 1E-06) {
       return false;
     }
   }

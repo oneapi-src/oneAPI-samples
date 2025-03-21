@@ -9,17 +9,18 @@
 #ifndef __DPCT_DEVICE_HPP__
 #define __DPCT_DEVICE_HPP__
 
-#include <sycl/sycl.hpp>
 #include <algorithm>
 #include <array>
 #include <cstring>
 #include <iostream>
+#include <map>
 #include <mutex>
 #include <set>
 #include <sstream>
-#include <map>
-#include <vector>
+#include <stack>
+#include <sycl/sycl.hpp>
 #include <thread>
+#include <vector>
 #if defined(__linux__)
 #include <unistd.h>
 #include <sys/syscall.h>
@@ -45,14 +46,20 @@ static void get_version(const sycl::device &dev, int &major, int &minor) {
       break;
     i++;
   }
-  major = std::stoi(&(ver[i]));
+  if (i < ver.size())
+    major = std::stoi(&(ver[i]));
+  else
+    major = 0;
   while (i < ver.size()) {
     if (ver[i] == '.')
       break;
     i++;
   }
   i++;
-  minor = std::stoi(&(ver[i]));
+  if (i < ver.size())
+    minor = std::stoi(&(ver[i]));
+  else
+    minor = 0;
 }
 } // namespace detail
 
@@ -162,6 +169,11 @@ public:
   unsigned int get_global_mem_cache_size() const {
     return _global_mem_cache_size;
   }
+  int get_image1d_max() const { return _image1d_max; }
+  auto get_image2d_max() const { return _image2d_max; }
+  auto get_image2d_max() { return _image2d_max; }
+  auto get_image3d_max() const { return _image3d_max; }
+  auto get_image3d_max() { return _image3d_max; }
 
   // set interface
   void set_name(const char* name) {
@@ -176,12 +188,6 @@ public:
   void set_max_work_item_sizes(const sycl::range<3> max_work_item_sizes) {
     for (int i = 0; i < 3; ++i)
       _max_work_item_sizes_i[i] = max_work_item_sizes[i];
-  }
-  [[deprecated]] void
-  set_max_work_item_sizes(const sycl::id<3> max_work_item_sizes) {
-    for (int i = 0; i < 3; ++i) {
-      _max_work_item_sizes_i[i] = max_work_item_sizes[i];
-    }
   }
   void set_host_unified_memory(bool host_unified_memory) {
     _host_unified_memory = host_unified_memory;
@@ -215,6 +221,12 @@ public:
       _max_nd_range_size_i[i] = max_nd_range_size[i];
     }
   }
+  void set_max_nd_range_size(sycl::id<3> max_nd_range_size) {
+    for (int i = 0; i < 3; i++) {
+      _max_nd_range_size[i] = max_nd_range_size[i];
+      _max_nd_range_size_i[i] = max_nd_range_size[i];
+    }
+  }
   void set_memory_clock_rate(unsigned int memory_clock_rate) {
     _memory_clock_rate = memory_clock_rate;
   }
@@ -233,6 +245,9 @@ public:
   }
   void set_global_mem_cache_size(unsigned int global_mem_cache_size) {
     _global_mem_cache_size = global_mem_cache_size;
+  }
+  void set_image1d_max(size_t image_max_buffer_size) {
+    _image1d_max = image_max_buffer_size;
   }
 
 private:
@@ -259,6 +274,9 @@ private:
   int _max_nd_range_size_i[3];
   uint32_t _device_id;
   std::array<unsigned char, 16> _uuid;
+  int _image1d_max;
+  int _image2d_max[2];
+  int _image3d_max[3];
 };
 
 static int get_major_version(const sycl::device &dev) {
@@ -347,16 +365,92 @@ Use 64 bits as memory_bus_width default value."
 
   prop.set_max_work_items_per_compute_unit(
       dev.get_info<sycl::info::device::max_work_group_size>());
+#ifdef SYCL_EXT_ONEAPI_MAX_WORK_GROUP_QUERY
+  prop.set_max_nd_range_size(
+      dev.get_info<
+          sycl::ext::oneapi::experimental::info::device::max_work_groups<3>>());
+#else
+#if defined(_MSC_VER) && !defined(__clang__)
+#pragma message("get_device_info: querying the maximum number \
+of work groups is not supported.")
+#else
+#warning "get_device_info: querying the maximum number of \
+work groups is not supported."
+#endif
   int max_nd_range_size[] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF};
   prop.set_max_nd_range_size(max_nd_range_size);
+#endif
 
-  // Estimates max register size per work group, feel free to update the value
-  // according to device properties.
-  prop.set_max_register_size_per_work_group(65536);
+#ifdef SYCL_EXT_CODEPLAY_MAX_REGISTERS_PER_WORK_GROUP_QUERY
+  if (dev.get_backend() == sycl::backend::ext_oneapi_cuda)
+    prop.set_max_register_size_per_work_group(
+        dev.get_info<sycl::ext::codeplay::experimental::info::device::
+                         max_registers_per_work_group>());
+  else
+#endif
+    // Estimates max register size per work group, feel free to update the value
+    // according to device properties.
+    prop.set_max_register_size_per_work_group(65536);
 
   prop.set_global_mem_cache_size(
       dev.get_info<sycl::info::device::global_mem_cache_size>());
+
+  prop.set_image1d_max(
+      dev.get_info<sycl::info::device::image_max_buffer_size>());
+  prop.get_image2d_max()[0] =
+      dev.get_info<sycl::info::device::image2d_max_width>();
+  prop.get_image2d_max()[1] =
+      dev.get_info<sycl::info::device::image2d_max_height>();
+  prop.get_image3d_max()[0] =
+      dev.get_info<sycl::info::device::image3d_max_width>();
+  prop.get_image3d_max()[1] =
+      dev.get_info<sycl::info::device::image3d_max_height>();
+  prop.get_image3d_max()[2] =
+      dev.get_info<sycl::info::device::image3d_max_depth>();
   out = prop;
+}
+
+/// Util function to check whether a device supports some kinds of sycl::aspect.
+inline void
+has_capability_or_fail(const sycl::device &dev,
+                       const std::initializer_list<sycl::aspect> &props) {
+  for (const auto &it : props) {
+    if (dev.has(it))
+      continue;
+    switch (it) {
+    case sycl::aspect::fp64:
+      throw std::runtime_error("'double' is not supported in '" +
+                               dev.get_info<sycl::info::device::name>() +
+                               "' device");
+      break;
+    case sycl::aspect::fp16:
+      throw std::runtime_error("'half' is not supported in '" +
+                               dev.get_info<sycl::info::device::name>() +
+                               "' device");
+      break;
+    default:
+#define __SYCL_ASPECT(ASPECT, ID)                                              \
+  case sycl::aspect::ASPECT:                                                   \
+    return #ASPECT;
+#define __SYCL_ASPECT_DEPRECATED(ASPECT, ID, MESSAGE) __SYCL_ASPECT(ASPECT, ID)
+#define __SYCL_ASPECT_DEPRECATED_ALIAS(ASPECT, ID, MESSAGE)
+      auto getAspectNameStr = [](sycl::aspect AspectNum) -> std::string {
+        switch (AspectNum) {
+#include <sycl/info/aspects.def>
+#include <sycl/info/aspects_deprecated.def>
+        default:
+          return "unknown aspect";
+        }
+      };
+#undef __SYCL_ASPECT_DEPRECATED_ALIAS
+#undef __SYCL_ASPECT_DEPRECATED
+#undef __SYCL_ASPECT
+      throw std::runtime_error(
+          "'" + getAspectNameStr(it) + "' is not supported in '" +
+          dev.get_info<sycl::info::device::name>() + "' device");
+    }
+    break;
+  }
 }
 
 /// dpct device extension
@@ -410,8 +504,16 @@ public:
     return get_info<sycl::info::device::mem_base_addr_align>();
   }
 
+  int get_mem_base_addr_align_in_bytes() const {
+    return get_info<sycl::info::device::mem_base_addr_align>() / 8;
+  }
+
   size_t get_global_mem_size() const {
     return get_device_info().get_global_mem_size();
+  }
+
+  size_t get_local_mem_size() const {
+    return get_device_info().get_local_mem_size();
   }
 
   /// Get the number of bytes of free and total memory on the SYCL device.
@@ -505,15 +607,25 @@ public:
                    _queues.end());
     queue = nullptr;
   }
-  void set_saved_queue(sycl::queue* q) {
+  [[deprecated("set_saved_queue for device_ext is deprecated, please use "
+               "dpct::blas::descriptor::set_saved_queue instead")]] void
+  set_saved_queue(sycl::queue *q) {
     std::lock_guard<mutex_type> lock(m_mutex);
     _saved_queue = q;
   }
-  sycl::queue *get_saved_queue() const {
+  [[deprecated(
+      "get_saved_queue for device_ext is deprecated, please use "
+      "dpct::blas::descriptor::get_saved_queue instead")]] sycl::queue *
+  get_saved_queue() const {
     std::lock_guard<mutex_type> lock(m_mutex);
     return _saved_queue;
   }
   sycl::context get_context() const { return _ctx; }
+
+  void
+  has_capability_or_fail(const std::initializer_list<sycl::aspect> &props) {
+    ::dpct::has_capability_or_fail(*this, props);
+  }
 
 private:
   void clear_queues() {
@@ -569,11 +681,7 @@ static inline unsigned int get_tid() {
 /// device manager
 class dev_mgr {
 public:
-  device_ext &current_device() {
-    unsigned int dev_id=current_device_id();
-    check_id(dev_id);
-    return *_devs[dev_id];
-  }
+  device_ext &current_device() { return get_device(current_device_id()); }
   device_ext &cpu_device() const {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (_cpu_device == -1) {
@@ -587,33 +695,84 @@ public:
     check_id(id);
     return *_devs[id];
   }
+
   unsigned int current_device_id() const {
-   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-   auto it=_thread2dev_map.find(get_tid());
-   if(it != _thread2dev_map.end())
-      return it->second;
-    return DEFAULT_DEVICE_ID;
+    if (_dev_stack.empty())
+      return DEFAULT_DEVICE_ID;
+    return _dev_stack.top();
   }
 
-/// Select device with a device ID.
-/// \param [in] id The id of the device which can
-/// be obtained through get_device_id(const sycl::device).
+  /// Select device with a device ID.
+  /// \param [in] id The id of the device which can
+  /// be obtained through get_device_id(const sycl::device).
   void select_device(unsigned int id) {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    check_id(id);
-    _thread2dev_map[get_tid()]=id;
+    /// Replace the top of the stack with the given device id
+    if (_dev_stack.empty()) {
+      push_device(id);
+    } else {
+      check_id(id);
+      _dev_stack.top() = id;
+    }
   }
+
   unsigned int device_count() { return _devs.size(); }
 
   unsigned int get_device_id(const sycl::device &dev) {
     unsigned int id = 0;
-    for(auto dev_item : _devs) {
+    for (auto dev_item : _devs) {
       if (*dev_item == dev) {
-        break;
+        return id;
       }
       id++;
     }
-    return id;
+    throw std::runtime_error(
+        "The device[" + dev.get_info<sycl::info::device::name>() +
+        "] is filtered out by dpct::dev_mgr::filter/dpct::filter_device in "
+        "current device "
+        "list!");
+  }
+
+  /// List all the devices with its id in dev_mgr.
+  void list_devices() const {
+    for (size_t i = 0; i < _devs.size(); ++i) {
+      std::cout << "" << i << ": "
+                << _devs[i]->get_info<sycl::info::device::name>() << std::endl;
+    }
+  }
+
+  /// Filter out devices; only keep the device whose name contains one of the
+  /// subname in \p dev_subnames.
+  /// May break device id mapping and change current device. It's better to be
+  /// called before other DPCT/SYCL APIs.
+  void filter(const std::vector<std::string> &dev_subnames) {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    auto iter = _devs.begin();
+    while (iter != _devs.end()) {
+      std::string dev_name = (*iter)->get_info<sycl::info::device::name>();
+      bool matched = false;
+      for (const auto &name : dev_subnames) {
+        if (dev_name.find(name) != std::string::npos) {
+          matched = true;
+          break;
+        }
+      }
+      if (matched)
+        ++iter;
+      else
+        iter = _devs.erase(iter);
+    }
+    _cpu_device = -1;
+    for (unsigned i = 0; i < _devs.size(); ++i) {
+      if (_devs[i]->is_cpu()) {
+        _cpu_device = i;
+        break;
+      }
+    }
+    /// Clear the device stack for all thread here. But we don't have access to
+    /// all threads current implementation.
+#ifdef DPCT_HELPER_VERBOSE
+    list_devices();
+#endif
   }
 
   template <class DeviceSelector>
@@ -623,6 +782,22 @@ public:
     sycl::device selected_device = sycl::device(selector);
     unsigned int selected_device_id = get_device_id(selected_device);
     select_device(selected_device_id);
+  }
+
+  /// Update the device stack for the current thread id
+  void push_device(unsigned int id) {
+    check_id(id);
+    _dev_stack.push(id);
+  }
+
+  /// Remove the device from top of the stack if it exist
+  unsigned int pop_device() {
+    if (_dev_stack.empty())
+      throw std::runtime_error("can't pop an empty dpct device stack");
+
+    auto id = _dev_stack.top();
+    _dev_stack.pop();
+    return id;
   }
 
   /// Returns the instance of device manager singleton.
@@ -656,19 +831,23 @@ private:
         _cpu_device = _devs.size() - 1;
       }
     }
+#ifdef DPCT_HELPER_VERBOSE
+    list_devices();
+#endif
   }
   void check_id(unsigned int id) const {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (id >= _devs.size()) {
       throw std::runtime_error("invalid device id");
     }
   }
   std::vector<std::shared_ptr<device_ext>> _devs;
-  /// DEFAULT_DEVICE_ID is used, if current_device_id() can not find current
-  /// thread id in _thread2dev_map, which means default device should be used
-  /// for the current thread.
+  /// stack of devices resulting from CUDA context change;
+  static inline thread_local std::stack<unsigned int> _dev_stack;
+  /// DEFAULT_DEVICE_ID is used, if current_device_id() finds an empty
+  /// _dev_stack, which means the default device should be used for the current
+  /// thread.
   const unsigned int DEFAULT_DEVICE_ID = 0;
-  /// thread-id to device-id map.
-  std::map<unsigned int, unsigned int> _thread2dev_map;
   int _cpu_device = -1;
 };
 
@@ -730,51 +909,63 @@ select_device(const DeviceSelector &selector = sycl::gpu_selector_v) {
   dev_mgr::instance().select_device(selector);
 }
 
+/// Filter out devices; only keep the device whose name contains one of the
+/// subname in \p dev_subnames.
+/// May break device id mapping and change current device. It's better to be
+/// called before other DPCT/SYCL APIs.
+static inline void filter_device(const std::vector<std::string> &dev_subnames) {
+  dev_mgr::instance().filter(dev_subnames);
+}
+
+/// List all the devices with its id in dev_mgr.
+static inline void list_devices() { dev_mgr::instance().list_devices(); }
+
 static inline unsigned int get_device_id(const sycl::device &dev){
   return dev_mgr::instance().get_device_id(dev);
 }
 
-/// Util function to check whether a device supports some kinds of sycl::aspect.
-inline void
-has_capability_or_fail(const sycl::device &dev,
-                       const std::initializer_list<sycl::aspect> &props) {
-  for (const auto &it : props) {
-    if (dev.has(it))
-      continue;
-    switch (it) {
-    case sycl::aspect::fp64:
-      throw std::runtime_error("'double' is not supported in '" +
-                               dev.get_info<sycl::info::device::name>() +
-                               "' device");
-      break;
-    case sycl::aspect::fp16:
-      throw std::runtime_error("'half' is not supported in '" +
-                               dev.get_info<sycl::info::device::name>() +
-                               "' device");
-      break;
-    default:
-#define __SYCL_ASPECT(ASPECT, ID)                                              \
-  case sycl::aspect::ASPECT:                                                   \
-    return #ASPECT;
-#define __SYCL_ASPECT_DEPRECATED(ASPECT, ID, MESSAGE) __SYCL_ASPECT(ASPECT, ID)
-#define __SYCL_ASPECT_DEPRECATED_ALIAS(ASPECT, ID, MESSAGE)
-      auto getAspectNameStr = [](sycl::aspect AspectNum) -> std::string {
-        switch (AspectNum) {
-#include <sycl/info/aspects.def>
-#include <sycl/info/aspects_deprecated.def>
-        default:
-          return "unknown aspect";
-        }
-      };
-#undef __SYCL_ASPECT_DEPRECATED_ALIAS
-#undef __SYCL_ASPECT_DEPRECATED
-#undef __SYCL_ASPECT
-      throw std::runtime_error(
-          "'" + getAspectNameStr(it) + "' is not supported in '" +
-          dev.get_info<sycl::info::device::name>() + "' device");
-    }
-    break;
+/// Util function to do implicit sync among queues of the same device then
+/// insert a synchronize barrier in the queue. For USM, If the queue is the
+/// default in-order queue, try to sync with all queues available in the current
+/// device before inserting a barrier. For USM-none, If the queue is the default
+/// out-of-order queue, try to sync with all queues available in the current
+/// device before inserting a barrier, else try to sync in the current queue
+/// before inserting a barrier.
+/// \param [out] event_ptr The memory to store the event.
+/// \param [in] queue The queue specified to do synchronization.
+inline void sync_barrier(sycl::event *event_ptr,
+                         sycl::queue *queue = &get_default_queue()) {
+  if (*queue == get_default_queue()) {
+    // Wait all the kernel tasks in all the queues of current device completed.
+    dpct::get_current_device().queues_wait_and_throw();
   }
+
+#ifdef DPCT_USM_LEVEL_NONE
+  if (*queue != get_default_queue()) {
+    // For out-of-ordered queue, wait all the kernel tasks in \p queue
+    // completed.
+    queue->wait();
+  }
+#endif
+
+#ifdef DPCT_PROFILING_ENABLED
+  *event_ptr = queue->ext_oneapi_submit_barrier();
+#else
+  *event_ptr = queue->single_task([=]() {});
+#endif
+}
+
+static inline unsigned int push_device_for_curr_thread(unsigned int id) {
+  dev_mgr::instance().push_device(id);
+  return id;
+}
+
+static inline unsigned int pop_device_for_curr_thread(void) {
+  return dev_mgr::instance().pop_device();
+}
+
+static inline unsigned int device_count() {
+  return dev_mgr::instance().device_count();
 }
 } // namespace dpct
 

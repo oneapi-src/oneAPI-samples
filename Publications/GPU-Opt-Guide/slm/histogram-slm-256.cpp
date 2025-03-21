@@ -3,11 +3,15 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <cstdint>
 #include <iostream>
 #include <random>
+#include <sycl/sycl.hpp>
 #include <vector>
+
+template <typename AccT> auto get_accessor_pointer(const AccT &acc) {
+  return acc.template get_multi_ptr<sycl::access::decorated::no>().get();
+}
 
 int main() {
   constexpr int N = 4096 * 4096;
@@ -72,9 +76,9 @@ int main() {
           it.barrier(sycl::access::fence_space::local_space);
 
           for (int k = 0; k < BLOCK_SIZE; k++) {
-            unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * BLOCK_SIZE +
-                        sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
+            unsigned long x = sg.load(
+                get_accessor_pointer(macc) + group * gSize * BLOCK_SIZE +
+                sgGroup * sgSize * BLOCK_SIZE + sgSize * k);
 #pragma unroll
             for (std::uint8_t shift : {0, 8, 16, 24, 32, 40, 48, 56}) {
               constexpr unsigned long mask = 0xFFU;

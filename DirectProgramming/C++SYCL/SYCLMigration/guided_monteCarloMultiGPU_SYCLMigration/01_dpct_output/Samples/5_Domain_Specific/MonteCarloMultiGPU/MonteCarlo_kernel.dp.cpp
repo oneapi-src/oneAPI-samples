@@ -51,7 +51,7 @@
 #define MAX_OPTIONS (1024 * 1024)
 
 // Preprocessed input option data
-typedef struct dpct_type_164939 {
+typedef struct dpct_type_642279 {
   real S;
   real X;
   real MuByT;
@@ -89,7 +89,7 @@ register pressure.
 */
 static void MonteCarloOneBlockPerOption(
     /*
-    DPCT1032:31: A different random number generator is used. You may need to
+    DPCT1032:20: A different random number generator is used. You may need to
     adjust the code.
     */
     dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
@@ -109,7 +109,7 @@ static void MonteCarloOneBlockPerOption(
 
   // Copy random number state to local memory for efficiency
   /*
-  DPCT1032:32: A different random number generator is used. You may need to
+  DPCT1032:21: A different random number generator is used. You may need to
   adjust the code.
   */
   dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
@@ -155,7 +155,7 @@ static void MonteCarloOneBlockPerOption(
 }
 
 /*
-DPCT1032:33: A different random number generator is used. You may need to adjust
+DPCT1032:22: A different random number generator is used. You may need to adjust
 the code.
 */
 static void rngSetupStates(
@@ -168,7 +168,7 @@ static void rngSetupStates(
   // Each threadblock gets different seed,
   // Threads within a threadblock get different sequence numbers
   /*
-  DPCT1105:34: The mcg59 random number generator is used. The subsequence
+  DPCT1105:23: The mcg59 random number generator is used. The subsequence
   argument "item_ct1.get_local_id(2)" is ignored. You need to verify the
   migration.
   */
@@ -207,7 +207,7 @@ extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
       dpct::get_in_order_queue()
           .memset(plan->rngStates, 0,
                   /*
-                  DPCT1032:36: A different random number generator is used. You
+                  DPCT1032:25: A different random number generator is used. You
                   may need to adjust the code.
                   */
                   plan->gridSize * THREAD_N *
@@ -217,9 +217,8 @@ extern "C" void initMonteCarloGPU(TOptionPlan *plan) {
 
   // place each device pathN random numbers apart on the random number sequence
   dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
-    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
-        *plan_rngStates_ct0 = plan->rngStates;
-    int plan_device_ct1 = plan->device;
+    auto plan_rngStates_ct0 = plan->rngStates;
+    auto plan_device_ct1 = plan->device;
 
     cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
                                            sycl::range<3>(1, 1, THREAD_N),
@@ -284,32 +283,36 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
     h_OptionData[i].VBySqrtT = (real)VBySqrtT;
   }
 
+  /*
+  DPCT1124:26: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(
       stream->memcpy(plan->d_OptionData, h_OptionData,
                      plan->optionCount * sizeof(__TOptionData))));
 
   stream->submit([&](sycl::handler &cgh) {
     /*
-    DPCT1101:37: 'SUM_N' expression was replaced with a value. Modify the code
+    DPCT1101:39: 'SUM_N' expression was replaced with a value. Modify the code
     to use the original expression, provided in comments, if it is correct.
     */
     sycl::local_accessor<real, 1> s_SumCall_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
     /*
-    DPCT1101:38: 'SUM_N' expression was replaced with a value. Modify the code
+    DPCT1101:40: 'SUM_N' expression was replaced with a value. Modify the code
     to use the original expression, provided in comments, if it is correct.
     */
     sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
-    dpct::rng::device::rng_generator<oneapi::mkl::rng::device::mcg59<1>>
-        *plan_rngStates_ct0 = plan->rngStates;
+    auto plan_rngStates_ct0 = plan->rngStates;
     const __TOptionData *plan_d_OptionData_ct1 =
         (__TOptionData *)(plan->d_OptionData);
-    __TOptionValue *plan_d_CallValue_ct2 =
-        (__TOptionValue *)(plan->d_CallValue);
-    int plan_pathN_ct3 = plan->pathN;
-    int plan_optionCount_ct4 = plan->optionCount;
+    auto plan_d_CallValue_ct2 = (__TOptionValue *)(plan->d_CallValue);
+    auto plan_pathN_ct3 = plan->pathN;
+    auto plan_optionCount_ct4 = plan->optionCount;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, plan->gridSize) *
@@ -327,6 +330,12 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
   });
   getLastCudaError("MonteCarloOneBlockPerOption() execution failed\n");
 
+  /*
+  DPCT1124:27: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(
       stream->memcpy(h_CallValue, plan->d_CallValue,
                      plan->optionCount * sizeof(__TOptionValue))));

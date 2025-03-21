@@ -65,7 +65,7 @@ class DeviceManager {
       GetDevices();
       return false;
     } else {
-      if (current_device_.is_host()) {
+      if (current_device_.is_cpu()) {
         std::cout << "Using Host device (single-threaded CPU)\n";
       } else {
         std::cout << "Using " << current_device_.get_info<sycl::info::device::name>() << "\n";

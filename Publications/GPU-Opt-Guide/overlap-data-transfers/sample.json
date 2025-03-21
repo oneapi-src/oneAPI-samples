@@ -7,7 +7,7 @@
   "description": "oneAPI GPU Optimization Guide Examples",
   "toolchain": [
     "dpcpp",
-    "ifort"
+    "ifx"
   ],
   "languages": [
     {
@@ -34,7 +34,7 @@
           "mkdir ../build",
           "cd ../build",
           "cmake ..",
-          "make reduction overlap",
+          "make reduction overlap_transfer",
           "make clean"
         ]
       }

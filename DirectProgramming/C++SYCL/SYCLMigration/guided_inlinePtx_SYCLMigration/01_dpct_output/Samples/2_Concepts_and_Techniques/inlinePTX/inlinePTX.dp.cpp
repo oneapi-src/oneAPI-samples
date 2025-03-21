@@ -85,9 +85,8 @@ int main(int argc, char **argv)
     checkCudaErrors(DPCT_CHECK_ERROR(
         h_ptr = sycl::malloc_host<int>(N, dpct::get_in_order_queue())));
 
-    sycl::range<3> cudaBlockSize(1, 1, 256);
-    sycl::range<3> cudaGridSize(1, 1,
-                                (N + cudaBlockSize[2] - 1) / cudaBlockSize[2]);
+    dpct::dim3 cudaBlockSize(256, 1, 1);
+    dpct::dim3 cudaGridSize((N + cudaBlockSize.x - 1) / cudaBlockSize.x, 1, 1);
     /*
     DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
     limit. To get the device limit, query info::device::max_work_group_size.
@@ -95,7 +94,7 @@ int main(int argc, char **argv)
     */
     dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize),
-        [=](sycl::nd_item<3> item_ct1) {
+        [=](sycl::nd_item<3> item_ct1)[[intel::reqd_sub_group_size(32)]] {
             sequence_gpu(d_ptr, N, item_ct1);
         });
     /*

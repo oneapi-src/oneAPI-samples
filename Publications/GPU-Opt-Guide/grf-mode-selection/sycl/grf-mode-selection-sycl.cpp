@@ -1,5 +1,5 @@
-#include <CL/sycl.hpp>
 #include <sycl/ext/intel/experimental/kernel_properties.hpp>
+#include <sycl/sycl.hpp>
 
 int main() {
   // Creating buffer of 4 ints to be used inside the kernel code

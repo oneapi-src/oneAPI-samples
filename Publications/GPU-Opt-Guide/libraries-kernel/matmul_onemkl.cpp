@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include "CL/sycl.hpp"
 #include "mkl.h"
 #include "oneapi/mkl/blas.hpp"
+#include "sycl/sycl.hpp"
 #include <cfloat>
 #include <iostream>
 

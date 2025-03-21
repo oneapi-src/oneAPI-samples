@@ -103,7 +103,7 @@ int computeGold(int *gpuData, const int len) {
     return false;
   }
 
-  /*int limit = 17;
+ /* int limit = 17;
   val = 0;
 
   for (int i = 0; i < len; ++i) {
@@ -125,8 +125,8 @@ int computeGold(int *gpuData, const int len) {
   if (val != gpuData[6]) {
     printf("atomicDec failed\n");
     return false;
-  }*/
-
+  }
+*/
   found = false;
 
   for (int i = 0; i < len; ++i) {

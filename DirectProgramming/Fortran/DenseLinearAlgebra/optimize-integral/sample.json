@@ -1,33 +1,48 @@
 {
-  "guid": "5c6ee310-cb61-4f9f-80da-0c94a3cb53e7",
-  "name": "Optimize Integral",
-  "categories": ["Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"],
-  "description": "Fortran Sample - Simple Compiler Optimizations",
-  "toolchain": [ "ifx" ],
-  "languages": [ { "fortran": {} } ],
-  "targetDevice": [ "CPU" ],
-  "os": [ "linux", "windows" ],
-  "builder": [ "make" ],
-  "ciTests":{
-    "linux": [
-      {
-        "id": "ifx_optsample_cpu",
-        "steps": [
-          "make",
-          "make run",
-          "make clean"
-        ]
-       }
+    "guid": "5c6ee310-cb61-4f9f-80da-0c94a3cb53e7",
+    "name": "Optimize Integral",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/Fortran/Dense Linear Algebra"
     ],
-    "windows": [
-      {
-        "id": "ifx_optsample_cpu",
-        "steps": [
-          "build.bat",
-          "run.bat"
+    "description": "Fortran Sample - Simple Compiler Optimizations",
+    "toolchain": [
+        "ifx"
+    ],
+    "languages": [
+        {
+            "fortran": {}
+        }
+    ],
+    "targetDevice": [
+        "CPU"
+    ],
+    "os": [
+        "linux",
+        "windows"
+    ],
+    "builder": [
+        "make"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "ifx_optsample_cpu",
+                "steps": [
+                    "make",
+                    "make run",
+                    "make clean"
+                ]
+            }
+        ],
+        "windows": [
+            {
+                "id": "ifx_optsample_cpu",
+                "steps": [
+                    "build.bat",
+                    "run.bat"
+                ]
+            }
         ]
-       }
-    ]
-  },
-  "expertise": "Concepts and Functionality"
+    },
+    "expertise": "Concepts and Functionality"
 }

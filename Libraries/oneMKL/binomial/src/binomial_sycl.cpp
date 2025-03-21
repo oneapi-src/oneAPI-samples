@@ -78,7 +78,7 @@ void Binomial<DATA_TYPE>::body() {
         sycl::nd_range(sycl::range<1>(opt_n * wg_size),
                        sycl::range<1>(wg_size)),
         [=](sycl::nd_item<1> item)
-            [[intel::kernel_args_restrict]] [[intel::reqd_sub_group_size(
+            [[intel::kernel_args_restrict]] [[sycl::reqd_sub_group_size(
                 sg_size)]] {
               const size_t opt = item.get_global_id(0) / wg_size;
               const DATA_TYPE sx = h_stock_price_local[opt];
@@ -109,7 +109,7 @@ void Binomial<DATA_TYPE>::body() {
                 id += mul_c;
               }
 
-              // Handling num_steps step by last item and putting it direclty to
+              // Handling num_steps step by last item and putting it directly to
               // SLM last element
               if (local_id == wg_size - 1) {
                 auto d = sx * sycl::exp(id) - xx;

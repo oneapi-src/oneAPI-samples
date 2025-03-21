@@ -509,15 +509,15 @@ bool shuffle_integral_image_test() {
 
 int main(int argc, char *argv[]) {
 
-  int dpct_device = 0;
+  int sycl_device = 0;
   printf("Starting shfl_scan\n");
 
   dpct::device_info deviceProp;
-  DPCT_CHECK_ERROR(
-      dpct_device = dpct::dev_mgr::instance().current_device_id());
+  
+  DPCT_CHECK_ERROR(sycl_device = dpct::get_current_device_id());
 
-  DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(dpct_device)));
+  checkCudaErrors(DPCT_CHECK_ERROR(
+  dpct::get_device(sycl_device).get_device_info(deviceProp)));
 
   std::cout << "Running on device: "<< deviceProp.get_name() << "\n";
   printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",

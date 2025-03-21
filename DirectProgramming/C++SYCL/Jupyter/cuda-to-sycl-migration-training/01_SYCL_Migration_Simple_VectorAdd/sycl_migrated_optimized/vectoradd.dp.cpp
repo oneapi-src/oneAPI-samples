@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
+
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
 #include <iostream>
@@ -19,12 +20,11 @@ void VectorAddKernel(float* A, float* B, float* C,
 
 int main()
 {
-        // sycl queue with out of order execution allowed
         dpct::device_ext &dev_ct1 = dpct::get_current_device();
         sycl::queue &q_ct1 = dev_ct1.out_of_order_queue();
         //# Print device name
         dpct::device_info dev;
-        dpct::get_device_info(dev, dpct::dev_mgr::instance().get_device(0));
+        dpct::get_device(0).get_device_info(dev);
         std::cout << "Device: " << dev.get_name() << "\n";
 
         //# Initialize vectors on host
@@ -39,26 +39,27 @@ int main()
         d_C = sycl::malloc_device<float>(N, q_ct1);
 
         //# copy vector data from host to device
-        auto e1 = q_ct1.memcpy(d_A, A, N * sizeof(float));
-        auto e2 = q_ct1.memcpy(d_B, B, N * sizeof(float));
+        q_ct1.memcpy(d_A, A, N * sizeof(float));
+        q_ct1.memcpy(d_B, B, N * sizeof(float));
+        q_ct1.wait();
 
         //# sumbit task to compute VectorAdd on device
-        auto e3 = q_ct1.parallel_for(
-            sycl::nd_range<3>(sycl::range<3>(1, 1, N), sycl::range<3>(1, 1, N)), {e1, e2},
+        q_ct1.parallel_for(
+            sycl::nd_range<3>(sycl::range<3>(1, 1, N), sycl::range<3>(1, 1, N)),
             [=](sycl::nd_item<3> item_ct1) {
                     VectorAddKernel(d_A, d_B, d_C, item_ct1);
-            });
+            }).wait();
 
         //# copy result of vector data from device to host
-        q_ct1.memcpy(C, d_C, N * sizeof(float), e3).wait();
+        q_ct1.memcpy(C, d_C, N * sizeof(float)).wait();
 
         //# print result on host
         for (int i = 0; i < N; i++) std::cout<< C[i] << " ";
         std::cout << "\n";
 
         //# free allocation on device
-        sycl::free(d_A, q_ct1);
-        sycl::free(d_B, q_ct1);
-        sycl::free(d_C, q_ct1);
+        dpct::dpct_free(d_A, q_ct1);
+        dpct::dpct_free(d_B, q_ct1);
+        dpct::dpct_free(d_C, q_ct1);
         return 0;
 }

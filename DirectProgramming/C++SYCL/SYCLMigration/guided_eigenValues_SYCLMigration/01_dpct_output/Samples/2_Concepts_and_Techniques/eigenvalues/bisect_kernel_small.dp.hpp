@@ -107,7 +107,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
   s_right_count[item_ct1.get_local_id(2)] = 0;
 
   /*
-  DPCT1065:7: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:46: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -131,7 +131,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
   while (true) {
     all_threads_converged = 1;
     /*
-    DPCT1065:9: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:48: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -144,7 +144,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
                             all_threads_converged);
 
     /*
-    DPCT1065:10: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:49: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -156,7 +156,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
     }
 
     /*
-    DPCT1065:11: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:50: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -172,7 +172,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
         s_right, (left == right), cta, item_ct1);
 
     /*
-    DPCT1065:12: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:51: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -207,7 +207,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
 
     // necessary so that compact_second_chunk is up-to-date
     /*
-    DPCT1065:13: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:52: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -226,7 +226,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
     }
 
     /*
-    DPCT1065:14: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:53: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -242,7 +242,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
     }
 
     /*
-    DPCT1065:15: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:54: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -250,7 +250,7 @@ void bisectKernel(float *g_d, float *g_s, const unsigned int n,
   }
 
   /*
-  DPCT1065:8: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:47: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */

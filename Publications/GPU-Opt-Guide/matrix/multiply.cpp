@@ -6,8 +6,8 @@
 // matrix multiply routines
 #include "multiply.hpp"
 
-#include <CL/sycl.hpp>
 #include <array>
+#include <sycl/sycl.hpp>
 
 using namespace std;
 
@@ -18,9 +18,8 @@ template <typename T> class Matrix1_1;
 template <typename T> class Matrix1_2;
 
 // Basic matrix multiply
-void multiply1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
-               TYPE c[][NUM], TYPE t[][NUM]) {
-  int i, j, k;
+void multiply1(int, int, int, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM],
+               TYPE[][NUM]) {
 
   // Declare a deviceQueue
   sycl::queue q(sycl::default_selector_v, exception_handler);
@@ -55,10 +54,8 @@ void multiply1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
 } // multiply1
 
 // Replaces accessorC reference with a local variable
-void multiply1_1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
-                 TYPE c[][NUM], TYPE t[][NUM]) {
-
-  int i, j, k;
+void multiply1_1(int, int, int, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM],
+                 TYPE[][NUM]) {
 
   // Declare a deviceQueue
   sycl::queue q(sycl::default_selector_v, exception_handler);
@@ -96,9 +93,8 @@ void multiply1_1(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
 }
 
 // Replaces accessorC reference with a local variable and adds matrix tiling
-void multiply1_2(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
-                 TYPE c[][NUM], TYPE t[][NUM]) {
-  int i, j, k;
+void multiply1_2(int, int, int, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM],
+                 TYPE[][NUM]) {
 
   // Declare a deviceQueue
   sycl::queue q(sycl::default_selector_v, exception_handler);
@@ -129,35 +125,33 @@ void multiply1_2(int msize, int tidx, int numt, TYPE a[][NUM], TYPE b[][NUM],
          sycl::range<2>(MATRIXTILESIZE, MATRIXTILESIZE), h);
      // Execute matrix multiply in parallel over our matrix_range
      // ind is an index into this range
-     h.parallel_for(sycl::nd_range<2>(matrix_range, tile_range),
-                    [=](cl::sycl::nd_item<2> it) {
-                      int k;
-                      const int numTiles = NUM / MATRIXTILESIZE;
-                      const int row = it.get_local_id(0);
-                      const int col = it.get_local_id(1);
-                      const int globalRow =
-                          MATRIXTILESIZE * it.get_group(0) + row;
-                      const int globalCol =
-                          MATRIXTILESIZE * it.get_group(1) + col;
-                      TYPE acc = 0.0;
-                      for (int t = 0; t < numTiles; t++) {
-                        const int tiledRow = MATRIXTILESIZE * t + row;
-                        const int tiledCol = MATRIXTILESIZE * t + col;
-                        aTile[row][col] = accessorA[globalRow][tiledCol];
-                        bTile[row][col] = accessorB[tiledRow][globalCol];
-                        it.barrier(sycl::access::fence_space::local_space);
-                        for (k = 0; k < MATRIXTILESIZE; k++) {
-                          // Perform computation ind[0] is row, ind[1] is col
-                          acc += aTile[row][k] * bTile[k][col];
-                        }
-                        it.barrier(sycl::access::fence_space::local_space);
-                      }
-                      accessorC[globalRow][globalCol] = acc;
-                    });
+     h.parallel_for(
+         sycl::nd_range<2>(matrix_range, tile_range), [=](sycl::nd_item<2> it) {
+           int k;
+           const int numTiles = NUM / MATRIXTILESIZE;
+           const int row = it.get_local_id(0);
+           const int col = it.get_local_id(1);
+           const int globalRow = MATRIXTILESIZE * it.get_group(0) + row;
+           const int globalCol = MATRIXTILESIZE * it.get_group(1) + col;
+           TYPE acc = 0.0;
+           for (int t = 0; t < numTiles; t++) {
+             const int tiledRow = MATRIXTILESIZE * t + row;
+             const int tiledCol = MATRIXTILESIZE * t + col;
+             aTile[row][col] = accessorA[globalRow][tiledCol];
+             bTile[row][col] = accessorB[tiledRow][globalCol];
+             it.barrier(sycl::access::fence_space::local_space);
+             for (k = 0; k < MATRIXTILESIZE; k++) {
+               // Perform computation ind[0] is row, ind[1] is col
+               acc += aTile[row][k] * bTile[k][col];
+             }
+             it.barrier(sycl::access::fence_space::local_space);
+           }
+           accessorC[globalRow][globalCol] = acc;
+         });
    }).wait_and_throw();
 } // multiply1_2
 
-void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM],
+void ParallelMultiply(int, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM],
                       TYPE t[][NUM]) {
   int NTHREADS = MAXTHREADS;
   int MSIZE = NUM;

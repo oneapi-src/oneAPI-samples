@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <array>
 #include <chrono>
 #include <iostream>
+#include <sycl/sycl.hpp>
 #include <unistd.h>
 
 // Array type and data size for this example.

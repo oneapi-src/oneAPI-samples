@@ -22,7 +22,7 @@ The samples source code using SYCL were migrated from CUDA source code for offlo
 |:---                   |:---
 | OS                    | Ubuntu* 22.04
 | Hardware              | Intel® Gen9 <br>Intel® Gen11 <br>Intel® Xeon CPU <br>Intel® Data Center GPU Max <br> Nvidia Tesla P100 <br> Nvidia A100 <br> Nvidia H100 
-| Software              | SYCLomatic (Tag - 20240403) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2024.1 <br> oneAPI for NVIDIA GPU plugin from Codeplay (to run SYCL™ applications on NVIDIA® GPUs)
+| Software              | SYCLomatic (Tag - 20241104) <br> Intel® oneAPI Base Toolkit (Base Kit) version 2025.0 <br> oneAPI for NVIDIA GPU plugin from Codeplay (to run SYCL™ applications on NVIDIA® GPUs)
 
 
 ## Key Implementation Details

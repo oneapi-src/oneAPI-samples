@@ -76,7 +76,7 @@ void histogram256Kernel(uint *d_PartialHistograms, uint *d_Data,
   const uint tag = item_ct1.get_local_id(2) << (UINT_BITS - LOG2_WARP_SIZE);
 
   /*
-  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:3: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -92,7 +92,7 @@ void histogram256Kernel(uint *d_PartialHistograms, uint *d_Data,
 
   // Merge per-warp histograms into per-block and write to global memory
   /*
-  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
+  DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
   sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
   performance if there is no access to global memory.
   */
@@ -139,7 +139,7 @@ void mergeHistogram256Kernel(uint *d_Histogram,
 
   for (uint stride = MERGE_THREADBLOCK_SIZE / 2; stride > 0; stride >>= 1) {
     /*
-    DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
+    DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
     sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
     performance if there is no access to global memory.
     */
@@ -187,7 +187,7 @@ extern "C" void histogram256(uint *d_Histogram, void *d_Data, uint byteCount) {
     sycl::local_accessor<uint, 1> s_Hist_acc_ct1(
         sycl::range<1>(1536 /*HISTOGRAM256_THREADBLOCK_MEMORY*/), cgh);
 
-    uint *d_PartialHistograms_ct0 = d_PartialHistograms;
+    auto d_PartialHistograms_ct0 = d_PartialHistograms;
     uint byteCount_sizeof_uint_ct2 = byteCount / sizeof(uint);
 
     cgh.parallel_for(
@@ -214,8 +214,8 @@ extern "C" void histogram256(uint *d_Histogram, void *d_Data, uint byteCount) {
     sycl::local_accessor<uint, 1> data_acc_ct1(
         sycl::range<1>(256 /*MERGE_THREADBLOCK_SIZE*/), cgh);
 
-    uint *d_PartialHistograms_ct1 = d_PartialHistograms;
-    uint PARTIAL_HISTOGRAM256_COUNT_ct2 = PARTIAL_HISTOGRAM256_COUNT;
+    auto d_PartialHistograms_ct1 = d_PartialHistograms;
+    auto PARTIAL_HISTOGRAM256_COUNT_ct2 = PARTIAL_HISTOGRAM256_COUNT;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, HISTOGRAM256_BIN_COUNT) *

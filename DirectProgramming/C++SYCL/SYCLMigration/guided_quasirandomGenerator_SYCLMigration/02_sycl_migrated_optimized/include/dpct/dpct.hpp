@@ -25,6 +25,11 @@ template <int Arg> class dpct_kernel_scalar;
 #include "memory.hpp"
 #include "util.hpp"
 
+#include "bindless_images.hpp"
+#include "graph.hpp"
+
+#define USE_DPCT_HELPER 1
+
 #if defined(_MSC_VER)
 #define __dpct_align__(n) __declspec(align(n))
 #define __dpct_inline__ __forceinline
@@ -39,11 +44,19 @@ template <int Arg> class dpct_kernel_scalar;
 #define __dpct_noinline__ __attribute__((noinline))
 #endif
 
-#define DPCT_COMPATIBILITY_TEMP (600)
+#define DPCT_COMPATIBILITY_TEMP (900)
 
-namespace dpct{
+namespace dpct {
 enum error_code { success = 0, default_error = 999 };
+/// A dummy function introduced to assist auto migration.
+/// The migration tool user should replace it with a real error-handling function.
+/// SYCL reports errors using exceptions and does not use error codes.
+inline const char *get_error_string_dummy(int ec) {
+  (void)ec;
+  return "<FIXME: Placeholder>"; // Return the error string for the error code
+                                 // ec.
 }
+} // namespace dpct
 
 #define DPCT_CHECK_ERROR(expr)                                                 \
   [&]() {                                                                      \

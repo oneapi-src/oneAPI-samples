@@ -118,7 +118,15 @@ int main(void) {
   // which shows the difference between sparse and dense algorithm output
   for (int i = 0; i < N; i++)
     if (input[i] == 4) input[i] = rand() % 3;
-  dense_histogram(input);
-  sparse_histogram(input);
+  try
+  {
+    dense_histogram(input);
+    sparse_histogram(input);
+  }
+  catch(const std::exception& e)
+  {
+    std::cerr << e.what() << '\n';
+    return -1;
+  }
   return 0;
 }
