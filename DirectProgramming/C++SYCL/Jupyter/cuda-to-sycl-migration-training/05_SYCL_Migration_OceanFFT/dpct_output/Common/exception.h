@@ -31,7 +31,6 @@
 
 // includes, system
 #include <stdlib.h>
-
 #include <exception>
 #include <iostream>
 #include <stdexcept>
@@ -147,6 +146,6 @@ Exception<Std_Exception>::Exception(const std::string &s) : Std_Exception(s) {}
 template <class Std_Exception>
 Exception<Std_Exception>::~Exception() throw() {}
 
-// functions, exported
+  // functions, exported
 
 #endif  // COMMON_EXCEPTION_H_

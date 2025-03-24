@@ -141,8 +141,8 @@ int main(int argc, char **argv) {
     sycl::local_accessor<float, 1> accumResult_acc_ct1(
         sycl::range<1>(1024 /*ACCUM_N*/), cgh);
 
-    int VECTOR_N_ct3 = VECTOR_N;
-    int ELEMENT_N_ct4 = ELEMENT_N;
+    auto VECTOR_N_ct3 = VECTOR_N;
+    auto ELEMENT_N_ct4 = ELEMENT_N;
 
     cgh.parallel_for(
         sycl::nd_range<3>(sycl::range<3>(1, 1, 128) * sycl::range<3>(1, 1, 256),

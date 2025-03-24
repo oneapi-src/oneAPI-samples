@@ -1,6 +1,6 @@
 # `Intel® Python XGBoost Performance` Sample
 
-This `Intel® Python XGBoost Performance` sample illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It demonstrates how to use software products that can be found in the [Intel® AI Analytics Toolkit (AI Kit)](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+This `Intel® Python XGBoost Performance` sample illustrates how to analyze the performance benefit from using Intel optimizations upstreamed by Intel to latest XGBoost compared to un-optimized XGBoost 0.81. It demonstrates how to use software products that can be found in the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 | Area                 | Description
 | :---                 | :---
@@ -18,13 +18,13 @@ XGBoost is a widely used gradient boosting library in the classical machine lear
 |:---             |:---
 | OS              | Ubuntu* 18.04 or higher
 | Hardware        | Intel Atom® processors <br> Intel® Core™ processor family <br> Intel® Xeon® processor family <br> Intel® Xeon® Scalable processor family
-| Software        | XGBoost <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software        | XGBoost <br> AI Tools
 
 ## Key Implementation Details
 
 In this sample, you will use a XGBoost model and prediction using Intel optimizations upstreamed by Intel to the latest XGBoost package and the un-optimized XGBoost 0.81 for comparison.
 
-This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [Intel® AI Analytics Toolkit](https://software.intel.com/en-us/oneapi/ai-kit). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
+This XGBoost sample code is implemented for the CPU using the Python language. The example assumes you XGBoost installed inside a conda environment, similar to what is delivered with the installation of the Intel® Distribution for Python* as part of the [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html). It also assumes you have set up an additional XGBoost 0.81 conda environment, with details on how to do so explained within the sample and this README.
 
 ## Set Environment Variables
 
@@ -44,13 +44,13 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-XGBoost is ready for use once you finish the Intel® AI Analytics Toolkit installation and have run the post installation script.
+XGBoost is ready for use once you finish the AI Tools installation and have run the post installation script.
 
 You can refer to the oneAPI [main page](https://software.intel.com/en-us/oneapi) for toolkit installation and the Toolkit [Getting Started Guide for Linux](https://software.intel.com/en-us/get-started-with-intel-oneapi-linux-get-started-with-the-intel-ai-analytics-toolkit) for post-installation steps and scripts.
 
 #### Activate Conda with Root Access
 
-By default, the AI Kit is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
+By default, the AI Tools is installed in the `/opt/intel/oneapi` folder and requires root privileges to manage it. However, if you activated another environment, you can return with the following command.
 
 ```
 source activate base
@@ -111,7 +111,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 ## Example Output
 
 ```
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## License

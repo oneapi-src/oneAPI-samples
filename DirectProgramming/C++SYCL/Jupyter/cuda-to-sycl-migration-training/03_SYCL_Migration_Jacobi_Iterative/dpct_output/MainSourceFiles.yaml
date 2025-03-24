@@ -272,18 +272,18 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          3836
-    Length:          35
-    ReplacementText: 'dpct::experimental::logical_group'
+    Offset:          3832
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1119:33: Migration of cooperative_groups::__v1::thread_block_tile<8> is not supported, please try to remigrate with option: --use-experimental-features=logical-group.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          3888
-    Length:          38
-    ReplacementText: 'dpct::experimental::logical_group(item_ct1, item_ct1.get_group(), ROWS_PER_CTA)'
+    Offset:          3880
+    Length:          0
+    ReplacementText: "        /*\n        DPCT1007:2: Migration of tiled_partition is not supported.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -317,9 +317,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          4304
-    Length:          12
-    ReplacementText: 'tile8.get_local_linear_range()'
+    Offset:          4282
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:3: Migration of size is not supported.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -335,9 +335,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          4417
-    Length:          19
-    ReplacementText: 'tile8.get_local_linear_id()'
+    Offset:          4409
+    Length:          0
+    ReplacementText: "    /*\n    DPCT1007:4: Migration of thread_rank is not supported.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -517,7 +517,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          5216
     Length:          0
-    ReplacementText: "  /*\n  DPCT1065:2: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1065:5: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -625,16 +625,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          5792
     Length:          4
-    ReplacementText: 'sycl::range<3>'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          5806
-    Length:          9
-    ReplacementText: 1, 1, 256
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -643,16 +634,25 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          5835
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          5848
-    Length:          33
-    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    Offset:          5884
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:34: Migration of cudaGraph_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          5905
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:35: Migration of cudaGraphExec_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -662,6 +662,24 @@ Replacements:
     Offset:          6004
     Length:          34
     ReplacementText: 'DPCT_CHECK_ERROR(d_sum = sycl::malloc_device<double>(1, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6042
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:36: Migration of cudaGraphNode_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          6091
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:37: Migration of cudaGraphNode_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -688,7 +706,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          6491
     Length:          0
-    ReplacementText: "  /*\n  DPCT1007:30: Migration of cudaGraphCreate is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1007:38: Migration of cudaGraphCreate is not supported.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -697,7 +715,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          6538
     Length:          0
-    ReplacementText: "  /*\n  DPCT1007:31: Migration of cudaGraphAddMemsetNode is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1007:39: Migration of cudaGraphAddMemsetNode is not supported.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -706,7 +724,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          6675
     Length:          0
-    ReplacementText: "  /*\n  DPCT1082:32: Migration of cudaKernelNodeParams type is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1082:40: Migration of cudaKernelNodeParams type is not supported.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -715,7 +733,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          7090
     Length:          0
-    ReplacementText: "  /*\n  DPCT1007:33: Migration of cudaGraphAddKernelNode is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1007:41: Migration of cudaGraphAddKernelNode is not supported.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -850,7 +868,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          7752
     Length:          0
-    ReplacementText: "  /*\n  DPCT1007:34: Migration of cudaGraphAddMemcpyNode is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1007:42: Migration of cudaGraphAddMemcpyNode is not supported.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -859,7 +877,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          7917
     Length:          0
-    ReplacementText: "  /*\n  DPCT1007:35: Migration of cudaGraphInstantiate is not supported.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1119:43: Migration of cudaGraphInstantiate is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -868,7 +886,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          8407
     Length:          0
-    ReplacementText: "    /*\n    DPCT1007:36: Migration of cudaGraphExecKernelNodeSetParams is not supported.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1007:44: Migration of cudaGraphExecKernelNodeSetParams is not supported.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -877,7 +895,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          8554
     Length:          0
-    ReplacementText: "    /*\n    DPCT1007:37: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1119:45: Migration of cudaGraphLaunch is not supported, please try to remigrate with option: --use-experimental-features=graph.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -920,36 +938,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          8777
-    Length:          9
-    ReplacementText: 'nblocks[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          8799
-    Length:          10
-    ReplacementText: 'nthreads[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          8816
     Length:          0
-    ReplacementText: "      /*\n      DPCT1083:4: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          8847
-    Length:          10
-    ReplacementText: 'nthreads[2]'
+    ReplacementText: "      /*\n      DPCT1083:7: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -958,7 +949,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          8913
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -967,7 +958,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          8921
     Length:          70
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -985,7 +976,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          9008
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:5: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -994,7 +985,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          9016
     Length:          66
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1012,7 +1003,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          9099
     Length:          0
-    ReplacementText: "/*\n      DPCT1124:38: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
+    ReplacementText: "/*\n      DPCT1124:46: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1093,16 +1084,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          9764
     Length:          4
-    ReplacementText: 'sycl::range<3>'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          9778
-    Length:          9
-    ReplacementText: 1, 1, 256
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1111,16 +1093,25 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          9807
     Length:          4
-    ReplacementText: 'sycl::range<3>'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          9820
-    Length:          33
-    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    Offset:          9856
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:47: Migration of cudaGraph_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          9877
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1119:48: Migration of cudaGraphExec_t is not supported, please try to remigrate with option: --use-experimental-features=graph.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1138,16 +1129,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10055
     Length:          0
-    ReplacementText: "    /*\n    DPCT1027:39: The call to cudaStreamBeginCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n    */\n"
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          10084
-    Length:          59
-    ReplacementText: '0'
+    ReplacementText: "    /*\n    DPCT1119:49: Migration of cudaStreamBeginCapture is not supported, please try to remigrate with option: --use-experimental-features=graph.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1183,7 +1165,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10242
     Length:          0
-    ReplacementText: "      /*\n      DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1192,7 +1174,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10248
     Length:          138
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:53: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:54: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:64: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:65: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1210,7 +1192,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10401
     Length:          0
-    ReplacementText: "      /*\n      DPCT1049:7: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1219,7 +1201,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10407
     Length:          138
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:55: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:56: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:66: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:67: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1237,7 +1219,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10557
     Length:          0
-    ReplacementText: "/*\n    DPCT1124:40: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n    */\n    "
+    ReplacementText: "/*\n    DPCT1124:50: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n    */\n    "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1282,16 +1264,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10688
     Length:          0
-    ReplacementText: "    /*\n    DPCT1027:41: The call to cudaStreamEndCapture was replaced with 0 because SYCL currently does not support capture operations on queues.\n    */\n"
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          10708
-    Length:          36
-    ReplacementText: '0'
+    ReplacementText: "    /*\n    DPCT1119:51: Migration of cudaStreamEndCapture is not supported, please try to remigrate with option: --use-experimental-features=graph.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1300,7 +1273,16 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10777
     Length:          0
-    ReplacementText: "      /*\n      DPCT1007:42: Migration of cudaGraphInstantiate is not supported.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1119:52: Migration of cudaGraphInstantiate is not supported, please try to remigrate with option: --use-experimental-features=graph.\n      */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
+    Offset:          10869
+    Length:          0
+    ReplacementText: "      /*\n      DPCT1007:53: Migration of cudaGraphExecUpdateResult is not supported.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1309,7 +1291,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          10919
     Length:          0
-    ReplacementText: "      /*\n      DPCT1007:43: Migration of cudaGraphExecUpdate is not supported.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1119:54: Migration of cudaGraphExecUpdate is not supported, please try to remigrate with option: --use-experimental-features=graph.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1318,7 +1300,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11110
     Length:          0
-    ReplacementText: "          /*\n          DPCT1007:44: Migration of cudaGraphExecDestroy is not supported.\n          */\n"
+    ReplacementText: "          /*\n          DPCT1119:55: Migration of cudaGraphExecDestroy is not supported, please try to remigrate with option: --use-experimental-features=graph.\n          */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1327,7 +1309,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11280
     Length:          0
-    ReplacementText: "        /*\n        DPCT1007:45: Migration of cudaGraphInstantiate is not supported.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1119:56: Migration of cudaGraphInstantiate is not supported, please try to remigrate with option: --use-experimental-features=graph.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1336,7 +1318,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11375
     Length:          0
-    ReplacementText: "    /*\n    DPCT1007:46: Migration of cudaGraphLaunch is not supported.\n    */\n"
+    ReplacementText: "    /*\n    DPCT1119:57: Migration of cudaGraphLaunch is not supported, please try to remigrate with option: --use-experimental-features=graph.\n    */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1379,36 +1361,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          11598
-    Length:          9
-    ReplacementText: 'nblocks[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          11620
-    Length:          10
-    ReplacementText: 'nthreads[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11637
     Length:          0
-    ReplacementText: "      /*\n      DPCT1083:9: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          11668
-    Length:          10
-    ReplacementText: 'nthreads[2]'
+    ReplacementText: "      /*\n      DPCT1083:12: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1417,7 +1372,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11734
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1426,7 +1381,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11742
     Length:          70
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1444,7 +1399,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11829
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:10: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1453,7 +1408,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11837
     Length:          66
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1471,7 +1426,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          11920
     Length:          0
-    ReplacementText: "/*\n      DPCT1124:47: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
+    ReplacementText: "/*\n      DPCT1124:58: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1552,16 +1507,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12486
     Length:          4
-    ReplacementText: 'sycl::range<3>'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          12500
-    Length:          9
-    ReplacementText: 1, 1, 256
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1570,16 +1516,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12529
     Length:          4
-    ReplacementText: 'sycl::range<3>'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          12542
-    Length:          33
-    ReplacementText: '1, 1, (N_ROWS / ROWS_PER_CTA) + 2'
+    ReplacementText: 'dpct::dim3'
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1624,7 +1561,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12816
     Length:          0
-    ReplacementText: "      /*\n      DPCT1049:11: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1049:14: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1633,7 +1570,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12822
     Length:          138
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:57: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:58: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:68: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:69: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x, x_new, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1651,7 +1588,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12975
     Length:          0
-    ReplacementText: "      /*\n      DPCT1049:12: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
+    ReplacementText: "      /*\n      DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1660,7 +1597,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          12981
     Length:          138
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:59: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:60: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n        stream->submit(\n          [&](sycl::handler &cgh) {\n            /*\n            DPCT1101:70: 'N_ROWS' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> x_shared_acc_ct1(sycl::range<1>(512/*N_ROWS*/), cgh);\n            /*\n            DPCT1101:71: 'ROWS_PER_CTA + 1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.\n            */\n            sycl::local_accessor<double, 1> b_shared_acc_ct1(sycl::range<1>(9/*ROWS_PER_CTA + 1*/), cgh);\n\n            cgh.parallel_for(\n              sycl::nd_range<3>(nblocks * nthreads, nthreads), \n              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                JacobiMethod(A, b, conv_threshold, x_new, x, d_sum, item_ct1, x_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get(), b_shared_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n              });\n          });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1678,7 +1615,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13131
     Length:          0
-    ReplacementText: "/*\n    DPCT1124:48: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n    */\n    "
+    ReplacementText: "/*\n    DPCT1124:59: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n    */\n    "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1757,36 +1694,9 @@ Replacements:
     NewHostVarName:  ''
     BlockLevelFormatFlag: false
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          13428
-    Length:          9
-    ReplacementText: 'nblocks[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          13450
-    Length:          10
-    ReplacementText: 'nthreads[2]'
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13467
     Length:          0
-    ReplacementText: "      /*\n      DPCT1083:14: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
-    ConstantFlag:    ''
-    ConstantOffset:  0
-    InitStr:         ''
-    NewHostVarName:  ''
-    BlockLevelFormatFlag: false
-  - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
-    Offset:          13498
-    Length:          10
-    ReplacementText: 'nthreads[2]'
+    ReplacementText: "      /*\n      DPCT1083:17: The size of local memory in the migrated code may be different from the original code. Check that the allocated memory size in the migrated code is correct.\n      */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1795,7 +1705,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13564
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:16: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1804,7 +1714,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13572
     Length:          70
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x_new, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1822,7 +1732,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13659
     Length:          0
-    ReplacementText: "        /*\n        DPCT1049:15: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
+    ReplacementText: "        /*\n        DPCT1049:18: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.\n        */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1831,7 +1741,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13667
     Length:          66
-    ReplacementText: "  dpct::has_capability_or_fail(stream->get_device(), {sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
+    ReplacementText: "  dpct::get_device(dpct::get_device_id(stream->get_device())).has_capability_or_fail({sycl::aspect::fp64});\n\n          stream->submit(\n            [&](sycl::handler &cgh) {\n              sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(sycl::range<1>(sharedMemSize), cgh);\n\n              cgh.parallel_for(\n                sycl::nd_range<3>(nblocks * nthreads, nthreads), \n                [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {\n                  finalError(x, d_sum, item_ct1, dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>().get());\n                });\n            });"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1849,7 +1759,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Offset:          13750
     Length:          0
-    ReplacementText: "/*\n      DPCT1124:49: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
+    ReplacementText: "/*\n      DPCT1124:60: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n      */\n      "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -1984,7 +1894,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
     Offset:          5616
     Length:          0
-    ReplacementText: "  /*\n  DPCT1025:50: The SYCL queue is created ignoring the flag and priority options.\n  */\n"
+    ReplacementText: "  /*\n  DPCT1025:61: The SYCL queue is created ignoring the flag and priority options.\n  */\n"
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -2092,7 +2002,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
     Offset:          6125
     Length:          0
-    ReplacementText: "/*\n  DPCT1124:51: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n  */\n  "
+    ReplacementText: "/*\n  DPCT1124:62: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n  */\n  "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -2137,7 +2047,7 @@ Replacements:
   - FilePath:        '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
     Offset:          6269
     Length:          0
-    ReplacementText: "/*\n  DPCT1124:52: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n  */\n  "
+    ReplacementText: "/*\n  DPCT1124:63: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the origin API might be synchronous, it depends on the type of operand memory, so you may need to call wait() on event return by memcpy API to ensure synchronization behavior.\n  */\n  "
     ConstantFlag:    ''
     ConstantOffset:  0
     InitStr:         ''
@@ -2290,8 +2200,10 @@ Replacements:
 MainSourceFilesDigest:
   - MainSourceFile:  '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/jacobi.cu'
     Digest:          e02410f3dbea57337d8ccad61adaca40
+    HasCUDASyntax:   true
   - MainSourceFile:  '/home/rkris11/work/git/cuda-samples/Samples/3_CUDA_Features/jacobiCudaGraphs/main.cpp'
     Digest:          849a3d562aa8434f0ce89b725cf630e0
+    HasCUDASyntax:   true
 DpctVersion:     19.0.0
 MainHelperFileName: ''
 USMLevel:        ''
@@ -2323,8 +2235,8 @@ OptionMap:
     Value:           'false'
     Specified:       false
   ExperimentalFlag:
-    Value:           '8'
-    Specified:       true
+    Value:           '0'
+    Specified:       false
   ExplicitNamespace:
     Value:           '20'
     Specified:       false
@@ -2353,6 +2265,9 @@ OptionMap:
     Value:           ''
     Specified:       false
   SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UseSYCLCompat:
     Value:           'false'
     Specified:       false
   UsmLevel:

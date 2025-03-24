@@ -101,11 +101,9 @@ template <typename T, bool floatKeys> bool testSort(int argc, char **argv) try {
 
   int deviceID = -1;
 
-  if (0 == DPCT_CHECK_ERROR(
-               deviceID = dpct::dev_mgr::instance().current_device_id())) {
+  if (0 == DPCT_CHECK_ERROR(deviceID = dpct::get_current_device_id())) {
     dpct::device_info devprop;
-    dpct::get_device_info(devprop,
-                          dpct::dev_mgr::instance().get_device(deviceID));
+    dpct::get_device(deviceID).get_device_info(devprop);
     unsigned int totalMem = (keysOnly ? 2 : 4) * numElements * sizeof(T);
 
     if (devprop.get_global_mem_size() < totalMem) {

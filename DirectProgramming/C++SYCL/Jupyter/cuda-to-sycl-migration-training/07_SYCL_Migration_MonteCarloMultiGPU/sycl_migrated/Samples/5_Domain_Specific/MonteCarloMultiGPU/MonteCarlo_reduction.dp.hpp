@@ -57,7 +57,7 @@ void sumReduce(T *sum, T *sum2, sycl::group<3> &cta, sycl::sub_group &tile32,
       sum[tid] = beta;
       sum2[tid] = beta2;
     }
-    item_ct1.get_sub_group().barrier();
+    //item_ct1.get_sub_group().barrier();
   }
   item_ct1.barrier();
 

@@ -1,6 +1,6 @@
-# Predictive Modeling with XGBoost* and the Intel® AI Analytics Toolkit (AI Kit)
+# Predictive Modeling with XGBoost* and the AI Tools
 
-The purpose of this repository is to be the central aggregation, curation, and distribution point for Juypter Notebooks that are developed in support of the Intel® AI Analytics Toolkit (AI Kit). These initial hands-on exercises introduce you to predictive modeling using decision trees, bagging, and XGBoost.
+The purpose of this repository is to be the central aggregation, curation, and distribution point for Juypter Notebooks that are developed in support of the AI Tools. These initial hands-on exercises introduce you to predictive modeling using decision trees, bagging, and XGBoost.
 
 The Jupyter Notebooks for the exercises are in the `AI_Kit_XGBoost_Predictive_Modeling` folder, and the answers to these exercises in the `AI_Kit_XGBoost_Predictive_Modeling.complete` folder.
 
@@ -9,7 +9,7 @@ The Jupyter Notebooks for the exercises are in the `AI_Kit_XGBoost_Predictive_Mo
 | Optimized for             | Description
 |:---                       |:---
 | OS                        | Ubuntu* 20.04 (or newer) <br> Windows Subsystem for Linux (WSL)
-| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> AI Tools
 
 The Jupyter Notebooks are tested for and can be run on the Intel® Devcloud for oneAPI.
 
@@ -19,11 +19,11 @@ The referenced folders and Notebooks are in the [`AI_Kit_XGBoost_Predictive_Mode
 
 | Notebook Directory and Name             | Notebook Focus
 |:---                                     |:---
-|[`00_Local_Setup\Local_Setup.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/00_Local_Setup) | - How to setup the environment for running on a local machine <br> - Anaconda setup <br> -  Intel® Distribution for Python* programming language <br> - Intel® AI Analytics Toolkit (AI Kit) <br> - Intel data science workstation kits
+|[`00_Local_Setup\Local_Setup.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/00_Local_Setup) | - How to setup the environment for running on a local machine <br> - Anaconda setup <br> -  Intel® Distribution for Python* programming language <br> - AI Tools <br> - Intel data science workstation kits
 |[`01_Decision_Trees\Decision_Trees.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/01_Decision_Trees) | - Recognize decision trees and how to use them for classification problems <br> - Recognize how to identify the best split and the factors for splitting. <br> - Explain strengths and weaknesses of decision trees <br> - Explain how regression trees help with classifying continuous values <br> - Apply Intel® Extension for Scikit-learn* to leverage underlying compute capabilities of hardware
 |[`02_Bagging\Bagging_RF.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/02_Bagging) | - Determine if stratefiedshuffle split is the best approach <br> - Recognize how to identify the optimal number of trees <br> - Understand the resulting plot of out-of-band errors <br> - Explore Random Forest vs Extra Random Trees and determine which one worked better <br> - Apply Intel® Extension for Scikit-learn* to leverage underlying compute capabilities of hardware
-| [`03_XGBoost\XGBoost.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/03_XGBoost)| - Use XGBoost with the AI Kit <br> - Take advantage of Intel® Extension for Scikit-learn* by enabling them with XGBoost <br> - Use Cross Validation technique to find better XGBoost Hyperparameters <br> - Use a learning curve to estimate the ideal number of trees <br> - Improve performance by implementing early stopping
-| [`04_oneDal\XGBoost-oneDal.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/04_oneDal)| - Utilize XGBoost with the AI KIt <br> - Take advantage of Intel® Extension for Scikit-learn* by enabling them with XGBoost <br> - Use Intel® oneAPI Data Analytics Library (oneDAL) to enhance prediction performance
+| [`03_XGBoost\XGBoost.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/03_XGBoost)| - Use XGBoost with the AI Tools <br> - Take advantage of Intel® Extension for Scikit-learn* by enabling them with XGBoost <br> - Use Cross Validation technique to find better XGBoost Hyperparameters <br> - Use a learning curve to estimate the ideal number of trees <br> - Improve performance by implementing early stopping
+| [`04_oneDal\XGBoost-oneDal.ipynb`](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Jupyter/Predictive_Modeling_Training/AI_Kit_XGBoost_Predictive_Modeling/04_oneDal)| - Utilize XGBoost with the AI Tools <br> - Take advantage of Intel® Extension for Scikit-learn* by enabling them with XGBoost <br> - Use Intel® oneAPI Data Analytics Library (oneDAL) to enhance prediction performance
 
 ## Run the Jupyter Notebooks Locally (on Linux* or WSL)
 
@@ -37,7 +37,7 @@ The referenced folders and Notebooks are in the [`AI_Kit_XGBoost_Predictive_Mode
    sudo reboot
    ```
 
-3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and Intel® AI Analytics Toolkit (AI Kit) from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
+3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and AI Tools from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
 
 4. After you complete the installation, refresh the new environment variables.
    ```bash

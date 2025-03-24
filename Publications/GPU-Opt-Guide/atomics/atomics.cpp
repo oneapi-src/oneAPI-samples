@@ -3,18 +3,16 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <sycl/sycl.hpp>
 #include <unistd.h>
 #include <vector>
 
 // Summation of 10M 'one' values
 constexpr size_t N = 1024 * 32;
 
-// Number of repetitions
-constexpr int repetitions = 16;
 // expected vlaue of sum
 int sum_expected = N;
 
@@ -45,8 +43,7 @@ private:
   std::chrono::steady_clock::time_point start_;
 };
 
-int ComputeSerialInt(std::vector<int> &data, std::vector<int> &flush,
-                     int iter) {
+int ComputeSerialInt(std::vector<int> &data, std::vector<int> &, int iter) {
   const size_t data_size = data.size();
   Timer timer;
   int sum;
@@ -68,7 +65,7 @@ int ComputeSerialInt(std::vector<int> &data, std::vector<int> &flush,
   return sum;
 } // end ComputeSerial
 
-int ComputeSerialFloat(std::vector<float> &data, std::vector<float> &flush,
+int ComputeSerialFloat(std::vector<float> &data, std::vector<float> &,
                        int iter) {
   const size_t data_size = data.size();
   Timer timer;
@@ -115,10 +112,7 @@ int reductionInt(sycl::queue &q, std::vector<int> &data,
     q.submit([&](auto &h) {
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
 
-      h.parallel_for(1, [=](auto index) {
-        size_t glob_id = index[0];
-        sum_acc[0] = 0;
-      });
+      h.parallel_for(1, [=](auto) { sum_acc[0] = 0; });
     });
     // flush the cache
     q.submit([&](auto &h) {
@@ -181,10 +175,7 @@ int reductionFloat(sycl::queue &q, std::vector<float> &data,
     q.submit([&](auto &h) {
       sycl::accessor sum_acc(sum_buf, h, sycl::write_only, sycl::no_init);
 
-      h.parallel_for(1, [=](auto index) {
-        size_t glob_id = index[0];
-        sum_acc[0] = 0;
-      });
+      h.parallel_for(1, [=](auto) { sum_acc[0] = 0; });
     });
     // flush the cache
     q.submit([&](auto &h) {
@@ -223,7 +214,7 @@ int reductionFloat(sycl::queue &q, std::vector<float> &data,
   return sum;
 } // end reduction2
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
   sycl::queue q{sycl::default_selector_v, exception_handler};
   std::cout << q.get_device().get_info<sycl::info::device::name>() << "\n";

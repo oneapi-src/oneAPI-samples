@@ -61,9 +61,9 @@ SYCL_EXTERNAL void MatrixMultiply(multi_ptr<const float, access::address_space::
 }
 
 // Processes an individual 8x8 subset of image data
-SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::global_space, (sycl::access::decorated)2> indataset, rgb* outdataset,
-                                multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> dct,
-                                multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> dctinv,
+SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::global_space, sycl::access::decorated::no> indataset, rgb* outdataset,
+                                multi_ptr<const float, access::address_space::global_space, sycl::access::decorated::no> dct,
+                                multi_ptr<const float, access::address_space::global_space, sycl::access::decorated::no> dctinv,
                                 int start_index, int width) {
   float interim[block_size], product[block_size], red_input[block_size],
       blue_input[block_size], green_input[block_size], temp[block_size];
@@ -225,7 +225,6 @@ void ProcessImage(rgb* indataset, rgb* outdataset, int width, int height) {
     buffer outdata_buf(outdataset, range<1>(image_size));
     buffer dct_buf(dct, range<1>(block_size));
     buffer dctinv_buf(dctinv, range<1>(block_size));
-
     q.submit([&](handler& h) {
       auto i_acc = indata_buf.get_access(h,read_only);
       auto o_acc = outdata_buf.get_access(h);
@@ -236,12 +235,12 @@ void ProcessImage(rgb* indataset, rgb* outdataset, int width, int height) {
       h.parallel_for(
           range<2>(width / block_dims, height / block_dims), [=](auto idx) {
             int start_index = idx[0] * block_dims + idx[1] * block_dims * width;
-            ProcessBlock(i_acc.get_pointer(), o_acc.get_pointer(),
-                         d_acc.get_pointer(), di_acc.get_pointer(), start_index,
+            ProcessBlock(i_acc.get_multi_ptr<sycl::access::decorated::no>(), o_acc.get_multi_ptr<sycl::access::decorated::no>().get(),
+                         d_acc.get_multi_ptr<sycl::access::decorated::no>(), di_acc.get_multi_ptr<sycl::access::decorated::no>(), start_index,
                          width);
           });
     });
-    q.wait_and_throw();
+    //q.wait_and_throw();
   } catch (sycl::exception e) {
     std::cout << "SYCL exception caught: " << e.what() << "\n";
     exit(1);

@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
 void runTest(int argc, char **argv) {
   dpct::queue_ptr stream;
   // This will pick the best possible CUDA capable device
-  findCudaDevice(argc, (const char **)argv);
+ // findCudaDevice(argc, (const char **)argv);
 
   StopWatchInterface *timer;
   sdkCreateTimer(&timer);
@@ -117,6 +117,12 @@ void runTest(int argc, char **argv) {
   checkCudaErrors(DPCT_CHECK_ERROR(dOData = (int *)sycl::malloc_device(
                                        memSize, dpct::get_in_order_queue())));
   // copy host memory to device to initialize to zero
+  /*
+  DPCT1124:16: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(stream->memcpy(dOData, hOData, memSize)));
 
   // execute the kernel
@@ -133,6 +139,12 @@ void runTest(int argc, char **argv) {
                        });
 
   // Copy result from device to host
+  /*
+  DPCT1124:17: cudaMemcpyAsync is migrated to asynchronous memcpy API. While the
+  origin API might be synchronous, it depends on the type of operand memory, so
+  you may need to call wait() on event return by memcpy API to ensure
+  synchronization behavior.
+  */
   checkCudaErrors(DPCT_CHECK_ERROR(stream->memcpy(hOData, dOData, memSize)));
   checkCudaErrors(DPCT_CHECK_ERROR(stream->wait()));
 

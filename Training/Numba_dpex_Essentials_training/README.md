@@ -9,7 +9,7 @@ These initial hands-on exercises introduce you to concepts of Data Parallel Pyth
 | Optimized for             | Description
 |:---                       |:---
 | OS                        | Ubuntu* 20.04 (or newer) <br> Windows Subsystem for Linux (WSL)
-| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> Intel® AI Analytics Toolkit (AI Kit)
+| Software                  | Intel® oneAPI Base Toolkit (Base Kit) <br> AI Tools
 
 The Jupyter Notebooks are tested for and can be run on the Intel® Devcloud for oneAPI.
 
@@ -41,7 +41,7 @@ The Jupyter Notebooks are tested for and can be run on the Intel® Devcloud for 
    ```bash
    sudo reboot
    ```
-3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and Intel® AI Analytics Toolkit (AI Kit) from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
+3. Download and install Intel® oneAPI Base Toolkit (Base Kit) and AI Tools from the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html) page.
 
 4. After you complete the installation, refresh the new environment variables. This results in the base conda environment being activated.
    ```bash

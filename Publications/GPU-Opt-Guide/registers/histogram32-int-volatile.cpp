@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
-#include <CL/sycl.hpp>
 #include <iostream>
 #include <random>
+#include <sycl/sycl.hpp>
 #include <vector>
 
 int main() {

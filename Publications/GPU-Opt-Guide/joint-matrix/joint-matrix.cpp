@@ -67,7 +67,7 @@ void matrix_multiply(Tc *C, Ta *A, Tb *B, sycl::queue q) {
                sub_c;
 
            joint_matrix_fill(sg, sub_c, C_INIT);
-           for (int k = 0; k < K / TK; k += 1) {
+           for (size_t k = 0; k < K / TK; k += 1) {
              joint_matrix_load(sg, sub_a, pA + (sg_startx * TM) * K + k * TK,
                                K);
              joint_matrix_load(sg, sub_b,
@@ -92,9 +92,9 @@ float make_fp32(bfloat16 x) {
 
 template <typename Tc, typename Ta, typename Tb, size_t M, size_t N, size_t K>
 void matrix_multiply_ref(Ta *A, Tb *B, Tc *C) {
-  for (int m = 0; m < M; m++)
-    for (int n = 0; n < N; n++) {
-      for (int k = 0; k < K; k++) {
+  for (size_t m = 0; m < M; m++)
+    for (size_t n = 0; n < N; n++) {
+      for (size_t k = 0; k < K; k++) {
         C[m * N + n] += make_fp32(A[m * K + k]) * make_fp32(B[k * N + n]);
       }
       C[m * N + n] *= ALPHA;
@@ -114,18 +114,18 @@ int test() {
   Tc *C = sycl::malloc_shared<Tc>(M * N, q);
   Tc *D = sycl::malloc_shared<Tc>(M * N, q);
 
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < K; j++) {
+  for (size_t i = 0; i < M; i++) {
+    for (size_t j = 0; j < K; j++) {
       A[i * K + j] = Ta(1.0f * (i + j));
     }
   }
-  for (int i = 0; i < K; i++) {
-    for (int j = 0; j < N; j++) {
+  for (size_t i = 0; i < K; i++) {
+    for (size_t j = 0; j < N; j++) {
       B[i * N + j] = Tb(2.0f * i + 3.0f * j);
     }
   }
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < N; j++) {
+  for (size_t i = 0; i < M; i++) {
+    for (size_t j = 0; j < N; j++) {
       C[i * N + j] = C_INIT;
       D[i * N + j] = C_INIT;
     }
@@ -134,8 +134,8 @@ int test() {
   matrix_multiply_ref<Tc, Ta, Tb, M, N, K>(A, B, D);
   matrix_multiply<Tc, Ta, Tb, TM, TN, TK, M, N, K, kernel_name>(C, A, B, q);
   bool res = true;
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < N; j++) {
+  for (size_t i = 0; i < M; i++) {
+    for (size_t j = 0; j < N; j++) {
       if constexpr (std::is_same_v<Tc, float>) {
         if (std::fabs(C[i * N + j] - D[i * N + j]) > BF16_EPSILON) {
           res = false;
@@ -148,7 +148,7 @@ int test() {
     }
   }
   std::cout << (res ? "passed" : "failed") << std::endl;
-  return !res;
+  return res;
 }
 
 int main() {

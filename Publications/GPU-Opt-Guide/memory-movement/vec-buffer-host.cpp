@@ -7,7 +7,7 @@
 #include <chrono>
 #include <iostream>
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 
 #include "align.hpp"
 
@@ -16,6 +16,10 @@ template <typename T> using VectorAllocator = AlignedAllocator<T>;
 template <typename T> using AlignedVector = std::vector<T, VectorAllocator<T>>;
 
 constexpr size_t array_size = (1 << 15);
+
+template <typename AccT> auto get_accessor_pointer(const AccT &acc) {
+  return acc.template get_multi_ptr<sycl::access::decorated::no>().get();
+}
 
 // Snippet1 Begin
 int VectorAdd0(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
@@ -44,7 +48,7 @@ int VectorAdd0(sycl::queue &q, AlignedVector<int> &a, AlignedVector<int> &b,
 
       h.parallel_for(num_items, [=](auto i) {
         if (i[0] == 0)
-          out << "add0:  dev addr = " << a_acc.get_pointer() << "\n";
+          out << "add0:  dev addr = " << get_accessor_pointer(a_acc) << "\n";
         sum_acc[i] = a_acc[i] + b_acc[i];
       });
     });
@@ -81,7 +85,7 @@ int VectorAdd1(sycl::queue &q, const AlignedVector<int> &a,
 
       h.parallel_for(num_items, [=](auto i) {
         if (i[0] == 0)
-          out << "add1: dev addr = " << a_acc.get_pointer() << "\n";
+          out << "add1: dev addr = " << get_accessor_pointer(a_acc) << "\n";
         sum_acc[i] = a_acc[i] + b_acc[i];
       });
     });

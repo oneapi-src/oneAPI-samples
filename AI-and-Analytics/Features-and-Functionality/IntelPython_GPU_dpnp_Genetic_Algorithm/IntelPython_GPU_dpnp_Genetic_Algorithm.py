@@ -557,5 +557,5 @@ print("Worst path: ", sorted_pairs[-1][0], " distance: ", sorted_pairs[-1][1])
 # In[ ]:
 
 
-print("[CODE_SAMPLE_COMPLETED_SUCCESFULLY]")
+print("[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]")
 
