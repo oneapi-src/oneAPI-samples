@@ -13,14 +13,12 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate base",
-				"pip install -r requirements.txt"
+				"pip install uv==0.6.3",
+				"uv sync"
 			],
 			"id": "IDP_XGBoost_GS_py",
 			"steps": [
-				"python IntelPython_XGBoost_GettingStarted.py"
-			]
+				"uv run IntelPython_XGBoost_GettingStarted.py"			]
 		}]
 	},
 	"expertise": "Getting Started"

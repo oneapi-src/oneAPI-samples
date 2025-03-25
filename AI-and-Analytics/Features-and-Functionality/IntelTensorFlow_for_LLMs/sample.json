@@ -11,13 +11,18 @@
   "ciTests": {
     "linux": [{
       "id": "intel llm bf16 infrence and fine-tuning",
+      "env": [
+        "pip install uv",
+        "uv venv tensorflow",
+        "source tensorflow/bin/activate",
+        "uv add --active -r requirements.txt",
+        "uv add --active py-cpuinfo",
+        "uv sync --active"
+      ],
       "steps": [
-        "source activate tensorflow",
-        "pip install -r requirements.txt",
-        "python -m pip install py-cpuinfo",
-        "python GPTJ_finetuning.py",
-        "/opt/intel/oneapi/intelpython/latest/envs/tensorflow/bin/python -m ipykernel install --user --name=tensorflow",
-        "python ci_test.py"
+        "uv run --active GPTJ_finetuning.py",
+        "uv run --active python -m ipykernel install --user --name=tensorflow",
+        "uv run --active ci_test.py"
       ]
     }]
   },

@@ -13,13 +13,15 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"pip install -r requirements.txt"
+				"pip install uv==0.6.3",
+				"uv sync",
+				"uv run python -m ipykernel install --user --name=idp_d4p_Linear_Regression_Dist"
 			],
 			"id": "idp_d4p_Linear_Regression_Dist",
 			"steps": [
-				"python download_data.py",
-				"mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py"
+				"uv run download_data.py",
+				"uv run mpirun -n 4 python ./IntelPython_daal4py_Distributed_LinearRegression.py",
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=idp_d4p_Linear_Regression_Dist --to notebook IntelPython_daal4py_Distributed_LinearRegression.ipynb"
 			]
 		}]
 	},

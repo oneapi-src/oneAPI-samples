@@ -11,14 +11,16 @@
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
-			"id": "modin_pandas_performance",
-			"steps": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"pip install numpy pandas modin[all]",
-				"pip install jupyter ipykernel",
-				"jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_Vs_Pandas.ipynb"
-			]
-		}]
+				"env": [
+					"pip install uv==0.6.3",
+					"uv sync",
+					"uv run python -m ipykernel install --user --name=Modin_Vs_Pandas"
+				],
+				"id": "modin_pandas_performance",
+				"steps": [
+					"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=Modin_Vs_Pandas --to notebook Modin_Vs_Pandas.ipynb"
+				]
+			}]
 	},
 	"expertise": "Concepts and Functionality"
 }
