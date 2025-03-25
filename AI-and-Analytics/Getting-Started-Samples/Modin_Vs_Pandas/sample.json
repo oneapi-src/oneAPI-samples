@@ -13,8 +13,7 @@
 		"linux": [{
 			"id": "modin_pandas_performance",
 			"steps": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"pip install numpy pandas modin[all]",
+				"source /intel/oneapi/intelpython/bin/activate modin",
 				"pip install jupyter ipykernel",
 				"jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Modin_Vs_Pandas.ipynb"
 			]
