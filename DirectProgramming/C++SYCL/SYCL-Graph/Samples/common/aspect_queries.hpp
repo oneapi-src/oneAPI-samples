@@ -1,0 +1,65 @@
+/* Copyright (C) 2023 Codeplay Software Limited
+ * This work is licensed under the Apache License, Version 2.0.
+ * For a copy, see http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+#pragma once
+
+#include <sycl/sycl.hpp>
+
+#include <iostream>
+#include <string>
+
+inline void ensure_full_aspects_support(const sycl::device &dev) {
+  std::string error_msg;
+
+  if (!dev.has(sycl::aspect::ext_oneapi_graph)) {
+    error_msg += "Error: The device does NOT support ext_oneapi_graph. \n";
+  }
+  if (!dev.has(sycl::aspect::ext_oneapi_limited_graph)) {
+    error_msg +=
+        "Error: The device does NOT support ext_oneapi_limited_graph. \n";
+  }
+  if (!dev.has(sycl::aspect::usm_shared_allocations)) {
+    error_msg +=
+        "Error: The device does NOT support usm_shared_allocations. \n";
+  }
+
+  if (!error_msg.empty()) {
+    std::cerr << error_msg;
+    std::exit(1);
+  }
+};
+
+inline void ensure_required_aspects_support(const sycl::device &dev) {
+  std::string error_msg;
+
+  if (!dev.has(sycl::aspect::ext_oneapi_limited_graph)) {
+    error_msg +=
+        "Error: The device does NOT support ext_oneapi_limited_graph. \n";
+  }
+  if (!dev.has(sycl::aspect::usm_shared_allocations)) {
+    error_msg +=
+        "Error: The device does NOT support usm_shared_allocations. \n";
+  }
+
+  if (!error_msg.empty()) {
+    std::cerr << error_msg;
+    std::exit(1);
+  }
+};
+
+inline void ensure_full_graph_support(const sycl::device &dev) {
+  if (!dev.has(sycl::aspect::ext_oneapi_graph)) {
+    std::cerr << "Error: The device does NOT support ext_oneapi_graph.\n";
+    std::exit(1);
+  }
+};
+
+inline void ensure_graph_support(const sycl::device &dev) {
+  if (!dev.has(sycl::aspect::ext_oneapi_limited_graph)) {
+    std::cerr
+        << "Error: The device does NOT support ext_oneapi_limited_graph.\n";
+    std::exit(1);
+  }
+};
