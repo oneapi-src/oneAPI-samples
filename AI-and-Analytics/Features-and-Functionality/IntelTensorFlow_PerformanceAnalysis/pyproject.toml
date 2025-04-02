@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "intel-extension-for-tensorflow[cpu]>=2.15.0",
     "neural-compressor>=3.3",

@@ -12,12 +12,12 @@
         "linux": [
       {
             "env": [
-                "pip install uv",
+                "pip install uv==0.6.3",
                 "uv sync"
             ],
             "id": "inc_text_classification_quantization_py",
             "steps": [
-              "uv run INC_QuantizationAwareTraining_TextClassification.py"
+              "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook INC_QuantizationAwareTraining_TextClassification.ipynb"
              ]
         }
       ]

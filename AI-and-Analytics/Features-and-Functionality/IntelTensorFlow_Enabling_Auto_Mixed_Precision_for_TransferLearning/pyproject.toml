@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "intel-extension-for-tensorflow==2.15.0",
     "intel-extension-for-tensorflow-lib==2.15.0",
@@ -21,8 +21,7 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
-    "jupyter>=1.1.1",
+    "jupyter>=1.1.1"
 ]
 [[tool.uv.index]]
 url = "https://software.repos.intel.com/python/pypi"

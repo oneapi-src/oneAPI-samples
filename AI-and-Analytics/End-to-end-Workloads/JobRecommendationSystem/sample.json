@@ -13,14 +13,14 @@
       {
         "env": [
           "pip install uv==0.6.3",
-          "uv sync",
-          "uv run python -m ipykernel install --user --name=JobRecommendationSystem_py"
+          "source /opt/intel/oneapi/setvars.sh",
+          "uv sync"
         ],
         "id": "JobRecommendationSystem_py",
         "steps": [
           "uv run spacy download en_core_web_sm",
           "uv run JobRecommendationSystem.py",
-          "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=JobRecommendationSystem_py --to notebook JobRecommendationSystem.ipynb"
+          "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook JobRecommendationSystem.ipynb"
         ]
       }
     ]

@@ -16,12 +16,11 @@
 				"curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -",				
 				"apt-get update && apt-get install tensorflow-model-server",
 				"pip install uv==0.6.3",
-				"uv sync",
-				"uv run python -m ipykernel install --user --name=tf_AMP_transfer_learning"
+				"uv sync"
 			],
 			"id": "tensorflow_AMP_transfer_learning",
 			"steps": [
-				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tf_AMP_transfer_learning --to notebook enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb"
 			]
 		}]
 	},

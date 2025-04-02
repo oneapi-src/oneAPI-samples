@@ -12,15 +12,12 @@
         "linux": [
       {
             "env": [
-                "pip install uv",
-                "uv venv tensorflow-gpu",
-                "source tensorflow-gpu/bin/activate",
-                "uv sync --active",
-                "uv run --active python -m ipykernel install --user --name=tensorflow-gpu"
+                "pip install uv==0.6.3",
+                "uv sync"                
             ],
             "id": "distributed_learning_tensorflow_horovod_py",
             "steps": [
-                "uv run --active jupyter nbconvert --to notebook --execute tensorflow_with_horovod.ipynb"
+                "uv run jupyter nbconvert --to notebook --execute tensorflow_with_horovod.ipynb"
              ]
         }
       ]

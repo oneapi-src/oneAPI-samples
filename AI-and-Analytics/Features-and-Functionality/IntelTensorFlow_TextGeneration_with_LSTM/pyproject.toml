@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "intel-extension-for-tensorflow[xpu]>=2.15.0.2",
     "intel-optimization-for-horovod",
@@ -17,6 +17,5 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
 ]

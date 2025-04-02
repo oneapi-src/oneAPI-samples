@@ -13,19 +13,15 @@
       "linux": [
         {
             "env": [
-                "pip install uv",
-                "uv venv user_tensorflow-gpu",
-                "source user_tensorflow-gpu/bin/activate",
-                "uv add --active -r requirements.txt",
-                "uv sync --active",
-                "uv run --active python -m ipykernel install --user --name=user_tensorflow-gpu"
+                "pip install uv==0.6.3",
+                "uv sync"                
             ],
             "id": "inc_text_generation_lstm_py",
             "steps": [
                 "export ITEX_ENABLE_NEXTPLUGGABLE_DEVICE=0",
                 "export ITEX_NUM_EPOCHS=5",
                 "export KERAS_NUM_EPOCHS=5",
-                "uv run --active python TextGenerationModelTraining.py"
+                "uv run jupyter nbconvert --to notebook --execute TextGenerationModelTraining.ipynb"
              ]
         }
       ]
