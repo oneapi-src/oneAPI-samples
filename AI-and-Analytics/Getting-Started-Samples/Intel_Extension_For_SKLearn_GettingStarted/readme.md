@@ -1,6 +1,6 @@
 # Intel® Extension for Scikit-learn Getting Started Sample
 
-The `Intel® Extension for Scikit-learn Getting Started` sample demonstrates how to use a support vector machine classifier from Intel® Extension for Scikit-learn* for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel® Extension for Scikit-learn* speeds up scikit-learn applications. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), which comes with [AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
+The `Intel® Extension for Scikit-learn Getting Started` sample demonstrates how to use a support vector machine classifier from Intel® Extension for Scikit-learn* for digit recognition problem. All other machine learning algorithms available with Scikit-learn can be used in the similar way. Intel® Extension for Scikit-learn* speeds up scikit-learn applications. The acceleration is achieved through the use of the Intel® oneAPI Data Analytics Library (oneDAL) [Intel oneAPI Data Analytics Library](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onedal.html), which comes with [AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
 
 
 | Area                     | Description
@@ -36,7 +36,7 @@ You will need to download and install the following toolkits, tools, and compone
 
 Required AI Tools: Intel® Extension for Scikit-learn*
 
-If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
+If you have not already, select and install these Tools via [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html). AI and Analytics samples are validated on AI Tools Offline Installer. It is recommended to select Offline Installer option in AI Tools Selector.
 
 >**Note**: If Docker option is chosen in AI Tools Selector, refer to [Working with Preset Containers](https://github.com/intel/ai-containers/tree/main/preset) to learn how to run the docker and samples.
 
@@ -76,7 +76,7 @@ For Jupyter Notebook, refer to [Installing Jupyter](https://jupyter.org/install)
 ## Run the Sample
 >**Note**: Before running the sample, make sure [Environment Setup](https://github.com/oneapi-src/oneAPI-samples/tree/master/AI-and-Analytics/Getting-Started-Samples/INC-Quantization-Sample-for-PyTorch#environment-setup) is completed.
 
-Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-tools-selector.html) to see relevant instructions:
+Go to the section which corresponds to the installation method chosen in [AI Tools Selector](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools-selector.html) to see relevant instructions:
 * [AI Tools Offline Installer (Validated)](#ai-tools-offline-installer-validated)
 * [Conda/PIP](#condapip) 
 * [Docker](#docker)
@@ -156,7 +156,7 @@ You should see printed output for cells (with similar numbers) and an accuracy r
 ```
 Model accuracy on test data: 0.9833333333333333
 
-[CODE_SAMPLE_COMPLETED_SUCCESFULLY]
+[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]
 ```
 
 ## Related Samples

@@ -295,6 +295,6 @@ else:
   print(f'Accuracy drop with AMP BF16 is: {acc_fp32-acc_bf16}')
   plt.savefig('./accuracy.png')
 
-print('[CODE_SAMPLE_COMPLETED_SUCCESFULLY]')
+print('[CODE_SAMPLE_COMPLETED_SUCCESSFULLY]')
 
 
