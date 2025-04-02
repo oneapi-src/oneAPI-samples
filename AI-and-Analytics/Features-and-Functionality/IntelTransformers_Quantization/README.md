@@ -34,9 +34,9 @@ Quantization thus offers a compelling approach to deploying language models in r
 
 You will need to download and install the following toolkits, tools, and components to use the sample.
 
-- **Intel® AI Analytics Toolkit (AI Kit)**
+- **AI Tools**
 
-  You can get the AI Kit from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the Intel® AI Analytics Toolkit for Linux*](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-ai-linux) for AI Kit installation information and post-installation steps and scripts.
+  You can get the AI Tools from [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#analytics-kit). <br> See [*Get Started with the AI Tools for Linux*](https://www.intel.com/content/www/us/en/docs/oneapi-ai-analytics-toolkit/get-started-guide-linux/current/before-you-begin.html) for AI Tools installation information and post-installation steps and scripts.
 
 - **Jupyter Notebook**
 
@@ -99,7 +99,7 @@ When working with the command-line interface (CLI), you should configure the one
    ```
 2. Activate Conda environment without Root access (Optional).
 
-   By default, the AI Kit is installed in the `<home>/intel/oneapi/intelpython` folder and requires root privileges to manage it.
+   By default, the AI Tools is installed in the `<home>/intel/oneapi/intelpython` folder and requires root privileges to manage it.
 
    You can choose to activate Conda environment without root access. To bypass root access to manage your Conda environment, clone and activate your desired Conda environment using the following commands similar to the following.
 
