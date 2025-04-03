@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.MD"
-requires-python = ">=3.11.11"
+requires-python = ">=3.11.11,<3.12"
 dependencies = [
     "datasets>=3.3.2",
     "intel-extension-for-pytorch==2.5.0",
