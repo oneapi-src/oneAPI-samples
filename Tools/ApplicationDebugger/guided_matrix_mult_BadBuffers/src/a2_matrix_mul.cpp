@@ -70,18 +70,6 @@ int main() {
     // efficient way. It just demonstrates the implicit multiple command group
     // execution ordering.
 
-    // Submit command group to queue to initialize matrix a
-    q.submit([&](auto &h) {
-      // Get write only access to the buffer on a device.
-      accessor a(a_buf, h, write_only);
-
-      // Execute kernel.
-      h.parallel_for(range(M, N), [=](auto index) {
-        // Each element of matrix a is 1.
-        a[index] = 1.0f;
-      });
-    });
-
     // Submit command group to queue to initialize matrix b
     q.submit([&](auto &h) {
       // Get write only access to the buffer on a device
@@ -91,6 +79,18 @@ int main() {
       h.parallel_for(range(N, P), [=](auto index) {
         // Each column of b is the sequence 1,2,...,N
         b[index] = index[0] + 1.0f;
+      });
+    });
+
+    // Submit command group to queue to initialize matrix a
+    q.submit([&](auto &h) {
+      // Get write only access to the buffer on a device.
+      accessor a(a_buf, h, write_only);
+
+      // Execute kernel.
+      h.parallel_for(range(M, N), [=](auto index) {
+        // Each element of matrix a is 1.
+        a[index] = 1.0f;
       });
     });
 
