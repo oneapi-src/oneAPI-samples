@@ -15,10 +15,10 @@
         "steps": [
             "pip install uv==0.6.3", 
             "uv sync",
-            "uv run IntelPyTorch_GPU_InferenceOptimization_with_AMP.py"
-         ]
+            "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook IntelPyTorch_GPU_InferenceOptimization_with_AMP.ipynb"
+        ]
     }
-     ]
+    ]
   },
   "expertise": "Code Optimization"
 }

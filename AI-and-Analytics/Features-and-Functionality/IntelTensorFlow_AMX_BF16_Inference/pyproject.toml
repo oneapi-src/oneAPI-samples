@@ -7,9 +7,9 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
-    "intel-extension-for-tensorflow>=2.15.0.2",
+    "intel-extension-for-tensorflow>=2.15.0",
     "matplotlib>=3.10.1",
     "notebook>=7.3.2",
     "pillow>=11.1.0",

@@ -1,5 +1,5 @@
 [project]
-name = "quantizing_transformer_model_using_intel_extension_for_transformers_(itrex)"
+name = "quantizing_transformer_model_using_intel_extension_for_transformers_itrex"
 version = "0.1.0"
 description = "This sample illustrates the process of quantizing the `Intel/neural-chat-7b-v3-3` language model. This model, a fine-tuned iteration of *Mistral-7B*, undergoes quantization utilizing Weight Only Quantization (WOQ) techniques provided by Intel® Extension for Transformers (ITREX)."
 authors = [
@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "accelerate==0.29.3",
     "datasets==2.9.0",

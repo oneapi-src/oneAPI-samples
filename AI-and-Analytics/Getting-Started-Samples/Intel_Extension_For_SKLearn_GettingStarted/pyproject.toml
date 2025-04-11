@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "joblib>=1.4.2",
     "matplotlib>=3.10.1",
@@ -17,6 +17,5 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
 ]

@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "deepspeed==0.15.4",
     "intel-extension-for-pytorch==2.5.10",
@@ -25,7 +25,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
 ]
 

@@ -13,14 +13,11 @@
     {
   		"env": [
         "pip install uv==0.6.3",
-        "uv venv tensorflow"
+        "uv sync"
       ],
   		"id": "Transformer_AMX_bfloat16_Mixed_Precision_Learning",
   		"steps": [
-        "source tensorflow/bin/activate",
-        "uv sync --active",
-        "uv run --active python -m ipykernel install --user --name=tensorflow",
-        "uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
+        "uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook IntelTensorFlow_Transformer_AMX_bfloat16_MixedPrecision.ipynb"
   		]
   	}
     ]

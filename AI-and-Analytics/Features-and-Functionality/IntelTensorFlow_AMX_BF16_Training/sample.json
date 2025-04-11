@@ -16,10 +16,8 @@
       ],
       "id": "intel amx bf16 training",
       "steps": [
-        "uv run Intel_TensorFlow_AMX_BF16_Training.py -m eager",
-        "uv run python -m ipykernel install --user --name=tf_amx_train",
         "export execution_mode=eager",
-        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tf_amx_train --to notebook IntelTensorFlow_AMX_BF16_Training.ipynb"
+        "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook IntelTensorFlow_AMX_BF16_Training.ipynb"
       ]
     }]
   },

@@ -7,13 +7,13 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "absl-py>=1.4.0",
     "astunparse>=1.6.3",
     "h5py>=3.13.0",
     "huggingface-hub>=0.29.1",
-    "intel-extension-for-tensorflow>=2.15.0.2",
+    "intel-extension-for-tensorflow>=2.15.0",
     "ipykernel>=6.29.5",
     "keras>=2.15.0",
     "keras-preprocessing>=1.1.2",
@@ -31,7 +31,6 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
 ]
 [[tool.uv.index]]

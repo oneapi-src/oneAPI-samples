@@ -13,13 +13,12 @@
 	{
 		"env": [
 			"pip install uv==0.6.3", 
-            "uv sync",
-            "uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=tensorflow-inc-quantize"
+            "uv sync"
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow-inc-quantize --to notebook inc_sample_tensorflow.ipynb"
-		 ]
+			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook inc_sample_tensorflow.ipynb"
+		]
 	}
     ]
  },

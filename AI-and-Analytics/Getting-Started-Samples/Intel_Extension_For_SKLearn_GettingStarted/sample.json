@@ -18,7 +18,7 @@
 			],
 			"id": "idp_sklex_gs_py",
 			"steps": [
-				"uv run Intel_Extension_For_SKLearn_GettingStarted.py"
+				"uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Intel_Extension_For_SKLearn_GettingStarted.ipynb"
 			]
 		}]
 	},

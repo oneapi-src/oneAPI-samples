@@ -17,8 +17,7 @@
 			],
 			"id": "tensorflow_inference_optimization",
 			"steps": [
-				"uv run python -m ipykernel install --user --name=tf_inf_opt",
-				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tf_inf_opt --to notebook tutorial_optimize_TensorFlow_pretrained_model.ipynb"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook tutorial_optimize_TensorFlow_pretrained_model.ipynb"
 			]
 		}]
 	},
