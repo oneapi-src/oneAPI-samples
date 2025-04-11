@@ -14,7 +14,7 @@
 			"id": "tensorflow_performance_analysis",
 			"steps": [
 				"pip install uv",
-				"uv venv intel-tensorflow",
+				"uv venv intel-tensorflow --python 3.10.12",
 				"source intel-tensorflow/bin/activate",
 				"uv sync --active",
 				"uv run --active python -m ipykernel install --user --name=intel-tensorflow",
