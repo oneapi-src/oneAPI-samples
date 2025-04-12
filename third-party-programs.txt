@@ -1,3 +1,5 @@
+-----------------------------------------------------------------------------------------------^
+--------------------------------------^[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/PrismJS/prism)----------------------------------------------------------------------------^
 oneAPI Code Samples - Third Party Programs File
 
 This file contains the list of third party software ("third party programs")
