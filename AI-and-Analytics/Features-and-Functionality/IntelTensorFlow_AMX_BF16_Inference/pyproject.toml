@@ -1,0 +1,26 @@
+[project]
+name = "inteltensorflow-amx-bf16-inference"
+version = "0.1.0"
+description = "This sample illustrates how to inference a TensorFlow model using Advanced Matrix Extensions Bfloat16"
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow>=2.15.0",
+    "matplotlib>=3.10.1",
+    "notebook>=7.3.2",
+    "pillow>=11.1.0",
+    "py-cpuinfo>=9.0.0",
+    "requests>=2.32.3",
+    "tensorflow-hub==0.16",
+]
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"

@@ -13,13 +13,12 @@
 	"ciTests": {
 		"linux": [{
 			"env": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate base",
-				"pip install -r requirements.txt"
+				"pip install uv==0.6.3", 
+				"uv sync"
 			],
 			"id": "idp_sklex_gs_py",
 			"steps": [
-				"python Intel_Extension_For_SKLearn_GettingStarted.py"
+				"uv run --active jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook Intel_Extension_For_SKLearn_GettingStarted.ipynb"
 			]
 		}]
 	},

@@ -1,0 +1,45 @@
+[project]
+name = "intelpytorch-trainingoptimizations-amx-bf16"
+version = "0.1.0"
+description = "This sample illustrates how to train a PyTorch model using Advanced Matrix Extensions Bfloat16"
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "deepspeed==0.15.4",
+    "intel-extension-for-pytorch==2.5.0",
+    "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.1",
+    "neural-compressor==3.1.1",
+    "numpy==1.26.4",
+    "onnxruntime==1.19.2",
+    "py-cpuinfo>=9.0.0",
+    "setuptools>=75.8.2",
+    "torch==2.5.0",
+    "torchaudio==2.5.0",
+    "torchvision>=0.20.0",
+    "transformers>=4.49.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+torchvision = { index = "pytorch" }
+
+[[tool.uv.index]]
+name = "pytorch"
+# Required URL for the index.
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]

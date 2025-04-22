@@ -1,0 +1,37 @@
+[project]
+name = "intel_extension_for_tensorflow_getting_started"
+version = "0.1.0"
+description= "This code sample will guide users how to run a TensorFlow inference workload on both the GPU and CPU by using the Intel® AI Analytics Toolkit."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.10.1",
+    "neural-compressor==3.1.1",
+    "tensorflow-hub>=0.16.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
+
+tensorflow = [
+    "intel-extension-for-tensorflow[cpu]==2.15",
+]
+
+tensorflow-gpu = [
+    "intel-extension-for-tensorflow[xpu]==2.15.0.2",
+]
+
+[tool.uv]
+conflicts = [
+    [
+      { group = "tensorflow" },
+      { group = "tensorflow-gpu" },
+    ],
+]

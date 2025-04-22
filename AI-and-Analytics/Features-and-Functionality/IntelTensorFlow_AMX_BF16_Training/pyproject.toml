@@ -1,0 +1,37 @@
+[project]
+name = "inteltensorflow-amx-bf16-training"
+version = "0.1.0"
+description = "This sample illustrates how to train a TensorFlow model using Advanced Matrix Extensions Bfloat16"
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "absl-py>=1.4.0",
+    "astunparse>=1.6.3",
+    "h5py>=3.13.0",
+    "huggingface-hub>=0.29.1",
+    "intel-extension-for-tensorflow>=2.15.0",
+    "ipykernel>=6.29.5",
+    "keras>=2.15.0",
+    "keras-preprocessing>=1.1.2",
+    "matplotlib>=3.10.1",
+    "numpy>=1.26.4",
+    "pandas>=2.2.3",
+    "pillow>=11.1.0",
+    "py-cpuinfo>=9.0.0",
+    "tensorboard>=2.15.2",
+    "tensorboard-data-server>=0.7.2",
+    "tensorboard-plugin-wit>=1.8.1",
+    "tf-estimator-nightly>=2.16.0.dev2024012409",
+    "tokenizers>=0.21.0",
+    "transformers>=4.49.0",
+]
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"

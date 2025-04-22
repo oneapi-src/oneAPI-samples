@@ -1,0 +1,24 @@
+[project]
+name = "tensorflow_transformer_with_advanced_matrix_extensions_bfloat16_mixed_precision_learning"
+version = "0.1.0"
+description = "This sample demonstrates optimizing a TensorFlow* model with Intel® Advanced Matrix Extensions (Intel® AMX) using bfloat16 (Brain Floating Point) on 4th Gen Intel® Xeon® processors (formerly Sapphire Rapids)."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[cpu]>=2.15.0",
+    "keras==3.0",
+    "neural-compressor>=3.3",
+    "onnxruntime>=1.20.1",
+]
+
+[tool.uv]
+override-dependencies = ["keras>=3.0"]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
