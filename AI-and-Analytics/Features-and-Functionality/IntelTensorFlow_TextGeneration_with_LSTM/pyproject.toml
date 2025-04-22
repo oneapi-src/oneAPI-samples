@@ -1,0 +1,21 @@
+[project]
+name = "leveraging-intel-extension-for-tensorFlow-with-LSTM-for-text-generation"
+version = "0.1.0"
+description = "This sample demonstrates how to train your model with LSTM (Long short-term memory) faster by using Intel Extension for TensorFlow's LSTM training layer on Intel platform."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[xpu]>=2.15.0.2",
+    "intel-optimization-for-horovod",
+    "neural-compressor>=3.1.1",
+    "requests>=2.32.3",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]

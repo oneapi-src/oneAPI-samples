@@ -1,0 +1,24 @@
+[project]
+name = "performance_analysis_using_model_zoo_for_Intel_architecture"
+version = "0.1.0"
+description = "This sample contains one Jupyter notebook from this GitHub Repo and four Jupyter Notebooks from the Model Zoo for Intel® Architecture to help users analyze the performance difference among different Tensorflow enviroments such as Stock vs Intel."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = "==3.10.12"
+dependencies = [
+    "intel-extension-for-tensorflow[cpu]>=1.1.0",
+    "tensorflow==2.10.0",
+    "neural-compressor>=3.3",
+    "onnxruntime>=1.20.1",
+    "cxxfilt>=0.3.0",
+    "pandas==1.4.4"
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]

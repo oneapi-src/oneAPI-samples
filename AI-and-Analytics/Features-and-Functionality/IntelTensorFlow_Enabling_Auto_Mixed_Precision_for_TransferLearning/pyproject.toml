@@ -1,0 +1,27 @@
+[project]
+name = "inteltensorflow-enabling-auto-mixed-precision-for-transferlearning"
+version = "0.1.0"
+description = "This tutorial guides you through the process of enabling auto-mixed precision to use low-precision datatypes, like bfloat16, for transfer learning with TensorFlow*"
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow==2.15.0",
+    "intel-extension-for-tensorflow-lib==2.15.0",
+    "neural-compressor==2.4.1",
+    "numpy==1.26.4",
+    "pandas>=2.2.3",
+    "pillow>=11.1.0",
+    "py-cpuinfo>=9.0.0",
+    "requests>=2.32.3",
+    "tensorflow-hub==0.16.0",
+]
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1"
+]
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"

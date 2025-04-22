@@ -1,0 +1,13 @@
+[project]
+name = "intelTensorFlow_gettingstarted"
+version = "0.1.0"
+description = "This sample illustrates how to train a TensorFlow model and run inference with oneMKL and oneDNN."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11, <=3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[cpu]==2.15",
+]

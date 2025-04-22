@@ -1,0 +1,31 @@
+[project]
+name = "fine_tuning_text_classification_model_with_intel_neural_compressor"
+version = "0.1.0"
+description = "This sample demonstrates how to fine-tune text model for emotion classification task using Intel® Neural Compressor Quantization Aware Training (QAT)."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10, <3.11"
+dependencies = [
+    "transformers (>=4.36,<4.46)",  # Adjusted to match the compatible range
+    "evaluate (>=0.4.3,<0.5.0)",
+    "accelerate (>=1.4.0,<2.0.0)",
+    "datasets (>=3.3.2,<4.0.0)",
+    "neural-compressor (>=2.2.0,<3.0)",  # Adjusted to match the compatible range
+    "optimum-intel[neural-compressor] (>=1.18.0,<1.22.0)"  # Added to ensure compatibility
+]
+
+
+[project.scripts]
+python-validate = "INC_QuantizationAwareTraining_TextClassification:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1"
+]

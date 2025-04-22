@@ -1,0 +1,20 @@
+[project]
+name = "model-zoo-for-Intel-architecture-inference-with-FP32-Int8"
+version = "0.1.0"
+description = "This code example illustrates how to run FP32 and Int8 inference on Resnet50 with TensorFlow using Intel® Model Zoo."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[cpu]>=2.15.0",
+    "neural-compressor>=3.3",
+    "onnxruntime>=1.20.1",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]

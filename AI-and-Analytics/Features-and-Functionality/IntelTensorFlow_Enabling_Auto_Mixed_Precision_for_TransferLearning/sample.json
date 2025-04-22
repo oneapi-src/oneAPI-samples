@@ -15,16 +15,12 @@
 				"echo \"deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal\" | tee /etc/apt/sources.list.d/tensorflow-serving.list",
 				"curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -",				
 				"apt-get update && apt-get install tensorflow-model-server",
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"pip install -r requirements.txt --no-deps",
-				"pip install tensorflow==2.15.0.post1",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow"
+				"pip install uv==0.6.3",
+				"uv sync"
 			],
 			"id": "tensorflow_AMP_transfer_learning",
 			"steps": [
-				"jupyter nbconvert --to notebook --execute enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook enabling_automixed_precision_for_transfer_learning_with_tensorflow.ipynb"
 			]
 		}]
 	},

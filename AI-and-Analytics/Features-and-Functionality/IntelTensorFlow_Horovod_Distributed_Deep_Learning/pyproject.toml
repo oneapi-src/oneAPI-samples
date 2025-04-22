@@ -1,0 +1,20 @@
+[project]
+name = "run-distributed-deep-learning-workloads-with-Intel-optimization-for-horovod"
+version = "0.1.0"
+description = "This sample demonstrates how to run multi-card inference and training on Intel GPUs using Intel Optimization for Horovod and TensorFlow."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[xpu]>=2.15.0.2",
+    "intel-optimization-for-horovod",
+    "neural-compressor>=3.1.1"
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1"
+]

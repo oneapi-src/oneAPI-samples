@@ -1,0 +1,33 @@
+[project]
+name = "jobrecommendationsystem"
+version = "0.1.0"
+description = "This sample illustrates the use of Intel® Extension for TensorFlow* to build and run an end-to-end AI workload on the example of the job recommendation system"
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11, <3.12"
+dependencies = [
+    "accelerate>=1.4.0",
+    "datasets>=3.3.2",
+    "intel-extension-for-tensorflow>=2.15.0.2",
+    "intel-extension-for-tensorflow-lib>=2.15.0.2.2",
+    "jinja2>=3.1.6",
+    "matplotlib>=3.10.1",
+    "nltk>=3.9.1",
+    "pip>=25.0.1",
+    "seaborn>=0.13.2",
+    "sentence-transformers>=3.4.1",
+    "spacy>=3.8.4",
+    "transformers>=4.49.0",
+    "wordcloud>=1.9.4",
+]
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"
+
+
