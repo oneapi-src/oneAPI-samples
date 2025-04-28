@@ -1,10 +1,10 @@
-// ==============================================================
+//==============================================================
 // Copyright © 2025 Codeplay Software
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
 
-#include "common/aspect_queries.hpp"
+#include "../../common/aspect_queries.hpp"
 
 #include <sycl/sycl.hpp>
 
