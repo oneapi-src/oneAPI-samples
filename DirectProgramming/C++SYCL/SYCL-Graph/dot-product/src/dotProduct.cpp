@@ -80,7 +80,7 @@ int main() {
   // use queue shortcut for graph submission
   Queue.ext_oneapi_graph(Exec).wait();
 
-  // memory can be freed inside or outside the graph
+  // memory is freed outside the graph
   free(X, Queue);
   free(Y, Queue);
   free(Z, Queue);
