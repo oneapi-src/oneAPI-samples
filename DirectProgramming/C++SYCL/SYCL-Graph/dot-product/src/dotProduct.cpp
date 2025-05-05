@@ -7,6 +7,7 @@
 #include "../../common/aspect_queries.hpp"
 
 #include <sycl/sycl.hpp>
+#include <sycl/ext/oneapi/experimental/graph.hpp>
 
 namespace sycl_ext = sycl::ext::oneapi::experimental;
 using namespace sycl;
