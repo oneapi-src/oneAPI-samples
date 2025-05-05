@@ -10,7 +10,8 @@ Code example demonstrating the usage of [`sycl_ext_oneapi_graph`](https://github
 
 ## Purpose
 
-This code example shows how a SYCL queue can be put into a recording state, which allows a `command_graph` object to be populated by the command-groups submitted to the queue. Once the graph is complete, recording finishes on the queue to put it back into the default executing state. The graph is then finalized so that no more nodes can be added. Lastly, the graph is submitted in its entirety for execution via `handler::ext_oneapi_graph(command_graph<graph_state::executable>)`. 
+This code example shows how to record commands submitted to a SYCL `queue` into a `command_graph` object. Once the graph recording is complete, the graph is finalized which means a new `command_graph` object in `graph_state::executable` is created which is ready for submission. Lastly, the graph is submitted en bloc for execution to a queue with a new function `ext_oneapi_graph()`. And can be replayed as many times as needed. 
+
 
 
 ## Prerequisites
