@@ -1,5 +1,5 @@
 //==============================================================
-// Copyright © 2025 Codeplay Software
+// Copyright © 2022 - 2023 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 // =============================================================
