@@ -6,8 +6,8 @@
 
 #include "../../common/aspect_queries.hpp"
 
-#include <sycl/sycl.hpp>
 #include <sycl/ext/oneapi/experimental/graph.hpp>
+#include <sycl/sycl.hpp>
 
 namespace sycl_ext = sycl::ext::oneapi::experimental;
 using namespace sycl;
@@ -21,11 +21,11 @@ int main() {
 
   queue Queue{};
 
-  ensure_required_aspects_support(Queue.get_device());
+  ensure_graph_support(Queue.get_device());
 
   sycl_ext::command_graph Graph(Queue.get_context(), Queue.get_device());
 
-  float *Dotp = malloc_shared<float>(1, Queue);
+  float *Dotp = malloc_device<float>(1, Queue);
   float *X = malloc_device<float>(Size, Queue);
   float *Y = malloc_device<float>(Size, Queue);
   float *Z = malloc_device<float>(Size, Queue);
@@ -38,13 +38,14 @@ int main() {
   //    \ /
   //     c
 
-  // init data on the device
+  // Init data on the device.
   auto Node_i = Graph.add([&](handler &CGH) {
     CGH.parallel_for(Size, [=](id<1> Id) {
       const size_t i = Id[0];
       X[i] = 1.0f;
       Y[i] = 3.0f;
       Z[i] = 2.0f;
+      *Dotp = 0.;
     });
   });
 
@@ -78,10 +79,27 @@ int main() {
 
   auto Exec = Graph.finalize();
 
-  // use queue shortcut for graph submission
+  // Use queue shortcut for graph submission.
   Queue.ext_oneapi_graph(Exec).wait();
 
-  // memory is freed outside the graph
+  // Copy the result back to the host.
+  float ResultDotp;
+  Queue.copy(Dotp, &ResultDotp, 1).wait();
+
+  // Verify the results.
+  float HostDotp{0.};
+  std::vector<float> HostX(Size, 1.0f), HostY(Size, 3.0f), HostZ(Size, 2.0f);
+  for (unsigned int i{0}; i < Size; ++i) {
+    HostX[i] = Alpha * HostX[i] + Beta * HostY[i];
+    HostZ[i] = Gamma * HostZ[i] + Beta * HostY[i];
+    HostDotp += HostX[i] * HostZ[i];
+  }
+
+  assert(HostDotp == ResultDotp);
+
+  printf("Success!\n");
+
+  // Memory is freed outside the graph.
   free(X, Queue);
   free(Y, Queue);
   free(Z, Queue);
