@@ -6,6 +6,7 @@
 
 #include "../../common/aspect_queries.hpp"
 
+#include <sycl/ext/oneapi/experimental/graph.hpp>
 #include <sycl/sycl.hpp>
 
 namespace sycl_ext = sycl::ext::oneapi::experimental;
@@ -18,7 +19,7 @@ int main() {
 
   ensure_graph_support(Queue.get_device());
 
-  std::vector<int> DataA(Size), DataB(Size), DataC(Size);
+  std::vector<int> DataA(Size, 1), DataB(Size, 1), DataC(Size, 1);
 
   // Lifetime of buffers must exceed the lifetime of graphs they are used in.
   buffer<int> BufferA{DataA.data(), range<1>{Size}};
@@ -51,31 +52,31 @@ int main() {
     //     decrement_kernel
 
     Queue.submit([&](handler &CGH) {
-      auto Pdata = BufferA.get_access<access::mode::read_write>(CGH);
+      auto PdataA = BufferA.get_access<access::mode::read_write>(CGH);
       CGH.parallel_for<class Increment_kernel>(
-          range<1>(Size), [=](item<1> Id) { Pdata[Id]++; });
+          range<1>(Size), [=](item<1> Id) { PdataA[Id]++; });
     });
 
     Queue.submit([&](handler &CGH) {
-      auto Pdata1 = BufferA.get_access<access::mode::read>(CGH);
-      auto Pdata2 = BufferB.get_access<access::mode::read_write>(CGH);
+      auto PdataA = BufferA.get_access<access::mode::read>(CGH);
+      auto PdataB = BufferB.get_access<access::mode::read_write>(CGH);
       CGH.parallel_for<class Add_kernel>(
-          range<1>(Size), [=](item<1> Id) { Pdata2[Id] += Pdata1[Id]; });
+          range<1>(Size), [=](item<1> Id) { PdataB[Id] += PdataA[Id]; });
     });
 
     Queue.submit([&](handler &CGH) {
-      auto Pdata1 = BufferA.get_access<access::mode::read>(CGH);
-      auto Pdata2 = BufferC.get_access<access::mode::read_write>(CGH);
+      auto PdataA = BufferA.get_access<access::mode::read>(CGH);
+      auto PdataC = BufferC.get_access<access::mode::read_write>(CGH);
       CGH.parallel_for<class Subtract_kernel>(
-          range<1>(Size), [=](item<1> Id) { Pdata2[Id] -= Pdata1[Id]; });
+          range<1>(Size), [=](item<1> Id) { PdataC[Id] -= PdataA[Id]; });
     });
 
     Queue.submit([&](handler &CGH) {
-      auto Pdata1 = BufferB.get_access<access::mode::read_write>(CGH);
-      auto Pdata2 = BufferC.get_access<access::mode::read_write>(CGH);
+      auto PdataB = BufferB.get_access<access::mode::read_write>(CGH);
+      auto PdataC = BufferC.get_access<access::mode::read_write>(CGH);
       CGH.parallel_for<class Decrement_kernel>(range<1>(Size), [=](item<1> Id) {
-        Pdata1[Id]--;
-        Pdata2[Id]--;
+        PdataB[Id]--;
+        PdataC[Id]--;
       });
     });
 
@@ -87,10 +88,28 @@ int main() {
     // submitted for execution.
     auto Exec_graph = Graph.finalize();
 
-    // Execute graph
+    // Execute graph.
     Queue.submit([&](handler &CGH) { CGH.ext_oneapi_graph(Exec_graph); })
         .wait();
   }
+
+  // Access the data back on the host.
+  host_accessor HostDataA(BufferA);
+  host_accessor HostDataB(BufferB);
+  host_accessor HostDataC(BufferC);
+
+  // Verify the results.
+  int dataAResult{2};
+  int dataBResult{2};
+  int dataCResult{-2};
+
+  for (int i{0}; i < Size; ++i) {
+    assert(HostDataA[i] == dataAResult);
+    assert(HostDataB[i] == dataBResult);
+    assert(HostDataC[i] == dataCResult);
+  }
+
+  printf("Success!\n");
 
   return 0;
 }
