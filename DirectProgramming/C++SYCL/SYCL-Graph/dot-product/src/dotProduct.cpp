@@ -6,6 +6,8 @@
 
 #include "../../common/aspect_queries.hpp"
 
+#include <cstddef>
+#include <iostream>
 #include <sycl/ext/oneapi/experimental/graph.hpp>
 #include <sycl/sycl.hpp>
 
@@ -14,6 +16,7 @@ using namespace sycl;
 
 int main() {
   constexpr size_t Size = 10;
+  constexpr size_t Iter = 5;
 
   float Alpha = 1.0f;
   float Beta = 2.0f;
@@ -77,19 +80,21 @@ int main() {
       },
       {sycl_ext::property::node::depends_on(Node_a, Node_b)});
 
-  auto Exec = Graph.finalize();
+  auto GraphExec = Graph.finalize();
 
   // Use queue shortcut for graph submission.
-  Queue.ext_oneapi_graph(Exec).wait();
+  for (int i = 0; i < Iter; ++i) {
+    Queue.ext_oneapi_graph(GraphExec).wait();
+  }
 
   // Copy the result back to the host.
   float ResultDotp;
   Queue.copy(Dotp, &ResultDotp, 1).wait();
 
   // Verify the results.
-  float HostDotp{0.};
+  float HostDotp{0.0f};
   std::vector<float> HostX(Size, 1.0f), HostY(Size, 3.0f), HostZ(Size, 2.0f);
-  for (unsigned int i{0}; i < Size; ++i) {
+  for (size_t i = 0; i < Size; ++i) {
     HostX[i] = Alpha * HostX[i] + Beta * HostY[i];
     HostZ[i] = Gamma * HostZ[i] + Beta * HostY[i];
     HostDotp += HostX[i] * HostZ[i];
@@ -97,7 +102,7 @@ int main() {
 
   assert(HostDotp == ResultDotp);
 
-  printf("Success!\n");
+  std::cout << "Success!" << std::endl;
 
   // Memory is freed outside the graph.
   free(X, Queue);
