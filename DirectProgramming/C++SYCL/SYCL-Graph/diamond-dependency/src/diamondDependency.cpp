@@ -6,6 +6,7 @@
 
 #include "../../common/aspect_queries.hpp"
 
+#include <iostream>
 #include <sycl/ext/oneapi/experimental/graph.hpp>
 #include <sycl/sycl.hpp>
 
@@ -86,11 +87,10 @@ int main() {
 
     // Finalize the modifiable graph to create an executable graph that can be
     // submitted for execution.
-    auto Exec_graph = Graph.finalize();
+    auto GraphExec = Graph.finalize();
 
     // Execute graph.
-    Queue.submit([&](handler &CGH) { CGH.ext_oneapi_graph(Exec_graph); })
-        .wait();
+    Queue.submit([&](handler &CGH) { CGH.ext_oneapi_graph(GraphExec); }).wait();
   }
 
   // Access the data back on the host.
@@ -103,13 +103,13 @@ int main() {
   int dataBResult{2};
   int dataCResult{-2};
 
-  for (int i{0}; i < Size; ++i) {
+  for (size_t i = 0; i < Size; ++i) {
     assert(HostDataA[i] == dataAResult);
     assert(HostDataB[i] == dataBResult);
     assert(HostDataC[i] == dataCResult);
   }
 
-  printf("Success!\n");
+  std::cout << "Success!" << std::endl;
 
   return 0;
 }
