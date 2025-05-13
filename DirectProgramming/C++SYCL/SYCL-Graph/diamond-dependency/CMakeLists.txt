@@ -5,6 +5,11 @@
 ############################################################################
 
 cmake_minimum_required(VERSION 3.12)
+
+if (NOT DEFINED CMAKE_CXX_COMPILER)
+  set(CMAKE_CXX_COMPILER icpx)
+endif()
+
 project(SYCL-Graph-Samples)
 
 # Set global flags
