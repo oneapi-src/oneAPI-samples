@@ -6,6 +6,8 @@
 #include <sycl/sycl.hpp>
 
 #define N 13762560
+const int WG_SIZE = 256; // 256,512,1024
+const int SG_SIZE = 32;  // 8, 16, 32
 
 template <int groups, int wg_size, int sg_size>
 int VectorAdd(sycl::queue &q, std::vector<int> &a, std::vector<int> &b,
@@ -56,20 +58,34 @@ int main() {
   std::cout << "Running on device: "
             << q.get_device().get_info<sycl::info::device::name>() << "\n";
   std::cout << "Vector size: " << a.size() << "\n";
-
-  VectorAdd<1,256,32>(q, a, b, sum);
-  VectorAdd<2,256,32>(q, a, b, sum);
-  VectorAdd<3,256,32>(q, a, b, sum);
-  VectorAdd<4,256,32>(q, a, b, sum);
-  VectorAdd<5,256,32>(q, a, b, sum);
-  VectorAdd<6,256,32>(q, a, b, sum);
-  VectorAdd<7,256,32>(q, a, b, sum);
-  VectorAdd<8,256,32>(q, a, b, sum);
-  VectorAdd<12,256,32>(q, a, b, sum);
-  VectorAdd<16,256,32>(q, a, b, sum);
-  VectorAdd<20,256,32>(q, a, b, sum);
-  VectorAdd<24,256,32>(q, a, b, sum);
-  VectorAdd<28,256,32>(q, a, b, sum);
-  VectorAdd<32,256,32>(q, a, b, sum);
+    
+  VectorAdd<1,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<2,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<3,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<4,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<5,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<6,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<7,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<8,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<12,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<16,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<20,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<24,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<28,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<32,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<40,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<48,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<56,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<64,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<80,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<96,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<112,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<128,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<192,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<256,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<384,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<512,WG_SIZE,SG_SIZE>(q, a, b, sum);
+  VectorAdd<1024,WG_SIZE,SG_SIZE>(q, a, b, sum);
+    
   return 0;
 }

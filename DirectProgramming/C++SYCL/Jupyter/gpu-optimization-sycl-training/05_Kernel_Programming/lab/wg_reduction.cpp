@@ -66,7 +66,7 @@ void reduction(sycl::queue &q, std::vector<int> &data, std::vector<int> &flush,
 
       h.parallel_for(
           sycl::nd_range<1>(num_work_items, work_group_size), [=
-      ](sycl::nd_item<1> item) [[intel::reqd_sub_group_size(16)]] {
+      ](sycl::nd_item<1> item) [[sycl::reqd_sub_group_size(16)]] {
             auto v = sycl::atomic_ref<
                 int, sycl::memory_order::relaxed,
                 sycl::memory_scope::device,
@@ -114,3 +114,4 @@ int main(int argc, char *argv[]) {
   reduction(q, data, extra, 16, vec_size, work_group_size);
 
 }
+
