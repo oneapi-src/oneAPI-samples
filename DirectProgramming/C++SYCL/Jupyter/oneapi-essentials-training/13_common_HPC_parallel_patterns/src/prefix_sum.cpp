@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <string>
+#include <cmath>
 // dpc_common.hpp can be found in the dev-utilities include folder.
 // e.g., $ONEAPI_ROOT/dev-utilities/<version>/include/dpc_common.hpp
 #include "dpc_common.hpp"
@@ -54,7 +55,7 @@ void Show(int a[], int arraysize) {
 
 int* ParallelPrefixSum(int* current, int* next, unsigned int nb, queue& q) {
   unsigned int two_power = 1;
-  unsigned int num_iter = log2(nb);
+  unsigned int num_iter = std::log2(nb);
   // unsigned int uintmax = UINT_MAX;
   int* result = NULL;
 
@@ -104,7 +105,7 @@ int* ParallelPrefixSum(int* current, int* next, unsigned int nb, queue& q) {
 void PrefixSum(int* x, unsigned int nb)
 {
   unsigned int two_power = 1;
-  unsigned int num_iter = log2(nb);
+  unsigned int num_iter = std::log2(nb);
   int temp = 0;
 
   // Iterate over the necessary iterations
@@ -134,7 +135,7 @@ void Usage(string prog_name, int exponent) {
 
 int main(int argc, char* argv[]) {
   unsigned int nb, seed;
-  int n, exp_max = log2(numeric_limits<int>::max());
+  int n, exp_max = std::log2(numeric_limits<int>::max());
 
   // Read parameters.
   try {
@@ -155,7 +156,7 @@ int main(int argc, char* argv[]) {
 
   cout << "\nSequence size: " << nb << ", seed: " << seed;
 
-  int num_iter = log2(nb);
+  int num_iter = std::log2(nb);
   cout << "\nNum iteration: " << num_iter << "\n";
 
   // Create a device queue using SYCL class queue

@@ -132,7 +132,7 @@ bool WithinEpsilon(float* output, float* reference, const size_t dim_x,
   }
 
   err_file.close();
-  norm2 = sqrt(norm2);
+  norm2 = std::sqrt(norm2);
   if (error) printf("error (Euclidean norm): %.9e\n", norm2);
   return error;
 }
@@ -285,14 +285,16 @@ int main(int argc, char* argv[]) {
         //    swaps their content at every iteration.
         if (k % 2 == 0)
           h.parallel_for(global_range, [=](auto it) {
-                Iso2dfdIterationGlobal(it, next_a.get_pointer(),
-                                          prev_a.get_pointer(), vel_a.get_pointer(),
+                Iso2dfdIterationGlobal(it, const_cast<float*>(next_a.template get_multi_ptr<sycl::access::decorated::no>().get()),
+                                          const_cast<float*>(prev_a.template get_multi_ptr<sycl::access::decorated::no>().get()), 
+                                          const_cast<float*>(vel_a.template get_multi_ptr<sycl::access::decorated::no>().get()),
                                           dtDIVdxy, n_rows, n_cols);
               });
         else
           h.parallel_for(global_range, [=](auto it) {
-                Iso2dfdIterationGlobal(it, prev_a.get_pointer(),
-                                          next_a.get_pointer(), vel_a.get_pointer(),
+                Iso2dfdIterationGlobal(it, const_cast<float*>(prev_a.template get_multi_ptr<sycl::access::decorated::no>().get()),
+                                          const_cast<float*>(next_a.template get_multi_ptr<sycl::access::decorated::no>().get()), 
+                                          const_cast<float*>(vel_a.template get_multi_ptr<sycl::access::decorated::no>().get()),
                                           dtDIVdxy, n_rows, n_cols);
               });
       });
