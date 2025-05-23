@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
       sycl::local_accessor<sycl::vec<int, 8>, 1> scratch(work_group_size, h);
       h.parallel_for(
           sycl::nd_range<1>{num_work_items, work_group_size}, [=
-      ](sycl::nd_item<1> item) [[intel::reqd_sub_group_size(16)]] {
+      ](sycl::nd_item<1> item) [[sycl::reqd_sub_group_size(16)]] {
             size_t glob_id = item.get_global_id(0);
             size_t group_id = item.get_group(0);
             size_t loc_id = item.get_local_id(0);

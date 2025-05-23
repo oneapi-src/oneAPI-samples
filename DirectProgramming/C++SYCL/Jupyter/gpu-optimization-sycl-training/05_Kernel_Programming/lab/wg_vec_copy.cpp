@@ -51,7 +51,7 @@ void vec_copy(sycl::queue &q, std::vector<int> &src, std::vector<int> &dst,
 
         h.parallel_for(
             sycl::nd_range<1>(num_work_items, work_group_size), [=
-        ](sycl::nd_item<1> item) [[intel::reqd_sub_group_size(16)]] {
+        ](sycl::nd_item<1> item) [[sycl::reqd_sub_group_size(16)]] {
               int glob_id = item.get_global_id();
               dst_acc[glob_id] = src_acc[glob_id];
             });
