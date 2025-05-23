@@ -24,7 +24,7 @@ int main() {
   std::cout << "Local Memory Size : " << slm_size << "\n";
    
   q.submit([&](sycl::handler &h){
-    h.parallel_for(sycl::nd_range<3>(sycl::range<3>(112, 120, 128), sycl::range<3>(1, 1, 128)), [=](sycl::nd_item<3> item)[[intel::reqd_sub_group_size(32)]] {
+    h.parallel_for(sycl::nd_range<3>(sycl::range<3>(112, 120, 128), sycl::range<3>(1, 1, 128)), [=](sycl::nd_item<3> item)[[sycl::reqd_sub_group_size(32)]] {
      // Kernel Code
     });
   }).wait();

@@ -38,9 +38,9 @@ int main() {
       h.parallel_for(sycl::nd_range<1>(N, 256), [=](sycl::nd_item<1> it) {
            int i = it.get_global_linear_id();
            int t = 0;
-           int startj = sycl::max<int>(M / 2 - i, 0);
-           int endj = sycl::min<int>(M / 2 + N - i, M);
-           int startk = sycl::max<int>(i - M / 2, 0);
+           int startj = std::max<int>(M / 2 - i, 0);
+           int endj = std::min<int>(M / 2 + N - i, M);
+           int startk = std::max<int>(i - M / 2, 0);
            for (int j = startj, k = startk; j < endj; j++, k++) {
              t += iacc[k] * kacc[j];
            }
