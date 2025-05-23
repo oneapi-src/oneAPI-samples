@@ -17,13 +17,8 @@ int main() {
   auto e = q.submit([&](auto &h) {
     h.parallel_for(
         sycl::nd_range(sycl::range{N / 16}, sycl::range{32}), [=
-<<<<<<< HEAD
-    ](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
-          sycl::sub_group sg = it.get_sub_group();
-=======
     ](sycl::nd_item<1> it) [[sycl::reqd_sub_group_size(16)]] {
-          sycl::ext::oneapi::sub_group sg = it.get_sub_group();
->>>>>>> 14364cb9 (fixed deprecations in gpu opt notebooks)
+          sycl::sub_group sg = it.get_sub_group();
           sycl::vec<int, 8> x;
 
           using global_ptr =
