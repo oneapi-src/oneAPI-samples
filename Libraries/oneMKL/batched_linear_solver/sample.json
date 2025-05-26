@@ -15,8 +15,8 @@
       {
         "id": "batched_linear_solver",
         "steps": [
-          "make",
-	  "make clean"
+          "make clean",
+	  "make"
         ]
       }
     ]
