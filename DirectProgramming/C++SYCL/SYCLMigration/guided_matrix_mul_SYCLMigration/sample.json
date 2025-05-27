@@ -35,7 +35,7 @@
                     "cd build",
                     "cmake ..",
                     "make",
-                    "make run_matrix_mul"
+                    "./bin/02_sycl_dpct_migrated"
                 ]
             }
         ]
