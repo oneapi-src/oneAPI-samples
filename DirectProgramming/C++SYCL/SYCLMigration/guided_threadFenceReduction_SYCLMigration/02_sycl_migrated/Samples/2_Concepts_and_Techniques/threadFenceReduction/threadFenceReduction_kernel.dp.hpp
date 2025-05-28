@@ -241,7 +241,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<512, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -258,7 +258,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<256, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -276,7 +276,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<128, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -293,7 +293,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<64, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -311,7 +311,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<32, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -329,7 +329,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<16, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -347,7 +347,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<8, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -365,7 +365,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<4, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -383,7 +383,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<2, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -401,7 +401,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<1, true>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -421,7 +421,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<512, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -439,7 +439,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<256, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -457,7 +457,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<128, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -475,7 +475,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<64, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -493,7 +493,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<32, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -511,7 +511,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<16, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -529,7 +529,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<8, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -547,7 +547,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<4, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -565,7 +565,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<2, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -583,7 +583,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
 
         cgh.parallel_for(
             sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
-            [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+            [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
               reduceMultiPass<1, false>(
                   d_idata, d_odata, size, item_ct1,
                   dpct_local_acc_ct1
@@ -621,7 +621,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<512, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -648,7 +648,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<256, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -675,7 +675,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<128, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -702,7 +702,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<64, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -729,7 +729,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<32, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -756,7 +756,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<16, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -783,7 +783,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<8, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -810,7 +810,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<4, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -837,7 +837,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<2, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -864,7 +864,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<1, true>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -893,7 +893,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<512, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -920,7 +920,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<256, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -947,7 +947,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<128, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -974,7 +974,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<64, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1001,7 +1001,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<32, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1028,7 +1028,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<16, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1055,7 +1055,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<8, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1082,7 +1082,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<4, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1109,7 +1109,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<2, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
@@ -1136,7 +1136,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
           cgh.parallel_for(
               sycl::nd_range<3>(dimGrid * dimBlock, dimBlock),
               [=](sycl::nd_item<3> item_ct1)
-                  [[intel::reqd_sub_group_size(32)]] {
+                  [[sycl::reqd_sub_group_size(32)]] {
                     reduceSinglePass<1, false>(
                         d_idata, d_odata, size, item_ct1,
                         dpct_local_acc_ct1
