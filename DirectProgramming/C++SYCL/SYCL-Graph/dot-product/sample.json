@@ -31,7 +31,8 @@
                     "mkdir build",
                     "cd build",
                     "cmake ..",
-                    "cmake --build . -j$(nproc)"
+                    "cmake --build . -j$(nproc)",
+                    "./dotProduct"
                 ]
             }
         ]
