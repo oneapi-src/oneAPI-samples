@@ -24,10 +24,6 @@ buffer, accessor, kernel, and command groups.
 The include folder is located at
 `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development system.
 
-### Running Samples In Intel&reg; DevCloud
-Running samples in the Intel&reg; DevCloud requires you to specify a compute node.
-For specific instructions, jump to [Run the Matrix Multiply Advisor sample on the DevCloud](#run-matmul-advisor-on-devcloud).
-
 ## Using Visual Studio Code* (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment,
@@ -42,7 +38,6 @@ The basic steps to build and run a sample using VS Code include:
 
 To learn more about the extensions, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
-
 
 ## How to Build
 > **Note**: If you have not already done so, set up your CLI
@@ -272,7 +267,7 @@ Several sample programs are available for you to try, many of which can be compi
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
 Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).
