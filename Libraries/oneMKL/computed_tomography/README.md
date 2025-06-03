@@ -84,10 +84,11 @@ Saving restored image in restored.bmp
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html).
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
 
 ## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Code samples are licensed under the MIT license. See
+[License.txt](License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

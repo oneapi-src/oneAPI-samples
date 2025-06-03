@@ -173,8 +173,9 @@ https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utilit
 for more information on using the utility.
 
 ## License
-Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Code samples are licensed under the MIT license. See
+[License.txt](License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).
 
