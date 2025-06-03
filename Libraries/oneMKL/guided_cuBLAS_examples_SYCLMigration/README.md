@@ -93,16 +93,6 @@ cmake -G "Visual Studio 16 2019" ..
 cmake --build .
 ```
 
-#### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html) for more information on using the utility.
-
-
 ## Run the `cuBLAS Migration` Sample
 
 ### On Linux
@@ -136,6 +126,10 @@ result
 =====
 [100%] Built target run_amax
 ```
+
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
 
 ## License
 
