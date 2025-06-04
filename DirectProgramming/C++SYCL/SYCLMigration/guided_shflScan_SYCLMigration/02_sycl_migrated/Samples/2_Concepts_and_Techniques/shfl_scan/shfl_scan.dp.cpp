@@ -305,7 +305,7 @@ bool shuffle_simple_test(int argc, char **argv) {
         sycl::nd_range<3>(sycl::range<3>(1, 1, gridSize) *
                               sycl::range<3>(1, 1, blockSize),
                           sycl::range<3>(1, 1, blockSize)),
-        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+        [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
           shfl_scan_test(
               d_data, 32, item_ct1,
               dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
@@ -322,7 +322,7 @@ bool shuffle_simple_test(int argc, char **argv) {
         sycl::nd_range<3>(sycl::range<3>(1, 1, p_gridSize) *
                               sycl::range<3>(1, 1, p_blockSize),
                           sycl::range<3>(1, 1, p_blockSize)),
-        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+        [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
           shfl_scan_test(
               d_partial_sums, 32, item_ct1,
               dpct_local_acc_ct1.get_multi_ptr<sycl::access::decorated::no>()
@@ -438,7 +438,7 @@ bool shuffle_integral_image_test() {
         sycl::nd_range<3>(sycl::range<3>(1, 1, gridSize) *
                               sycl::range<3>(1, 1, blockSize),
                           sycl::range<3>(1, 1, blockSize)),
-        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+        [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
           shfl_intimage_rows(
               reinterpret_cast<sycl::uint4 *>(d_data),
               reinterpret_cast<sycl::uint4 *>(d_integral_image), item_ct1,
@@ -473,7 +473,7 @@ bool shuffle_integral_image_test() {
 
     cgh.parallel_for(sycl::nd_range<3>(testGrid * blockSz, blockSz),
                      [=](sycl::nd_item<3> item_ct1)
-                         [[intel::reqd_sub_group_size(32)]] {
+                         [[sycl::reqd_sub_group_size(32)]] {
                            shfl_vertical_shfl((unsigned int *)d_integral_image,
                                               w, h, item_ct1, sums_acc_ct1);
                          });
