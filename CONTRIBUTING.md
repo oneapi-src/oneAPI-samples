@@ -1,8 +1,8 @@
 # Contributing to oneAPI-samples
 
-The `master` branch contains code samples that work with the latest released version of the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html). Do not commit change to the `master` branch.
+The `main` branch contains code samples that work with the latest released version of the [Intel® oneAPI Toolkits](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html). Do not commit change to the `main` branch.
 
-All contributions must go into the `development` branch through a pull request (PR) where they will be reviewed before being merged. At specific dates, corresponding to the releases of the oneapi DPC++/C++ compiler, the `development` branch is merged into the `master` branch.
+All contributions must go into the `development` branch through a pull request (PR) where they will be reviewed before being merged. At specific dates, corresponding to the releases of the oneapi DPC++/C++ compiler, the `development` branch is merged into the `main` branch.
 
 ## Fork the Repository
 
@@ -10,7 +10,7 @@ All contributions must go into the `development` branch through a pull request (
 
 2. Select an **Owner** for the forked repository.
 
-3. Deselect the **Copy the master branch only** check box. (It should be unchecked before proceeding to the next step.)
+3. Deselect the **Copy the main branch only** check box. (It should be unchecked before proceeding to the next step.)
 
 4. Click the **Create fork** button.
 
@@ -50,7 +50,7 @@ When submitting a pull request, keep the following guidelines in mind:
 
 - Check the number of files being updated. Ensure that your pull request includes only the files you expected to be changed. (If there are additional files you did not expect included in the commit, troubleshoot before submitting the PR.)
 
-- Never open a pull request to the `master` branch directly, all pull requests must be targeting the `development` branch.
+- Never open a pull request to the `main` branch directly, all pull requests must be targeting the `development` branch.
 
 ## Log a Bug or Request a Feature
 
@@ -59,11 +59,13 @@ We use [GitHub Issues](https://github.com/oneapi-src/oneAPI-samples/issues) to t
 When reporting a bug, provide the following information when possible:
 
 - Steps to reproduce the bug.
-- Whether you found or reproduced the bug using the latest sample in the `master` branch and the latest Intel® oneAPI Toolkits.
+- Whether you found or reproduced the bug using the latest sample in the `main` branch and the latest Intel® oneAPI Toolkits.
 - Version numbers or other information about the CPU/GPU/FPGA/device, platform, operating system or distribution you used to find the bug.
 
 For usage, installation, or other requests for help, go to the [Intel® oneAPI Forums](https://software.intel.com/en-us/forums/intel-oneapi-forums) for more information.
 
 ## License
 
-Code samples in this repository are licensed under the terms outlined in [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt). By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
+Code samples in this repository are licensed under the terms outlined in [License.txt](License.txt).  
+  
+By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.

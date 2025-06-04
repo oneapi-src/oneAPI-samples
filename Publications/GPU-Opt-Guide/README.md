@@ -19,8 +19,6 @@ To build and use these examples, you will need to one or more of the following t
 
 - [Intel® oneAPI HPC Toolkit (HPC Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html)
 
-- [Intel® oneAPI IoT Toolkit (IoT Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/iot-toolkit.html)
-
 > **Note**: You will need the HPC Kit to build the Fortran examples in this repository. The Intel® Fortran Compiler is included in the HPC Kit.
 
 Alternatively, you can build most of the toolchain from the sources in the [Intel Project for LLVM* technology](https://github.com/intel/llvm) GitHub repository.
@@ -76,6 +74,6 @@ Alternatively, you can get the common resources from the [oneAPI-samples](https:
    ```
 
 ## License
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/main/License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/main/third-party-programs.txt).
