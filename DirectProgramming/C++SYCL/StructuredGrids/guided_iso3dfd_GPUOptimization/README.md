@@ -113,13 +113,13 @@ Perform the following steps:
 |:---                                    |:---                                 |:---
 |                                        | make clean                          |
 | make run_all                           |                                     | make run_verify_all
-| make run_cpu                           |                                     | 
+| make run_cpu                           |                                     |
 | make run_gpu_basic                     |                                     | run_verify_gpu_basic
 | make run_gpu_linear                    |                                     | run_verify_gpu_linear
 | make run_gpu_private_I                 | make run_gpu_private_K              | run_verify_gpu_private
-| make run_gpu_optimized                 | make run_gpu_optimized_good_params  | run_verify_gpu_optimized 
+| make run_gpu_optimized                 | make run_gpu_optimized_good_params  | run_verify_gpu_optimized
 |                                        | make run_gpu_optimized_wrong_params |
- 
+
 
 `run_all` and `run_verify_all` execute all basic commands. Verification commands compares GPU and CPU execution and compares results to ensure accurate calculation.
 
@@ -173,7 +173,7 @@ Parameters are described if used incorrectly.
 
 ## Guided Builds
 
-Below is the step by step guide that shows how to optimize iso3dfd. We'll start with code that runs on the CPU, then a basic implementation of GPU offload, then make several iterations to optimize the code. The below uses the Intel&reg; Advisor analysis tool to provide performance analysis of the built applications. 
+Below is the step by step guide that shows how to optimize iso3dfd. We'll start with code that runs on the CPU, then a basic implementation of GPU offload, then make several iterations to optimize the code. The below uses the Intel&reg; Advisor analysis tool to provide performance analysis of the built applications.
 
 > **Note**: The actual results and measurements may vary depending on your actual hardware.
 
@@ -238,7 +238,7 @@ From the roofline analysis of the `2_GPU_basic_offload.cpp` version, we can see 
 
 In this next iteration, we'll address the problem being compute bound in kernels by reducing index calculations by changing how we calculate indices.
 
-For index calculations optimization, we can change the 3D indexing to 1D. We need to flatten the buffers (lines 21-22), change how we calculate location in the memory for each kernel(lines 43-49), and change how we are accessing the neighbors(lines 52 and 56-61). 
+For index calculations optimization, we can change the 3D indexing to 1D. We need to flatten the buffers (lines 21-22), change how we calculate location in the memory for each kernel(lines 43-49), and change how we are accessing the neighbors(lines 52 and 56-61).
 
 Run roofline analysis again to gauge the results and look for additional opportunities for optimization based on 3_GPU_linear.
 
@@ -256,11 +256,11 @@ For Windows:\
 
 With the code changes that are in the `3_GPU_linear.cpp` file, we can see in the roofline model that the INT operations decreased about 6x. The kernel now has much lower arithmetic intensity and bandwidth increased more than 3x.  But now we are L3 cache bandwidth bounded.
 
-> **Tip**: Your can compare performance gains by usig the [roofline analaysis compare function](https://www.intel.com/content/www/us/en/develop/documentation/advisor-user-guide/top/analyze-cpu-roofline/explore-cpu-memory-roofline-results/compare-cpu-roofline-results.html). 
+> **Tip**: Your can compare performance gains by usig the [roofline analaysis compare function](https://www.intel.com/content/www/us/en/develop/documentation/advisor-user-guide/top/analyze-cpu-roofline/explore-cpu-memory-roofline-results/compare-cpu-roofline-results.html).
 
 ![linear indexing version roofline](images/linear.png)
 
-We are memory bound but our kernels use a lot of overlapping memory as their neighbor cells. Because of this we can read each memory cell once and re-use the data. To do this we need to change the kernel; now they will not calculate only one cell but will iterate over one of the dimensions. Data reused during iterations will be stored in private memory which could fit in the registers which are many times faster than any type of memory available. 
+We are memory bound but our kernels use a lot of overlapping memory as their neighbor cells. Because of this we can read each memory cell once and re-use the data. To do this we need to change the kernel; now they will not calculate only one cell but will iterate over one of the dimensions. Data reused during iterations will be stored in private memory which could fit in the registers which are many times faster than any type of memory available.
 
 The question remains, what dimension is the best? Since the required changes are not that big, we provided cpp files for first and third. We run some benchmarks and iterate over first and second dimensions providing similar results. But iterating over third dimension increases execution time significantly, since not all of the vectorization is used.
 
@@ -282,7 +282,7 @@ For Linux:\
 For Windows:\
 `advisor-gui advisor\4_gpu\e000\e000.advixeexp`
 
-We are still memory bounded but we reduced the data transfer and additional calculations. 
+We are still memory bounded but we reduced the data transfer and additional calculations.
 
 ![private memory version roofline](images/private_memory.png)
 
@@ -425,6 +425,6 @@ bytes        : 6.72433 GBytes/s
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).
