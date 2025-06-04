@@ -120,10 +120,6 @@ When working with the command-line interface (CLI), configure the software tools
 >
 > `sudo echo dev.i915.perf_stream_paranoid=0 > /etc/sysctl.d/60-mdapi.conf`
 
-### Running Samples in Intel&reg; DevCloud
-
-To run a sample in the Intel&reg; DevCloud, specify the compute node (CPU, GPU, FPGA) and the operating mode (batch or interactive). For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 ### Use Visual Studio Code* (VS Code) (Optional)
 
 You can use Visual Studio Code* (VS Code) extensions to set your environment,
@@ -449,6 +445,6 @@ bytes        : 7.07402 GBytes/s
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneA
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt)

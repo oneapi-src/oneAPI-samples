@@ -58,7 +58,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)
 
 ### On Linux*
@@ -108,12 +108,9 @@ the memory allocation for OpenCL™. If that is the case, then adjust the value 
    make clean
    ```
 
-### Run the `DPC Reduce` Sample in Intel® DevCloud
-If running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 ## Example Output
 ```
-Rank #0 runs on: testsystem, uses device: Intel(R) Gen9 HD Graphics NEO 
+Rank #0 runs on: testsystem, uses device: Intel(R) Gen9 HD Graphics NEO
 Number of steps is 1000000
 Cpu Seq calc:               PI =3.14 in 0.00422 seconds
 Cpu TBB  calc:              PI =3.14 in 0.00177 seconds
@@ -130,6 +127,6 @@ success
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

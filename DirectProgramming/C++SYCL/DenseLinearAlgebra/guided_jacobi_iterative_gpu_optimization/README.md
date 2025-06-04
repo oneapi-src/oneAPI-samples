@@ -60,7 +60,7 @@ When working with the command-line interface (CLI), you should configure the one
 >
 > For more information on configuring environment variables, see *[Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html)*.
 
-> **Note**: For GPU Analysis on Linux*, enable collecting GPU hardware metrics by setting the value of `dev.i915 perf_stream_paranoidsysctl` option to `0`. 
+> **Note**: For GPU Analysis on Linux*, enable collecting GPU hardware metrics by setting the value of `dev.i915 perf_stream_paranoidsysctl` option to `0`.
 >
 > The command makes a temporary change that is lost after reboot:
 >
@@ -81,7 +81,7 @@ The basic steps to build and run a sample using VS Code include:
 3. Open a terminal in VS Code (**Terminal > New Terminal**).
 4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 *[Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://software.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html)*.
 
 ### On Linux*
@@ -107,7 +107,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    make run_3_multi_gpu
    ```
    > **Note**: This option is untested, but you should be able to run it in a multi-GPU environment.
-   
+
 6. Clean the project. (Optional)
    ```
    make clean
@@ -135,7 +135,7 @@ The first step is to run offload modeling on the CPU version to identify portion
    ```
    advisor --collect=offload --config=gen9_gt2 --project-dir=./../advisor/1_cpu -- ./src/1_guided_jacobi_iterative_solver_cpu
    ```
-2. View the results. 
+2. View the results.
    ```
    advisor-gui ../advisor/1_cpu/e000/e000.advixeexp
    ```
@@ -166,71 +166,6 @@ Once the offload code changes, run the roofline analysis to look for performance
    As we can see in the charts below, the execution time has been sped up as we predicted in all cases besides the main loop. The reason is that we have to wait for each iteration to finish calculations, as the next iteration is dependent on the results we get. This is why 74.6% of the time that the GPU has been in the **Stalled** mode.
 
    ![offload Modeling results](images/gpu.PNG)
-
-
-### Build and Run the Sample in Intel® DevCloud (Optional)
-
->**Note**: For more information on using Intel® DevCloud, see the Intel® oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started/) page.
-
-1. Open a terminal on a Linux* system.
-2. Log in to the Intel® DevCloud.
-   ```
-   ssh devcloud
-   ```
-3. Change to the sample directory.
-4. Configure the sample for the appropriate node.
-   
-   <details>
-   <summary>You can specify nodes using a single line script.</summary>
-
-   The following example is for a GPU node. (This is a single line script.)
-	```
-	qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-	```
-   - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-   - `-d .` makes the current folder as the working directory for the task.
-
-     |Available Nodes    |Command Options
-     |:---               |:---
-     |GPU	             |`qsub -l nodes=1:gpu:ppn=2 -d .`
-     |CPU	             |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-  </details>
-
-5. Perform build steps you would on Linux. (Including optionally cleaning the project.)
-
-   <details>
-   <summary>You can submit build and run jobs through a Portable Bash Script (PBS).</summary>
-
-   A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`. 
-
-   If you choose to use scripts, jobs terminate with writing files to the disk:
-   - `<script_name>.sh.eXXXX`, which is the job stderr
-   - `<script_name>.sh.oXXXX`, which is the job stdout
-
-   Here XXXX is the job ID, which gets printed to the screen after each qsub command.
-
-   You can inspect output of the sample.
-   ```
-   cat run.sh.oXXXX
-   ```
-   Once the jobs complete, you can remove the stderr and stdout files.
-   ```
-   rm run.sh.*
-   ```
-</details>
-
-6. Run the sample.
-
-   > **Note**: To inspect job progress if you are using a script, use the qstat utility.
-   >   ```
-   >   watch -n 1 qstat -n -1
-   >   ```
-   >  The command displays the results every second. The job is complete when no new results display.
-
-7. Review the output, then exit.
-
 
 ## Example Output
 
@@ -294,6 +229,6 @@ Total runtime is 13.5157 seconds.
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

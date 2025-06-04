@@ -118,4 +118,11 @@ Max difference between naive and Fourier-based calculations : 1.19209e-07 (verif
 
 ### Troubleshooting
 If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
-[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

@@ -10,7 +10,7 @@ Code example demonstrating the usage of [`sycl_ext_oneapi_graph`](https://github
 
 ## Purpose
 
-This code example shows how to record commands submitted to a SYCL `queue` into a `command_graph` object. Once the graph recording is complete, the graph is finalized which means a new `command_graph` object in `graph_state::executable` is created which is ready for submission. Lastly, the graph is submitted en bloc for execution to a queue with a new function `ext_oneapi_graph()`. And can be replayed as many times as needed. 
+This code example shows how to record commands submitted to a SYCL `queue` into a `command_graph` object. Once the graph recording is complete, the graph is finalized which means a new `command_graph` object in `graph_state::executable` is created which is ready for submission. Lastly, the graph is submitted en bloc for execution to a queue with a new function `ext_oneapi_graph()`. And can be replayed as many times as needed.
 
 
 
@@ -70,11 +70,11 @@ executable (for example Intel `icpx` or LLVM `clang++`).
    ```
 
 The CMake configuration automatically detects the available SYCL backends and
-enables the SPIR/CUDA/HIP targets for the device code, including the corresponding 
-architecture flags. If desired, these auto-configured cmake options may be overridden 
+enables the SPIR/CUDA/HIP targets for the device code, including the corresponding
+architecture flags. If desired, these auto-configured cmake options may be overridden
 with the following ones:
 
-| OPTION                     | VALUE 
+| OPTION                     | VALUE
 |:---                        |:---
 | ENABLE_SPIR                | ON or OFF
 | ENABLE_CUDA                | ON or OFF
@@ -103,6 +103,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).
