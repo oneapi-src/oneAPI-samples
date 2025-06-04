@@ -168,31 +168,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
    simple-add-buffers.exe
    ```
 
-### Build and Run the `Simple Add` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU) and whether to run in batch or interactive mode.
-
->**Note**: Since Intel® DevCloud for oneAPI includes the appropriate development environment already configured, you do not need to set environment variables.
-
-Use the Linux instructions to build and run the program.
-
-You can specify a GPU node using a single line script.
-
-```
-qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-```
-
-- `-I` (upper case I) requests an interactive session.
-- `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-- `-d .` makes the current folder as the working directory for the task.
-
-  |Available Nodes           |Command Options
-  |:---                      |:---
-  |GPU	                     |`qsub -l nodes=1:gpu:ppn=2 -d .`
-  |CPU	                     |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
->**Note**: For more information on how to specify compute nodes, read *[Launch and manage jobs](https://devcloud.intel.com/oneapi/documentation/job-submission/)* in the Intel® DevCloud for oneAPI Documentation.
-
 ## Example Output
 ```
 simple-add output snippet changed to:

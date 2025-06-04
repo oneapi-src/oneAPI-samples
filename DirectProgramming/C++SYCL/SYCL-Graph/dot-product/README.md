@@ -10,7 +10,7 @@ Code example demonstrating the usage of [`sycl_ext_oneapi_graph`](https://github
 
 ## Purpose
 
-This example uses the explicit graph creation API to perform a dot product operation. 
+This example uses the explicit graph creation API to perform a dot product operation.
 
 ## Prerequisites
 | Optimized for                     | Description
@@ -22,7 +22,7 @@ This example uses the explicit graph creation API to perform a dot product opera
 
 ## Key Implementation Details
 
-Key SYCL* concepts demonstrated in the code sample include using command graph extension with unified shared memory and explicit graph building API. 
+Key SYCL* concepts demonstrated in the code sample include using command graph extension with unified shared memory and explicit graph building API.
 
 >**Note**: For comprehensive information about oneAPI programming, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -68,11 +68,11 @@ executable (for example Intel `icpx` or LLVM `clang++`).
    ```
 
 The CMake configuration automatically detects the available SYCL backends and
-enables the SPIR/CUDA/HIP targets for the device code, including the corresponding 
-architecture flags. If desired, these auto-configured cmake options may be overridden 
+enables the SPIR/CUDA/HIP targets for the device code, including the corresponding
+architecture flags. If desired, these auto-configured cmake options may be overridden
 with the following ones:
 
-| OPTION                     | VALUE 
+| OPTION                     | VALUE
 |:---                        |:---
 | ENABLE_SPIR                | ON or OFF
 | ENABLE_CUDA                | ON or OFF
@@ -101,6 +101,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

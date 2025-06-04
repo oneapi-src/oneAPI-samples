@@ -1,13 +1,13 @@
 ## Title
  GPU Optimization with SYCL
-  
+
 ## Requirements
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu 18.04, 20 Windows* 10
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel DevCloud
-  
+
 ## Purpose
 The primary focus of this document is GPUs. Each section focuses on different topics to guide you in your path to creating optimized solutions.
 
@@ -52,18 +52,6 @@ Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened i
   - `License.txt`
   - `Readme.md`
 
-
-## Install Directions
-
-The training content can be accessed locally on the computer after installing necessary tools, or you can directly access using Intel DevCloud without any installation necessary.
-
-#### Access using Intel DevCloud
-
-The Jupyter notebooks are tested and can be run on Intel DevCloud without any installation necessary, below are the steps to access these Jupyter notebooks on Intel DevCloud:
-1. Register on [Intel DevCloud](https://devcloud.intel.com/oneapi)
-2. Login, Get Started and Launch Jupyter Lab
-3. Open Terminal in Jupyter Lab and git clone the repo and access the Notebooks
-
 #### Local Installation of oneAPI Tools and JupyterLab
 
 The Jupyter Notebooks can be downloaded locally to computer and accessed:
@@ -79,6 +67,6 @@ The Jupyter Notebooks can be viewed on Github and you can run the code on comman
 - open command line terminal and use the `run_*.sh` script in each module to compile and run code.
 
 ## License  
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt)

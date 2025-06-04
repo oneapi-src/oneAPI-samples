@@ -122,14 +122,14 @@ a script that submitted to PBS through the `qsub` utility. By default, the
 `qsub` utility does not inherit the current environment variables or your
 current working directory, so you might need to submit jobs to configure the
 environment variables. To indicate the correct working directory, you can use
-either absolute paths or pass the `-d \<dir\>` option to `qsub`. 
+either absolute paths or pass the `-d \<dir\>` option to `qsub`.
 
 If you choose to use scripts, jobs terminate with writing files to the disk:
 - `<script_name>.sh.eXXXX`, which is the job stderr
 - `<script_name>.sh.oXXXX`, which is the job stdout
 
 Here XXXX is the job ID, which gets printed to the screen after each qsub
-command. 
+command.
 
 You can inspect output of the sample.
 ```
@@ -152,7 +152,7 @@ cat run.sh.oXXXX
    qsub	-I  -l nodes=1:gpu:ppn=2 -d .
    ```
    - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node. 
+   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
    - `-d .` makes the current folder as the working directory for the task.
 
 > **Note**: To inspect job progress, use the qstat utility.
@@ -164,8 +164,8 @@ cat run.sh.oXXXX
 
 6. Perform build steps you would on Linux. (Including optionally cleaning the
    project.)
-7. Run the sample. 
-8. Disconnect from the Intel® DevCloud. 
+7. Run the sample.
+8. Disconnect from the Intel® DevCloud.
    ```
    exit
    ```
@@ -218,8 +218,8 @@ success for Sparse Histogram:
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+[License.txt](License.txt)
 for details.
 
 Third-party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).
