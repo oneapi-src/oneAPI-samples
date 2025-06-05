@@ -63,8 +63,6 @@ int main() {
   // Initialize the device queue with the default selector. The device queue is
   // used to enqueue kernels. It encapsulates all states needed for execution.
   {
-    property_list propList = property_list{property::queue::enable_profiling()};
-
     queue q(default_selector_v);
 
     cout << "Computing" << "\n";
@@ -79,8 +77,8 @@ int main() {
     float * dev_a = sycl::malloc_device<float>(M*N, q);
     float * dev_b = sycl::malloc_device<float>(N*P, q);
     device selected_device = device(default_selector_v);
-    context devicecontext(selected_device, propList);
-    queue q2(devicecontext, selected_device, propList);
+    context devicecontext(selected_device);
+    queue q2(devicecontext, selected_device);
     float * dev_c = sycl::malloc_device<float>(M*P, q2);
 
     cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N

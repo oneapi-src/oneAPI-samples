@@ -66,10 +66,6 @@ The basic SYCL* standards implemented in the code include the use of the followi
 >
 > `sudo echo dev.i915.perf_stream_paranoid=0 > /etc/sysctl.d/60-mdapi.conf`
 
-### Running Samples in Intel&reg; DevCloud
-
-If running a sample in the Intel&reg; DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel&reg; oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
 ### On Linux*
 Perform the following steps:
 1. Build the program using the following `cmake` commands.
@@ -133,7 +129,6 @@ The Jupyter Notebooks can be viewed on Github and you can run the code on comman
 - open command line terminal and use the `run_*.sh` script in each module to compile and run code.
 
 ## License  
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
-
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt)

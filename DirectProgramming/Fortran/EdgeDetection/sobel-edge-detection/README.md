@@ -78,7 +78,7 @@ Run `make` to build and run the sample. Six programs are generated:
 You can remove all generated files with `make clean`.
 
 ### Example of Output
-If everything is working correctly, each example program will read the sample input image, xeon_4gen.ppm, 
+If everything is working correctly, each example program will read the sample input image, xeon_4gen.ppm,
 and output the edge highlights of this image, e.g.:
 
 ![before and after images](Assets/image_edges.png)
@@ -91,6 +91,6 @@ If an error occurs, troubleshoot the problem using the Diagnostics Utility for I
 [Learn more](https://www.intel.com/content/www/us/en/develop/documentation/diagnostic-utility-user-guide/top.html)
 
 ## License
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

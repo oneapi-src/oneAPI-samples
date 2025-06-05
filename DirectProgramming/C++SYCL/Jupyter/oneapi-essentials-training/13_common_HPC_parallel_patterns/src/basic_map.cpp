@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <numeric>
+#include <cmath>
 #include <sycl/sycl.hpp>
 
 using namespace sycl;
@@ -24,7 +25,7 @@ int main() {
   // BEGIN CODE SNIP
   // Compute the square root of each input value
   q.parallel_for(N, [=](id<1> i) {
-     output[i] = sqrt(input[i]);
+     output[i] = std::sqrt(input[i]);
    }).wait();
   // END CODE SNIP
 

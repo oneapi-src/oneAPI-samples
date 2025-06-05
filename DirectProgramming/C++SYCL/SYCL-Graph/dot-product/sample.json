@@ -1,0 +1,41 @@
+{
+    "guid": "D9C73D3A-9E23-4AD6-B3DF-FECB3786BAC8",
+    "name": "Dot Product",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL/SYCL-Graph"
+    ],
+    "description": "Dot Product operation using SYCL-Graph",
+    "toolchain": [
+        "dpcpp"
+    ],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "os": [
+        "linux"
+    ],
+    "builder": [
+        "cmake"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "test",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . -j$(nproc)",
+                    "./dotProduct"
+                ]
+            }
+        ]
+    },
+    "expertise": "Concepts and Functionality"
+}

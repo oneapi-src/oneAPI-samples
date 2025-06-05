@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <math.h>
 #include <sycl/sycl.hpp>
 #include <iostream>
 

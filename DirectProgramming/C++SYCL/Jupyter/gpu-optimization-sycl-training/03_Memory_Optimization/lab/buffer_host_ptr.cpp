@@ -37,9 +37,10 @@ int main() {
 
     h.parallel_for(num_items, [=](auto i) {
       if (i[0] == 0)
-        out << "device accessor address = " << a_acc.get_pointer() << "\n";
+        out << "device accessor address = " << a_acc.template get_multi_ptr<sycl::access::decorated::no>() << "\n";
       sum_acc[i] = a_acc[i] + b_acc[i];
     });
   }).wait();
   return 0;
 }
+

@@ -16,24 +16,6 @@ These samples are collection of Jupyter Notebooks that demonstrate OpenMP Offloa
 | Hardware              | GEN9 or newer
 | Software              | Intel® oneAPI DPC++/C++ Compiler
 
-## Run the Notebooks in Intel® DevCloud
-
-You can run the Jupyter Notebooks in the Intel® DevCloud for oneAPI.
-
-1. If you do not already have an account, request an Intel® DevCloud account at [Create an Intel® DevCloud Account](https://intelsoftwaresites.secure.force.com/DevCloud/oneapi).
-
-   > **Note**: You can find information about configuring your Linux system and connecting to Intel DevCloud at Intel® DevCloud for oneAPI [Get Started](https://devcloud.intel.com/oneapi/get_started).
-
-2. On a Linux* system, open a terminal.
-
-3. SSH into Intel® DevCloud.
-   ```
-   ssh DevCloud
-   ```
-4. Type the following command to download the oneAPI-essentials series of
-   Jupyter notebooks and OpenMP offload notebooks into your Intel® DevCloud account
-   `/data/oneapi_workshop/get_jupyter_notebooks.sh`
-
 ### Running the Notebooks
 
 1. Open the Notebook `OpenMP Welcome.ipynb`.
@@ -75,8 +57,8 @@ You can run the Jupyter Notebooks in the Intel® DevCloud for oneAPI.
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+[License.txt](License.txt)
 for details.
 
 Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).

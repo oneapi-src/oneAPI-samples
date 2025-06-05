@@ -37,7 +37,7 @@ int main() {
     auto hacc = hbuf.get_access<sycl::access::mode::atomic>(h);
     h.parallel_for(
         sycl::nd_range(sycl::range{N / blockSize}, sycl::range{64}), [=
-    ](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
+    ](sycl::nd_item<1> it) [[sycl::reqd_sub_group_size(16)]] {
           int group = it.get_group()[0];
           int gSize = it.get_local_range()[0];
           sycl::sub_group sg = it.get_sub_group();
