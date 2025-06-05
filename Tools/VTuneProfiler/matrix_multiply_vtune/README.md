@@ -17,9 +17,9 @@ versions are provided that use different SYCL features.
 ## Key Implementation details
 
 The basic SYCL implementation explained in the code includes device selector,
-buffer, accessor, kernel, and command groups. 
+buffer, accessor, kernel, and command groups.
 
-## Include Files 
+## Include Files
 The include folder is located at `%ONEAPI_ROOT%\dev-utilities\latest\include` on your development
 system.
 
@@ -95,7 +95,7 @@ dependencies and permissions errors.
 #### Command Line using MSBuild
 
 1. DPCPP Configurations:
-  - Release 
+  - Release
   ```
     MSBuild matrix_multiply.sln /t:Rebuild /p:Configuration="Release"
   ```
@@ -105,7 +105,7 @@ dependencies and permissions errors.
   ```
 2. Navigate to the Configuration folder (example: x64 folder)
 
-3. Run the program: 
+3. Run the program:
 ```
   matrix_multiply.exe
 ```
@@ -145,6 +145,6 @@ vtune -collect gpu-hotspots -- ./matrix_multiply
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

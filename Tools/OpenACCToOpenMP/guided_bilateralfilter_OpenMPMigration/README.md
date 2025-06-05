@@ -1,5 +1,5 @@
 # `BilateralFilter` Sample
- 
+
 This sample uses OpenMP directives to perform a simple bilateral filter on an image and measures performance. The original OpenACC source code is migrated to OpenMP to Offload on Intel® Platforms.
 
 | Area                  | Description
@@ -13,12 +13,12 @@ This sample uses OpenMP directives to perform a simple bilateral filter on an im
 Bilateral filter is an edge-preserving nonlinear smoothing filter. There are three parameters distribute to the filter: gaussian delta, euclidean delta and iterations.
 When the euclidean delta increases, most of the fine texture will be filtered away, yet all contours are as crisp as in the original image. If the euclidean delta approximates to ∞, the filter becomes a normal gaussian filter. Fine texture will blur more with larger gaussian delta. Multiple iterations have the effect of flattening the colors in an image considerably, but without blurring edges, which produces a cartoon effect.
 
-> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code. 
+> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
-|:---                           |:--- 
+|:---                           |:---
 | `openMP_migrated_output`            | Contains the OpenMP migrated code.
 
 ## Prerequisites
@@ -33,14 +33,14 @@ For more information on how to install the above Tool, visit [intel-application-
 
 ## Key Implementation Details
 
-This sample demonstrates the migration of the following OpenACC pragmas: 
+This sample demonstrates the migration of the following OpenACC pragmas:
 - #pragma acc kernels copyin() copyout() create() if()
   The kernels construct identifies a region of code that may contain parallelism that has been as been translated into:
   - #pragma omp target map(to:) map(from:) map(alloc:) if()
 - #pragma acc loop independent, gang
   The loop directive is intended to give the compiler additional information about the next loop in the code. This has been translated into:
   - #pragma omp loop order(concurrent)
-  
+
 
 >  **Note**: Refer to [Portability across Heterogeneous Architectures](https://www.intel.com/content/www/us/en/developer/articles/technical/openmp-accelerator-offload.html#gs.n33nuz) for general information about the migration of OpenACC to OpenMP.
 
@@ -60,7 +60,7 @@ For this sample, the tool takes application sources (either C/C++ or Fortran lan
      ```
 
 The binary of the translator can be found inside intel-application-migration-tool-for-openacc-to-openmp/src location
-    
+
   2. The openacc sample is taken from NVIDIA_HPC_SDK samples and can be found at the installation location as shown below
      ```
      cd /opt/hpc_software/sdk/nvidia/hpc_sdk/Linux_x86_64/24.3/examples/OpenACC/SDK/src/bilateralFilter
@@ -101,14 +101,14 @@ Introduce teams in the pragma as shown below in the translated code (line 126)
    ```
    $ make
    ```
-   
+
 By default, this command sequence will build the `openMP_migrated_output ` version of the program.
 
 3. Run the program.
    ```
    $ make run
    ```  
-   
+
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
@@ -120,6 +120,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](third-party-programs.txt).
