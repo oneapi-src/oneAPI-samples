@@ -11,7 +11,7 @@ SYCL programming, and *before* you start using the debugger.
 | What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator
 | Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
 
-This sample accompanies 
+This sample accompanies
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
 of the application debugger.
 
@@ -70,7 +70,7 @@ The basic steps to build and run a sample using VS Code include:
  - Run the sample in the VS Code terminal using the instructions below.
  - (Linux only) Debug your GPU application with GDB for Intel® oneAPI toolkits using the **Generate Launch Configurations** extension.
 
-To learn more about the extensions, see the 
+To learn more about the extensions, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 
@@ -94,7 +94,7 @@ To learn more about the extensions, see the
 
 Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide based on
-your OS: 
+your OS:
 - [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 - [Get Started with Intel® Distribution for GDB* on Windows* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-windows/)
 
@@ -385,6 +385,6 @@ names and brands may be claimed as the property of others.
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

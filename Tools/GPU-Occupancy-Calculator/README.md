@@ -22,16 +22,16 @@ The Intel GPU Occupancy tool will compute the theoretical GPU Occupancy for Inte
   Local Memory size and will compute Occupancy and generate graphs.
 * Change the values of Global size, Work-Group size, Sub-Group size or Local Memory size based on your HPC application to calculate Occupancy and tune application.
 
-  
+
 ### Custom GPU Configuration:
 If the GPU drop down does not have the configuration, a custom configuration can be loaded using URL parameter "`?gpu=`"
 
 An example of a custom configuration and corresponding description are listed below:
 
 Example of Intel GPU Occupancy Calculator with Custom GPU configuration:
-  
+
 `https://oneapi-src.github.io/oneAPI-samples/Tools/GPU-Occupancy-Calculator/?gpu=8;8;512;64;true;[32,16];128;128;[0,1,2,4,8,16,24,32,48,64,96,128];1024;64;64;My_GPU`
-  
+
 URL Parameters details are as follows:
 ```  
   EU_Per_XeCore = 8
@@ -50,6 +50,6 @@ URL Parameters details are as follows:
 ```
 ## License
 
-Code samples are licensed under the MIT license. See _License.txt_ for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third party program Licenses can be found in _third-party-programs.txt_
+Third party program Licenses can be found in [third-party-programs.txt](third-party-programs.txt).

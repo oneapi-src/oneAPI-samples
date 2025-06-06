@@ -11,7 +11,7 @@ for the debugger.
 This sample contains two versions of the same program: `jacobi-bugged` and
 `jacobi-fixed`. The latter works correctly, but in the former several bugs are
 injected. You can try to find and fix them using the debugger.  The debug steps
-follow a common strategy that attempts to resolve bugs first on the CPU, 
+follow a common strategy that attempts to resolve bugs first on the CPU,
 then focus on possibly more difficult GPU-oriented bugs.
 
 | Area                | Description
@@ -77,10 +77,10 @@ devices.  Use the ONEAPI_DEVICE_SELECTOR environment variable
 to select device.  The default device is Level Zero GPU device, if available.
 For more details on possible values of this variable see [Environment Variables](https://intel.github.io/llvm-docs/EnvironmentVariables.html#oneapi-device-selector).
 
-For an overview of the Jacobi method, please refer to the Wikipedia article 
+For an overview of the Jacobi method, please refer to the Wikipedia article
 on the [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method).
 
-For an overview of the debugger, please refer to 
+For an overview of the debugger, please refer to
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/top.html).
 
 ## Key Implementation Details
@@ -155,9 +155,9 @@ Second, we update `x_k` with the new value from `x_k1`.
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure 
-the oneAPI toolkits using environment variables. Set up your CLI environment 
-by sourcing the `setvars` script every time you open a new terminal window. 
+When working with the command-line interface (CLI), you should configure
+the oneAPI toolkits using environment variables. Set up your CLI environment
+by sourcing the `setvars` script every time you open a new terminal window.
 This practice ensures that your compiler, libraries, and tools are ready
 for development.
 
@@ -226,7 +226,7 @@ Build the project using the following `cmake` commands.
 ### Setup the Debugger
 
 Preliminary setup steps are needed for the debugger to function.
-Please see the setup instructions in the Get Started Guide 
+Please see the setup instructions in the Get Started Guide
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 
 ### Run the buggy program
@@ -263,7 +263,7 @@ please see
 
 The below instructions provide step by step instructions for locating and
 resolving the three bugs in the `jacobi` sample, as well as basic usage of
-the debbuger. 
+the debbuger.
 
 ### Recommended Commands
 
@@ -368,12 +368,12 @@ to a different thread while stepping):
 
 ### Debugging `jacobi-bugged`
 
-Again, to try to isolate our bugs, we'll focus first on the CPU.  This is 
+Again, to try to isolate our bugs, we'll focus first on the CPU.  This is
 a common strategy.  You can specify the device for offloading the kernels
-using `ONEAPI_DEVICE_SELECTOR` variable, for example: 
+using `ONEAPI_DEVICE_SELECTOR` variable, for example:
 
 ```
-ONEAPI_DEVICE_SELECTOR=*:cpu ./myApplication`. 
+ONEAPI_DEVICE_SELECTOR=*:cpu ./myApplication`.
 ```
 
 The above limits the kernel offloading only to CPU devices.
@@ -423,7 +423,7 @@ Challenge: in the debugger you can simmulate the computation of a reduced
 ```
 
 Once this bug is fixed, while offloading to CPU you receive the correct result:
-which are the same as in `jacobi-fixed` for the offload to CPU device. Since we're 
+which are the same as in `jacobi-fixed` for the offload to CPU device. Since we're
 only running on the CPU, we don't see the GPU bug:
 
 ```
@@ -626,8 +626,8 @@ and brands may be claimed as the property of others.
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+[License.txt](License.txt)
 for details.
 
 Third-party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).

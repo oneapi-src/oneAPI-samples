@@ -35,7 +35,7 @@ The sample includes three different versions of some simple matrix multiplicatio
 |:---                 |:---
 | OS                      | Ubuntu* 24.04 LTS
 | Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1 
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1
 
 
 ## Key Implementation Details
@@ -128,7 +128,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*. 
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
 Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
@@ -136,7 +136,7 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Fixing the Null Pointer Version
 
-In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` statement.  The error message clearly tells you which `memcpy` statement caused the error. 
+In `1_matrix_mul_null_pointer` a null pointer is passed to a SYCL `memcpy` statement.  The error message clearly tells you which `memcpy` statement caused the error.
 
 ```
    ./1_matrix_mul_null_pointer
@@ -172,7 +172,7 @@ As an exercise, let's find this a debugger (any host debugger will work; however
    ```
 3. Run a `backtrace` to get a summary showing the rough location that triggered the assert.
    ```
-   (gdb) backtrace 
+   (gdb) backtrace
    ```
 4. Notice in the results that the exception was triggered around line 95 (frame 9):
    ```
@@ -224,7 +224,7 @@ In the second version, the code attempts to execute more than one offload statem
 
    Thread 1.1 "2_matrix_mul_mu" received signal SIGABRT, Aborted.
    ```
-   The exception talks about a “command group” and that only a single command group is allowed within a `submit`.  A command group is something like a `parallel_for` or a SYCL `memcpy` statement – it’s a language construct or function call that makes something happen on the device.  Only one action is allowed per `submit` construct. 
+   The exception talks about a “command group” and that only a single command group is allowed within a `submit`.  A command group is something like a `parallel_for` or a SYCL `memcpy` statement – it’s a language construct or function call that makes something happen on the device.  Only one action is allowed per `submit` construct.
 
 3. Run a `backtrace` to get summary showing the rough location that triggered the assert.
    ```
@@ -290,7 +290,7 @@ In the second version, the code attempts to execute more than one offload statem
    101         });
    ```
 
-   As the exception reported, we are trying to do two memory copies to the device within the `submit` statement, where only a single `parallel_for` or `memcpy` is allowed. 
+   As the exception reported, we are trying to do two memory copies to the device within the `submit` statement, where only a single `parallel_for` or `memcpy` is allowed.
 
 7. To fix the error, remove the extra `memcpy` from the code above.   If this statement were actually issuing two different `memcpy` statements, you would update the code to break this up into two `submit` statements, each with a single `memcpy` .
    ```
@@ -307,6 +307,6 @@ In the second version, the code attempts to execute more than one offload statem
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).
