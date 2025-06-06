@@ -1,0 +1,21 @@
+[project]
+name = "intel_extension_for_scikit_learn_getting_started"
+version = "0.1.0"
+description= "This sample illustrates how to do Image classification using SVM classifier from Python API package SKlearnex with the use of Intel® oneAPI Data Analytics Library (oneDAL)."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "joblib>=1.4.2",
+    "matplotlib>=3.10.1",
+    "scikit-learn==1.5.2",
+    "scikit-learn-intelex>=2025.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]

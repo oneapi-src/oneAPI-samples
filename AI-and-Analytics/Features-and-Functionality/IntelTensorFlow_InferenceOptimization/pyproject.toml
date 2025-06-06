@@ -1,0 +1,21 @@
+[project]
+name = "inteltensorflow-inferenceoptimization"
+version = "0.1.0"
+description = "This tutorial will guide you how to optimize a pre-trained model for a better inference performance, and also analyze the model pb files before and after the inference optimizations."
+authors = [
+    {name = "Copyright © 2020 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow>=2.15.0",
+    "neural-compressor==2.4.1",
+    "pandas==2.2.3",
+]
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"
