@@ -56,7 +56,7 @@ The best oneAPI sample to start with depends on what you are trying to learn or 
 
 ### Using Integrated Development Environments (IDE)
 
-If you prefer to use an Integrated Development Environment (IDE) with these samples, you can download [Visual Studio Code](https://code.visualstudio.com/download) for use on Windows*, Linux*, and macOS*.
+If you prefer to use an Integrated Development Environment (IDE) with these samples, you can download [Visual Studio Code](https://code.visualstudio.com/download) for use on Windows or Linux.
 
 ## Repository Structure
 
@@ -83,14 +83,6 @@ OpenCL Driver: Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8468V OpenCL 3.0 (Buil
 Level Zero Driver: Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1100 12.60.7 [1.3.27642] \
 oneAPI package version: \
 &dash; Intel oneAPI HPC Toolkit Build Version: 2025.2.0.463
-
-### Windows 11
-11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz \
-Intel(R) Iris(R) Xe Graphics OpenCL 3.0 NEO \
-OpenCL Driver: Intel(R) OpenCL, 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz OpenCL 3.0 (Build 0) [2024.18.9.0.28_160000] \
-Level Zero Driver: Intel(R) oneAPI Unified Runtime over Level-Zero, Intel(R) Iris(R) Xe Graphics 12.0.0 [1.3.27193] \
-oneAPI package version: \
-&dash; Intel oneAPI HPC Toolkit Build Version: 2025.0.0.822
 
 ## Known Issues and Limitations
 
