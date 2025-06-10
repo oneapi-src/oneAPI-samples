@@ -52,7 +52,7 @@ The best oneAPI sample to start with depends on what you are trying to learn or 
 | the basics of writing, compiling, and building programs for CPUs and GPUs            |[Simple Add](https://github.com/oneapi-src/oneAPI-samples/tree/main/DirectProgramming/C++SYCL/DenseLinearAlgebra/simple-add) or [Vector Add](https://github.com/oneapi-src/oneAPI-samples/tree/main/DirectProgramming/C++SYCL/DenseLinearAlgebra/vector-add) samples <br> (You can use these samples as starter projects by removing unwanted elements and adding your code and build requirements.)
 | the basics of using artificial intelligence                                          | [Getting Started Samples for AI Tools](https://github.com/oneapi-src/oneAPI-samples/tree/main/AI-and-Analytics/Getting-Started-Samples)
 
->**Note**: The README.md included with each sample provides build instructions for all supported operating system. For samples run in Jupyter Notebooks, you might need to install or configure additional frameworks or package managers if you do not already have them on your system.
+>**Note**: The README.md included with each sample provides build instructions for all supported operating systems. For samples that run in Jupyter Notebooks, you may need to install or configure additional frameworks or package managers if you do not already have them on your system.
 
 ### Using Integrated Development Environments (IDE)
 
