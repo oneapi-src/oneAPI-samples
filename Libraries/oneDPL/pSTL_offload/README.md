@@ -1,3 +1,5 @@
+> Starting with the oneAPI 2025.2 release, oneDPL Code Samples that were originally hosted in the [oneAPI-samples](https://github.com/oneapi-src/oneAPI-samples) repository will now be maintained in the [uxlfoundation/oneDPL](https://github.com/uxlfoundation/oneDPL) repository. The links below have been updated to reflect this change.
+
 # Intel® oneAPI DPC++ Library (oneDPL) Code Samples
 
 | Code Sample Name                                                                                    | Supported Intel® Architecture(s) | Description
