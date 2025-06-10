@@ -12,7 +12,7 @@ You can refine your browsing or searching through filtering on the following:
 
 - Expertise (Getting Started, Tutorial, etc.)
 - Programming language (C++, Python, or Fortran)
-- Target device (CPU GPU, and FPGA)
+- Target device (CPU, GPU, and FPGA)
 
 ## Get the oneAPI Samples
 
