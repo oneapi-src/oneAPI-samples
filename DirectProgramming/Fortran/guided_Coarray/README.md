@@ -9,15 +9,15 @@ The `Coarray` sample provides a guided approach to build and run a serial Fortra
 
 ## Purpose
 
-The `Coarray` sample demonstrates the use of the Fortran coarray feature. The sample program estimates the value of the mathematical constant π (Pi) using a Monte Carlo method (named Monte Carlo after the game that uses random numbers). 
+The `Coarray` sample demonstrates the use of the Fortran coarray feature. The sample program estimates the value of the mathematical constant π (Pi) using a Monte Carlo method (named Monte Carlo after the game that uses random numbers).
 
-Imagine a square piece of paper two units across (the actual unit doesn’t matter). On this paper draw a circle whose diameter is two units (radius one unit). 
+Imagine a square piece of paper two units across (the actual unit doesn’t matter). On this paper draw a circle whose diameter is two units (radius one unit).
 
 ![image of a circle](images/circle.png)
 
 The area of the circle is πr2. But since the radius (r) is 1 and the area of the square is 4 (2r x 2r), the ratio of the area of the circle to that of the area of the square is π/4.
 
-To get the area of the circle, you can pick random points on the paper and count the points that are within the circle. To make this easier, use the center of the square as the origin and generate random values for X and Y coordinates between zero and 1, so you are looking at a quarter of the circle/square. Sqrt(X2+Y2) is the distance between the point and the origin. You are interested only in the points that are within that distance. Since r=1 when X2+Y2 is less than or equal to 1, the point is within the circle. Count the number of random points that are within the circle and divide that by the total number of points and the result is π/4. 
+To get the area of the circle, you can pick random points on the paper and count the points that are within the circle. To make this easier, use the center of the square as the origin and generate random values for X and Y coordinates between zero and 1, so you are looking at a quarter of the circle/square. Sqrt(X2+Y2) is the distance between the point and the origin. You are interested only in the points that are within that distance. Since r=1 when X2+Y2 is less than or equal to 1, the point is within the circle. Count the number of random points that are within the circle and divide that by the total number of points and the result is π/4.
 
 ## Prerequisites
 
@@ -34,11 +34,11 @@ This sample contains two versions of the program:
 | File Name                   | Description
 |:---                         |:---
 | `01_mcpi_sequential.F90`    | This example shows a sequential implementation of the program
-| `02_mcpi_coarray_final.F90` | A working version of the converted program that uses coarray 
+| `02_mcpi_coarray_final.F90` | A working version of the converted program that uses coarray
 
-Key coarray concepts explained in the code are images, shared variables, codimensions, and cobounds. 
+Key coarray concepts explained in the code are images, shared variables, codimensions, and cobounds.
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/overview.html) for more information about features and options mentioned in this sample. 
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/overview.html) for more information about features and options mentioned in this sample.
 
 ## Set Environment Variables
 
@@ -85,7 +85,7 @@ Alternately, use the `Makefile` to compile and run the program:
    make seq
    ```
 
-### On Windows* 
+### On Windows*
 
 1. Open an Intel oneAPI command window.
 2. Change to the sample directory.
@@ -107,7 +107,7 @@ Computing pi using 600000000 trials sequentially
 Computed value of pi is 3.1415794, Relative Error: .422E-05
 ```
 
-When the program is run again, a different computed value is given due to the different random number sequence: 
+When the program is run again, a different computed value is given due to the different random number sequence:
 
 ```
 Computing pi using 600000000 trials sequentially
@@ -116,40 +116,40 @@ Computed value of pi is 3.1415488, Relative Error: .139E-04
 
 ## Modify the Program to Use Coarrays
 
-The Intel® Fortran Compiler (ifx) and the Intel® Fortran Compiler Classic (ifort) support parallel programming using coarrays as defined in the Fortran 2008 Standard and extended by Fortran 2018. An application using coarrays runs the same program, called an image, multiple times in parallel. A Fortran program containing coarrays is interpreted as if it were replicated a fixed number of times and all copies were executed asynchronously. 
+The Intel® Fortran Compiler (ifx) and the Intel® Fortran Compiler Classic (ifort) support parallel programming using coarrays as defined in the Fortran 2008 Standard and extended by Fortran 2018. An application using coarrays runs the same program, called an image, multiple times in parallel. A Fortran program containing coarrays is interpreted as if it were replicated a fixed number of times and all copies were executed asynchronously.
 
-Coarray variables are shared across all images in a model called Partitioned Global Address Space (PGAS). 
+Coarray variables are shared across all images in a model called Partitioned Global Address Space (PGAS).
 
-In this sample, coarrays are used to split the trials across multiple images. Each image has its own local variables, plus a portion of the coarrays shared variables (using PGAS). 
+In this sample, coarrays are used to split the trials across multiple images. Each image has its own local variables, plus a portion of the coarrays shared variables (using PGAS).
 
 A coarray can be a scalar and can be thought of as having extra dimensions, referred to as codimensions. To declare a coarray, either add the `CODIMENSION` attribute, or specify the cobounds alongside the variable name. The cobounds are always enclosed in square brackets. The following example shows the use of codimensions and cobounds:
 
-``` 
+```
 real, dimension(100), codimension[*] :: A
 integer :: B[3,*]
 ```
 
-When specifying cobounds in a declaration, the last cobound must be an `*`. This indicates that it depends on the number of images in the application. The total number of subscripts plus cosubscripts is 15. As with array bounds, it is possible to have a lower cobound that is not 1, though this is not common. 
+When specifying cobounds in a declaration, the last cobound must be an `*`. This indicates that it depends on the number of images in the application. The total number of subscripts plus cosubscripts is 15. As with array bounds, it is possible to have a lower cobound that is not 1, though this is not common.
 
-In the sample program, since the work with estimating π will be split across the images, a coarray is needed to keep track of each image's subtotal of points within the circle. At the end, the subtotals are added to create a grand total, which is then divided by the number of trials as in the sequential version. 
+In the sample program, since the work with estimating π will be split across the images, a coarray is needed to keep track of each image's subtotal of points within the circle. At the end, the subtotals are added to create a grand total, which is then divided by the number of trials as in the sequential version.
 
 ### Edit the Program
 
-1. Open the file `mcpi_sequential.F90` and save it as `mcpi_coarray.F90`. 
-2. In `mcpi_coarray.F90`, edit the existing declaration of `total` to be a coarray: 
+1. Open the file `mcpi_sequential.F90` and save it as `mcpi_coarray.F90`.
+2. In `mcpi_coarray.F90`, edit the existing declaration of `total` to be a coarray:
 
    ```
    ! Declare scalar coarray that will exist on each image
    integer(K_BIGINT) :: total[*] ! Per-image subtotal
    ```
 
-   An important aspect of coarrays is that individual images have local variables which can also be accessed by other images using PGAS. To read the value of `total` on image 3, use the syntax `total[3]`. To reference the local copy, the coindex in brackets is omitted. For best performance, minimize touching the storage of other images. 
+   An important aspect of coarrays is that individual images have local variables which can also be accessed by other images using PGAS. To read the value of `total` on image 3, use the syntax `total[3]`. To reference the local copy, the coindex in brackets is omitted. For best performance, minimize touching the storage of other images.
 
 3. Update the output to show the number of images doing the work and define image 1 to manage timing.
 
-   In a coarray application, each image has its own set of I/O units. The standard input is preconnected only on image 1. The standard output is preconnected on all images. The standard encourages the implementations to merge output, but the order is unpredictable. Intel Fortran supports this merging. 
+   In a coarray application, each image has its own set of I/O units. The standard input is preconnected only on image 1. The standard output is preconnected on all images. The standard encourages the implementations to merge output, but the order is unpredictable. Intel Fortran supports this merging.
 
-   It is typical to have image 1 do any setup and terminal I/O. Change the initial output to show how many images are doing the work and verify that the number of trials is evenly divisible by the number of images (by default, this is the number of cores times threads-per-core). Image 1 does all the timing. 
+   It is typical to have image 1 do any setup and terminal I/O. Change the initial output to show how many images are doing the work and verify that the number of trials is evenly divisible by the number of images (by default, this is the number of cores times threads-per-core). Image 1 does all the timing.
 
    Replace:
 
@@ -174,28 +174,28 @@ In the sample program, since the work with estimating π will be split across th
 
    The new `IF` code block implements the following logic:
 
-   1. Execute this `IF` code block only on image 1. 
+   1. Execute this `IF` code block only on image 1.
 
-      Add the test for the image number using the intrinsic function `THIS_IMAGE()`. When `THIS_IMAGE()` is called without arguments, it returns the index of the invoking image. 
+      Add the test for the image number using the intrinsic function `THIS_IMAGE()`. When `THIS_IMAGE()` is called without arguments, it returns the index of the invoking image.
    2. Ensure that the number of trials is evenly divisible by the number of images.
 
-      The intrinsic function `NUM_IMAGES` returns this value. `error_stop` is similar to stop except that it forces all images in a coarray application to exit. 
-   3. Print the number of trials and the number of images. 
-   4. Start the timing. 
+      The intrinsic function `NUM_IMAGES` returns this value. `error_stop` is similar to stop except that it forces all images in a coarray application to exit.
+   3. Print the number of trials and the number of images.
+   4. Start the timing.
 
-   Images other than image 1 skip this `IF` code block and proceed to the next part of the code. In more complex applications you may want other images to wait until the initialization is done. If that is desired, insert a `sync all` statement. The execution does not continue until all images have reached the `sync all` statement. 
-4. Modify the main compute `DO` loop to split the work among the images. Replace: 
-   
-   ``` 
+   Images other than image 1 skip this `IF` code block and proceed to the next part of the code. In more complex applications you may want other images to wait until the initialization is done. If that is desired, insert a `sync all` statement. The execution does not continue until all images have reached the `sync all` statement.
+4. Modify the main compute `DO` loop to split the work among the images. Replace:
+
+   ```
    do bigi=1_K_BIGINT,num_trials
    ```
 
    with the following:
 
-   ``` 
+   ```
    do bigi=1_K_BIGINT,num_trials/int(NUM_IMAGES(),K_BIGINT)
    ```
-5. Add sync after the `DO` loop, to wait for all images to get to this point in the code. Insert the following after the `DO` loop: 
+5. Add sync after the `DO` loop, to wait for all images to get to this point in the code. Insert the following after the `DO` loop:
 
    ```
    ! Wait for everyone
@@ -235,12 +235,12 @@ In the sample program, since the work with estimating π will be split across th
 
    The new `IF` code block implements the following logic:
 
-   1. Execute this `IF` code block only on image 1. 
-   2. `total` (without a coindex) has the count from image 1. Add in the values of `total` from the other images. Note the `[i]` coindex. 
+   1. Execute this `IF` code block only on image 1.
+   2. `total` (without a coindex) has the count from image 1. Add in the values of `total` from the other images. Note the `[i]` coindex.
 
    (The rest of the code should be the same as the sequential version.)
 
-   All images exit after this code block. 
+   All images exit after this code block.
 
 ## Build and Run the Coarray Program
 
@@ -292,7 +292,7 @@ Computing pi using 600000000 trials across 8 images
 Computed value of pi is 3.1416575, Relative Error: .206E-04
 ```
 
-When the program is run again, a different computed value is given due to the different random number sequence: 
+When the program is run again, a different computed value is given due to the different random number sequence:
 
 ```
 Computing pi using 600000000 trials across 8 images
@@ -317,7 +317,7 @@ The program can be run with a different number of images; the default is determi
    ./coarray
    ```
 
-Alternately, set the environment variable `FOR_COARRAY_NUM_IMAGES` to the desired number of images and run the program. The environment variable overrides the compiler option setting. For example: 
+Alternately, set the environment variable `FOR_COARRAY_NUM_IMAGES` to the desired number of images and run the program. The environment variable overrides the compiler option setting. For example:
 
 ```
 export FOR_COARRAY_NUM_IMAGES=4
@@ -336,7 +336,7 @@ export FOR_COARRAY_NUM_IMAGES=4
    coarray.exe
    ```
 
-Alternately, set the environment variable `FOR_COARRAY_NUM_IMAGES` to the desired number of images and run the program. The environment variable overrides the compiler option setting. For example: 
+Alternately, set the environment variable `FOR_COARRAY_NUM_IMAGES` to the desired number of images and run the program. The environment variable overrides the compiler option setting. For example:
 
 ```
 set FOR_COARRAY_NUM_IMAGES=4
@@ -351,7 +351,7 @@ Computing pi using 600000000 trials across 4 images
 Computed value of pi is 3.1415352, Relative Error: .183E-04
 ```
 
-Note the elapsed time differences when you change the number of images. 
+Note the elapsed time differences when you change the number of images.
 
 > **Note**: This sample program is a functional demonstration of using Fortran coarrays. There may not be a performance improvement.
 
@@ -370,6 +370,6 @@ The following articles provide additional information about using coarrays on di
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

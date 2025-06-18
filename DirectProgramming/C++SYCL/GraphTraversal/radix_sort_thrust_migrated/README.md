@@ -1,6 +1,6 @@
 # `Radix Sort Thrust Migrated` Sample
 
-The `Radix Sort Thrust Migrated` sample is a CUDA to SYCL migrated sample that shows the THRUST equivalent in Intel® oneAPI. 
+The `Radix Sort Thrust Migrated` sample is a CUDA to SYCL migrated sample that shows the THRUST equivalent in Intel® oneAPI.
 
 | Area                   | Description
 |:---                    |:---
@@ -85,49 +85,6 @@ Run the programs on a CPU or GPU. Each sample uses a default device, which in mo
    make run_radixSortMigrated
    ```
 
-### Build and Run the `Radix Sort Thrust Migrated` Sample in Intel® DevCloud (Optional)
-
-When running a sample in the Intel® DevCloud, you must specify the compute node (CPU, GPU, FPGA) and whether to run in batch or interactive mode. For more information, see the Intel® oneAPI Base Toolkit [Get Started Guide](https://devcloud.intel.com/oneapi/get_started/).
-
-#### Build and Run Samples in Batch Mode (Optional)
-
-You can submit build and run jobs through a Portable Bash Script (PBS). A job is a script that submitted to PBS through the `qsub` utility. By default, the `qsub` utility does not inherit the current environment variables or your current working directory, so you might need to submit jobs to configure the environment variables. To indicate the correct working directory, you can use either absolute paths or pass the `-d \<dir\>` option to `qsub`.
-
-1. Open a terminal on a Linux* system.
-2. Log in to Intel® DevCloud.
-   ```
-   ssh devcloud
-   ```
-3. Download the samples.
-   ```
-   git clone https://github.com/oneapi-src/oneAPI-samples.git
-   ```
-4. Change to the sample directory.
-5. Configure the sample for a GPU node and choose the backend as OpenCL.
-   ```
-   qsub  -I  -l nodes=1:gpu:ppn=2 -d .
-   export SYCL_DEVICE_FILTER=opencl:gpu
-   ```
-   - `-I` (upper case I) requests an interactive session.
-   - `-l nodes=1:gpu:ppn=2` (lower case L) assigns one full GPU node.
-   - `-d .` makes the current folder as the working directory for the task.
-
-     |Available Nodes  |Command Options
-     |:---             |:---
-     | GPU	           |`qsub -l nodes=1:gpu:ppn=2 -d .`
-     | CPU	           |`qsub -l nodes=1:xeon:ppn=2 -d .`
-
-6. Perform build steps as you would on Linux.
-7. Run the programs.
-8. Clean up the project files.
-   ```
-   make clean
-   ```
-9. Disconnect from the Intel® DevCloud.
-   ```
-   exit
-   ```
-
 ## Example Output
 
 This is example output if you built the default and ran `run_radixSortMigrated`.
@@ -145,7 +102,7 @@ Sorting 1048576 32-bit unsigned int keys and values
 
 radixSortThrust, Throughput = 5.5147 MElements/s, Time = 0.19014 s, Size = 1048576 elements
 Test passed
-Time taken by program is : 292.000000 sec 
+Time taken by program is : 292.000000 sec
 [100%] Built target run_radixSortMigrated
 
 ```
@@ -153,6 +110,6 @@ Time taken by program is : 292.000000 sec
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](third-party-programs.txt).

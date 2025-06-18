@@ -1,5 +1,5 @@
 # `Atomic` Sample
- 
+
 This sample illustrates the read, write, update & capture clauses for the atomic directive. The original OpenACC source code is migrated to OpenMP to Offload on Intel® Platforms.
 
 | Area                  | Description
@@ -12,12 +12,12 @@ This sample illustrates the read, write, update & capture clauses for the atomic
 
 OpenMP atomic operations allows multiple threads to safely update a shared numeric variable, such as on hardware platforms that support atomic operation use. An atomic operation applies only to the single assignment statement that immediately follows it, so atomic operations are useful for code that requires fine-grain synchronization.
 
-> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code. 
+> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
-|:---                           |:--- 
+|:---                           |:---
 | `openMP_migrated_output`            | Contains the OpenMP migrated code.
 
 ## Prerequisites
@@ -32,7 +32,7 @@ For more information on how to install the above Tool, visit [intel-application-
 
 ## Key Implementation Details
 
-This sample demonstrates the migration of the following OpenACC pragmas: 
+This sample demonstrates the migration of the following OpenACC pragmas:
 - #pragma acc parallel loop copy() copyout()
 
   The kernels construct identifies a region of code that may contain parallelism that has been as been translated into:
@@ -53,7 +53,7 @@ This sample demonstrates the migration of the following OpenACC pragmas:
 
   The `atomic capture` updates the value of a variable while capturing the original or final value of the variable atomically. This has been translated into:
   - #pragma omp atomic capture
-  
+
 
 >  **Note**: Refer to [Portability across Heterogeneous Architectures](https://www.intel.com/content/www/us/en/developer/articles/technical/openmp-accelerator-offload.html#gs.n33nuz) for general information about the migration of OpenACC to OpenMP.
 
@@ -73,7 +73,7 @@ For this sample, the tool takes application sources (either C/C++ or Fortran lan
      ```
 
 The binary of the translator can be found inside intel-application-migration-tool-for-openacc-to-openmp/src location
-    
+
   2. The openacc sample is taken from [Openacc-samples](https://github.com/OpenACC/openacc-examples.git)
      ```
      cd openacc-examples/Submissions/C/Atomic/
@@ -103,14 +103,14 @@ For each given input-file, the tool will generate a translation file named <inpu
    ```
    $ make
    ```
-   
+
 By default, this command sequence will build the `openMP_migrated_output ` version of the program.
 
 3. Run the program.
    ```
    $ make run
    ```  
-   
+
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
@@ -122,6 +122,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](third-party-programs.txt).

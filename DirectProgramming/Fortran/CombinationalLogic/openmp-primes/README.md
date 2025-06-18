@@ -51,7 +51,7 @@ Use the following options to compile the program versions.
 
 - [`-qopenmp` (Linux) or `/Qopenmp` (Windows)](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/qopenmp-qopenmp.html) enables compiler recognition of OpenMP* directives. Omitting this
   option results in a serial program.
-- [`-O[n]` (Linux) or `/O[n]` (Windows)](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/o-001.html) sets the optimization level from level 1 (`-O1`) to level 3 (`-O3`). You can disable all optimizations using `-O0` (Linux) or `/Od` (Windows). 
+- [`-O[n]` (Linux) or `/O[n]` (Windows)](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/o-001.html) sets the optimization level from level 1 (`-O1`) to level 3 (`-O3`). You can disable all optimizations using `-O0` (Linux) or `/Od` (Windows).
 
 >**Note**: You can find more information about these options in the *Compiler
 >Options* section of the [Intel® Fortran Compiler Developer Guide and
@@ -73,8 +73,8 @@ development.
 > - For private installations: ` . ~/intel/oneapi/setvars.sh`
 >
 > Windows:
-> - Under normal circumstances, you do not need to run the setvars.bat batch file. The terminal shortcuts 
-> in the Windows Start menu, Intel oneAPI command prompt for <target architecture> for Visual Studio <year>, 
+> - Under normal circumstances, you do not need to run the setvars.bat batch file. The terminal shortcuts
+> in the Windows Start menu, Intel oneAPI command prompt for <target architecture> for Visual Studio <year>,
 > set these variables automatically.
 >
 > For additional information, see [Use the Command Line on Windows](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/use-the-command-line-on-windows.html).
@@ -122,13 +122,13 @@ changes.
    debug_run.bat
    ```
 
-   Notice the timestamp. With multi-threaded applications, use Elapsed Time to measure the time. CPU time is the time 
+   Notice the timestamp. With multi-threaded applications, use Elapsed Time to measure the time. CPU time is the time
    accumulated for all threads.
 
 ### Experiment 2: Run the Optimized Version
 
 1. Run the program.
-   
+
    Linux:
 
    ```
@@ -177,7 +177,7 @@ threads to use.
    ```
    export OMP_NUM_THREADS=2
    make run
-   ``` 
+   ```
 
    Windows:
 
@@ -188,7 +188,7 @@ threads to use.
 
    Notice if the application ran faster with more threads.
 
-3. Experiment with the number of threads and see how changing the number of threads 
+3. Experiment with the number of threads and see how changing the number of threads
    affects performance.
 
 4. On Linux clean the object and executable files.
@@ -206,8 +206,8 @@ Reference](https://www.intel.com/content/www/us/en/docs/fortran-compiler/develop
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+[License.txt](License.txt)
 for details.
 
 Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).

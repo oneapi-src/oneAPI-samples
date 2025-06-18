@@ -11,14 +11,13 @@
 	"targetDevice": ["CPU"],
 	"ciTests": {
 		"linux": [{
+			"env": [
+				"pip install uv==0.6.3",
+				"uv sync"
+			],
 			"id": "tensorflow_inference_optimization",
 			"steps": [
-				"source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"pip install tensorflow==2.15.0.post1",
-				"pip install ipykernel jupyter",
-				"python -m ipykernel install --user --name=tensorflow",
-				"jupyter nbconvert --to notebook --execute tutorial_optimize_TensorFlow_pretrained_model.ipynb"
+				"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook tutorial_optimize_TensorFlow_pretrained_model.ipynb"
 			]
 		}]
 	},

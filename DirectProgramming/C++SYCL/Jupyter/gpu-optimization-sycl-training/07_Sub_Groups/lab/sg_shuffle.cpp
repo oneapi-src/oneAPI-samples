@@ -37,7 +37,7 @@ int main() {
       h.parallel_for(
           sycl::nd_range<2>(sycl::range<2>(N / blockSize, N),
                             sycl::range<2>(1, blockSize)),
-          [=](sycl::nd_item<2> it) [[intel::reqd_sub_group_size(16)]] {
+          [=](sycl::nd_item<2> it) [[sycl::reqd_sub_group_size(16)]] {
             int gi = it.get_group(0);
             int gj = it.get_group(1);
 

@@ -78,7 +78,7 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
 ## Manual Workarounds
 The following manual change has been done to complete the migration.
    
-1. The warp size in CUDA is a fixed constant 32, but in SYCL sub-group size usually can be 16 or 32. Use intel extension [[intel::reqd_sub_group_size(32)]] to restrict the sub-group size to 32.
+1. The warp size in CUDA is a fixed constant 32, but in SYCL sub-group size usually can be 16 or 32. Use intel extension [[sycl::reqd_sub_group_size(32)]] to restrict the sub-group size to 32.
       ```
       dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize),
@@ -90,7 +90,7 @@ The following manual change has been done to complete the migration.
       ```
       dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize),
-        [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(32)]] {
+        [=](sycl::nd_item<3> item_ct1) [[sycl::reqd_sub_group_size(32)]] {
             sequence_gpu(d_ptr, N, item_ct1);
         });
       ```

@@ -21,7 +21,7 @@ int main() {
   auto e = q.submit([&](auto &h) {
     sycl::stream out(65536, 128, h);
     h.parallel_for(
-        sycl::nd_range<1>(15, 15), [=](sycl::nd_item<1> it) [[intel::reqd_sub_group_size(16)]] {
+        sycl::nd_range<1>(15, 15), [=](sycl::nd_item<1> it) [[sycl::reqd_sub_group_size(16)]] {
           int i = it.get_global_linear_id();
           auto sg = it.get_sub_group();
           int sgSize = sg.get_local_range()[0];

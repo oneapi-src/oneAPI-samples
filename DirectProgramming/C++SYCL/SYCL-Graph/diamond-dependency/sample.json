@@ -1,0 +1,41 @@
+{
+    "guid": "3AB46B31-4A82-491D-AFF5-6532720E76B8",
+    "name": "Diamond Dependency",
+    "categories": [
+        "Toolkit/oneAPI Direct Programming/C++SYCL/SYCL-Graph"
+    ],
+    "description": "Diamond Dependency kernel structure using SYCL-Graph",
+    "toolchain": [
+        "dpcpp"
+    ],
+    "targetDevice": [
+        "CPU",
+        "GPU"
+    ],
+    "languages": [
+        {
+            "cpp": {}
+        }
+    ],
+    "os": [
+        "linux"
+    ],
+    "builder": [
+        "cmake"
+    ],
+    "ciTests": {
+        "linux": [
+            {
+                "id": "test",
+                "steps": [
+                    "mkdir build",
+                    "cd build",
+                    "cmake ..",
+                    "cmake --build . -j$(nproc)",
+                    "./diamondDependency"
+                ]
+            }
+        ]
+    },
+    "expertise": "Concepts and Functionality"
+}

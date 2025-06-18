@@ -94,5 +94,12 @@ ifx lu_solve_omp_offload_optimized.F90 -o lu_solve_omp_offload_optimized -i8 -fr
 ```
 
 ### Troubleshooting
-If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits
-[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2023-1/overview.html)
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
+
+## License
+
+Code samples are licensed under the MIT license. See
+[License.txt](License.txt) for details.
+
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

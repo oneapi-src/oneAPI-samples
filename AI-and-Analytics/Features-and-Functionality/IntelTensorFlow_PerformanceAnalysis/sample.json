@@ -1,0 +1,26 @@
+{
+	"guid": "B213F6A4-E0C4-4268-8D0C-DDA5073A3F24",
+	"name": "Performance_Analysis_using_model_zoo_for_Intel_Architecture",
+	"categories": ["Toolkit/oneAPI AI And Analytics/Features And Functionality"],
+	"description": "This sample contains one Jupyter notebook from this GitHub Repo and four Jupyter Notebooks from the Model Zoo for Intel® Architecture to help users analyze the performance difference among different Tensorflow enviroments such as Stock vs Intel.",
+	"builder": ["cli"],
+	"languages": [{
+		"python": {}
+	}],
+	"os": ["linux"],
+	"targetDevice": ["CPU"],
+	"ciTests": {
+		"linux": [{
+			"id": "tensorflow_performance_analysis",
+			"steps": [
+				"pip install uv",
+				"uv venv intel-tensorflow --python 3.10.12",
+				"source intel-tensorflow/bin/activate",
+				"uv sync --active",
+				"uv run --active python -m ipykernel install --user --name=intel-tensorflow",
+				"uv run --active jupyter nbconvert --to notebook --execute TF_PerfAnalysis.ipynb"
+			]
+		}]
+	},
+    "expertise": "Performance Analysis"
+}
