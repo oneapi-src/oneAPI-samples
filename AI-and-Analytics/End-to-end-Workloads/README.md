@@ -11,14 +11,13 @@ through machine learning, and provide interoperability for efficient model
 development.
 
 You can find more information at
-[Intel AI Tools](https://www.intel.com/content/www/us/en/developer/topic-technology/artificial-intelligence/frameworks-tools.html).
+[Intel AI Tools](https://software.intel.com/content/www/us/en/develop/tools/oneapi/ai-analytics-toolkit.html).
 
 
 # End-to-end Samples
 
 |AI Tools preset bundle    | Components         | Folder                 | Description
 | :---               | :---               |:---                    |:---
-|Classical Machine Learning| Intel® Distribution of Modin* <br> Intel® oneAPI Data Analytics Library (oneDAL) <br> IDP | [Census](Census)       | Use Intel® Distribution of Modin* to ingest and process U.S. census data from 1970 to 2010 in order to build a ridge regression based model to find the relation between education and the total income earned in the US.
 |Deep Learning| Intel® Extension for PyTorch (IPEX), Intel® Neural Compressor (INC)           | [LanguageIdentification](LanguageIdentification) | Trains a model to perform language identification using the Hugging Face Speechbrain library and CommonVoice dataset, and optimized with Intel® Extension for PyTorch and Intel® Neural Compressor (INC).
 |Inference Optimization| Intel® Distribution of OpenVINO™ toolkit           | [LidarObjectDetection-PointPillars](LidarObjectDetection-PointPillars) | Performs 3D object detection and classification using point cloud data from a LIDAR sensor as input.
 

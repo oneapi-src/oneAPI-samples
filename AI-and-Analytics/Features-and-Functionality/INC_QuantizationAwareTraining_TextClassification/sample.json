@@ -12,13 +12,12 @@
         "linux": [
       {
             "env": [
-                "source /intel/oneapi/intelpython/bin/activate", 
-                "conda activate pytorch",
-                "pip install -r requirements.txt"
+                "pip install uv==0.6.3",
+                "uv sync"
             ],
             "id": "inc_text_classification_quantization_py",
             "steps": [
-              "python INC_QuantizationAwareTraining_TextClassification.py"
+              "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook INC_QuantizationAwareTraining_TextClassification.ipynb"
              ]
         }
       ]

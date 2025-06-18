@@ -1,5 +1,5 @@
 ﻿# `Hidden Markov Models` Sample
- 
+
 The `Hidden Markov Models` sample presents a statistical model using a Markov process to present graphable nodes that are otherwise in an unobservable state or “hidden”. This technique helps with pattern recognition such as speech, handwriting, gesture recognition, parts-of-speech tagging, partial discharges, and bioinformatics. The sample offloads the complexity of the Markov process to the GPU.
 
 | Property                     | Description
@@ -153,8 +153,8 @@ The sample completed successfully!
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt)
+[License.txt](License.txt)
 for details.
 
 Third party program Licenses can be found here:
-[third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+[third-party-programs.txt](third-party-programs.txt).

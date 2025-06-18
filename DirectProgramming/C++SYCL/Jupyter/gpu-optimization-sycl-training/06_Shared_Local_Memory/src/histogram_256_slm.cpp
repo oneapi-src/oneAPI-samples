@@ -69,7 +69,7 @@ int main() {
 
           for (int k = 0; k < blockSize; k++) {
             unsigned long x =
-                sg.load(macc.get_pointer() + group * gSize * blockSize +
+                sg.load(macc.template get_multi_ptr<sycl::access::decorated::no>().get() + group * gSize * blockSize +
                         sgGroup * sgSize * blockSize + sgSize * k);
 #pragma unroll
             for (std::uint8_t shift : {0, 8, 16, 24, 32, 40, 48, 56}) {

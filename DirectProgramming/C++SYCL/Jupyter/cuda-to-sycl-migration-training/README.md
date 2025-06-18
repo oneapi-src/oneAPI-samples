@@ -1,14 +1,14 @@
 ## Title
- 
+
  CUDA To SYCL Migration
-  
+
 ## Requirements
 | Optimized for                     | Description
 |:---                               |:---
 | OS                                | Linux* Ubuntu 18.04, 20 Windows* 10, 11
 | Hardware                          | Skylake with GEN9 or newer
 | Software                          | Intel&reg; oneAPI DPC++ Compiler, Jupyter Notebooks, Intel DevCloud
-  
+
 ## Purpose
 C++ and SYCL* deliver a unified programming model, performance portability, and C++ alignment for applications using accelerators from different vendors.
 
@@ -20,11 +20,6 @@ At the end of this course you will be able to:
 
 - Understand the advantages of migrating to SYCL
 - Migrate a CUDA application to a SYCL application and compile/run on different accelerators like CPU or GPU from different vendors.
-
-## License  
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
-
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt)
 
 ## Content Details
 
@@ -57,21 +52,10 @@ Each module folder has a Jupyter Notebook file (`*.ipynb`), this can be opened i
     - `run_sycl_migrated.sh` - script to compile/run migrated SYCL code
     - `run_sycl_migrated_optimized.sh`  - script to compile/run migrated optimized SYCL code
 
-## Install Directions
-
-The training content can be accessed locally on the computer after installing the necessary tools, or you can directly access it using Intel DevCloud without any installation.
-
-#### Access using Intel DevCloud
-
-The Jupyter notebooks are tested and can be run on Intel DevCloud without any installation necessary, below are the steps to access these Jupyter notebooks on Intel DevCloud:
-1. Register on [Intel DevCloud](https://devcloud.intel.com/oneapi)
-2. Login, Get Started and Launch Jupyter Lab
-3. Open Terminal in Jupyter Lab and git clone the repo and access the Notebooks
-
 #### Local Installation of oneAPI Tools and JupyterLab
 
 The Jupyter Notebooks can be downloaded locally to a computer and accessed:
-- Install Intel oneAPI Base Toolkit on local computer: [Installation Guide](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html) 
+- Install Intel oneAPI Base Toolkit on local computer: [Installation Guide](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html)
 - Install Jupyter Lab on local computer: [Installation Guide](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)
 - git clone the repo and access the Notebooks using Jupyter Lab
 
@@ -82,4 +66,7 @@ The Jupyter Notebooks can be viewed on Github and you can run the code on comman
 - git clone the repo
 - open command line terminal and use the `run_*.sh` script in each module to compile and run code.
 
+## License  
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt)

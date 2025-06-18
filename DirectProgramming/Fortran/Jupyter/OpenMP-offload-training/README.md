@@ -63,31 +63,31 @@ The *oneAPI OpenMP* Offload Modules in Fortran* contains training and conceptual
 * Introduce Developer Training Modules
 * Describe oneAPI Tool Modules
 
-[Introduction to OpenMP Offload](intro) 
+[Introduction to OpenMP Offload](intro)
 * oneAPI Software Model Overview and Workflow
 * HPC Single-Node Workflow with oneAPI
 * Simple OpenMP Code Example
 * Target Directive Explanation
 * _Lab Exercise_: Vector Increment with Target Directive
 
-[Managing Data Transfers](datatransfer) 
+[Managing Data Transfers](datatransfer)
 * Offloading Data
 * Target Data Region
 * _Lab Exercise_: Target Data Region
 * Mapping Global Variable to Device
 
-[Utilizing GPU Parallelism](parallelism) 
+[Utilizing GPU Parallelism](parallelism)
 * Device Parallelism
 * OpenMP Constructs and Teams
 * Host Device Concurrency
 * _Lab Exercise_: OpenMP Device Parallelism
 
-[Unified Shared Memory](USM) 
+[Unified Shared Memory](USM)
 * Allocating Unified Shared Memory
 * USM Explicit Data Movement
 * _Lab Exercise_: Unified Shared Memory
 
 ## License
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

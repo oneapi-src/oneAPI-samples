@@ -23,7 +23,7 @@ int main() {
     auto sg = item.get_sub_group();
     auto i = item.get_global_id(0);
 
-    //# Add all elements in sub_group using sub_group collectives
+    //# Add all elements in sub_group using sub_group algorithm
     int result = reduce_over_group(sg, data[i], plus<>());
 
     //# write sub_group sum in first location for each sub_group

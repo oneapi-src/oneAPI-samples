@@ -13,17 +13,15 @@
       "linux": [
         {
             "env": [
-                "source /intel/oneapi/intelpython/bin/activate",
-                "conda env remove -n user_tensorflow-gpu",
-                "conda create --name user_tensorflow-gpu --clone tensorflow-gpu",
-                "conda activate user_tensorflow-gpu",
-                "pip install -r requirements.txt",
-                "python -m ipykernel install --user --name=user_tensorflow-gpu"
+                "pip install uv==0.6.3",
+                "uv sync"                
             ],
             "id": "inc_text_generation_lstm_py",
             "steps": [
                 "export ITEX_ENABLE_NEXTPLUGGABLE_DEVICE=0",
-                "ITEX_NUM_EPOCHS=5 KERAS_NUM_EPOCHS=5 python TextGenerationModelTraining.py"
+                "export ITEX_NUM_EPOCHS=5",
+                "export KERAS_NUM_EPOCHS=5",
+                "uv run jupyter nbconvert --to notebook --execute TextGenerationModelTraining.ipynb"
              ]
         }
       ]

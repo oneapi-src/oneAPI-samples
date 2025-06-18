@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Race Condition` Sample
 
-The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit. 
+The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -31,8 +31,8 @@ The sample includes different versions of a simple matrix multiplication program
 |:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
 | Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.0 <br> Intel® Distribution for GDB* 2025.0 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2506.18 or newer from https://dgpu-docs.intel.com/releases/releases.html
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2507.12 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -124,13 +124,16 @@ This example shows what happens when code tries to access data provided by the d
 
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.
+### Setting up to Debug on the GPU
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+
+Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
 >**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
 
 ### Getting the Tracing and Profiling Tool
 
-At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit). 
+At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
 To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
@@ -138,7 +141,7 @@ To complete the steps in the following section, you must download the [Unified T
 
 As you might have noticed, when you attempt to run `1_matrix_mul_race_condition.cpp` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
 
-In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html) before you can see code running on the GPU.
+In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
 
 1. Run the Intel® Distribution for GDB*.  
    ```
@@ -168,11 +171,12 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    intelgt: inferior 3 (gdbserver-ze) has been removed.
    (gbd)
    ```
-   As we saw outside the debugger, it ran to completion.   But note that the inferior (the code running on the GPU), exited with an error code.   Let's see if we can trap that error.
+   As we saw outside the debugger, it ran to completion.   But note that the inferior (the code running on the GPU), exited with an error code (0377).   Let's see if we can trap that error.
 
 4. Run again, telling the debugger to stop if the application throws an exception
    ```
    (gdb) catch throw
+   Catchpoint 1 (throw)
    (gdb) run
    ```
    We run, and stop with this:
@@ -198,45 +202,41 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    ```
    The output might look similar to the following:
    ```
-   #0  0x00007ffff78bb35a in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #1  0x00007ffff7d148e8 in void sycl::_V1::detail::plugin::checkUrResult<(sycl::_V1::errc)1>(ur_result_t) const ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #2  0x00007ffff7e7058e in sycl::_V1::detail::copyD2H(sycl::_V1::detail::SYCLMemObjI*, ur_mem_handle_t_*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, char*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #3  0x00007ffff7e710ac in sycl::_V1::detail::MemoryManager::copy(sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #4  0x00007ffff7ee4c1f in sycl::_V1::detail::MemCpyCommandHost::enqueueImp() ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #5  0x00007ffff7edb6ca in sycl::_V1::detail::Command::enqueue(sycl::_V1::detail::EnqueueResultT&, sycl::_V1::detail::BlockingT, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&) ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #6  0x00007ffff7f00fc7 in sycl::_V1::detail::Scheduler::GraphProcessor::enqueueCommand(sycl::_V1::detail::Command*, std::shared_lock<std::shared_timed_mutex>&, sycl::_V1::detail::EnqueueResultT&, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&, sycl::_V1::detail::Command*, sycl::_V1::detail::BlockingT) ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #7  0x00007ffff7efbd9a in sycl::_V1::detail::Scheduler::addCopyBack(sycl::_V1::detail::AccessorImplHost*) ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #8  0x00007ffff7f11c16 in sycl::_V1::detail::SYCLMemObjT::updateHostMemory(void*) ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #9  0x00007ffff7f20563 in std::_Function_handler<void (std::function<void (void*)> const&), sycl::_V1::detail::SYCLMemObjT::handleHostData(void*, unsigned long)::{lambda(std::function<void (void*)> const&)#1}>::_M_invoke(std::_Any_data const&, std::function<void (void*)> const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #10 0x00007ffff7f1fb7a in std::_Function_handler<void (), sycl::_V1::detail::SYCLMemObjT::set_final_data(std::function<void (std::function<void (void*)> const&)> const&)::{lambda()#1}>::_M_invoke(std::_Any_data const&) ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #11 0x00007ffff7f11e88 in sycl::_V1::detail::SYCLMemObjT::updateHostMemory() ()
-      from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #12 0x00007ffff7f20044 in std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>::_M_dispose() () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #13 0x000000000040945a in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release (this=0x1fb99f0)
+   #0  0x00007ffff78bb35a in __cxa_throw () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+   #1  0x00007ffff7cbebf4 in void sycl::_V1::detail::Adapter::checkUrResult<(sycl::_V1::errc)1>(ur_result_t) const () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #2  0x00007ffff7e2abde in sycl::_V1::detail::copyD2H(sycl::_V1::detail::SYCLMemObjI*, ur_mem_handle_t_*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, char*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&) ()
+      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #3  0x00007ffff7e2b73c in sycl::_V1::detail::MemoryManager::copy(sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&) ()
+      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #4  0x00007ffff7eb31e9 in ur_result_t sycl::_V1::detail::callMemOpHelper<void (sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&), sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, void*&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl>&>(void (&)(sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&), sycl::_V1::detail::SYCLMemObjI*&&, void*&&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, void*&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >&&, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl>&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #5  0x00007ffff7eb2c4e in sycl::_V1::detail::MemCpyCommandHost::enqueueImp() () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #6  0x00007ffff7ea90fb in sycl::_V1::detail::Command::enqueue(sycl::_V1::detail::EnqueueResultT&, sycl::_V1::detail::BlockingT, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #7  0x00007ffff7ecec2e in sycl::_V1::detail::Scheduler::GraphProcessor::enqueueCommand(sycl::_V1::detail::Command*, std::shared_lock<std::shared_timed_mutex>&, sycl::_V1::detail::EnqueueResultT&, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&, sycl::_V1::detail::Command*, sycl::_V1::detail::BlockingT) ()
+      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #8  0x00007ffff7eca5ba in sycl::_V1::detail::Scheduler::addCopyBack(sycl::_V1::detail::AccessorImplHost*) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #9  0x00007ffff7edd2e6 in sycl::_V1::detail::SYCLMemObjT::updateHostMemory(void*) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #10 0x00007ffff7eebdd3 in std::_Function_handler<void (std::function<void (void*)> const&), sycl::_V1::detail::SYCLMemObjT::handleHostData(void*, unsigned long)::{lambda(std::function<void (void*)> const&)#1}>::_M_invoke(std::_Any_data const&, std::function<void (void*)> const&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #11 0x00007ffff7eeb3ea in std::_Function_handler<void (), sycl::_V1::detail::SYCLMemObjT::set_final_data(std::function<void (std::function<void (void*)> const&)> const&)::{lambda()#1}>::_M_invoke(std::_Any_data const&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #12 0x00007ffff7edd558 in sycl::_V1::detail::SYCLMemObjT::updateHostMemory() () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #13 0x00007ffff7eeb8b4 in std::_Sp_counted_ptr_inplace<sycl::_V1::detail::buffer_impl, std::allocator<sycl::_V1::detail::buffer_impl>, (__gnu_cxx::_Lock_policy)2>::_M_dispose() ()
+      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   #14 0x00000000004097ea in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release (this=0x3923630)
       at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr_base.h:346
-   #14 0x00000000004093d6 in std::__shared_count<(__gnu_cxx::_Lock_policy)2>::~__shared_count (this=0x7fffffffb810)
+   #15 0x0000000000409766 in std::__shared_count<(__gnu_cxx::_Lock_policy)2>::~__shared_count (this=0x7fffffffb480)
       at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr_base.h:1071
-   #15 0x000000000040b879 in std::__shared_ptr<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2>::~__shared_ptr
-      (this=0x7fffffffb808) at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr_base.h:1524
-   #16 0x000000000040b855 in std::shared_ptr<sycl::_V1::detail::buffer_impl>::~shared_ptr (this=0x7fffffffb808)
+   #16 0x000000000040bc09 in std::__shared_ptr<sycl::_V1::detail::buffer_impl, (__gnu_cxx::_Lock_policy)2>::~__shared_ptr (this=0x7fffffffb478)
+      at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr_base.h:1524
+   #17 0x000000000040bbe5 in std::shared_ptr<sycl::_V1::detail::buffer_impl>::~shared_ptr (this=0x7fffffffb478)
       at /usr/lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr.h:175
-   #17 0x000000000040ad75 in sycl::_V1::detail::buffer_plain::~buffer_plain (this=0x7fffffffb808)
-      at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/buffer.hpp:87
-   #18 0x0000000000409182 in sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void>::~buffer (
-      this=0x7fffffffb808) at /opt/intel/oneapi/compiler/2025.0/bin/compiler/../../include/sycl/buffer.hpp:485
-   #19 0x0000000000403c66 in main ()
-      at 1_matrix_mul_race_condition.cpp:129
+   #18 0x000000000040b105 in sycl::_V1::detail::buffer_plain::~buffer_plain (this=0x7fffffffb478) at /opt/intel/oneapi/compiler/2025.1/bin/compiler/../../include/sycl/buffer.hpp:87
+   #19 0x0000000000409512 in sycl::_V1::buffer<float, 2, sycl::_V1::detail::aligned_allocator<float>, void>::~buffer (this=0x7fffffffb478)
+      at /opt/intel/oneapi/compiler/2025.1/bin/compiler/../../include/sycl/buffer.hpp:485
+   #20 0x0000000000403c96 in main () at 1_matrix_mul_race_condition.cpp:129
+   (gdb)
    ````
 6. Look at the final frame. (Your frame number might differ.)
     ```
-    (gdb) frame 19
+    (gdb) frame 20
     ```
    You should see something similar to the following:
     ```
@@ -284,17 +284,16 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    <<<< [211022976856153] zeCommandListAppendMemoryCopyRegion [46127 ns] hWaitEvents = 37882840 -> ZE_RESULT_SUCCESS(0x0)
    >>>> [211022976862571] zeEventHostSynchronize: hEvent = 37883384 timeout = 18446744073709551615
    <<<< [211022979801501] zeEventHostSynchronize [2937354 ns] -> ZE_RESULT_SUCCESS(0x0)
-   corrupted double-linked list
-   Aborted (core dumped)
+   Segmentation fault (core dumped)
     ```
 
 ### Interpret the Results
 
 The first clue here is that the program throws an exception after it has completed checking the results and finding them bad. That behavior is worrying.
 
-Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 8`.  This frame shows us attempting to update the host memory from the device, while `frame 19` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 18`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data the buffer being copied into (`c_back`) no longer exists*.
+Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 9`.  This frame shows us attempting to update the host memory from the device, while `frame 20` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 19`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data the buffer being copied into (`c_back`) no longer exists*.
 
-We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing is to copy some memory from the device memory (`srcptr = 18374967954634571776`) to a host pointer (`dstptr = 35936816`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable, it again is a likely suspect.  The message about a corrupted double-linked list is also troubling.
+We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing is to copy some memory from the device memory (`srcptr = 18374967954634571776`) to a host pointer (`dstptr = 35936816`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
 
 But what if the developer didn't delete `c_back`, and let program termination clean it up?  Try it!  Unfortunately, in that case your program complains about bad results, but it exits cleanly (shutdown will wait for the GPU to copy memory back to the host buffer before it kills the buffer).
 
@@ -339,7 +338,7 @@ So in conclusion, it looks like the third kernel is still executing and/or its r
 
 ### Understand the Problem
 
-Because we are using SYCL buffers, even though the `q.submit` statements that populate `a_buf` and `b_buf` execute asynchronously, the third `q.submit` statement does not execute until those first two submits are complete because the SYCL runtime realizes that the third `q.submit` depends on the `a_buf` and `b_buf` buffers, which are being used in the first two kernels.   Once the first two kernels complete, the third `q.submit` kernel starts executing because its input data are ready. The SYCL runtime then immediately returns control to the host and we proceed to the code which verifies the result - ***while the third `q.submit` keeps running***.
+Because we are using SYCL buffers, even though the `q.submit` statements that populate `a_buf` and `b_buf` execute asynchronously, the third `q.submit` statement does not execute until those first two submits are complete because the SYCL runtime realizes that the third `q.submit` depends on the `a_buf` and `b_buf` buffers, which are being used in the first two kernels.   Once the first two kernels complete, the third `q.submit` kernel starts executing because both its inputs are ready. The SYCL runtime then immediately returns control to the host and we proceed to the code which verifies the result - ***while the third `q.submit` keeps running***.
 
 There are three errors in this code:
 
@@ -347,7 +346,7 @@ There are three errors in this code:
 
 2. We  should be using a host accessor pointing to SYCL buffer `c_buf` to access its contents, which would also indicate that we need to wait for the third `q.submit kernel` to complete **and** for the *data to be copied back to the host* before accessing the data in `c_back`.
 
-3. For buffers initialized with a pointer to host memory (like `c_buf`), the developer "make a contract" to not reference the host pointer again until the SYCL buffer is destroyed.  This, deleting the host memory before the SYCL buffer is destroyed is illegal (the call to `delete[] c_back;`). The buffer cannot detect that the memory was deallocated.
+3. For buffers initialized with a pointer to host memory (like `c_buf`), the developer "makes a contract with the SYCL runtime" to not reference the host pointer again until the SYCL buffer is destroyed.  Thus, deleting the host memory before the SYCL buffer is destroyed is illegal (the call to `delete[] c_back;`). The buffer cannot detect that the memory was deallocated.
 
 ### Fix the Code
 
@@ -396,9 +395,9 @@ int VerifyResult(sycl::host_accessor<float, 2, sycl::access::mode::read> c_back)
 int i, j, k;
 :
 ```
-The result should look like `3_matrix_mul.cpp`.  With these changes we did the following:
+The result should look like `3_matrix_mul.cpp`.  Reiterating, with these changes :
 1.  We created a host accessor to pull the values of out `c_buf` on the host, forcing the data to be transferred from the device to the host before the first access (one of the race conditions in this code).
-2.  We are waiting for the third `q.submit` kernel to complete before asking for the values in `c_buf`, fixing the other race condition.
+2.  We waited for the third `q.submit` kernel to complete before asking for the values in `c_buf`, fixing the other race condition.
 3.  We are no longer deleting `c_back` before the SYCL buffer that makes use of it (`c_buf`) is destroyed on program exit.
 4.  We changed `VerifyResult` to pass down the host accessor, with which we are able to read the contents of the accessor the same way we would access the original `c_back` array (which we "made a contract" not to look at while a SYCL buffer was making use of it).
 
@@ -414,7 +413,7 @@ Note that the source files differ by **two characters** (parentheses) only.
 123d121
 <   }
 ```
-This is a more detailed region of the code.
+This is a more detailed look at this region of the code.
 ```
   {   // This is unique to 2_matrix_mul.cpp
     queue q(default_selector{});
@@ -448,9 +447,9 @@ As a result, because the device queue `q` exists only in the scope of those brac
 
 Note that `2_matrix_mul.cpp` still has a bug.  It is an example of problem (2) above - it's not using a host accessor to access the data in `c_back`, which is still being managed by SYCL buffer `c_buf`.   This violates the contract (3 above) that we are not allowed to look at the host data while it is being managed by a SYCL buffer.  We just got lucky.
 
-This points out a potential trap in the training documentation you may have read while learning SYCL.   You could easily get the impression that if you use the SYCL buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parenthesis may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
+This points out a potential trap in the training documentation you may have read while learning SYCL.   You can easily get the impression that if you use the SYCL buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parenthesis may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
 
-This is the trap of the SYCL buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot call `VerifyResult` with the `c_back` array until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing. 
+This is the trap of the SYCL buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot call `VerifyResult` with the `c_back` array until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing.
 
 >**Note**: You will find more on the proper use of buffers and accessors in the *Buffer Accessor Mode* section of the *[oneAPI GPU Optimization Guide Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/buffer-accessor-modes.html)*.
 
@@ -461,12 +460,12 @@ As we saw, `1_matrix_mul_race_condition.cpp` suffered from multiple race conditi
 But this gives us some hints on how to find these types of problems in any sort of code.
 
 1.  The kernel *is* producing correct results, but they are not getting to the host when the host tries to access them.
-2.  The host crashes when your host code calls a buffer destructor (frames 17 and 18 above).
-3.  The host crashes when the SYCL runtime attempts to copy device data to a buffer on the host (frame 11 above).
+2.  The host crashes when your host code calls a buffer destructor (frames 15-19 above).
+3.  The host crashes when the SYCL runtime attempts to copy device data to a buffer on the host (frame 9 above).
 
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).
