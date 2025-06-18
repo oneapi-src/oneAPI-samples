@@ -23,7 +23,6 @@ Third party program Licenses can be found here: [third-party-programs.txt](https
 | Deep Learning              | JAX Getting Started Sample     | [IntelJAX GettingStarted](IntelJAX_GettingStarted)                                       | The JAX Getting Started sample demonstrates how to train a JAX model and run inference on Intel® hardware.
 | Deep Learning              | oneCCL Bindings for PyTorch    | [Intel oneCCL Bindings For PyTorch GettingStarted](Intel_oneCCL_Bindings_For_PyTorch_GettingStarted) | Guides users through the process of running a simple PyTorch* distributed workload on both GPU and CPU.
 | Deep Learning              | ONNX Runtime*                  | [Quickstart Examples for PyTorch, TensorFlow, and SciKit Learn](https://onnxruntime.ai/docs/get-started/with-python.html#quickstart-examples-for-pytorch-tensorflow-and-scikit-learn) | Train a model using your favorite framework, export to ONNX format and inference in any supported ONNX Runtime language.
-| Deep Learning              | TensorFlow*                    | [TensorFlow_GettingStarted](TensorFlow_GettingStarted)                                   | A simple training example for TensorFlow.
 
 *Other names and brands may be claimed as the property of others.
 [Trademarks](https://www.intel.com/content/www/us/en/legal/trademarks.html)
