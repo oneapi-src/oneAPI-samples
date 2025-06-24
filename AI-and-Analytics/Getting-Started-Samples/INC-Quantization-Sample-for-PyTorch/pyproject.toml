@@ -12,7 +12,7 @@ dependencies = [
     "datasets>=3.3.2",
     "intel-extension-for-pytorch==2.5.0",
     "neural-compressor==2.1",
-    "torch==2.5.0",
+    "torch==2.7.1",
     "transformers>=4.49.0",
 ]
 
