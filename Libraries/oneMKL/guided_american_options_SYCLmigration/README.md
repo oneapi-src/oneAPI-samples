@@ -157,24 +157,14 @@ By default, this command sequence will build the `dpct_output` as well as `sycl_
       make run_host_api # or make run_device_api for RNG Device API usage
       unset ONEAPI_DEVICE_SELECTOR
       ```
-#### Troubleshooting
 
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the
-**Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility
-provides configuration and system checks to help find missing dependencies,
-permissions errors, and other issues. See the
-[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](
-https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-0/overview.html)
-for more information on using the utility.
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
 
 ## License
+
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
-
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

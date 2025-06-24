@@ -34,10 +34,10 @@ For more information on how to install Syclomatic Tool & DPC++ CUDA® plugin, vi
 
 ## Key Implementation Details
 
-This sample demonstrates the migration of the following: 
+This sample demonstrates the migration of the following:
 
 - CUBLAS Library, LU decomposition
-  
+
 >  **Note**: Refer to [Workflow for a CUDA* to SYCL* Migration](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/cuda-sycl-migration-workflow.html#gs.s2njvh) for general information about the migration workflow.
 
 ### CUDA source code evaluation
@@ -70,7 +70,7 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA run
    ```
    The above step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated. The --gen-helper-function option will make a copy of dpct header files/functions used in the migrated code into the dpct_output folder as include folder. 
+4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The --in-root specifies path to the root of the source tree to be migrated. The --gen-helper-function option will make a copy of dpct header files/functions used in the migrated code into the dpct_output folder as include folder.
 In the native CUDA code, there are two cublas APIs that cannot be enabled (defined by MACROs) during one compilation. So, in one c2s execution, only one code path can be migrated. To get both the APIs migrated we need to exclude the line #define DOUBLE_PRECISION in native cuda code and execute c2s twice as shown below.
 
    ```
@@ -115,12 +115,12 @@ Since its a custom API SYCLomatic tool will not act on it and we can either remo
    $ cmake .. or ( cmake -D INTEL_MAX_GPU=1 .. ) or ( cmake -D NVIDIA_GPU=1 .. ) or ( cmake -D FLOAT_TYPE=1 ..)
    $ make
    ```
->**Note:** 
+>**Note:**
 > - By default, no flags are enabled during the build which supports Intel® Gen9, Xeon CPU.
 > - Enable INTEL_MAX_GPU flag during build which supports Intel® Data Center GPU Max 1550 or 1100 to get optimized performance.
 > - Enable NVIDIA_GPU flag during build which supports NVIDIA GPUs.([oneAPI for NVIDIA GPUs plugin from Codeplay](https://developer.codeplay.com/products/oneapi/nvidia/)  is required to build for NVIDIA GPUs)
 > - Enable FLOAT_TYPE flag as gen11 doesn't support double precision data type
-   
+
 By default, this command sequence will build the `sycl_migrated` versions of the program.
 
 4. Run the code
@@ -137,18 +137,14 @@ By default, this command sequence will build the `sycl_migrated` versions of the
       make run_sm
       unset ONEAPI_DEVICE_SELECTOR
       ```
-#### Troubleshooting
-
-If an error occurs, you can get more details by running `make` with
-the `VERBOSE=1` argument:
-```
-make VERBOSE=1
-```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the [Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/2024-0/overview.html) for more information on using the utility.
+      
+### Troubleshooting
+If an error occurs, troubleshoot the problem using the Diagnostics Utility for Intel® oneAPI Toolkits.
+[Learn more](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html).
 
 ## License
+
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
-
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

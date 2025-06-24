@@ -11,18 +11,14 @@
  "ciTests": {
 	"linux": [
 	{
-		"env": ["source /intel/oneapi/intelpython/bin/activate",
-				"conda activate tensorflow",
-				"conda install -n tensorflow -c conda-forge python-flatbuffers -y",
-				"conda install -n tensorflow -c https://software.repos.intel.com/python/conda/ -c conda-forge neural-compressor -y",
-				"conda install -n tensorflow -y",
-				"pip install jupyter ipykernel",
-				"python -m ipykernel install --user --name=tensorflow"
+		"env": [
+			"pip install uv==0.6.3", 
+            "uv sync"
         ],
 		"id": "neural-compressor tensorflow",
 		"steps": [
-			"jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=tensorflow --to notebook inc_sample_tensorflow.ipynb"
-		 ]
+			"uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook inc_sample_tensorflow.ipynb"
+		]
 	}
     ]
  },

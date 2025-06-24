@@ -13,13 +13,9 @@
       {
           "id": "intel amx bf16 training",
           "steps": [
-              "source /intel/oneapi/intelpython/bin/activate",
-              "conda activate pytorch",
-              "python -m pip install -r requirements.txt",
-              "python -m ipykernel install --user --name=pytorch",
-              "python pytorch_training_avx512_bf16.py",
-              "python pytorch_training_amx_bf16.py",
-              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb"
+              "pip install uv==0.6.3",
+              "uv sync",
+              "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook IntelPyTorch_TrainingOptimizations_AMX_BF16.ipynb"
            ]
       }
        ]

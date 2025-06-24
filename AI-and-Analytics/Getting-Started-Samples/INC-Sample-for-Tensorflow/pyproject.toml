@@ -1,0 +1,20 @@
+[project]
+name = "intel_neural_compressor_accelerate_inference_with_intel_optimization_for_tensorflow"
+version = "0.1.0"
+description = "This sample illustrates how to run Intel® Neural Compressor to quantize the FP32 model trained by Keras on Tensorflow to INT8 model to speed up the inference."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "intel-extension-for-tensorflow[cpu]==2.15",
+    "matplotlib>=3.10.1",
+    "neural-compressor==3.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]

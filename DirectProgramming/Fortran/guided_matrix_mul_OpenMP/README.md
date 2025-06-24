@@ -1,4 +1,4 @@
-﻿# `Matrix Multiply` Sample 
+﻿# `Matrix Multiply` Sample
 
 The `Matrix Multiply` sample provides a guided approach to modify a simple Fortran program to offload computations to an Intel® GPU using OpenMP* with the Intel® Fortran Compiler. The sample program is a simple matrix multiply algorithm.
 
@@ -9,7 +9,7 @@ The `Matrix Multiply` sample provides a guided approach to modify a simple Fortr
 
 ## Purpose
 
-The `Matrix Multiply` sample demonstrates the steps to modify a simple Fortran program to use OpenMP* directives to offload the compute kernel from the host to an Intel® GPU using the Intel® Fortran Compiler. 
+The `Matrix Multiply` sample demonstrates the steps to modify a simple Fortran program to use OpenMP* directives to offload the compute kernel from the host to an Intel® GPU using the Intel® Fortran Compiler.
 
 Three working versions of the matrix multiply program are provided with the sample:
 
@@ -96,7 +96,7 @@ Note that:
    ./a.out
    ```
 
-### On Windows* 
+### On Windows*
 
 1. Open an Intel oneAPI command window.
 2. Change to the sample directory.
@@ -137,7 +137,7 @@ In the sample parallel program (`02_mm_CPU_parallel.f90`), the arrays `a`, `b`, 
 Follow these steps to modify the sequential program to use OpenMP directives to parallelize the code for CPU:
 
 1. Open the file `01_mm_CPU_sequential.f90` and save it as `mm_CPU_parallel.f90`.
-2. In your new `mm_CPU_parallel.f90` file, wrap the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do` OpenMP directives: 
+2. In your new `mm_CPU_parallel.f90` file, wrap the matrix multiply function with `!$omp parallel do` and `!$omp end parallel do` OpenMP directives:
 
    ```
    !$omp parallel do shared(a, b, c, n), private(i, j, k)
@@ -164,7 +164,7 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
    ```
    ifx -xhost -qopenmp mm_CPU_parallel.f90
    ```
-3. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
+3. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer.
    ```
    export OMP_NUM_THREADS=4
    ```
@@ -181,7 +181,7 @@ In order for the Intel Fortran Compiler to recognize OpenMP directives, the prog
    ```
    ifx /Qxhost /Qopenmp mm_CPU_parallel.f90
    ```
-4. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer. 
+4. Set the environment variable `OMP_NUM_THREADS` to indicate how many threads should be used during the run. The default is the number of cores in the entire computer.
    ```
    set OMP_NUM_THREADS=4
    ```
@@ -203,14 +203,14 @@ Note that when compiler option `-xhost` (`/Qxhost`) is used, the compiler optimi
 
 ## Modify the Parallel Program to Use OpenMP Offload for GPU
 
-This section of the guided sample assumes that the host and the device do not share physical memory. In this sample, the device is a discrete Intel GPU. 
+This section of the guided sample assumes that the host and the device do not share physical memory. In this sample, the device is a discrete Intel GPU.
 
 The following are offloading terms and concepts helpful for this section:
-- Offloading: The act of executing a block of code on a device other than the device that executes the TARGET directive. 
+- Offloading: The act of executing a block of code on a device other than the device that executes the TARGET directive.
 - TARGET: The OpenMP directive that initiates offloading.
 - TARGET region: The code that is offloaded, which is contained in the TARGET construct.
 
-The parallel version of the program showed that there is an opportunity for a performance increase by offloading the nested DO loops of the matrix multiply to an Intel GPU. 
+The parallel version of the program showed that there is an opportunity for a performance increase by offloading the nested DO loops of the matrix multiply to an Intel GPU.
 
 To use an Intel GPU, the OpenMP TARGET directive and its clauses designate the task. The OpenMP TARGET directive transfers control from the host (the CPU), to the target device (the GPU). The host thread waits until the offload region is completed before continuing. There are other OpenMP tasks not covered in this sample that allow asynchronous execution of threads on the host and the device.
 
@@ -221,13 +221,13 @@ The TEAMS and MAP clauses for the TARGET directive are used to take advantage of
 In the sample GPU program (`03_mm_GPU.f90`), the arrays `A`, `B`, and `C` are initialized on the host. All three arrays are mapped *to* the device so the initial values are available on the device. Only the array `C` needs to be mapped *from* the device. This is because `A` and `B` are not modified on the device, so there is no need to copy those arrays back to the host. For best performance, only map the required variables between the host and the device and vice versa.
 
 The complete TARGET directive for this sample is `!$omp target teams map(to: a, b) map(tofrom: c)`.
-In the TARGET region, there are additional clauses for `!$OMP PARALLEL DO`. 
+In the TARGET region, there are additional clauses for `!$OMP PARALLEL DO`.
 
 The DISTRIBUTE clause schedules iterations of the DO loop across the TEAMS creating a third level of parallelism.
 
-The SIMD clause enables vectorization, to take advantage of the SIMD (single instruction, multiple data) instructions of the device. 
+The SIMD clause enables vectorization, to take advantage of the SIMD (single instruction, multiple data) instructions of the device.
 
-The combination of TEAMS and DISTRIBUTE enables two levels of parallelism. TEAMS spreads the computation coarsely across the device compute units and DISTRIBUTE spreads the computation more finely within that device compute unit. 
+The combination of TEAMS and DISTRIBUTE enables two levels of parallelism. TEAMS spreads the computation coarsely across the device compute units and DISTRIBUTE spreads the computation more finely within that device compute unit.
 
 <img src="images/distribute-team.png" alt="TEAMS and DISTRIBUTE combine to enable two levels of parallelism" width="500"/>
 
@@ -235,7 +235,7 @@ Variables that are PRIVATE are only available on the device; no mapping is requi
 
 Follow these steps to modify your parallel program to use OpenMP offload directives to parallelize the code for GPU:
 
-1. Open your program file `mm_CPU_parallel.f90` and save it as `mm_GPU.f90`. 
+1. Open your program file `mm_CPU_parallel.f90` and save it as `mm_GPU.f90`.
 2. In `mm_GPU.f90`, replace the PARALLEL DO directives with the following OpenMP TARGET directives:
    ```
    !$omp target teams map(to: a, b) map(tofrom: c)
@@ -301,9 +301,9 @@ There are (at least) two methods to determine if the compute kernel offloaded.
 
 **Method One: Use LIBOMPTARGET_PLUGIN_PROFILE to Confirm Kernel Offload**
 
-You can set the `LIBOMPTARGET_PLUGIN_PROFILE` environment variable to confirm that the application ran on the device. After setting the variable, a table with offload information will be printed when you run the sample code. Some profile information is also printed. 
+You can set the `LIBOMPTARGET_PLUGIN_PROFILE` environment variable to confirm that the application ran on the device. After setting the variable, a table with offload information will be printed when you run the sample code. Some profile information is also printed.
 
-**On Linux:** 
+**On Linux:**
 ```
 export LIBOMPTARGET_PLUGIN_PROFILE=T
 ```
@@ -340,7 +340,7 @@ The first line identifies the plugin used to offload. It’s either LEVEL0 or OP
 
 Kernel 0 is the single parallel region that was offloaded. When multiple kernels are offloaded, there are multiple kernels listed by number.
 
-The next section of the table lists times for each step of the run on both the host and the device. 
+The next section of the table lists times for each step of the run on both the host and the device.
 
 Look at the table row by row in the Count column:
 
@@ -362,21 +362,21 @@ myid = OMP_GET_THREAD_NUM()
       print *, 'Number of CPU procs is ', OMP_GET_NUM_THREADS()
       print *, 'matrix size ', n
       print *, "Number of OpenMP Device Available:", omp_get_num_devices()
-!$omp target 
+!$omp target
    if (OMP_IS_INITIAL_DEVICE()) then
      print *, 'Running on CPU'
      else
      print *, 'Running on GPU'
    endif
-!$omp end target 
+!$omp end target
     endif
 ```
 
 ## Run the Supplied Working Versions of the Program with Make
 
-On Linux, you can run the working versions of the program provided with this sample using Make. 
+On Linux, you can run the working versions of the program provided with this sample using Make.
 
-### Compile and Run `01_mm_CPU_sequential.f90` 
+### Compile and Run `01_mm_CPU_sequential.f90`
 
 1. Change to the sample directory.
 2. Remove any leftover files from a previous compilation.
@@ -413,7 +413,7 @@ On Linux, you can run the working versions of the program provided with this sam
 
 ## Additional Information
 
-For more information about using OpenMP offload with Intel GPUs, refer to the following resources: 
+For more information about using OpenMP offload with Intel GPUs, refer to the following resources:
 
 - [Three Quick, Practical Examples of OpenMP Offload to GPUs](https://www.intel.com/content/www/us/en/developer/videos/three-quick-practical-examples-openmp-offload-gpus.html) (video)
 
@@ -432,6 +432,6 @@ https://app.plan.intel.com/e/er?cid=em&source=elo&campid=satg_WW_satgobmcdn_EMNL
 
 ## License
 
-Code samples are licensed under the MIT license. See [License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+Code samples are licensed under the MIT license. See [License.txt](License.txt) for details.
 
-Third-party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third-party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

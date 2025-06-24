@@ -7,7 +7,7 @@
   "description": "oneAPI GPU Optimization Guide Examples",
   "toolchain": [
     "dpcpp",
-    "ifx"
+    "ifort"
   ],
   "languages": [
     {

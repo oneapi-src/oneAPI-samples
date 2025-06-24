@@ -1,5 +1,5 @@
 # `MonteCarloMultiGPU` Sample
- 
+
 This sample uses OpenMP directives to implement a Monte Carlo simulation to estimate the price of a European call option and its confidence interval. The original OpenACC source code is migrated to OpenMP to Offload on Intel® Platforms.
 
 | Area                  | Description
@@ -12,12 +12,12 @@ This sample uses OpenMP directives to implement a Monte Carlo simulation to esti
 
 The purpose of this sample is to estimate the expected value of a European call option and provide a measure of the confidence interval around this estimate using Monte Carlo simulation. Monte Carlo simulation is a statistical technique that uses random sampling to approximate complex mathematical and physical systems. This particualr sample demonstartes how it can be offloaded to GPUs using openmp directives and obtain good performance.
 
-> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code. 
+> **Note**: We use intel-application-migration-tool-for-openacc-to-openmp which assists developers in porting OpenACC code automatically to OpenMP code.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                   | Description
-|:---                           |:--- 
+|:---                           |:---
 | `openMP_migrated_output`            | Contains the OpenMP migrated code.
 
 ## Prerequisites
@@ -32,7 +32,7 @@ For more information on how to install the above Tool, visit [intel-application-
 
 ## Key Implementation Details
 
-This sample demonstrates the migration of the following OpenACC pragmas & APIs: 
+This sample demonstrates the migration of the following OpenACC pragmas & APIs:
 - #pragma acc routine
 - #pragma acc enter data create() copyin()
 - #pragma acc kernels loop async() present()
@@ -63,7 +63,7 @@ For this sample, the tool takes application sources (either C/C++ or Fortran lan
      ```
 
 The binary of the translator can be found inside intel-application-migration-tool-for-openacc-to-openmp/src location
-    
+
   2. The openacc sample is taken from NVIDIA_HPC_SDK samples and can be found at the installation location as shown below
      ```
      cd /opt/hpc_software/sdk/nvidia/hpc_sdk/Linux_x86_64/24.3/examples/OpenACC/SDK/src/MonteCarloMultiGPU
@@ -106,14 +106,14 @@ Note the following OpenACC API calls. These have NOT been translated.
    ```
    $ make
    ```
-   
+
 By default, this command sequence will build the `openMP_migrated_output ` version of the program.
 
 3. Run the program.
    ```
    $ make run
    ```  
-   
+
 #### Troubleshooting
 
 If an error occurs, you can get more details by running `make` with
@@ -125,6 +125,6 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program licenses are at [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program licenses are at [third-party-programs.txt](third-party-programs.txt).

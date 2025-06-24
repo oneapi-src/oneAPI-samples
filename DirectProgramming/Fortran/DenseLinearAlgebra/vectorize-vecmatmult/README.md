@@ -16,7 +16,7 @@ For the Intel® Fortran Compiler, vectorization is the unrolling of a loop combi
 
 Vectorization may call library routines that can result in additional performance gain on Intel microprocessors when compared to non-Intel microprocessors. The vectorization can also be affected by specific options, such as `-m` or `-x`.
 
-Vectorization is enabled with the compiler at optimization levels of `-O2` (default level) and higher for both Intel® microprocessors and non-Intel® microprocessors. Many loops are vectorized automatically, in cases where this doesn't happen, you may be able to vectorize loops by making simple code modifications. 
+Vectorization is enabled with the compiler at optimization levels of `-O2` (default level) and higher for both Intel® microprocessors and non-Intel® microprocessors. Many loops are vectorized automatically, in cases where this doesn't happen, you may be able to vectorize loops by making simple code modifications.
 
 This sample leads you through the following steps.
 1. Establish a performance baseline.
@@ -45,7 +45,7 @@ You will use the following Fortran source files in the sample.
 |`matvec.f90`       | Fortran source file with a matrix-times-vector algorithm.
 |`driver.f90`       | Fortran source file with the main program calling matvec.
 
-Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information the features and options mentioned in this sample. 
+Read the [Intel® Fortran Compiler Developer Guide and Reference](https://software.intel.com/content/www/us/en/develop/documentation/fortran-compiler-developer-guide-and-reference/top.html) for more information the features and options mentioned in this sample.
 
 ## Set Environment Variables
 
@@ -61,8 +61,8 @@ When working with the command-line interface (CLI), you should configure the one
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
 > Windows:
-> - Under normal circumstances, you do not need to run the setvars.bat batch file. The terminal shortcuts 
-> in the Windows Start menu, Intel oneAPI command prompt for <target architecture> for Visual Studio <year>, 
+> - Under normal circumstances, you do not need to run the setvars.bat batch file. The terminal shortcuts
+> in the Windows Start menu, Intel oneAPI command prompt for <target architecture> for Visual Studio <year>,
 > set these variables automatically.
 >
 > For additional information, see [Use the Command Line on Windows](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/current/use-the-command-line-on-windows.html).
@@ -83,7 +83,7 @@ The basic steps to build and run a sample using VS Code include:
  3. Open a terminal in VS Code (**Terminal > New Terminal**).
  4. Run the sample in the VS Code terminal using the instructions below.
 
-To learn more about the extensions and how to configure the oneAPI environment, see the 
+To learn more about the extensions and how to configure the oneAPI environment, see the
 [Using Visual Studio Code with Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/develop/documentation/using-vs-code-with-intel-oneapi/top.html).
 
 ### On Linux*
@@ -116,7 +116,7 @@ A vectorization report shows what loops in your code were vectorized and explain
    ```
    ./MatVector
    ```
-3. Record the new execution time. 
+3. Record the new execution time.
 
    The reduction in time is mostly due to auto-vectorization of the inner loop at line 32 noted in the vectorization report **matvec.optrpt**.
 
@@ -240,10 +240,10 @@ The compiler may be able to perform additional optimizations if it can optimize 
    ```
     LOOP BEGIN at src/driver.f90 (56, 7)
         remark #15541: loop was not vectorized: outer loop is not an auto-vectorization candidate.
-    
+
         LOOP BEGIN at src/matvec.f90 (20, 3)
             remark #15541: loop was not vectorized: outer loop is not an auto-vectorization candidate.
-    
+
             LOOP BEGIN at src/matvec.f90 (25, 6)
                 remark #15300: LOOP WAS VECTORIZED
                 remark #15305: vectorization support: vector length 2
@@ -304,6 +304,6 @@ The previous examples made use of double-precision arrays. You could build same 
 ## License
 
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

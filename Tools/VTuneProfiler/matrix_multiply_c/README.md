@@ -18,13 +18,13 @@ versions are provided with various levels of CPU optimizations.
 
 By default a square matrix is used with size of 2048. You may want to increase matrix size by redefining the macro MAXTHREADS in the multiply.h. However, make sure the size is multiple of # of threads. It's made for simplicity.
 
-By default # of threads executed is equal to number of CPU cores available in the system (defined in run-time). You may want to limit max number of created threads by modifying the MAXTHREADS. 
+By default # of threads executed is equal to number of CPU cores available in the system (defined in run-time). You may want to limit max number of created threads by modifying the MAXTHREADS.
 
 Default threading model is native, i.e. pthreads on Linux and Win32 threads on Windows.
 
 OpenMP threading model is available.
 
-For the MKL-based kernel consider either MKL's multithreaded or singlethreaded implementation. Make the kernel multithreaded by yourself in the latter case. 
+For the MKL-based kernel consider either MKL's multithreaded or singlethreaded implementation. Make the kernel multithreaded by yourself in the latter case.
 
 In order to change the threading model:
 
@@ -72,7 +72,7 @@ This sample contains six versions of matrix multiplication:
 - `multiply3` – Optimized implementation with adding Cache blocking and data alignment (add ALIGNED macro to Compiler preprocessor)
 - `multiply4` – Optimized implementation with matrix transposition and loop unrolling
 - `multiply5` – Most optimal version with using Intel MKL (link the MKL library to the project and add the USE_MKL macro to Compiler preprocessor)
-  
+
 Note: multiply kernels availability depends on threading model you choose.
 
 Edit the line in `multiply.h` to select the version of the multiply function:
@@ -134,9 +134,6 @@ vtune -collect hotspots -- ./matrix
 
 ## License
 Code samples are licensed under the MIT license. See
-[License.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/License.txt) for details.
+[License.txt](License.txt) for details.
 
-Third party program Licenses can be found here: [third-party-programs.txt](https://github.com/oneapi-src/oneAPI-samples/blob/master/third-party-programs.txt).
-
-
- 
+Third party program Licenses can be found here: [third-party-programs.txt](third-party-programs.txt).

@@ -1,0 +1,32 @@
+[project]
+name = "intel_pytorch_gpu_inference_optimization_with_amp"
+version = "0.1.0"
+description = "This sample illustrates how to use AMP BFLOAT16 in PyTorch on Intel dGPU"
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "deepspeed==0.15.4",
+    "intel-extension-for-pytorch==2.5.10",
+    "matplotlib>=3.10.1",
+    "neural-compressor==3.1.1",
+    "numpy==1.26.4",
+    "oneccl-bind-pt==2.5.0",
+    "requests>=2.32.3",
+    "torch==2.5.1",
+    "torchaudio==2.5.1",
+    "torchvision==0.20.1",
+    "tqdm>=4.67.1",
+]
+
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
+
+[[tool.uv.index]]
+url = "https://pytorch-extension.intel.com/release-whl/stable/xpu/cn/"

@@ -1,0 +1,36 @@
+[project]
+name = "getting_started_with_intel_neural_compressor_for_quantization"
+version = "0.1.0"
+description = "This sample is a getting started guide for Intel® Neural Compressor to do INT8 quantization on a Huggingface BERT model. This allows us to achieve performance boosts on Intel hardware."
+authors = [
+    {name = "Copyright © 2023 Intel Corporation"}
+]
+license = {text = "MIT"}
+readme = "README.MD"
+requires-python = ">=3.11.11,<3.12"
+dependencies = [
+    "datasets>=3.3.2",
+    "intel-extension-for-pytorch==2.5.0",
+    "neural-compressor==2.1",
+    "torch==2.5.0",
+    "transformers>=4.49.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
+
+[[tool.uv.index]]
+url = "https://software.repos.intel.com/python/pypi"
+
+[[tool.uv.index]]
+name = "pytorch"
+# Required URL for the index.
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+

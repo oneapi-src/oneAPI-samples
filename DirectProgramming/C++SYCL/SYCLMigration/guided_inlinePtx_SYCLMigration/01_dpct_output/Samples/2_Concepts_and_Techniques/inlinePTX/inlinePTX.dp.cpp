@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     */
     dpct::get_in_order_queue().parallel_for(
         sycl::nd_range<3>(cudaGridSize * cudaBlockSize, cudaBlockSize),
-        [=](sycl::nd_item<3> item_ct1)[[intel::reqd_sub_group_size(32)]] {
+        [=](sycl::nd_item<3> item_ct1)[[sycl::reqd_sub_group_size(32)]] {
             sequence_gpu(d_ptr, N, item_ct1);
         });
     /*

@@ -10,16 +10,14 @@
     "ciTests": {
       "linux": [
       {
-          "env": ["apt-get update && apt-get install -y libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6",
-            "source /intel/oneapi/intelpython/bin/activate",
-            "conda activate pytorch",
-            "pip install -r requirements.txt",
-            "pip install ipykernel jupyter",
-            "python -m ipykernel install --user --name=pytorch"
+          "env": [
+            "apt-get update && apt-get install -y libgl1 libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6",
+            "pip install uv==0.6.3", 
+            "uv sync"
           ],
           "id": "quantize with inc",
           "steps": [
-              "jupyter nbconvert --ExecutePreprocessor.enabled=True --ExecutePreprocessor.kernel_name=pytorch --to notebook quantize_with_inc.ipynb"
+              "uv run jupyter nbconvert --ExecutePreprocessor.enabled=True --to notebook quantize_with_inc.ipynb"
            ]
       }
        ]
