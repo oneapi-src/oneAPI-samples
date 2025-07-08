@@ -24,7 +24,7 @@ dependencies = [
     "torch==2.5.0",
     "torchaudio==2.5.0",
     "torchvision==0.20.0",
-    "transformers==4.38.0",
+    "transformers==4.51.0",
 ]
 
 [dependency-groups]
