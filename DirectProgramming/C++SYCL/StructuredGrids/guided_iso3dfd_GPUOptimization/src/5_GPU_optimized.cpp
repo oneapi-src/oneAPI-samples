@@ -131,6 +131,10 @@ void iso3dfd(queue& q, float* next, float* prev, float* vel, float* coeff,
               next_acc[idx] = 2.0f * front[0] - next_acc[idx] +
                                   value * vel_acc[idx];
 
+              // Don't prepare data for the next iteration if this is the last one.
+              if (i == end_i - 1)
+                break;
+
               // Increase linear index, jump to the next cell in first dimension
               idx += n2n3;
 
