@@ -10,13 +10,13 @@ readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "deepspeed==0.15.4",
-    "intel-extension-for-pytorch==2.5.10",
+    "intel-extension-for-pytorch==2.8.0",
     "matplotlib>=3.10.1",
     "neural-compressor==3.1.1",
     "numpy==1.26.4",
     "oneccl-bind-pt==2.5.0",
     "requests>=2.32.3",
-    "torch==2.5.1",
+    "torch==2.8.0",
     "torchaudio==2.5.1",
     "torchvision==0.20.1",
     "tqdm>=4.67.1",
