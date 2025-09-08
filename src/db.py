@@ -80,7 +80,7 @@ def df_sort_filter():
     df = df.sort_values(by=['name'], ignore_index=True,key=lambda x: x.str.lower())
     df['description'] = df['description'].apply(truncate_text) # truncate sample description to achieve uniform card height
     df = df.dropna(subset=['expertise']) # DROP row if 'expertise' shows "NaN"
-    df = df.drop(["guid","toolchain", "os", "builder", "ciTests","commonFolder", "dependencies", "categories"], axis=1)
+    df = df.drop(["guid","toolchain", "os", "builder", "ciTests","commonFolder", "dependencies", "categories"], axis=1, errors='ignore')
     df['url'] = df.insert(2, 'url', 'np.Nan')
     return df
 
