@@ -453,8 +453,13 @@ int run_sparse_pcg_example(const sycl::device &dev)
         // setup optimizations and properties we know about A matrix
         oneapi::mkl::sparse::init_matrix_handle(&A);
 
+#if (INTEL_MKL_VERSION < 20250300)
+        auto ev_set = oneapi::mkl::sparse::set_csr_data(q, A, n, n,
+                oneapi::mkl::index_base::zero, ia_d, ja_d, a_d, {});
+#else
         auto ev_set = oneapi::mkl::sparse::set_csr_data(q, A, n, n, nnz,
                 oneapi::mkl::index_base::zero, ia_d, ja_d, a_d, {});
+#endif
 
         oneapi::mkl::sparse::set_matrix_property(A, oneapi::mkl::sparse::property::symmetric);
         oneapi::mkl::sparse::set_matrix_property(A, oneapi::mkl::sparse::property::sorted);
