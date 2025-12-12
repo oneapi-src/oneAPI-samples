@@ -187,9 +187,9 @@ A recent addition to the oneAPI compiler is that ability to use the "Address San
    Take a look at the lines where the arrays are allocated:
 
    ```
-   buffer<float, 2> a_buf(range(0, 0));
-   buffer<float, 2> b_buf(range(N, P));
-   buffer c_buf(reinterpret_cast<float *>(c_back), range(M, P));
+   61     buffer<float, 2> a_buf(range(0, 0));
+   62     buffer<float, 2> b_buf(range(N, P));
+   63     buffer c_buf(reinterpret_cast<float *>(c_back), range(M, P));
    ```
 
    Well, that's a problem.   `a` was accidentally allocated with zero size.    Fix this like you see in `a2_matrix_mul.cpp` and things will work just fine.
@@ -470,7 +470,7 @@ Let us use the Address Sanitizer again to catch invalid pointer addresses at run
    128     });
    ```
 
-4. Understand what is happening
+4. Putting together what we know
 
    Looking at the error, we see that we were trying to read local index `LID(68, 3, 0)` , or global index `GID(468, 73, 0)` of either array `a` or array `b`.   According to the text when the program ran (`Problem size: c(150,600) = a(150,300) * b(300,600)`) both of these indexes are in range, but are they?
 
@@ -488,6 +488,7 @@ Let us use the Address Sanitizer again to catch invalid pointer addresses at run
 
 In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is supposed to represent allocated memory on the device is inadvertently  passed as an argument to a kernel.  This example uses explicitly allocated device memory rather than SYCL buffers like the previous example.
 
+#### Checking the Behavior using Multiple Backends
 1. Run the program on the GPU using Level Zero.
    ```
    ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./b1_matrix_mul_null_usm
@@ -541,7 +542,7 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
    Segmentation fault (core dumped)
    ```
 
-#### Attempting to Understand What Is Happening
+#### Debugging the Problem
 
 Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests as something that goes terribly wrong.  Or one of the backbends might have a bug while the others do not.  But here all three crash, so it's likely the program is doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address `0x0`, while this may be legally allocated memory on the GPU.
 
