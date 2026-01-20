@@ -47,8 +47,8 @@ void MatrixTranspose(float x[block_size], float xinv[block_size]) {
 }
 
 // Multiply two matrices x and y and write output to xy
-SYCL_EXTERNAL void MatrixMultiply(multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> x, 
-                                  multi_ptr<const float, access::address_space::global_space, (sycl::access::decorated)2> y,
+SYCL_EXTERNAL void MatrixMultiply(const float x[block_size],
+                                  const float y[block_size],
                                   float xy[block_size]) {
   for (int i = 0; i < block_dims; ++i) {
     for (int j = 0; j < block_dims; ++j) {
@@ -61,7 +61,8 @@ SYCL_EXTERNAL void MatrixMultiply(multi_ptr<const float, access::address_space::
 }
 
 // Processes an individual 8x8 subset of image data
-SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::global_space, sycl::access::decorated::no> indataset, rgb* outdataset,
+SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::global_space, sycl::access::decorated::no> indataset,
+                                multi_ptr<rgb, access::address_space::global_space, sycl::access::decorated::no> outdataset,
                                 multi_ptr<const float, access::address_space::global_space, sycl::access::decorated::no> dct,
                                 multi_ptr<const float, access::address_space::global_space, sycl::access::decorated::no> dctinv,
                                 int start_index, int width) {
@@ -111,8 +112,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
 
   // Computation of the discrete cosine transform of the image section of size
   // 8x8 for red values
-  MatrixMultiply(dct, red_input, temp);
-  MatrixMultiply(temp, dctinv, interim);
+  MatrixMultiply(dct.get(), red_input, temp);
+  MatrixMultiply(temp, dctinv.get(), interim);
 
   // Computation of quantization phase using the quantization matrix
   for (int i = 0; i < block_size; ++i)
@@ -123,8 +124,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
     interim[i] = sycl::floor((interim[i] * quant[i]) + 0.5f);
 
   // Computation of Inverse Discrete Cosine Transform (IDCT)
-  MatrixMultiply(dctinv, interim, temp);
-  MatrixMultiply(temp, dct, product);
+  MatrixMultiply(dctinv.get(), interim, temp);
+  MatrixMultiply(temp, dct.get(), product);
 
   // Translating the pixels values from [-128, 127] range to [0, 255] range
   // and writing to output image data
@@ -146,8 +147,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
 
   // Computation of the discrete cosine transform of the image section of size
   // 8x8 for blue values
-  MatrixMultiply(dct, blue_input, temp);
-  MatrixMultiply(temp, dctinv, interim);
+  MatrixMultiply(dct.get(), blue_input, temp);
+  MatrixMultiply(temp, dctinv.get(), interim);
 
   // Computation of quantization phase using the quantization matrix
   for (int i = 0; i < block_size; ++i)
@@ -158,8 +159,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
     interim[i] = sycl::floor((interim[i] * quant[i]) + 0.5f);
 
   // Computation of Inverse Discrete Cosine Transform (IDCT)
-  MatrixMultiply(dctinv, interim, temp);
-  MatrixMultiply(temp, dct, product);
+  MatrixMultiply(dctinv.get(), interim, temp);
+  MatrixMultiply(temp, dct.get(), product);
 
   // Translating the pixels values from [-128, 127] range to [0, 255] range
   // and writing to output image data
@@ -181,8 +182,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
 
   // Computation of the discrete cosine transform of the image section of size
   // 8x8 for green values
-  MatrixMultiply(dct, green_input, temp);
-  MatrixMultiply(temp, dctinv, interim);
+  MatrixMultiply(dct.get(), green_input, temp);
+  MatrixMultiply(temp, dctinv.get(), interim);
 
   // Computation of quantization phase using the quantization matrix
   for (int i = 0; i < block_size; ++i)
@@ -193,8 +194,8 @@ SYCL_EXTERNAL void ProcessBlock(multi_ptr<const rgb, access::address_space::glob
     interim[i] = sycl::floor((interim[i] * quant[i]) + 0.5f);
 
   // Computation of Inverse Discrete Cosine Transform (IDCT)
-  MatrixMultiply(dctinv, interim, temp);
-  MatrixMultiply(temp, dct, product);
+  MatrixMultiply(dctinv.get(), interim, temp);
+  MatrixMultiply(temp, dct.get(), product);
 
   // Translating the pixels values from [-128, 127] range to [0, 255] range
   // and writing to output image data
@@ -235,7 +236,7 @@ void ProcessImage(rgb* indataset, rgb* outdataset, int width, int height) {
       h.parallel_for(
           range<2>(width / block_dims, height / block_dims), [=](auto idx) {
             int start_index = idx[0] * block_dims + idx[1] * block_dims * width;
-            ProcessBlock(i_acc.get_multi_ptr<sycl::access::decorated::no>(), o_acc.get_multi_ptr<sycl::access::decorated::no>().get(),
+            ProcessBlock(i_acc.get_multi_ptr<sycl::access::decorated::no>(), o_acc.get_multi_ptr<sycl::access::decorated::no>(),
                          d_acc.get_multi_ptr<sycl::access::decorated::no>(), di_acc.get_multi_ptr<sycl::access::decorated::no>(), start_index,
                          width);
           });
