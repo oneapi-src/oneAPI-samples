@@ -1,0 +1,3 @@
+[submodule "Libraries/oneMKL"]
+	path = Libraries/oneMKL
+	url = https://github.com/oneapi-src/oneMKL-samples.git
