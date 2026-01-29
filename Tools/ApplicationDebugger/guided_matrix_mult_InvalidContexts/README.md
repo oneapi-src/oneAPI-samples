@@ -19,7 +19,7 @@ verifies the results.
 The sample in this tutorial shows how to debug incorrect use of variables that
 are owned by different queues that have different contexts.
 
-This type of error can be hard to detect and determine the root cause in a
+This type of error can be hard to detect and root cause in a
 large body of code where queues and memory are passed between functions. The
 lack of tools that tell you what is wrong combined with the fact that the
 default Level Zero driver does not notice there is a problem (only the OpenCL™
@@ -37,12 +37,12 @@ program.
 
 ## Prerequisites
 
-| Optimized for       | Description
-|:---                 |:---
+| Optimized for           | Description
+|:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
 | Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2507.12 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.3 <br> Intel® Distribution for GDB* 2025.3 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.31 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -163,20 +163,16 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Getting the Tracing and Profiling Tool
 
-At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+In this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
 
-To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
+To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Check the Programs
 
 1. Notice that both versions of the application run to completion and report
    correct results.
 
-   SYCL applications use the Level Zero runtime by default with an Intel GPU.
-   If you use OpenCL™ software to run `1_matrix_mul_invalid_contexts`, the
-   program with a bug in it will crash before it can report results.
-
-2. Check the results on a **GPU** with OpenCL.
+2. SYCL applications use the Level Zero runtime by default with an Intel GPU.  What happens if you use OpenCL™ software to run `1_matrix_mul_invalid_contexts` on the GPU?
 
    ```
    ONEAPI_DEVICE_SELECTOR=opencl:gpu ./1_matrix_mul_invalid_contexts
@@ -193,39 +189,126 @@ To complete the steps in the following section, you must download the [Unified T
    Device max work group size: 1024
    Problem size: c(150,600) = a(150,300) * b(300,600)
    terminate called after throwing an instance of 'sycl::_V1::exception'
-      what():  Enqueue process failed.
+   what():  Enqueue process failed.
+   opencl backend failed with error: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
 
    > **Note:** this will only work if the `sycl-ls` command shows OpenCL
-   > devices for the graphics card, such as like this:
+   devices for the graphics card, such as like this:
 
    ```
-   $ sycl-ls
-   [opencl:cpu][opencl:0] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2024.18.6.0.02_160000]
-   [opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
-   [opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
-   [opencl:cpu][opencl:3] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2023.16.7.0.21_160000]
-   [opencl:fpga][opencl:4] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.7.0.21_160000]
-   [level_zero:gpu][level_zero:0] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
-   [level_zero:gpu][level_zero:1] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
+      $ sycl-ls
+      [opencl:cpu][opencl:0] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2024.18.6.0.02_160000]
+      [opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
+      [opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
+      [opencl:cpu][opencl:3] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2023.16.7.0.21_160000]
+      [opencl:fpga][opencl:4] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.7.0.21_160000]
+      [level_zero:gpu][level_zero:0] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
+      [level_zero:gpu][level_zero:1] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
    ```
 
-   If you are missing `[opencl:gpu]` devices you may have to add the necessary libraries to your device path by setting the appropriate path in `DRIVERLOC` and then running the following four commands (for Ubuntu - adapt for other OSes):
+   > If you are missing `[opencl:gpu]` devices you may have to add the necessary libraries to your device path by setting the appropriate path in `DRIVERLOC` and then running the following four commands (for Ubuntu - adapt for other OSes):
 
    ```
-   export DRIVERLOC=/usr/lib/x86_64-linux-gnu
-   export OCL_ICD_FILENAMES=$OCL_ICD_FILENAMES:$DRIVERLOC/intel-opencl/libigdrcl.so
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DRIVERLOC
-   export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
+      export DRIVERLOC=/usr/lib/x86_64-linux-gnu
+      export OCL_ICD_FILENAMES=$OCL_ICD_FILENAMES:$DRIVERLOC/intel-opencl/libigdrcl.so
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DRIVERLOC
+      export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
    ```
+   
 
 3. Check the results on the **CPU** using OpenCL.
 
    ```
    ONEAPI_DEVICE_SELECTOR=opencl:cpu ./1_matrix_mul_invalid_contexts
    ```
-   Interestingly, this runs just fine.  In the next section we will try to explain the inconsistency.
+   Interestingly, this runs just fine.  In the next sections we will try to explain the inconsistency.
+
+### Guided Instructions for Zero Buffer using Address Sanitizer
+A recent addition to the oneAPI compiler is that ability to use the "Address Sanitizer" you may have seen when using [GCC](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html) or [CLANG](https://clang.llvm.org/docs/AddressSanitizer.html) to catch invalid pointer addresses at runtime on the GPU rather than the host.   This will require a special build of the application.
+
+1. Compile a version of the program with device-side address sanitizer (assuming that you are in the `build` directory)
+   ```
+   icpx -fsycl -O0 -g -Xarch_device -fsanitize=address -std=gnu++17 -Rno-debug-disables-optimization -o 1_matrix_mul_invalid_contexts_asan ../src/1_matrix_mul_invalid_contexts.cpp
+   ```
+   > Note:  If you leave the `-Xarch_device` off, this command will look for illegal addresses on the host rather than the device.
+
+2. Now run the program on the GPU:
+   ```
+   ./1_matrix_mul_invalid_contexts_asan
+   Initializing
+   ==== DeviceSanitizer: ASAN
+   Computing
+   Device: Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz
+   Device compute units: 144
+   Device max work item size: 8192, 8192, 8192
+   Device max work group size: 8192
+   Problem size: c(150,600) = a(150,300) * b(300,600)
+
+   ====ERROR: DeviceSanitizer: invalid-argument on kernel <typeinfo name for auto main::'lambda0'(auto&)::operator()<sycl::_V1::handler>(auto&) const::'lambda'(auto)>
+   #0 in sycl::_V1::event sycl::_V1::queue::submit_with_event<false, sycl::_V1::ext::oneapi::experimental::properties<sycl::_V1::ext::oneapi::experimental::detail::properties_type_list<>>>(sycl::_V1::ext::oneapi::experimental::properties<sycl::_V1::ext::oneapi::experimental::detail::properties_type_list<>>, sycl::_V1::detail::type_erased_cgfo_ty const&, sycl::_V1::detail::code_location const&) const /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../include/sycl/queue.hpp:3762:12
+   #1 in std::enable_if<std::is_invocable_r_v<void, auto, sycl::_V1::handler&>, sycl::_V1::event>::type sycl::_V1::queue::submit<main::'lambda0'(auto&)>(auto, sycl::_V1::detail::code_location const&) /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../include/sycl/queue.hpp:429:12
+   #2 in main Tools/ApplicationDebugger/guided_matrix_mult_InvalidContexts/build/../src/1_matrix_mul_invalid_contexts.cpp:106:7
+   #3 in ?? (/lib/x86_64-linux-gnu/libc.so.6+0x7fddd2a5bd8f)
+   #4 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x7fddd2a5be3f)
+   #5 in _start (./1_matrix_mul_invalid_contexts_asan+0x403624)
+
+   The 5th argument 0x7fddcf88a800 is allocated in other context
+   0x7fddcf88a800 is located inside of Device USM region [0x7fddcf88a800, 0x7fddcf8e2640)
+   allocated here:
+   #0 in float* sycl::_V1::malloc_device<float>(unsigned long, sycl::_V1::device const&, sycl::_V1::context const&, sycl::_V1::property_list const&, sycl::_V1::detail::code_location const&) /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../include/sycl/usm.hpp:174:27
+   #1 in float* sycl::_V1::malloc_device<float>(unsigned long, sycl::_V1::queue const&, sycl::_V1::property_list const&, sycl::_V1::detail::code_location const&) /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../include/sycl/usm.hpp:182:10
+   #2 in main Tools/ApplicationDebugger/guided_matrix_mult_InvalidContexts/build/../src/1_matrix_mul_invalid_contexts.cpp:82:21
+   #3 in ?? (/lib/x86_64-linux-gnu/libc.so.6+0x7fddd2a5bd8f)
+   #4 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x7fddd2a5be3f)
+   #5 in _start (./1_matrix_mul_invalid_contexts_asan+0x403624)
+
+   Aborted (core dumped)
+   ```
+
+   Remember that SYCL applications use the Level Zero runtime by default with an Intel GPU, and that when we ran this version of the program without Address Sanitizer everything looked fine.  So, is this a problem with Address Sanitizer or the program?
+
+3. Look at the reported source location
+
+   That Address Sanitizer threw an error at line 106 where we enter the main work kernel.   
+   
+   ```
+    99     q.submit([&](auto &h) {
+   100         h.memcpy(dev_c, &c_back[0], M*P * sizeof(float));
+   101     });
+   102
+   103     q.wait();
+   104
+   105     // Submit command group to queue to multiply matrices: c = a * b
+   106     q.submit([&](auto &h) {                             // Something reported wrong here
+   107       // Read from a and b, write to c
+   108       int width_a = N;
+   109
+   110       // Execute kernel.
+   ```
+   
+   And it complained that "the 5th argument" was allocated in another context, an element that was set up in line 82:
+
+   ```
+   77     float * dev_a = sycl::malloc_device<float>(M*N, q);
+   78     float * dev_b = sycl::malloc_device<float>(N*P, q);
+   79     device selected_device = device(default_selector_v);
+   80     context devicecontext(selected_device);
+   81     queue q2(devicecontext, selected_device);
+   82     float * dev_c = sycl::malloc_device<float>(M*P, q2);   // Complaining about this
+   83
+   84     cout << "Problem size: c(" << M << "," << P << ") = a(" << M << "," << N
+   85          << ") * b(" << N << "," << P << ")\n";
+   ```
+
+   Unfortunately, figuring out which "5th argument" of which kernel is involved requires internal knowledge of Level Zero API calls and how SYCL collects the references used in the `q.submit` lambda function at line 106.   We can get some of this by running `unitrace ` against `./1_matrix_mul_invalid_contexts_asan`, but the result is not satisfying.
+
+   Also, it may not be useful to figure out which argument was involved, because this may not be where things first go bad.   The SYCL syntax used in this program means that `q.submit` statements will immediately return control to the calling program even if the submitted kernel is still running.   So the problem might have occurred before line 106, and we are only just now learning about it.
+
+   However, we don't need to go that deep into the internals.  We are told that the invalid element encountered at line 106 was allocated to a different context in line 82.   Here we see that `dev_c` is the variable, and it was allocated a size of `M*P` using queue `q2`.
+
+   You've probably spotted the problem in this trivial example, but let's use the debugger to see if we can gather additional information to do a proper diagnosis.
 
 ### Use the Debugger to Find the Issue
 
@@ -276,7 +359,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
 4. Prompt for a call stack to inspect the results.
 
    ```
-   (gdb) where
+   (gdb) backtrace
    ```
 
    The output can be extensive and might look similar to the following:
@@ -324,7 +407,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
 
    ```
    #18 0x0000000000403f7b in main ()
-      at /nfs/site/home/cwcongdo/oneAPI-samples-true/Tools/ApplicationDebugger/guided_matrix_mult_InvalidContexts/src/1_matrix_mul_invalid_contexts.cpp:99
+      at Tools/ApplicationDebugger/guided_matrix_mult_InvalidContexts/src/1_matrix_mul_invalid_contexts.cpp:99
    99          q.submit([&](auto &h) {
    (gdb)
    ```
@@ -350,38 +433,36 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    103         q.wait();
    ```
 
-   As you can see, there is something wrong in line 99.  Unfortunately, the
+   Something wrong in line 99.  Unfortunately, the
    ` Enqueue process failed` message we saw when it crashed does not really tell us anything other than our attempt to submit the `memcpy` to the device failed
 
-   Fortunately, in this case the two variables, `dev_c` and `c_back`, are
-   allocated only a few lines above line 99. In real code this might have
-   happened in another source file or library, so hunting down this issue is
-   going to be much harder.
+   Fortunately, in this case the two variables, `dev_c` and `c_back`, are allocated only a few lines above line 99. In real code this might have happened in another source file or library, so hunting down this issue is going to be much harder.
 
-   Look at the source, and note that `dev_c` is defined as a pointer to device memory allocated on queue `q2`:
+   Look at the source, and note that `dev_c` is defined as a pointer to device memory allocated on queue `q2` (we noticed this with Address Sanitizer):
 
    ```
-   float * dev_c = sycl::malloc_device<float>(M*P, q2);
+   82     float * dev_c = sycl::malloc_device<float>(M*P, q2);
    ```
 
    and `c_back` is defined as local memory
 
    ```
-   float(*c_back)[P] = new float[M][P];
+   49   float(*c_back)[P] = new float[M][P];
    ```
 
 8. Look at line 99, and notice the discrepancy.
 
    ```
-   q.submit([&](auto &h) {
+   99     q.submit([&](auto &h) {
    ```
 
-   Variable `dev_c` was allocated on queue `q2` while the submit statement is
-   being done on queue `q`.
+   Variable `dev_c` was allocated on queue `q2` while the submit statement is being done on queue `q`.  These queues are created using deferent devices contexts (the default one, and `devicecontext`)
+
+   So unlike what Address Sanitizer suggested, the problem was first noticed in line 99, not 106.   The debugger stopped immediately, while Address Sanitizer took a moment longer to spot the problem/respond to the exception.
 
 ### Identify the Problem without Code Inspection
 
-You must have already built the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool). Once you have built the utility, you can start it before your program (similar to using GBD).
+You need to build the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool) before completing this section. Once you have built the utility, you can start it before your program (similar to using GBD).
 
 One of the things that the Unified Tracing and Profiling utility can help us see
 is every low-level API call made to OpenCL™ or Level Zero. We will use it to attempt to match the source to the events.
@@ -407,7 +488,7 @@ is every low-level API call made to OpenCL™ or Level Zero. We will use it to a
    `src_ptr` into device memory `dst_ptr = 0xff00ffffffeb0000` (NOTE:  in some versions of `unitrace` these addresses may be returned in decimal rather than hexidecimal). Working back
    up the trace, you can see we allocated the destination device memory with the address
    `0xff00ffffffeb0000` using context `0x49dbff0` (line 16). However,
-   the command queue (`0x49d7130`) being used in the `clEnqueueMemcpyINTEL`
+   the command queue (`0x49d7130`) being used in the `clEnqueueMemcpyINTEL` call
    was created using the context `0x488d190` (line 4), which is
    different from the context used to allocate the destination device memory
    (`0x49dbff0` - line 16 again). The generic error we get is the OpenCL
@@ -422,7 +503,7 @@ is every low-level API call made to OpenCL™ or Level Zero. We will use it to a
 
    For comparison, an example of legal memory copy where the device context
    (`0x488d190`) used for the command queue (`0x49d7130`) is the same as that
-   uses for the memory allocation is shown as well (lines 4, 7, 19).
+   used for the memory allocation is shown as well (lines 4, 7, 19).
 
 2. Let's also look at the output from Level Zero, and see if we could have
    detected the issue there:
