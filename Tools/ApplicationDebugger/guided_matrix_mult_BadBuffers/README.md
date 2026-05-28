@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Bad Buffers` Sample
 
-The `Guided Matrix Multiplication Bad Buffers` sample demonstrates how to use several tools in the Intel® oneAPI Base Toolkit (Base Kit) to triage incorrect use of the SYCL language.
+The `Guided Matrix Multiplication Bad Buffers` sample demonstrates how to use several tools in Intel® oneAPI to triage incorrect use of the SYCL language.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -31,9 +31,9 @@ The sample includes different versions of a simple matrix multiplication program
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
-| Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.3 <br> Intel® Distribution for GDB* 2025.3 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.31 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Intel Graphics Hardware | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -46,7 +46,7 @@ The basic SYCL* standards implemented in the code include the use of the followi
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), configure the oneAPI toolkit environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
+When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
 
 ## Build the `Guided Matrix Multiplication Bad Buffers` Programs
 
@@ -121,7 +121,6 @@ the `VERBOSE=1` argument:
 ```
 make VERBOSE=1
 ```
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
 
 
 ## Guided Debugging
@@ -129,7 +128,7 @@ If you receive an error message, troubleshoot the problem using the **Diagnostic
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+To learn how setup and use the Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
 Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
@@ -137,12 +136,12 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Getting the Tracing and Profiling Tool
 
-In this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+In this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI.
 
 To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Guided Instructions for Zero Buffer using Address Sanitizer
-A recent addition to the oneAPI compiler is that ability to use the "Address Sanitizer" you may have seen when using [GCC](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html) or [CLANG](https://clang.llvm.org/docs/AddressSanitizer.html) to catch invalid pointer addresses at runtime on the GPU rather than the host.   This will require a special build of the application.
+The oneAPI compiler has the ability to use the "Address Sanitizer" you may have seen when using [GCC](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html) or [CLANG](https://clang.llvm.org/docs/AddressSanitizer.html) to catch invalid pointer addresses at runtime on the GPU rather than the host.   This will require a special build of the application.
 
 1. Compile a version of the program with device-side Address Sanitizer (assuming that you are in the `build` directory)
    ```
@@ -198,7 +197,7 @@ A recent addition to the oneAPI compiler is that ability to use the "Address San
 
 ### Guided Instructions for Zero Buffer using gdb-oneapi and the OpenCL CPU device
 
-In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `lambda` function. **This will cause the application to crash.**  We saw in the previous section how we can catch this with the device-side Address Sanitizer.  But what if the bad array allocation occured somewhere else deep in the program?   How would we track the problem back to its source?   Let's try one technique to locate the source of the error.
+In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `lambda` function. **This will cause the application to crash.**  We saw in the previous section how we can catch this with the device-side Address Sanitizer.  But what if the bad array allocation occurred somewhere else deep in the program?   How would we track the problem back to its source?   Let's try one technique to locate the source of the error.
 
 1. Run the program without the debugger.
 
@@ -353,7 +352,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
             0}}, static dimensions = <optimized out>}, MOffset = {<sycl::_V1::detail::array<2>> = {common_array = {0,
             0}}, static dimensions = <optimized out>}}}
    ```
-   Clearly there is a mismatch here!   'a' has no space reserved for it, yet we will be iterating over 150 by 300 elements (and updating element 131 by 0 in this thread), which is clearly an error.
+   Clearly there is a mismatch here:   'a' has no space reserved for it, yet we will be iterating over 150 by 300 elements (and updating element 131 by 0 in this thread), which is clearly an error.
 
 9. To further root-cause the error, we will need to restart the program and look at the values of the buffers behind the accessors (`a_buf` and `b_buf`), which are not in scope in any of our stack frames.   We'll set some breakpoints at the `parallel_for` statements where they are initialized.
 
@@ -416,7 +415,7 @@ In `a1_matrix_mul_zero_buff`, a zero-element buffer is passed to a SYCL submit `
    ```
 
 ### Guided Instructions for Null Device Pointer using Address Sanitizer
-Let us use the Address Sanitizer again to catch invalid pointer addresses at runtime, this time in code that makes use of explicit device memory allocations rather than using SYCL buffers.   This will require a special build of the application.
+Let us use the Address Sanitizer again to catch invalid pointer addresses at runtime, this time in code that makes use of explicit device-memory allocations rather than using SYCL buffers.   This will require a special build of the application.
 
 1. Compile a version of the program with device-side Address Sanitizer (assuming that you are in the `build` directory)
    ```
@@ -544,7 +543,7 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
 
 #### Debugging the Problem
 
-Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests as something that goes terribly wrong.  Or one of the backbends might have a bug while the others do not.  But here all three crash, so it's likely the program is doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address `0x0`, while this may be legally allocated memory on the GPU.
+Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests when something goes terribly wrong.  Or one of the backbends might have a bug while the others do not.  But here all three crash, so it's likely the program is doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address `0x0`, while this may be legally allocated memory on the GPU.
 
 Another reason to try different backends is that debugging support may differ between different GPU drivers and/or different GPU models.  Debugging the program using the OpenCL™ CPU driver gets around these issues.
 
