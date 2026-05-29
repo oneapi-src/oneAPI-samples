@@ -131,6 +131,10 @@ int main() {
     q.memcpy(&c_back[0], dev_c, M*P * sizeof(float));
 
     q.wait();
+
+    sycl::free(dev_a, q);
+    sycl::free(dev_b, q);
+    sycl::free(dev_c, q);
   }
 
   int result;
