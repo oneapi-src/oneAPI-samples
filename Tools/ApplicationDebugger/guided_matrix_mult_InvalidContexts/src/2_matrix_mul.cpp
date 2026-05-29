@@ -65,6 +65,19 @@ int main() {
   {
     property_list propList = property_list{property::queue::enable_profiling()};
 
+    std::vector<sycl::device> devices = sycl::device::get_devices();
+    cout << "Devices:" << std::endl;
+
+    for (size_t index = 0; index < devices.size(); index++){
+       std::string device_name = devices[index].get_info<sycl::info::device::name>();
+       std::string device_driver = devices[index].get_info<sycl::info::device::driver_version>();
+       std::string sycl_version = devices[index].get_info<sycl::info::device::version>();
+       std::string vendor = devices[index].get_info<sycl::info::device::vendor>();
+       std::string backend = devices[index].get_info<sycl::info::device::backend_version>();
+       std::cout << "  [" << index << "] " << device_name << ", "  << sycl_version  << " [" << device_driver
+                << "] " << backend << ",  " << vendor <<  std::endl;
+    }
+
     queue q(default_selector_v);
 
     cout << "Computing" << "\n";
@@ -130,6 +143,10 @@ int main() {
     q.memcpy(&c_back[0], dev_c, M*P * sizeof(float));
 
     q.wait();
+
+    sycl::free(dev_a, q);
+    sycl::free(dev_b, q);
+    sycl::free(dev_c, q);
   }
 
   int result;

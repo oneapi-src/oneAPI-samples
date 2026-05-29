@@ -63,7 +63,23 @@ int main() {
   // Initialize the device queue with the default selector. The device queue is
   // used to enqueue kernels. It encapsulates all states needed for execution.
   {
-    queue q(default_selector_v);
+    property_list propList = property_list{property::queue::enable_profiling()};
+
+    std::vector<sycl::device> devices = sycl::device::get_devices();
+    cout << "Devices:" << std::endl;
+
+    for (size_t index = 0; index < devices.size(); index++){
+       std::string device_name = devices[index].get_info<sycl::info::device::name>();
+       std::string device_driver = devices[index].get_info<sycl::info::device::driver_version>();
+       std::string sycl_version = devices[index].get_info<sycl::info::device::version>();
+       std::string vendor = devices[index].get_info<sycl::info::device::vendor>();
+       std::string backend = devices[index].get_info<sycl::info::device::backend_version>();
+       std::cout << "  [" << index << "] " << device_name << ", "  << sycl_version  << " [" << device_driver
+                << "] " << backend << ",  " << vendor <<  std::endl;
+    }
+
+    // Be very specific about the device to use.
+    queue q(devices[0]);
 
     cout << "Computing" << "\n";
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
@@ -76,7 +92,11 @@ int main() {
     // Create 2D buffers for matrices, buffer c is bound with host memory c_back
     float * dev_a = sycl::malloc_device<float>(M*N, q);
     float * dev_b = sycl::malloc_device<float>(N*P, q);
-    device selected_device = device(default_selector_v);
+#ifdef BAD_FREE
+    device selected_device = devices[0];
+#else
+    device selected_device = devices[1];
+#endif
     context devicecontext(selected_device);
     queue q2(devicecontext, selected_device);
     float * dev_c = sycl::malloc_device<float>(M*P, q2);
@@ -131,6 +151,13 @@ int main() {
     q.memcpy(&c_back[0], dev_c, M*P * sizeof(float));
 
     q.wait();
+    sycl::free(dev_a, q);
+    sycl::free(dev_b, q);
+#ifdef BAD_FREE
+    sycl::free(dev_c, q);
+#else
+    sycl::free(dev_c, q2);
+#endif
   }
 
   int result;

@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Race Condition` Sample
 
-The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.
+The `Guided Matrix Multiplication Race Condition` sample demonstrates an approach to debugging a race condition using several tools in Intel® oneAPI.  The race condition arises from accessing data on the host before it has been fully copied back from the device.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -22,7 +22,7 @@ The sample includes different versions of a simple matrix multiplication program
 | File name                           | Description
 |:---                                 |:---
 | `1_matrix_mul_race_condition.cpp`   |This example shows what happens when a developer tries to access data provided by the device before the copy to the host is complete.
-| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that properly waits for the data to be copied back to the host.
+| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that properly waits for the data to be copied back to the host but still has some issues.
 | `3_matrix_mul.cpp`                  | A working version of the application that corrects its errors using a host accessor and a `q.wait` command in place of parenthesis.
 
 ## Prerequisites
@@ -30,9 +30,9 @@ The sample includes different versions of a simple matrix multiplication program
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
-| Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.3 <br> Intel® Distribution for GDB* 2025.3 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.31 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Intel GraphicsHardware  | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -44,7 +44,7 @@ The basic SYCL* standards implemented in the code include the use of the followi
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
 
 ## Build and Run the `Guided Matrix Multiply Race Condition` Programs
 
@@ -115,8 +115,6 @@ the `VERBOSE=1` argument:
 make VERBOSE=1
 ```
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
-
 
 ## Guided Debugging
 
@@ -125,7 +123,7 @@ This example shows what happens when code tries to access data provided by the d
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
 Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
@@ -133,13 +131,13 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Getting the Tracing and Profiling Tool
 
-In this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+In this tutorial, the instructions require a utility that was not installed with Intel® oneAPI.
 
 To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Examine the Original Code
 
-As you might have noticed, when you attempt to run `1_matrix_mul_race_condition.cpp` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
+As you might have noticed, when you attempt to run `1_matrix_mul_race_condition` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
 
 In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
 
@@ -149,7 +147,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    ```
 2. Then run the application in the debugger.
    ```
-   run
+   (gdb) run
    ```
 3. Examine the results.
    ```
@@ -276,13 +274,22 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    Fail - The result is incorrect for element: [0, 3], expected: 45150, but found: 0
    Fail - The result is incorrect for element: [0, 4], expected: 45150, but found: 0
    Fail - The results mismatch!
-   >>>> [211022976795378] zeEventCreate: hEventPool = 37983040 desc = 140734297023408 {ZE_STRUCTURE_TYPE_EVENT_DESC(0x11) 0 4 4 0} phEvent = 140734297023464 (hEvent = 15669694584003)
-   <<<< [211022976802066] zeEventCreate [1339 ns] hEvent = 37883384 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [211022976805342] zeCommandListAppendMemoryCopyRegion: hCommandList = 37277672 dstptr = 35936816 dstRegion = 140734297023744 dstPitch = 2400 dstSlicePitch = 360000 srcptr = 18374967954634571776 srcRegion = 140734297023768 srcPitch = 2400 srcSlicePitch = 360000 hSignalEvent = 37883384 numWaitEvents = 1 phWaitEvents = 37993232 (hWaitEvents = [37882840])
-   <<<< [211022976856153] zeCommandListAppendMemoryCopyRegion [46127 ns] hWaitEvents = 37882840 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [211022976862571] zeEventHostSynchronize: hEvent = 37883384 timeout = 18446744073709551615
-   <<<< [211022979801501] zeEventHostSynchronize [2937354 ns] -> ZE_RESULT_SUCCESS(0x0)
-   Segmentation fault (core dumped)
+   >>>> [670752705693142] zeEventCreate: hEventPool = 0x48187f8 desc = 0x7ffea023b540 {ZE_STRUCTURE_TYPE_EVENT_DESC(0x11) 0 4 4 0} phEvent = 0x7ffea023b578 (hEvent = 0x0)
+   <<<< [670752705701414] zeEventCreate [2045 ns] hEvent = 0x4935aa8 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752705704779] zeCommandListAppendMemoryCopyRegion: hCommandList = 0x4917708 dstptr = 0x5b103e38010 dstRegion = 0x7ffea023b740 dstPitch = 0x960 dstSlicePitch = 0x57e40 srcptr = 0xff00ffffff2e0000 srcRegion = 0x7ffea023b768 srcPitch = 0x960 srcSlicePitch = 0x57e40 hSignalEvent = 0x4935aa8 numWaitEvents = 0x1 phWaitEvents = 0x4935390 (hWaitEvents = [0x49353d8])
+   <<<< [670752705716520] zeCommandListAppendMemoryCopyRegion [7285 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+   >>>> [670752705801127] zeEventQueryStatus: hEvent = 0x49353d8
+   <<<< [670752705806038] zeEventQueryStatus [2103 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752705809927] zeEventHostSynchronize: hEvent = 0x49353d8 timeout = 0xffffffffffffffff
+   <<<< [670752706994834] zeEventHostSynchronize [1182409 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752707005758] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707010312] zeEventQueryStatus [1742 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707014922] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707018218] zeEventQueryStatus [1273 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707038683] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707042673] zeEventQueryStatus [1348 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707045585] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707048684] zeEventQueryStatus [1206 ns] -> ZE_RESULT_NOT_READY(0x1)
     ```
 
 ### Interpret the Results
@@ -291,7 +298,7 @@ The first clue here is that the program throws an exception *after* it has compl
 
 Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 9`.  This frame shows us attempting to update the host memory from the device, while `frame 20` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 19`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data the buffer being copied into (`c_back`) no longer exists*.
 
-We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing is to copy some memory from the device memory (`srcptr = 18374967954634571776`) to a host pointer (`dstptr = 35936816`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
+We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing/timing out is to copy some memory from the device memory (`srcptr = 0xff00ffffff2e0000`) to a host pointer (`dstptr = 0x5b103e38010`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
 
 But what if the developer didn't delete `c_back`, and let program termination clean it up?  Try it!  
 
