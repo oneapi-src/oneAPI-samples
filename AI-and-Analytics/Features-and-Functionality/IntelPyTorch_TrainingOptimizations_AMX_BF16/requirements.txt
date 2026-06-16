@@ -1,3 +1,0 @@
-matplotlib
-py-cpuinfo
-transformers

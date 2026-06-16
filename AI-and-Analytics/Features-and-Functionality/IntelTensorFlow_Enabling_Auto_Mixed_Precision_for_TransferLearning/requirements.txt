@@ -1,5 +1,0 @@
-neural-compressor==2.4.1
-Pillow
-py-cpuinfo
-requests
-tensorflow-hub==0.16.0
