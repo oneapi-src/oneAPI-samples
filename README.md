@@ -62,10 +62,6 @@ If you prefer to use an Integrated Development Environment (IDE) with these samp
 
 The oneAPI-sample repository is organized by high-level categories.
 
-- [AI-and-Analytics](https://github.com/oneapi-src/oneAPI-samples/tree/main/AI-and-Analytics)
-  - [End-to-End-Workloads](https://github.com/oneapi-src/oneAPI-samples/tree/main/AI-and-Analytics/End-to-end-Workloads)
-  - [Features-and-Functionality](https://github.com/oneapi-src/oneAPI-samples/tree/main/AI-and-Analytics/Features-and-Functionality)
-  - [Getting-Started-Samples](https://github.com/oneapi-src/oneAPI-samples/tree/main/AI-and-Analytics/Getting-Started-Samples)
 - [DirectProgramming](https://github.com/oneapi-src/oneAPI-samples/tree/main/DirectProgramming)
   - [C++](https://github.com/oneapi-src/oneAPI-samples/tree/main/DirectProgramming/C++)
   - [C++SYCL](https://github.com/oneapi-src/oneAPI-samples/tree/main/DirectProgramming/C++SYCL)

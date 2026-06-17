@@ -1,6 +1,0 @@
-notebook
-Pillow
-tensorflow-hub==0.16
-requests
-py-cpuinfo
-
