@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Race Condition` Sample
 
-The `Guided Matrix Multiplication Race Condition` sample demonstrates a guided approach to debugging a race condition accessing data on the host before it has been fully copied back from the device. It uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.
+The `Guided Matrix Multiplication Race Condition` sample demonstrates an approach to debugging a race condition using several tools in Intel® oneAPI.  The race condition arises from accessing data on the host before it has been fully copied back from the device.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -22,7 +22,7 @@ The sample includes different versions of a simple matrix multiplication program
 | File name                           | Description
 |:---                                 |:---
 | `1_matrix_mul_race_condition.cpp`   |This example shows what happens when a developer tries to access data provided by the device before the copy to the host is complete.
-| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that properly waits for the data to be copied back to the host.
+| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that properly waits for the data to be copied back to the host but still has some issues.
 | `3_matrix_mul.cpp`                  | A working version of the application that corrects its errors using a host accessor and a `q.wait` command in place of parenthesis.
 
 ## Prerequisites
@@ -30,9 +30,9 @@ The sample includes different versions of a simple matrix multiplication program
 | Optimized for           | Description
 |:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
-| Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2507.12 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Intel GraphicsHardware  | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -44,7 +44,7 @@ The basic SYCL* standards implemented in the code include the use of the followi
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
 
 ## Build and Run the `Guided Matrix Multiply Race Condition` Programs
 
@@ -115,8 +115,6 @@ the `VERBOSE=1` argument:
 make VERBOSE=1
 ```
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
-
 
 ## Guided Debugging
 
@@ -125,7 +123,7 @@ This example shows what happens when code tries to access data provided by the d
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
 Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
@@ -133,13 +131,13 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Getting the Tracing and Profiling Tool
 
-At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+In this tutorial, the instructions require a utility that was not installed with Intel® oneAPI.
 
-To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
+To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Examine the Original Code
 
-As you might have noticed, when you attempt to run `1_matrix_mul_race_condition.cpp` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
+As you might have noticed, when you attempt to run `1_matrix_mul_race_condition` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
 
 In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
 
@@ -149,7 +147,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    ```
 2. Then run the application in the debugger.
    ```
-   run
+   (gdb) run
    ```
 3. Examine the results.
    ```
@@ -171,7 +169,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    intelgt: inferior 3 (gdbserver-ze) has been removed.
    (gbd)
    ```
-   As we saw outside the debugger, it ran to completion.   But note that the inferior (the code running on the GPU), exited with an error code (0377).   Let's see if we can trap that error.
+   As we saw outside the debugger, it ran to completion.   But note that the inferior (the code running on the GPU), exited with an error code (`0377`).   Let's see if we can trap that error.
 
 4. Run again, telling the debugger to stop if the application throws an exception
    ```
@@ -208,11 +206,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
       from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
    #3  0x00007ffff7e2b73c in sycl::_V1::detail::MemoryManager::copy(sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&) ()
       from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #4  0x00007ffff7eb31e9 in ur_result_t sycl::_V1::detail::callMemOpHelper<void (sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&), sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, void*&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl>&>(void (&)(sycl::_V1::detail::SYCLMemObjI*, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, void*, std::shared_ptr<sycl::_V1::detail::queue_impl>, unsigned int, sycl::_V1::range<3>, sycl::_V1::range<3>, sycl::_V1::id<3>, unsigned int, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl> const&), sycl::_V1::detail::SYCLMemObjI*&&, void*&&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, void*&, std::shared_ptr<sycl::_V1::detail::queue_impl>&, unsigned int&, sycl::_V1::range<3>&, sycl::_V1::range<3>&, sycl::_V1::id<3>&, unsigned int&, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >&&, ur_event_handle_t_*&, std::shared_ptr<sycl::_V1::detail::event_impl>&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #5  0x00007ffff7eb2c4e in sycl::_V1::detail::MemCpyCommandHost::enqueueImp() () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #6  0x00007ffff7ea90fb in sycl::_V1::detail::Command::enqueue(sycl::_V1::detail::EnqueueResultT&, sycl::_V1::detail::BlockingT, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #7  0x00007ffff7ecec2e in sycl::_V1::detail::Scheduler::GraphProcessor::enqueueCommand(sycl::_V1::detail::Command*, std::shared_lock<std::shared_timed_mutex>&, sycl::_V1::detail::EnqueueResultT&, std::vector<sycl::_V1::detail::Command*, std::allocator<sycl::_V1::detail::Command*> >&, sycl::_V1::detail::Command*, sycl::_V1::detail::BlockingT) ()
-      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
+   :
    #8  0x00007ffff7eca5ba in sycl::_V1::detail::Scheduler::addCopyBack(sycl::_V1::detail::AccessorImplHost*) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
    #9  0x00007ffff7edd2e6 in sycl::_V1::detail::SYCLMemObjT::updateHostMemory(void*) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
    #10 0x00007ffff7eebdd3 in std::_Function_handler<void (std::function<void (void*)> const&), sycl::_V1::detail::SYCLMemObjT::handleHostData(void*, unsigned long)::{lambda(std::function<void (void*)> const&)#1}>::_M_invoke(std::_Any_data const&, std::function<void (void*)> const&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
@@ -261,6 +255,8 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
     133     }
     ```
 
+    So we crashed in the last line of the program while we were cleaning up.   But if you look closely at the stack above, you will see that we were also in the middle of a copy from the device to the host (frame 2).
+
 8. Exit the debugger.
 
 9. Run the program using the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool) tool.
@@ -278,67 +274,79 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    Fail - The result is incorrect for element: [0, 3], expected: 45150, but found: 0
    Fail - The result is incorrect for element: [0, 4], expected: 45150, but found: 0
    Fail - The results mismatch!
-   >>>> [211022976795378] zeEventCreate: hEventPool = 37983040 desc = 140734297023408 {ZE_STRUCTURE_TYPE_EVENT_DESC(0x11) 0 4 4 0} phEvent = 140734297023464 (hEvent = 15669694584003)
-   <<<< [211022976802066] zeEventCreate [1339 ns] hEvent = 37883384 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [211022976805342] zeCommandListAppendMemoryCopyRegion: hCommandList = 37277672 dstptr = 35936816 dstRegion = 140734297023744 dstPitch = 2400 dstSlicePitch = 360000 srcptr = 18374967954634571776 srcRegion = 140734297023768 srcPitch = 2400 srcSlicePitch = 360000 hSignalEvent = 37883384 numWaitEvents = 1 phWaitEvents = 37993232 (hWaitEvents = [37882840])
-   <<<< [211022976856153] zeCommandListAppendMemoryCopyRegion [46127 ns] hWaitEvents = 37882840 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [211022976862571] zeEventHostSynchronize: hEvent = 37883384 timeout = 18446744073709551615
-   <<<< [211022979801501] zeEventHostSynchronize [2937354 ns] -> ZE_RESULT_SUCCESS(0x0)
-   Segmentation fault (core dumped)
+   >>>> [670752705693142] zeEventCreate: hEventPool = 0x48187f8 desc = 0x7ffea023b540 {ZE_STRUCTURE_TYPE_EVENT_DESC(0x11) 0 4 4 0} phEvent = 0x7ffea023b578 (hEvent = 0x0)
+   <<<< [670752705701414] zeEventCreate [2045 ns] hEvent = 0x4935aa8 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752705704779] zeCommandListAppendMemoryCopyRegion: hCommandList = 0x4917708 dstptr = 0x5b103e38010 dstRegion = 0x7ffea023b740 dstPitch = 0x960 dstSlicePitch = 0x57e40 srcptr = 0xff00ffffff2e0000 srcRegion = 0x7ffea023b768 srcPitch = 0x960 srcSlicePitch = 0x57e40 hSignalEvent = 0x4935aa8 numWaitEvents = 0x1 phWaitEvents = 0x4935390 (hWaitEvents = [0x49353d8])
+   <<<< [670752705716520] zeCommandListAppendMemoryCopyRegion [7285 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+   >>>> [670752705801127] zeEventQueryStatus: hEvent = 0x49353d8
+   <<<< [670752705806038] zeEventQueryStatus [2103 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752705809927] zeEventHostSynchronize: hEvent = 0x49353d8 timeout = 0xffffffffffffffff
+   <<<< [670752706994834] zeEventHostSynchronize [1182409 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [670752707005758] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707010312] zeEventQueryStatus [1742 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707014922] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707018218] zeEventQueryStatus [1273 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707038683] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707042673] zeEventQueryStatus [1348 ns] -> ZE_RESULT_NOT_READY(0x1)
+   >>>> [670752707045585] zeEventQueryStatus: hEvent = 0x4935aa8
+   <<<< [670752707048684] zeEventQueryStatus [1206 ns] -> ZE_RESULT_NOT_READY(0x1)
     ```
 
 ### Interpret the Results
 
-The first clue here is that the program throws an exception after it has completed checking the results and finding them bad. That behavior is worrying.
+The first clue here is that the program throws an exception *after* it has completed checking the results and finding them bad. That behavior is worrying.
 
 Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 9`.  This frame shows us attempting to update the host memory from the device, while `frame 20` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 19`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data the buffer being copied into (`c_back`) no longer exists*.
 
-We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing is to copy some memory from the device memory (`srcptr = 18374967954634571776`) to a host pointer (`dstptr = 35936816`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
+We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing/timing out is to copy some memory from the device memory (`srcptr = 0xff00ffffff2e0000`) to a host pointer (`dstptr = 0x5b103e38010`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
 
-But what if the developer didn't delete `c_back`, and let program termination clean it up?  Try it!  Unfortunately, in that case your program complains about bad results, but it exits cleanly (shutdown will wait for the GPU to copy memory back to the host buffer before it kills the buffer).
+But what if the developer didn't delete `c_back`, and let program termination clean it up?  Try it!  
+
+Unfortunately, if you do this your program complains about bad results, but it exits cleanly (shutdown will wait for the GPU to copy memory back to the host buffer before it kills the buffer).
 
 Is the behavior different if you run it on OpenCL or Level 0?  The default is to use the Level Zero run time, but we can explicitly force the use of either Level Zero or OpenCL, which can be helpful when troubleshooting.
 
 ```
 ONEAPI_DEVICE_SELECTOR=level_zero:gpu ./1_matrix_mul_race_condition
+
 ONEAPI_DEVICE_SELECTOR=opencl:gpu ./1_matrix_mul_race_condition
 ```
 Unfortunately not; pretty much the same thing happens - they both produce incorrect results on exiting.
 
-> **Note:** the command with OpenCL will only work if the `sycl-ls` command shows OpenCL
-> devices for the graphics card, such as like this:
+> **Note:** the command with OpenCL will only work if the `sycl-ls` command
+  shows OpenCL devices for the graphics card, such as like this:
 
    ```
-   $ sycl-ls
-   [opencl:cpu][opencl:0] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2024.18.6.0.02_160000]
-   [opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
-   [opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
-   [opencl:cpu][opencl:3] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2023.16.7.0.21_160000]
-   [opencl:fpga][opencl:4] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.7.0.21_160000]
-   [level_zero:gpu][level_zero:0] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
-   [level_zero:gpu][level_zero:1] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
+      $ sycl-ls
+      [opencl:cpu][opencl:0] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2024.18.6.0.02_160000]
+      [opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
+      [opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [24.22.29735.27]
+      [opencl:cpu][opencl:3] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2023.16.7.0.21_160000]
+      [opencl:fpga][opencl:4] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.7.0.21_160000]
+      [level_zero:gpu][level_zero:0] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
+      [level_zero:gpu][level_zero:1] Intel(R) Level-Zero, Intel(R) Data Center GPU Max 1550 1.3 [1.3.29735]
    ```
 
-   If you are missing `[opencl:gpu]` devices you may have to add the necessary libraries to your device path by setting the appropriate path in `DRIVERLOC` and then running the following four commands (for Ubuntu - adapt for other OSes):
+   > If you are missing `[opencl:gpu]` devices you may have to add the necessary libraries to your device path by setting the appropriate path in `DRIVERLOC` and then running the following four commands (for Ubuntu - adapt for other OSes):
 
    ```
-   export DRIVERLOC=/usr/lib/x86_64-linux-gnu
-   export OCL_ICD_FILENAMES=$OCL_ICD_FILENAMES:$DRIVERLOC/intel-opencl/libigdrcl.so
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DRIVERLOC
-   export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
+      export DRIVERLOC=/usr/lib/x86_64-linux-gnu
+      export OCL_ICD_FILENAMES=$OCL_ICD_FILENAMES:$DRIVERLOC/intel-opencl/libigdrcl.so
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DRIVERLOC
+      export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
    ```
 
-Similarly, we specify targeting the CPU, which sometimes can avoid problems in your code that are specific to offloading to the GPU.
+Similarly, we an force the program to run on the CPU, which sometimes can avoid problems in your code that are specific to offloading to the GPU.
 ```
 ONEAPI_DEVICE_SELECTOR=*:cpu ./1_matrix_mul_race_condition
 ```
 This also has problems, but if you run this in the debugger you will see lots of threads all running in the third `q.submit` kernel, but no thread running `main`.   This is because these threads have been abandoned when `main` deleted `c_back` and exited!
 
-So in conclusion, it looks like the third kernel is still executing and/or its results are still being copied back to the host as the program is terminating.  Which explains the incorrect results (they aren't available on the host yet) and the crash (results from the card are being copied to memory that has been deallocated).  All these point to some sort of synchronization issue or race condition between the host and device.
+So in conclusion, it looks like the third kernel is still executing and/or its results are still being copied back to the host as the program is terminating.  Which explains the incorrect results (they aren't available on the host yet) and the crash (the card is trying to copy the results to memory on the host that has been deallocated).  All these point to some sort of synchronization issue or race condition between the host and device.
 
 ### Understand the Problem
 
-Because we are using SYCL buffers, even though the `q.submit` statements that populate `a_buf` and `b_buf` execute asynchronously, the third `q.submit` statement does not execute until those first two submits are complete because the SYCL runtime realizes that the third `q.submit` depends on the `a_buf` and `b_buf` buffers, which are being used in the first two kernels.   Once the first two kernels complete, the third `q.submit` kernel starts executing because both its inputs are ready. The SYCL runtime then immediately returns control to the host and we proceed to the code which verifies the result - ***while the third `q.submit` keeps running***.
+Because we are using SYCL buffers, even though the `q.submit` statements that populate `a_buf` and `b_buf` execute asynchronously, the third `q.submit` statement does not execute until those first two submits are complete because the SYCL runtime realizes that the third `q.submit` depends on the `a_buf` and `b_buf` buffers, which are being used in the first two kernels.   Once the first two kernels complete, the third `q.submit` kernel starts executing because both its inputs are ready. The SYCL runtime then immediately returns control to the host program and we proceed to the code which verifies the result - ***while the third `q.submit` keeps running***.
 
 There are three errors in this code:
 
@@ -346,7 +354,7 @@ There are three errors in this code:
 
 2. We  should be using a host accessor pointing to SYCL buffer `c_buf` to access its contents, which would also indicate that we need to wait for the third `q.submit kernel` to complete **and** for the *data to be copied back to the host* before accessing the data in `c_back`.
 
-3. For buffers initialized with a pointer to host memory (like `c_buf`), the developer "makes a contract with the SYCL runtime" to not reference the host pointer again until the SYCL buffer is destroyed.  Thus, deleting the host memory before the SYCL buffer is destroyed is illegal (the call to `delete[] c_back;`). The buffer cannot detect that the memory was deallocated.
+3. For buffers initialized with a pointer to host memory (like `c_buf`), the developer "makes a contract with the SYCL runtime" to not reference the host pointer again until the SYCL buffer is destroyed.  Thus, deleting the host memory before the SYCL buffer is destroyed is illegal (the call to `delete[] c_back;` is illegal because `c_buf` has not yet been deleted). The buffer cannot detect that the memory was deallocated.
 
 ### Fix the Code
 
@@ -396,7 +404,7 @@ int i, j, k;
 :
 ```
 The result should look like `3_matrix_mul.cpp`.  Reiterating, with these changes :
-1.  We created a host accessor to pull the values of out `c_buf` on the host, forcing the data to be transferred from the device to the host before the first access (one of the race conditions in this code).
+1.  We created a host accessor to pull the values of out `c_buf` on the host, forcing the data to be transferred from the device to the host before the first access on the host (one of the race conditions in this code).
 2.  We waited for the third `q.submit` kernel to complete before asking for the values in `c_buf`, fixing the other race condition.
 3.  We are no longer deleting `c_back` before the SYCL buffer that makes use of it (`c_buf`) is destroyed on program exit.
 4.  We changed `VerifyResult` to pass down the host accessor, with which we are able to read the contents of the accessor the same way we would access the original `c_back` array (which we "made a contract" not to look at while a SYCL buffer was making use of it).
@@ -449,7 +457,7 @@ Note that `2_matrix_mul.cpp` still has a bug.  It is an example of problem (2) a
 
 This points out a potential trap in the training documentation you may have read while learning SYCL.   You can easily get the impression that if you use the SYCL buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parenthesis may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
 
-This is the trap of the SYCL buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot call `VerifyResult` with the `c_back` array until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing.
+This is the trap of the SYCL buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot access the `c_back` array in `VerifyResult` until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing.
 
 >**Note**: You will find more on the proper use of buffers and accessors in the *Buffer Accessor Mode* section of the *[oneAPI GPU Optimization Guide Developer Guide](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/buffer-accessor-modes.html)*.
 

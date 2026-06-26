@@ -1,6 +1,6 @@
 # `Guided Matrix Multiplication Illegal SLM Size` Sample
 
-The `Guided Matrix Multiplication Illegal SLM Size` sample demonstrates a guided approach to debugging incorrect use of the SYCL language. The sample uses the Intel® oneAPI Base Toolkit (Base Kit) and several tools included in the Base Kit.
+The `Guided Matrix Multiplication Illegal SLM Size` sample demonstrates an approach to debugging incorrect use of the SYCL language using several tools in Intel® oneAPI.
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
@@ -14,7 +14,7 @@ The sample is a simple program that multiplies together two large matrices and v
 
 ## Purpose
 
-The sample in this tutorial shows how to debug crashes that occur when the user tries to reserve more memory for a work-group than there is space in work-group local memory (also called [Shared Local Memory (SLM)](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/shared-local-memory.html).
+The sample in this tutorial shows how to debug crashes that occur when the user tries to reserve more memory for a work-group than there is space in work-group local memory (also called [Shared Local Memory (SLM)](https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/current/shared-local-memory.html)).
 
 Using this type of memory when working with GPUs is an important optimization, but you must be careful due to its limited size. Shared local memory is often also shared with/traded for Vector Engine memory registers.
 
@@ -27,12 +27,12 @@ The sample includes different versions of a simple matrix multiplication program
 
 ## Prerequisites
 
-| Optimized for       | Description
-|:---                 |:---
+| Optimized for           | Description
+|:---                     |:---
 | OS                      | Ubuntu* 24.04 LTS
-| Hardware                | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2025.1 <br> Intel® Distribution for GDB* 2025.1 <br> Unified Tracing and Profiling Tool 2.1.2, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Rolling Release driver 2507.12 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Intel Graphics Hardware | GEN9 or newer
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
+| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
 
 ## Key Implementation Details
 
@@ -43,13 +43,13 @@ The basic SYCL* standards implemented in the code include the use of the followi
 - SYCL* kernels (including parallel_for function and explicit memory copies)
 - SYCL* queues
 
-The type of error shown in this sample can be hard to detect and root cause in a large body of code where large amounts of data are passed due to the lack of tools that tell you what is actually going wrong, and because the resulting error message ("`PI_ERROR_OUT_OF_RESOURCES`") isn't informative.
+The type of error shown in this sample can be hard to detect and root cause in a large body of code where large amounts of data are passed due to the lack of tools that tell you what is actually going wrong, and because the resulting error message ("`UR_RESULT_ERROR_OUT_OF_RESOURCES`") isn't informative.
 
 This can be particularly painful. For example, you might experience this error in the cases where code that runs on a device with a large amount of shared local memory fails on a device with less shared local memory, or where one data set out of many results in an allocation that exceeds SLM limits on a given machine.
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), you should configure the oneAPI toolkits using environment variables. Set up your CLI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
+When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
 
 ## Build and Run the `Guided Matrix Multiplication Illegal SLM Size` Sample
 
@@ -117,15 +117,13 @@ the `VERBOSE=1` argument:
 make VERBOSE=1
 ```
 
-If you receive an error message, troubleshoot the problem using the **Diagnostics Utility for Intel® oneAPI Toolkits**. The diagnostic utility provides configuration and system checks to help find missing dependencies, permissions errors, and other issues. See the *[Diagnostics Utility for Intel® oneAPI Toolkits User Guide](https://www.intel.com/content/www/us/en/docs/oneapi/user-guide-diagnostic-utility/current/overview.html)* for more information on using the utility.
-
 
 ## Guided Debugging
 
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GDB-PVC debugger](https://dgpu-docs.intel.com/system-user-guides/DNP-Max-1100-userguide/DNP-Max-1100-userguide.html#gdb-pvc-debugger)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
 Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
 
@@ -134,15 +132,15 @@ Documentation on using the debugger in a variety of situations can be found at *
 
 ### Getting the Tracing and Profiling Tool
 
-At a step in this tutorial, the instructions require a utility that was not installed with the Intel® oneAPI Base Toolkit (Base Kit).
+In this tutorial, the instructions require a utility that was not installed with Intel® oneAPI.
 
-To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install ).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
+To complete the steps in the following section, you must download the [Unified Tracing and Profiling Tool](https://github.com/intel/pti-gpu/tree/master/tools/unitrace) code from GitHub and build the utility. The build instructions are included in the README in the GitHub repository.  This build will go much more smoothly if you first install the latest drivers from [the Intel GPU driver download site](https://dgpu-docs.intel.com/driver/overview.html), especially the development packages (only available in the Data Center GPU driver install).  Once you have built the utility, you invoke it on the command line in front of your program (similar to using GDB).
 
 ### Check the Program
 
 In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illegal amount of device-local memory. If you attempt to run the code, the application will crash.
 
-#### Observe the Failure
+### Observe the Failure
 
 1. Run the program outside the debugger.
    ```
@@ -160,11 +158,11 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    Device max work group size: 1024
    Problem size: c(150,600) = a(150,300) * b(300,600)
    terminate called after throwing an instance of 'sycl::_V1::exception'
-     what():  UR backend failed. UR backend returns:40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
+      what():  level_zero backend failed with error: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
 
-#### Locate the General Location of the Problem
+### Locate the General Location of the Problem
 
 1. Start the debugger to learn more about the error.
    ```
@@ -175,16 +173,19 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    ```
    (gdb) run
    ```
-   When you get the error message `Debugging of GPU offloaded code is not enabled`, ignore it and answer `n` to the question `Quit anyway? (y or n)`
+   When you get the error message `Debugging of GPU offloaded code is not enabled`, ignore it and answer `n` to the question `Quit anyway? (y or n)`.  You may need to do this more than once.   If the error happens further in the program, you may need to re-run with `ZET_ENABLE_PROGRAM_DEBUGGING=1`
 
    The application will fail and display the same message when we ran it outside of the debugger.
    ```
    :
-   Problem size: c(150,600) = a(150,300) * b(300,600)
+   Continuing with GPU-debugging disabled.
+
    terminate called after throwing an instance of 'sycl::_V1::exception'
-     what():  UR backend failed. UR backend returns:40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
+   what():  level_zero backend failed with error: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
 
    Thread 1.1 "1_matrix_mul_SL" received signal SIGABRT, Aborted.
+   __pthread_kill_implementation (no_tid=0, signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:44
+   ⚠️ warning: 44   ./nptl/pthread_kill.c: No such file or directory
    (gdb)
    ```
 
@@ -205,29 +206,22 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
    #6  0x00007ffff78bb0da in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
    #7  0x00007ffff78a5a55 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
    #8  0x00007ffff78bb391 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #9  0x00007ffff7dcc4c9 in sycl::_V1::detail::enqueue_kernel_launch::handleOutOfResources(sycl::_V1::detail::device_impl const&, ur_kernel_handle_t_*, sycl::_V1::detail::NDRDescT const&) ()
-      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #10 0x00007ffff7dd6214 in sycl::_V1::detail::enqueue_kernel_launch::handleErrorOrWarning(ur_result_t, sycl::_V1::detail::device_impl const&, ur_kernel_handle_t_*, sycl::_V1::detail::NDRDescT const&) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #11 0x00007ffff7eb9b71 in sycl::_V1::detail::enqueueImpKernel(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::NDRDescT&, std::vector<sycl::_V1::detail::ArgDesc, std::allocator<sycl::_V1::detail::ArgDesc> >&, std::shared_ptr<sycl::_V1::detail::kernel_bundle_impl> const&, std::shared_ptr<sycl::_V1::detail::kernel_impl> const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<ur_event_handle_t_*, std::allocator<ur_event_handle_t_*> >&, std::shared_ptr<sycl::_V1::detail::event_impl> const&, std::function<void* (sycl::_V1::detail::AccessorImplHost*)> const&, ur_kernel_cache_config_t, bool, bool, unsigned long, sycl::_V1::detail::RTDeviceBinaryImage const*) ()
-      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #12 0x00007ffff7f02e52 in sycl::_V1::handler::finalize()::$_0::operator()() const () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #13 0x00007ffff7effe3a in sycl::_V1::handler::finalize() () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #14 0x00007ffff7e84277 in void sycl::_V1::detail::queue_impl::finalizeHandler<sycl::_V1::handler>(sycl::_V1::handler&, sycl::_V1::event&) ()
-      from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #15 0x00007ffff7e832b7 in sycl::_V1::detail::queue_impl::submit_impl(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, bool, sycl::_V1::detail::code_location const&, bool, sycl::_V1::detail::SubmissionInfo const&)
-      () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #16 0x00007ffff7e895c8 in sycl::_V1::detail::queue_impl::submit_with_event(std::function<void (sycl::_V1::handler&)> const&, std::shared_ptr<sycl::_V1::detail::queue_impl> const&, sycl::_V1::detail::SubmissionInfo const&, sycl::_V1::detail::code_location const&, bool) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #17 0x00007ffff7f33afa in sycl::_V1::queue::submit_with_event_impl(std::function<void (sycl::_V1::handler&)>, sycl::_V1::detail::SubmissionInfo const&, sycl::_V1::detail::code_location const&, bool) () from /opt/intel/oneapi/compiler/2025.1/lib/libsycl.so.8
-   #18 0x0000000000404f54 in sycl::_V1::queue::submit_with_event<main::{lambda(sycl::_V1::handler&)#1}>(main::{lambda(sycl::_V1::handler&)#1}, sycl::_V1::queue*, sycl::_V1::detail::code_location const&) (this=0x7fffffffb8f0, CGF=..., SecondaryQueuePtr=0x0, CodeLoc=...) at /opt/intel/oneapi/compiler/2025.1/bin/compiler/../../include/sycl/queue.hpp:2826
-   #19 0x000000000040440c in sycl::_V1::queue::submit<main::{lambda(sycl::_V1::handler&)#1}>(main::{lambda(sycl::_V1::handler&)#1}, sycl::_V1::detail::code_location const&) (
-      this=0x7fffffffb8f0, CGF=..., CodeLoc=...) at /opt/intel/oneapi/compiler/2025.1/bin/compiler/../../include/sycl/queue.hpp:365
-   #20 0x0000000000403fe3 in main () at /nfs/site/home/cwcongdo/oneAPI-samples-true/Tools/ApplicationDebugger/guided_matrix_mult_SLMSize/src/1_matrix_mul_SLM_size.cpp:104
+   #9  0x00007ffff7dd78a5 in sycl::_V1::detail::enqueue_kernel_launch::handleOutOfResources(sycl::_V1::detail::device_impl const&, ur_kernel_handle_t_*, sycl::_V1::detail::NDRDescT const&) ()
+      from /opt/intel/oneapi/compiler/2025.3/lib/libsycl.so.8
+   #10 0x00007ffff7de164a in sycl::_V1::detail::enqueue_kernel_launch::handleErrorOrWarning(ur_result_t, sycl::_V1::detail::device_impl const&, ur_kernel_handle_t_*, sycl::_V1::detail::NDRDescT const&) ()
+      from /opt/intel/oneapi/compiler/2025.3/lib/libsycl.so.8
+   :
+   #18 0x0000000000407d5e in sycl::_V1::queue::submit_with_event<sycl::_V1::ext::oneapi::experimental::properties<sycl::_V1::ext::oneapi::experimental::detail::properties_type_list<> > >(sycl::_V1::ext::oneapi::experimental::properties<sycl::_V1::ext::oneapi::experimental::detail::properties_type_list<> >, sycl::_V1::detail::type_erased_cgfo_ty const&, sycl::_V1::detail::code_location const&) const (this=0x7fffffffb680, Props=..., CGF=...,
+      CodeLoc=...) at /opt/intel/oneapi/compiler/2026.0/bin/compiler/../../include/sycl/queue.hpp:3700
+   #19 0x0000000000404419 in sycl::_V1::queue::submit<main::{lambda(sycl::_V1::handler&)#1}>(main::{lambda(sycl::_V1::handler&)#1}, sycl::_V1::detail::code_location const&) (this=0x7fffffffb680, CGF=..., CodeLoc=...) at /opt/intel/oneapi/compiler/2026.0/bin/compiler/../../include/sycl/queue.hpp:441
+   #20 0x0000000000403f73 in main ()
+      at Tools/ApplicationDebugger/guided_matrix_mult_SLMSize/src/1_matrix_mul_SLM_size.cpp:104
    ```
 
 4. Look at the final frame. (Your frame number might differ, and you might have to repeat this command to get the frame to change).
    ```
    (gdb) frame 20
-   #20 0x0000000000403fe3 in main () at /nfs/site/home/cwcongdo/oneAPI-samples-true/Tools/ApplicationDebugger/guided_matrix_mult_SLMSize/src/1_matrix_mul_SLM_size.cpp:104
+   #20 0x0000000000403fe3 in main () at Tools/ApplicationDebugger/guided_matrix_mult_SLMSize/src/1_matrix_mul_SLM_size.cpp:104
    104         q.submit([&](handler &h){
    (gdb)
    ```
@@ -254,7 +248,7 @@ In `1_matrix_mul_SLM_size`, the local_accessor class is used to reserve an illeg
 
 Now exit the debugger.
 
-#### Root-Cause the Issue
+### Root-Cause the Issue
 
 You can see that there is something wrong in the submit at line `104`, but we need more information to understand what is happening. For that we need to capture the lower-level API calls using the `unitrace` tool.
 
@@ -270,16 +264,16 @@ Among other things, the Tracing and Profiling utility can print every low-level 
 3. Let the output continue until the error occurs and the program stops.
    ```
    :
-   >>>> [776257970958971] zeKernelSetGroupSize: hKernel = 54646808 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
-   <<<< [776257970963072] zeKernelSetGroupSize [1237 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [776257970967552] zeCommandListCreateImmediate: hContext = 53065840 hDevice = 48614248 altdesc = 140735243323376 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 140735243323360 (hCommandList = 0)
-   <<<< [776257971129090] zeCommandListCreateImmediate [157138 ns] hCommandList = 54788792 -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [776257971135996] zeEventHostReset: hEvent = 49803640
-   <<<< [776257971139385] zeEventHostReset [1296 ns] -> ZE_RESULT_SUCCESS(0x0)
-   >>>> [776257972254927] zeCommandListAppendLaunchKernel: hCommandList = 54788792 hKernel = 54646808 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140735243324504 {16385, 1, 1} hSignalEvent = 49803640 numWaitEvents = 0 phWaitEvents = 0
-   <<<< [776257972338436] zeCommandListAppendLaunchKernel [56440 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+   >>>> [672116802394124] zeKernelSetGroupSize: hKernel = 0x2689658 groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1
+   <<<< [672116802398592] zeKernelSetGroupSize [1577 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [672116802403366] zeCommandListCreateImmediate: hContext = 0x260be58 hDevice = 0x25752c8 altdesc = 0x7fffb216c300 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 0x7fffb216c2e8 (hCommandList = 0x0)
+   <<<< [672116802564843] zeCommandListCreateImmediate [156721 ns] hCommandList = 0x3d56268 -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [672116802577317] zeEventHostReset: hEvent = 0x3b585a8
+   <<<< [672116802581433] zeEventHostReset [1546 ns] -> ZE_RESULT_SUCCESS(0x0)
+   >>>> [672116802588167] zeCommandListAppendLaunchKernel: hCommandList = 0x3d56268 hKernel = 0x2689658 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7fffb216c840 {16385, 1, 1} hSignalEvent = 0x3b585a8 numWaitEvents = 0x0 phWaitEvents = 0x0
+   <<<< [672116802646429] zeCommandListAppendLaunchKernel [49631 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
    terminate called after throwing an instance of 'sycl::_V1::exception'
-   what():  UR backend failed. UR backend returns:40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
+   what():  level_zero backend failed with error: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
    Aborted (core dumped)
    ```
 
@@ -288,16 +282,16 @@ Among other things, the Tracing and Profiling utility can print every low-level 
    A note about the output above. You will see that is has two lines that read:
 
    ```
-   >>>> [776257970958971] zeKernelSetGroupSize: hKernel = 54646808 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
+   >>>> [672116802394124] zeKernelSetGroupSize: hKernel = 0x2689658 groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1
    :
-   >>>> [776257972254927] zeCommandListAppendLaunchKernel: hCommandList = 54788792 hKernel = 54646808 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140735243324504 {16385, 1, 1} hSignalEvent = 49803640 numWaitEvents = 0 phWaitEvents = 0
+   >>>> [672116802588167] zeCommandListAppendLaunchKernel: hCommandList = 0x3d56268 hKernel = 0x2689658 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7fffb216c840 {16385, 1, 1} hSignalEvent = 0x3b585a8 numWaitEvents = 0x0 phWaitEvents = 0x0
    ```
 
-   We used the form of `parallel_for` that takes the `nd_range`, which specifies the global iteration range (163850) and the local work-group size (10) like so:  `nd_range<1>{{163850}, {10}}`. The first line above shows the workgroup size (`groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1`), and the second shows how many total workgroups will be needed to process the global iteration range (`{16385, 1, 1}`).
+   At like 106 we used the form of `parallel_for` that takes the `nd_range`, which specifies the global iteration range (163850) and the local work-group size (10) like so:  `nd_range<1>{{163850}, {10}}`. The first line above shows the workgroup size (`groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1`), and the second shows how many total workgroups will be needed to process the global iteration range (`{16385, 1, 1}`).
 
-#### Determine Device Limits
+### Determine Device Limits
 
-If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two NEO variables to the following values:
+If you have access to a version of the graphics drivers built with debug functionality, you can get even more information about this error by setting two "NEO" variables to the following values:
 
 ```
 export NEOReadDebugKeys=1
@@ -324,35 +318,35 @@ Aborted (core dumped)
 
 The new message of interest is `Size of SLM (656384) larger than available (131072)`. This tells you that the size of the Shared Local Memory (SLM) memory on the device, 131072 bytes (128Kb), is smaller than the requested size of 656384 bytes (641Kb).
 
-If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In our case, the calculation is easy:  the first argument to the `nd_range` in the `parallel_for` is single-dimensional, so it's just 163850. Thus the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes rounded up to the nearest 64-byte cache line), doesn't fit in the SLM on this device.
+If the `parallel_for` were operating over a multi-dimensional range (for example, if `acc` were two or three-dimensional), you will need to multiply the dimensions together to determine the number of floating point numbers we are trying to store in SLM. In our case, the calculation is easy:  the first argument to the `nd_range` in the `parallel_for` is single-dimensional, so it's just 163850. Thus the problem is that the size of work-group local memory we tried to allocate, (163850 floats or 4*163850=655,400 bytes rounded up to the nearest 64-byte cache line), doesn't fit in the SLM on this device.
 
 You should know that different devices will have different amounts of memory set aside as SLM. In SYCL, you can query this number by passing `info::device::local_mem_size` to the `get_info` member of the `device` class.
 
-Finally, running under `unitrace -c` you see:
+Finally, running under `unitrace -c` with these debug variables set you will see:
 
 ```
 :
->>>> [776708418226802] zeKernelSetGroupSize: hKernel = 57133096 groupSizeX = 10 groupSizeY = 1 groupSizeZ = 1
-<<<< [776708418230893] zeKernelSetGroupSize [1154 ns] -> ZE_RESULT_SUCCESS(0x0)
->>>> [776708418235549] zeCommandListCreateImmediate: hContext = 55553168 hDevice = 51101560 altdesc = 140722633379296 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 140722633379280 (hCommandList = 0)
+>>>> [672514990780902] zeKernelSetGroupSize: hKernel = 0x3fa2658 groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1
+<<<< [672514990785597] zeKernelSetGroupSize [1532 ns] -> ZE_RESULT_SUCCESS(0x0)
+>>>> [672514990790934] zeCommandListCreateImmediate: hContext = 0x3f24e58 hDevice = 0x3e8e6d8 altdesc = 0x7fff875129a0 {ZE_STRUCTURE_TYPE_COMMAND_QUEUE_DESC(0xe) 0 0 0 0 2 0} phCommandList = 0x7fff87512988 (hCommandList = 0x0)
 Flush Task for Immediate command list : Enabled
-Using PCI barrier ptr: 0x141f77d49000
-<<<< [776708418401199] zeCommandListCreateImmediate [160724 ns] hCommandList = 57275080 -> ZE_RESULT_SUCCESS(0x0)
->>>> [776708418408270] zeEventHostReset: hEvent = 52290952
-<<<< [776708418411693] zeEventHostReset [997 ns] -> ZE_RESULT_SUCCESS(0x0)
->>>> [776708418417397] zeCommandListAppendLaunchKernel: hCommandList = 57275080 hKernel = 57133096 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 140722633380424 {16385, 1, 1} hSignalEvent = 52290952 numWaitEvents = 0 phWaitEvents = 0
+Using PCI barrier ptr: 0xc615206b000
+<<<< [672514990965418] zeCommandListCreateImmediate [169631 ns] hCommandList = 0x566f268 -> ZE_RESULT_SUCCESS(0x0)
+>>>> [672514990977437] zeEventHostReset: hEvent = 0x54715a8
+<<<< [672514990981535] zeEventHostReset [1392 ns] -> ZE_RESULT_SUCCESS(0x0)
+>>>> [672514990988038] zeCommandListAppendLaunchKernel: hCommandList = 0x566f268 hKernel = 0x3fa2658 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7fff87512ee0 {16385, 1, 1} hSignalEvent = 0x54715a8 numWaitEvents = 0x0 phWaitEvents = 0x0
 Size of SLM (656384) larger than available (131072)
-<<<< [776708418485438] zeCommandListAppendLaunchKernel [60634 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
+<<<< [672514991042897] zeCommandListAppendLaunchKernel [46307 ns] -> ZE_RESULT_ERROR_OUT_OF_DEVICE_MEMORY(0x1879048195)
 terminate called after throwing an instance of 'sycl::_V1::exception'
-  what():  UR backend failed. UR backend returns:40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
+  what():  level_zero backend failed with error: 40 (UR_RESULT_ERROR_OUT_OF_RESOURCES)
 Aborted (core dumped)
 ```
 
-This is useful because it shows you the kernel being called that caused the error (`_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_` which `c++filt` resolves to `typeinfo name for main::{lambda(sycl::_V1::handler&)#1}::operator()(sycl::_V1::handler&) const::{lambda(sycl::_V1::nd_item<1>)#1} `) in addition to the amount of memory requested vs. the available size of SLM.
+This is useful because it shows you the kernel being called that caused the error (`_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_` which `c++filt` resolves to `typeinfo name for main::{lambda(sycl::_V1::handler&)#1}::operator()(sycl::_V1::handler&) const::{lambda(sycl::_V1::nd_item<1>)#1} `) in addition to the amount of memory requested vs. the available size of SLM.  So now we know for sure that the problem was in fact in the lambda function located by the debugger in addition to the reason for the error.
 
 
 
-#### Resolving the Problem
+### Resolving the Problem
 
 The synthetic code in this example has nothing to do with matrix multiply and can simply be removed to resolve the problem, so you can delete code to solve the problem.
 
