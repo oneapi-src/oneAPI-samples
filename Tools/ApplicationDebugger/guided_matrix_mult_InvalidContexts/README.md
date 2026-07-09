@@ -174,7 +174,7 @@ To complete the steps in the following section, you must download the [Unified T
    [opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) Data Center GPU Max 1550 OpenCL 3.0 NEO  [25.18.33578]
    [opencl:cpu][opencl:3] Intel(R) OpenCL, Intel(R) Xeon(R) Platinum 8360Y CPU @ 2.40GHz OpenCL 3.0 (Build 0) [2023.16.7.0.21_160000]
    ```
-   > **Note:** If you have only one `[level_zero:gpu]` device listed, or the order is different from the above, the the main example below may not work.   Try to follow through anyway, and then try the bonus sample at the end of this document, which should work no matter what system configuration.
+   > **Note:** If you have only one `[level_zero:gpu]` device listed, or the order is different from the above, the main example below may not work.   Try to follow through anyway, and then try the bonus sample at the end of this document, which should work no matter what system configuration.
 
 3. SYCL applications use the Level Zero runtime by default with an Intel GPU.  But what happens if you use OpenCL™ runtime to run `1_matrix_mul_invalid_contexts` on the GPU?
 
@@ -461,7 +461,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
 
 ### Identify the Problem without Code Inspection
 
-You need to build the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool) before completing this section. Once you have built the utility, you can start it before your program (similar to using GBD).
+You need to build the [Unified Tracing and Profiling Tool](#getting-the-tracing-and-profiling-tool) before completing this section. Once you have built the utility, you can start it before your program (similar to using GDB).
 
 One of the things that the Unified Tracing and Profiling utility can help us see
 is every low-level API call made to OpenCL™ or Level Zero. We will use it to attempt to match the source to the events.
@@ -633,7 +633,7 @@ be entirely re-written, which is beyond the scope of this tutorial.
    101     queue q2(devicecontext, selected_device);
    102     float * dev_c = sycl::malloc_device<float>(M*P, q2);
    ```
-   As is hopefully obvious from the previous example, the problem is that we are trying to free memory allocated in SYCL queue `q2` that has a different device context fron SYCL queue `q`, even though under the covers they point to the same hardware device.
+   As is hopefully obvious from the previous example, the problem is that we are trying to free memory allocated in SYCL queue `q2` that has a different device context from SYCL queue `q`, even though under the covers they point to the same hardware device.
 
 6. While we are at it, what does the debugger show us?
    ```

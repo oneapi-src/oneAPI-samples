@@ -78,7 +78,7 @@ int main() {
                 << "] " << backend << ",  " << vendor <<  std::endl;
     }
 
-    queue q(default_selector_v);
+    queue q(default_selector_v, propList);
 
     cout << "Computing" << "\n";
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
