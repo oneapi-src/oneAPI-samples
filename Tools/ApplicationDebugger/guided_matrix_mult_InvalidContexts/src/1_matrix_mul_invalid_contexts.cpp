@@ -79,7 +79,7 @@ int main() {
     }
 
     // Be very specific about the device to use.
-    queue q(devices[0]);
+    queue q(devices[0], propList);
 
     cout << "Computing" << "\n";
     cout << "Device: " << q.get_device().get_info<info::device::name>() << "\n";
@@ -95,7 +95,7 @@ int main() {
 #ifdef BAD_FREE
     device selected_device = devices[0];
 #else
-    device selected_device = devices[1];
+    device selected_device = devices.size() > 1 ? devices[1] : devices[0];
 #endif
     context devicecontext(selected_device);
     queue q2(devicecontext, selected_device);

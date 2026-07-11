@@ -287,7 +287,7 @@ Among other things, the Tracing and Profiling utility can print every low-level 
    >>>> [672116802588167] zeCommandListAppendLaunchKernel: hCommandList = 0x3d56268 hKernel = 0x2689658 (_ZTSZZ4mainENKUlRN4sycl3_V17handlerEE_clES2_EUlNS0_7nd_itemILi1EEEE_) pLaunchFuncArgs = 0x7fffb216c840 {16385, 1, 1} hSignalEvent = 0x3b585a8 numWaitEvents = 0x0 phWaitEvents = 0x0
    ```
 
-   At like 106 we used the form of `parallel_for` that takes the `nd_range`, which specifies the global iteration range (163850) and the local work-group size (10) like so:  `nd_range<1>{{163850}, {10}}`. The first line above shows the workgroup size (`groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1`), and the second shows how many total workgroups will be needed to process the global iteration range (`{16385, 1, 1}`).
+   At line 106 we used the form of `parallel_for` that takes the `nd_range`, which specifies the global iteration range (163850) and the local work-group size (10) like so:  `nd_range<1>{{163850}, {10}}`. The first line above shows the workgroup size (`groupSizeX = 0xa groupSizeY = 0x1 groupSizeZ = 0x1`), and the second shows how many total workgroups will be needed to process the global iteration range (`{16385, 1, 1}`).
 
 ### Determine Device Limits
 

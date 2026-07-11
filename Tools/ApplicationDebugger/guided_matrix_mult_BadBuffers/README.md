@@ -543,7 +543,7 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
 
 #### Debugging the Problem
 
-Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests when something goes terribly wrong.  Or one of the backbends might have a bug while the others do not.  But here all three crash, so it's likely the program is doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address `0x0`, while this may be legally allocated memory on the GPU.
+Why did we try with multiple backends?   If one had shown correct or incorrect results, and one had crashed, we might be facing a race condition that only occasionally manifests when something goes terribly wrong.  Or one of the backends might have a bug while the others do not.  But here all three crash, so it's likely the program is doing something illegal to memory.  The host CPU is a particularly good place to test for illegal memory accesses, because the CPU never allows pointers with an address within a few kilobytes of address `0x0`, while this may be legally allocated memory on the GPU.
 
 Another reason to try different backends is that debugging support may differ between different GPU drivers and/or different GPU models.  Debugging the program using the OpenCL™ CPU driver gets around these issues.
 
