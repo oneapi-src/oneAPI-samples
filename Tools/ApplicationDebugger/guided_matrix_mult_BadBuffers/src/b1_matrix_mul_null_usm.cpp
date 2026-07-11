@@ -133,7 +133,11 @@ int main() {
 
     q.wait();
 
-    sycl::free(dev_a, q);
+    sycl::free(dev_a, q);   // For the purposes of this demo, since we lost the original pointer value
+                            // and will crash before this point, this free is effectively a no-op and a
+                            // bug in its own right (we should be checking pointers best we can before
+                            // trying to free them).   
+                            // All USM allocations should be released after use.
     sycl::free(dev_b, q);
     sycl::free(dev_c, q);
   }

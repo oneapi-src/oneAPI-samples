@@ -336,7 +336,7 @@ Unfortunately not; pretty much the same thing happens - they both produce incorr
       export PATH=$PATH:/opt/intel/oneapi:$DRIVERLOC
    ```
 
-Similarly, we an force the program to run on the CPU, which sometimes can avoid problems in your code that are specific to offloading to the GPU.
+Similarly, we can force the program to run on the CPU, which sometimes can avoid problems in your code that are specific to offloading to the GPU.
 ```
 ONEAPI_DEVICE_SELECTOR=*:cpu ./1_matrix_mul_race_condition
 ```
