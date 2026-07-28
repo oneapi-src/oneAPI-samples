@@ -5,10 +5,10 @@ The `Guided Matrix Multiplication Invalid Contexts` sample demonstrates how to u
 The sample is a simple program that multiplies together two large matrices and
 verifies the results.
 
-| Property              | Description
-|:---                   |:---
-| What you will learn   | A method to determine the root cause of incorrect use of queues with different contexts.
-| Time to complete      | 50 minutes
+| Property            | Description                                                                              |
+|:--------------------|:-----------------------------------------------------------------------------------------|
+| What you will learn | A method to determine the root cause of incorrect use of queues with different contexts. |
+| Time to complete    | 50 minutes                                                                               |
 
 > **Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -28,19 +28,19 @@ with no indication as to why.
 The sample includes different versions of a simple matrix multiplication
 program.
 
-| File                                 | Description
-|:---                                  |:---
-| `1_matrix_mul_invalid_contexts.cpp`  | This example shows what happens when a developer mixes up queues owned by different contexts.
-| `2_matrix_mul.cpp`                   | A working version of the matrix multiply code that uses the same queue for all memory operations.
+| File                                | Description                                                                                       |
+|:------------------------------------|:--------------------------------------------------------------------------------------------------|
+| `1_matrix_mul_invalid_contexts.cpp` | This example shows what happens when a developer mixes up queues owned by different contexts.     |
+| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that uses the same queue for all memory operations. |
 
 ## Prerequisites
 
-| Optimized for           | Description
-|:---                     |:---
-| OS                      | Ubuntu* 24.04 LTS
-| Intel GraphicsHardware  | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Optimized for           | Description                                                                                                                                                                                                                                             |
+|:------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| OS                      | Ubuntu* 24.04 LTS                                                                                                                                                                                                                                       |
+| Intel Graphics Hardware | Gen9 or newer                                                                                                                                                                                                                                           |
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace). |
+| Intel GPU Driver        | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html                                                                                                                            |
 
 ## Key Implementation Details
 
@@ -312,10 +312,9 @@ The oneAPI compiler has the ability to use the "Address Sanitizer" you may have 
 
 ### Use the Debugger to Find the Issue
 
-In this section, you will use the Intel® Distribution for GDB* to determine
-what might be wrong.  
+In this section, you will use the Intel® Distribution for GDB* to determine what might be wrong.  
 
-In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
+To view code running on the GPU, you must enable GPU debugging. This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
 
 1. Start the debugger using OpenCL™ on the **GPU**.
 

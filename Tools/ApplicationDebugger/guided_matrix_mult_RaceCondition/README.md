@@ -4,10 +4,10 @@ The `Guided Matrix Multiplication Race Condition` sample demonstrates an approac
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
-| Property               | Description
-|:---                    |:---
-| What you will learn    | A way to root-cause incorrect use of the SYCL language.
-| Time to complete       | 50 minutes
+| Property            | Description                                             |
+|:--------------------|:--------------------------------------------------------|
+| What you will learn | A way to root-cause incorrect use of the SYCL language. |
+| Time to complete    | 50 minutes                                              |
 
 >**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -19,20 +19,20 @@ This example results in a race condition that really doesn't give any clue as to
 
 The sample includes different versions of a simple matrix multiplication program.
 
-| File name                           | Description
-|:---                                 |:---
-| `1_matrix_mul_race_condition.cpp`   |This example shows what happens when a developer tries to access data provided by the device before the copy to the host is complete.
-| `2_matrix_mul.cpp`                  | A working version of the matrix multiply code that properly waits for the data to be copied back to the host but still has some issues.
-| `3_matrix_mul.cpp`                  | A working version of the application that corrects its errors using a host accessor and a `q.wait` command in place of parenthesis.
+| File name                         | Description                                                                                                                             |
+|:----------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------|
+| `1_matrix_mul_race_condition.cpp` | This example shows what happens when a developer tries to access data provided by the device before the copy to the host is complete.   |
+| `2_matrix_mul.cpp`                | A working version of the matrix multiply code that properly waits for the data to be copied back to the host but still has some issues. |
+| `3_matrix_mul.cpp`                | A working version of the application that corrects its errors using a host accessor and a `q.wait` command in place of parentheses.     |
 
 ## Prerequisites
 
-| Optimized for           | Description
-|:---                     |:---
-| OS                      | Ubuntu* 24.04 LTS
-| Intel GraphicsHardware  | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Optimized for           | Description                                                                                                                                                                                                                                             |
+|:------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| OS                      | Ubuntu* 24.04 LTS                                                                                                                                                                                                                                       |
+| Intel Graphics Hardware | Gen9 or newer                                                                                                                                                                                                                                           |
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace). |
+| Intel GPU Driver        | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html                                                                                                                            |
 
 ## Key Implementation Details
 
@@ -137,9 +137,9 @@ To complete the steps in the following section, you must download the [Unified T
 
 ### Examine the Original Code
 
-As you might have noticed, when you attempt to run `1_matrix_mul_race_condition` the code reports bad results and then exits. We can use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
+As you might have noticed, when you attempt to run `1_matrix_mul_race_condition`, the code reports bad results and then exits. Use the Intel® Distribution for GDB* to get a backtrace of the entire stack to understand the problem.  
 
-In case we need view code running on the GPU, we need to enable GPU debugging.  This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
+To view code running on the GPU, you must enable GPU debugging. This will require [some setup on your system](#setting-up-to-debug-on-the-gpu) before you can see code running on the GPU.
 
 1. Run the Intel® Distribution for GDB*.  
    ```
@@ -167,9 +167,9 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    [Inferior 3 (device [0000:4d:00.0]) detached]
    intelgt: inferior 2 (gdbserver-ze) has been removed.
    intelgt: inferior 3 (gdbserver-ze) has been removed.
-   (gbd)
+   (gdb)
    ```
-   As we saw outside the debugger, it ran to completion.   But note that the inferior (the code running on the GPU), exited with an error code (`0377`).   Let's see if we can trap that error.
+   As you may have noticed when running outside the debugger, the program ran to completion. Note that the inferior (the code running on the GPU), exited with an error code (`0377`). You can try to trap that error as shown in the next step.
 
 4. Run again, telling the debugger to stop if the application throws an exception
    ```
@@ -177,7 +177,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
    Catchpoint 1 (throw)
    (gdb) run
    ```
-   We run, and stop with this:
+   The debugger stops with the following output:
    ```
    Device: Intel(R) Data Center GPU Max 1550
    Problem size: c(150,600) = a(150,300) * b(300,600)
@@ -296,7 +296,7 @@ In case we need view code running on the GPU, we need to enable GPU debugging.  
 
 The first clue here is that the program throws an exception *after* it has completed checking the results and finding them bad. That behavior is worrying.
 
-Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 9`.  This frame shows us attempting to update the host memory from the device, while `frame 20` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 19`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data the buffer being copied into (`c_back`) no longer exists*.
+Next, looking at the crash in the debugger, there are a couple of odd things that stand out.   Look at stack `frame 9`.  This frame shows us attempting to update the host memory from the device, while `frame 20` shows we are already at the end of the program and have started cleaning up the SYCL buffers (`frame 19`).  The only variable containing data returned from the device is `c_back`.  But the developer has already deleted `c_back` in line 126, so the *data in the buffer being copied into (`c_back`) no longer exists*.
 
 We see something like this in the `unitrace` output above.   The kernel is executed, the results are immediately checked, we create and wait on some events, and then the last thing we try to do before crashing/timing out is to copy some memory from the device memory (`srcptr = 0xff00ffffff2e0000`) to a host pointer (`dstptr = 0x5b103e38010`) that previously was used to initialize this same device memory (around line 101).   Since `c_buf` is the only accessor that is defined as writeable in the `q.submit` at line 97, it again is a likely suspect.  
 
@@ -314,7 +314,7 @@ ONEAPI_DEVICE_SELECTOR=opencl:gpu ./1_matrix_mul_race_condition
 Unfortunately not; pretty much the same thing happens - they both produce incorrect results on exiting.
 
 > **Note:** the command with OpenCL will only work if the `sycl-ls` command
-  shows OpenCL devices for the graphics card, such as like this:
+  shows OpenCL devices for the graphics card, such as this:
 
    ```
       $ sycl-ls
@@ -352,7 +352,7 @@ There are three errors in this code:
 
 1. As just noted, we did not wait until the third `q.submit` kernel completed before accessing the data in `c_back`. This could either be done using parenthesis to enforce scope, and thus order of operations, or by adding a `q.wait()` call just before the call to `VerifyResult`.
 
-2. We  should be using a host accessor pointing to SYCL buffer `c_buf` to access its contents, which would also indicate that we need to wait for the third `q.submit kernel` to complete **and** for the *data to be copied back to the host* before accessing the data in `c_back`.
+2. We  should be using a host accessor pointing to SYCL buffer `c_buf` to access its contents, which would also indicate that we need to wait for the third `q.submit` kernel to complete **and** for the *data to be copied back to the host* before accessing the data in `c_back`.
 
 3. For buffers initialized with a pointer to host memory (like `c_buf`), the developer "makes a contract with the SYCL runtime" to not reference the host pointer again until the SYCL buffer is destroyed.  Thus, deleting the host memory before the SYCL buffer is destroyed is illegal (the call to `delete[] c_back;` is illegal because `c_buf` has not yet been deleted). The buffer cannot detect that the memory was deallocated.
 
@@ -413,7 +413,7 @@ The result should look like `3_matrix_mul.cpp`.  Reiterating, with these changes
 
 Compare `1_matrix_mul_race_condition.cpp` and `2_matrix_mul.cpp` source files.
 
-Note that the source files differ by **two characters** (parentheses) only.
+Note that the source files differ by only **two characters**.
 
 ```
 54d53
@@ -455,7 +455,7 @@ As a result, because the device queue `q` exists only in the scope of those brac
 
 Note that `2_matrix_mul.cpp` still has a bug.  It is an example of problem (2) above - it's not using a host accessor to access the data in `c_back`, which is still being managed by SYCL buffer `c_buf`.   This violates the contract (3 above) that we are not allowed to look at the host data while it is being managed by a SYCL buffer.  We just got lucky.
 
-This points out a potential trap in the training documentation you may have read while learning SYCL.   You can easily get the impression that if you use the SYCL buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parenthesis may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
+This points out a potential trap in the training documentation you may have read while learning SYCL.   You can easily get the impression that if you use the SYCL buffer-accessor mechanism, synchronization will be taken care of for you.  The use of parentheses may be mentioned in passing with little explanation.   Even though the documentation may say "the { } block ensures all SYCL work has concluded," this is not stressed.
 
 This is the trap of the SYCL buffer-accessor mechanism - you may assume that the automatic synchronization mechanism is smarter than it really is.  In `1_matrix_mul_race_condition.cpp`, the SYCL runtime does not realize that we cannot access the `c_back` array in `VerifyResult` until the third `q.submit` kernel completes and the data are copied back to the host - it assumes you know what you are doing.
 

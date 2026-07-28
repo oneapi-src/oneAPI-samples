@@ -4,10 +4,10 @@ The `Guided Matrix Multiplication Bad Buffers` sample demonstrates how to use se
 
 The sample is a simple program that multiplies together two large matrices and verifies the results.
 
-| Area                  | Description
-|:---                   |:---
-| What you will learn   | A method to determine the root cause problems from passing bad data through the SYCL runtime.
-| Time to complete      | 50 minutes
+| Area                | Description                                                                                   |
+|:--------------------|:----------------------------------------------------------------------------------------------|
+| What you will learn | A method to determine the root cause problems from passing bad data through the SYCL runtime. |
+| Time to complete    | 50 minutes                                                                                    |
 
 >**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
@@ -19,21 +19,21 @@ In one case, we will know that there is a problem due to a crash. In the other c
 
 The sample includes different versions of a simple matrix multiplication program.
 
-| File                          | Description
-|:---                           |:---
-| `a1_matrix_mul_zero_buff.cpp` | This example shows the crash you get when a zero-element buffer is passed to a SYCL `submit`  lambda function.
-| `a2_matrix_mul.cpp`           | A working version of the matrix multiply code that uses SYCL buffers and accessors.
-| `b1_matrix_mul_null_usm.cpp`  | This example shows you the bad results you get when a null pointer to device memory is passed to a SYCL `submit` lambda function.
-| `b2_matrix_mul_usm.cpp`       | A working version of the matrix multiply code that uses explicit pointers to host and device memory rather than SYCL buffers and accessors.
+| File                          | Description                                                                                                                                 |
+|:------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------|
+| `a1_matrix_mul_zero_buff.cpp` | This example shows the crash you get when a zero-element buffer is passed to a SYCL `submit`  lambda function.                              |
+| `a2_matrix_mul.cpp`           | A working version of the matrix multiply code that uses SYCL buffers and accessors.                                                         |
+| `b1_matrix_mul_null_usm.cpp`  | This example shows you the bad results you get when a null pointer to device memory is passed to a SYCL `submit` lambda function.           |
+| `b2_matrix_mul_usm.cpp`       | A working version of the matrix multiply code that uses explicit pointers to host and device memory rather than SYCL buffers and accessors. |
 
 ## Prerequisites
 
-| Optimized for           | Description
-|:---                     |:---
-| OS                      | Ubuntu* 24.04 LTS
-| Intel Graphics Hardware | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace).
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
+| Optimized for           | Description                                                                                                                                                                                                                                             |
+|:------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| OS                      | Ubuntu* 24.04 LTS                                                                                                                                                                                                                                       |
+| Intel Graphics Hardware | Gen9 or newer                                                                                                                                                                                                                                           |
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0 <br> Unified Tracing and Profiling Tool 2.3.0, which is available from the [following Github repository](https://github.com/intel/pti-gpu/tree/master/tools/unitrace). |
+| Intel GPU Driver        | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html                                                                                                                            |
 
 ## Key Implementation Details
 
@@ -511,7 +511,7 @@ In `b1_matrix_mul_null_usm.cpp` a bad (in this case, null) pointer that is suppo
    The results should be the same as the Level Zero output.
 
    > **Note:** this will only work if the `sycl-ls` command shows OpenCL
-   devices for the graphics card, such as like this:
+   devices for the graphics card, such as this:
 
    ```
       $ sycl-ls

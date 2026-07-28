@@ -4,16 +4,16 @@ The `Guided Matrix Multiplication Exception` sample demonstrates an approach to 
 
 The sample code is a simple program that multiplies together two large matrices and verifies the results.
 
-| Property              | Description
-|:---                   |:---
-| What you will learn   | How to use backtraces in the Intel® Distribution for GDB* to locate incorrect use of the SYCL API.
-| Time to complete      | 50 minutes
+| Property            | Description                                                                                        |
+|:--------------------|:---------------------------------------------------------------------------------------------------|
+| What you will learn | How to use backtraces in the Intel® Distribution for GDB* to locate incorrect use of the SYCL API. |
+| Time to complete    | 50 minutes                                                                                         |
 
->**Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
+> **Note**: For comprehensive instructions on the Intel® Distribution for GDB* and writing SYCL code, see the *[Intel® oneAPI Programming Guide](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/current/overview.html)*. (Use search or the table of contents to find relevant information quickly.)
 
 ## Purpose
 
-The two samples in this tutorial show situations where the SYCL runtime provides an assert when it detects incorrect use of the SYCL API that is not caught at build time. Unfortunately, these runtime error checks are not comprehensive, so not getting an assert does not indicate correct code structure or practices.
+The two samples in this tutorial show situations where the SYCL* runtime provides an assert when it detects incorrect use of the SYCL API that is not caught at build time. Unfortunately, these runtime error checks are not comprehensive, so not getting an assert does not indicate correct code structure or practices.
 
 Currently, SYCL asserts only tell you that an error was detected, but not where it resides in your code. To determine the location, you must run the program in the Intel® Distribution for GDB* with debug symbols enabled. Turning off optimization can also help.
 
@@ -23,21 +23,20 @@ You may want to consult the SYCL spec about argument order and allowed values to
 
 The sample includes three different versions of some simple matrix multiplication code.
 
-| File name                         | Description
-|:---                               |:---
-| `1_matrix_mul_null_pointer.cpp`   | This example shows the assert you get when a null pointer is passed to a SYCL memcpy statement
-| `2_matrix_mul_multi_offload.cpp`  | This example shows the assert you get when you try to execute more than one offload statement in a SYCL `submit` lambda function
-| `3_matrix_mul.cpp`                | A working version of the matrix multiply code that uses unified shared memory (`1_matrix_mul_null_pointer.cpp` and `2_matrix_mul_multi_offload.cpp` are broken versions of this code)
+| File name                        | Description                                                                                                                                                                           |
+|:---------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `1_matrix_mul_null_pointer.cpp`  | This example shows the assert you get when a null pointer is passed to a SYCL memcpy statement                                                                                        |
+| `2_matrix_mul_multi_offload.cpp` | This example shows the assert you get when you try to execute more than one offload statement in a SYCL `submit` lambda function                                                      |
+| `3_matrix_mul.cpp`               | A working version of the matrix multiply code that uses unified shared memory (`1_matrix_mul_null_pointer.cpp` and `2_matrix_mul_multi_offload.cpp` are broken versions of this code) |
 
 ## Prerequisites
 
-| Optimized for           | Description
-|:---                     |:---
-| OS                      | Ubuntu* 24.04 LTS
-| Intel Graphics Hardware | GEN9 or newer
-| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0
-| Intel GPU Driver | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html
-
+| Optimized for           | Description                                                                                                                  |
+|:------------------------|:-----------------------------------------------------------------------------------------------------------------------------|
+| OS                      | Ubuntu* 24.04 LTS                                                                                                            |
+| Intel Graphics Hardware | Gen9 or newer                                                                                                                |
+| Software                | Intel® oneAPI DPC++/C++ Compiler 2026.0 <br> Intel® Distribution for GDB* 2026.0                                             |
+| Intel GPU Driver        | Intel® General-Purpose GPU Long-Term Support driver 2523.59 or later from https://dgpu-docs.intel.com/releases/releases.html |
 
 ## Key Implementation Details
 
@@ -50,7 +49,7 @@ The basic SYCL* standards implemented in the code include the use of the followi
 
 ## Set Environment Variables
 
-When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries and tools are ready for development.
+When working with the command-line interface (CLI), set up your oneAPI environment by sourcing the `setvars` script every time you open a new terminal window. This practice ensures that your compiler, libraries, and tools are ready for development.
 
 ## Build and Run the `Guided Matrix Multiplication Exception` Programs
 
@@ -84,14 +83,14 @@ To learn more about the extensions and how to configure the oneAPI environment, 
 ### On Linux*
 
 1. Change to the sample directory.
-1. Build the programs.
+2. Build the programs.
    ```
    mkdir build
    cd build
    cmake ..
    make
    ```
-2. Run the programs.
+3. Run the programs.
    ```
    make run_all
    ```
@@ -109,7 +108,7 @@ To learn more about the extensions and how to configure the oneAPI environment, 
    ```
    make run_3
    ```
-3. Clean the program. (Optional)
+4. Clean the program. (Optional)
    ```
    make clean
    ```
@@ -128,11 +127,11 @@ make VERBOSE=1
 These instructions assume you have installed the Intel® Distribution for GDB* and have a basic working knowledge of GDB.
 
 ### Setting up to Debug on the GPU
-To learn how setup and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*.  Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
+To learn how to set up and use Intel® Distribution for GDB*, see the *[Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/get-started-guide-linux/current/overview.html)*. Additional setup instructions you should follow are at *[GPU Debugging](https://dgpu-docs.intel.com/driver/gpu-debugging.html)* and *[Configuring Kernel Boot Parameters](https://dgpu-docs.intel.com/driver/configuring-kernel-boot-parameters.html)*.
 
-Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*
+Documentation on using the debugger in a variety of situations can be found at *[Debug Examples in Linux](https://www.intel.com/content/www/us/en/docs/distribution-for-gdb/tutorial-debugging-dpcpp-linux/current/overview.html)*.
 
->**Note**: SYCL applications will use the oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
+> **Note**: SYCL applications will use the Intel® oneAPI Level Zero runtime by default. oneAPI Level Zero provides a low-level, direct-to-metal interface for the devices in a oneAPI platform. For more information see the *[Level Zero Specification Documentation - Introduction](https://oneapi-src.github.io/level-zero-spec/level-zero/latest/core/INTRO.html)* and *[Intel® oneAPI Level Zero](https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/current/intel-oneapi-level-zero.html)*.
 
 ### Fixing the Null Pointer Version
 
@@ -164,7 +163,7 @@ As an exercise, let's find this a debugger (any host debugger will work; however
 
    > Why can we ignore these messages and keep on debugging anyway?  Because we don't need to monitor the code running on the device in the debugger - the asserts are coming from the host during the call of the kernel.  Running `gdb-oneapi` with `ZET_ENABLE_PROGRAM_DEBUGGING=1` is only necessary if you want to debug the kernels running on the GPU.
 
-2. Notice the application failure. The error is the same message seen when we ran it outside the debugger.
+2. The application fails with the following error:
    ```
    Exception caught at File: 1_matrix_mul_null_pointer.cpp | Function: main | Line: 95 | Column: 7
    terminate called after throwing an instance of 'sycl::_V1::exception'
@@ -187,8 +186,8 @@ As an exercise, let's find this a debugger (any host debugger will work; however
    #6  0x00007ffff78bb0da in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
    #7  0x00007ffff78a5a55 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
    #8  0x00007ffff78bb391 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
-   #9  0x00007ffff7eb7ea0 in sycl::_V1::detail::queue_impl::memcpy(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, void*, void const*, unsigned long, std::vector<sycl::_V1::event, std::allocator<sycl::_V1::event> > const&, bool, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
-   #10 0x00007ffff7f62421 in sycl::_V1::queue::memcpy(void*, void const*, unsigned long, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2025.0/lib/libsycl.so.8
+   #9  0x00007ffff7eb7ea0 in sycl::_V1::detail::queue_impl::memcpy(std::shared_ptr<sycl::_V1::detail::queue_impl> const&, void*, void const*, unsigned long, std::vector<sycl::_V1::event, std::allocator<sycl::_V1::event> > const&, bool, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2026.0/lib/libsycl.so.8
+   #10 0x00007ffff7f62421 in sycl::_V1::queue::memcpy(void*, void const*, unsigned long, sycl::_V1::detail::code_location const&) () from /opt/intel/oneapi/compiler/2026.0/lib/libsycl.so.8
    #11 0x0000000000403dfa in main ()
       at 1_matrix_mul_null_pointer.cpp:95
    ```
@@ -205,7 +204,7 @@ As an exercise, let's find this a debugger (any host debugger will work; however
    ```
    Notice that in this case a `0` was passed as one of the pointers in the `memcpy`, which is clearly the error described in the exception. In a real application you will need to examine each of the input variables to `memcpy` using the gdb `print` command, and then trace the pointers back to where they were initialized (possibly in another source file).
 
-6.  Exit the debugger using the `quit`command.
+6.  Exit the debugger using the `quit` command.
 
 
 ### Fixing the Multiple Offload Version
