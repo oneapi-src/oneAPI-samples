@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+    
+<head>
+        <script defer type="text/javascript" src="https://www.intel.com/content/dam/www/global/wap/performance-config.js" >
+        </script> 
+
+        <link rel="stylesheet" type="text/css" href="_static/styles.css" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+        <link rel="icon" type="image/x-icon" href="_static/assets/favicon.ico">
+
+        <!-- Bootstrap CSS -->
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+
+        <meta http-equiv="Content-Security-Policy" 
+            content="
+            default-src 'self';
+            child-src 'self';
+            data: https://*.github.io;
+            img-src 'self' https://*.cookielaw.org https://*.onetrust.com;
+            data: https://*.github.io https://github.com https://*.githubusercontent.com;
+            script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.intel.com https://*.onetrust.com  https://*.cookielaw.org https://*.github.io;
+            style-src 'self' 'unsafe-inline' data: https://*.onetrust.com https://*.cookielaw.org https://*.gstatic.com https://fonts.googleapis.com https://*.github.io https://*.jsdelivr.net https://*.bootstrapcdn.com https://*.cloudflare.com;
+            font-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.bootstrapcdn.com https://*.cloudflare.com; 
+            frame-src 'self' https://*.googleapis.com https://*.gstatic.com https://*.bootstrapcdn.com; 
+            object-src 'self';
+            connect-src 'self' https://*.github.io https://*.github.com https://*.githubusercontent.com https://*.jsdelivr.net https://*.intel.com
+                https://*.onetrust.com https://*.cookielaw.org https://*.bootstrapcdn.com https://*.cloudflare.com https://*.googleapis.com https://*.gstatic.com;
+            worker-src 'self'"
+        />
+        <meta name="description" content="Find C++, Python, and Fortran samples for AI, ML, CUDA to SYCL migration, and performance acceleration using CPUs, GPUs, and FPGAs.">
+        <meta name="robots" content="max-snippet:-1">
+        <title> Intel Samples Catalog </title>
+
+    </head>     
+
+<script src="_static/script.js"></script>
+
+<body>
+    <script type="text/javascript">
+        var wapLocalCode = 'us-en'; // configured 27/06/2024
+        var wapSection = 'oneapi-samples'; // configured 27/06/2024
+        // Load TMS
+        (function () {
+        var url = 'https://www.intel.com/content/dam/www/global/wap/tms-loader.js'; // WAP file URL
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.src = url;
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);})();
+    </script> 
+    <div class="flexbox">
+        
+
+<div class="all-wrapper">
+
+    <div class="grid-row"> 
+
+        <div class="col "> <!--#1-->
+
+            <div class="col-nav-grp"> 
+
+                <div class="logo" onclick="firstPage()"> 
+                        <img src="_static/assets/logo-energyblue-white.svg" alt="Intel Logo" height="50" width="50">
+                </div>
+
+                <div class="app-title">
+                    Samples&nbsp;Catalog
+                </div>
+
+                <div>
+                    <a class="btn home-button" onclick="resetFiltersGoHome()" role="button">
+                        <i class="fa fa-home fa-lg"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col ">  <!--#2--></div>
+
+        <div class="col ">  <!--#3--></div>
+
+        <div class="col ">  <!--#4--> </div>
+
+        <div class="col tech-blogs">   <!--#5-->
+
+                <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/tech-articles-how-to/library.html">
+                    Tech Blogs
+                </a>
+
+        </div>
+
+        <div class="col">
+            <figure>
+                <a href="https://github.com/oneapi-src/oneAPI-samples">
+                <img class=scaled src="_static/assets/github-mark-white.png" alt="oneAPI Samples Repository">
+                </a>
+                <figcaption>View on GitHub*</figcaption>
+            </figure>
+        </div>
+
+    </div> <!--END GRID ROW-->
+
+    <div class="nav-page-row">
+
+        <div class="col">
+            <div class="col-nav-left">
+                for<a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html">
+                    &nbsp;Intel&reg;&nbsp;oneAPI&nbsp;Toolkits
+                </a>
+            </div>
+        </div>
+
+        <div class="col">
+            <div id="total-records"></div>
+        </div>
+
+        <div class="col"></div>
+
+        <div class="col">
+            <div class="nav-ctrls ">
+                <button class='arrow left' onclick="previousPage()"></button>
+                    <button class='pg-first-last' onclick="firstPage()">First</button>
+                        <div class="pg-rng-box">
+                            <div>
+                                <snall class="pg-rng" id="paginator-state"></snall>
+                            </div>
+                        </div>
+                    <button class='pg-first-last' onclick="lastPage()">Last</button>
+                <button class='arrow right' onclick="nextPage()"></button>
+            </div>
+        </div>
+
+        <div id="results-container">
+            <div id="qty-show-results" class="transparent"></div>
+        </div>
+
+        <div class="col"></div>
+
+    </div> <!--END NAV-PAGE-ROW-->
+
+
+    
+    <div class='content-row'>
+
+            <div class='left-column'>
+
+                <div class="accordion">
+
+                    <div class="accordion-item">
+                
+                        <div class="search-container">            
+                            <div class="search-widget">   
+                                <i class="fa fa-search fa-1x"></i>
+                                <input type="text" 
+                                        id="textInput" 
+                                        class="searchBox" 
+                                        name="searchInput" 
+                                        placeholder="Search samples..."
+                                        onkeypress=onlyAlphaNumInput(event) 
+                                        data-search
+                                >
+                                    <button title="Reset Search" type="reset" onclick="resetSearcher()" class="resetSearchButton">
+                                        <i class="fa fa-remove fa-xl"></i>
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clear-filters">
+                        <a class="btn" onclick="resetFiltersGoHome()"> 
+                            Clear
+                        </a> 
+                    </div>
+
+                    <div class="accordion-header" id="headingOne"> <!-- collapseOne -->
+                            <!-- class="accordion-button collapsed"  -->
+                            <button
+                                class="accordion-button-custom" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#panelsstayOpen-collapseOne" 
+                                aria-expanded="true" 
+                                aria-controls="stayOpen-collapseOne"
+                            >
+                            Filters
+                            </button>
+                    </div>
+
+                
+                    <div id="stayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                   
+                    <div class="accordion-body">
+
+                        <form id="filter-menu">
+                            <div class="filter-children expertise-checkboxes"> 
+    
+                                <span class="badge-col-head">
+                                    Expertise
+                                </span>
+    
+                                <div id="expertise-col">
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" class="checkoption" value="getStart" name="data-filter"/> 
+                                        <label class="container-filter">
+                                            Getting Started
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" class="checkoption" value="tutorial"  name="data-filter"/>
+                                        <label class="container-filter">
+                                            Tutorial
+                                        </label>
+                                    </span>
+    
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" class="checkoption" value="conFunc"  name="data-filter"/>
+                                        <label class="container-filter">
+                                            Concepts and Functionality
+                                        </label>
+                                    </span>
+                                    
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" class="checkoption" value="refDesEnd2End"  name="data-filter"/>
+                                        <label class="container-filter">
+                                            Reference Designs and End to End
+                                        </label>
+                                    </span>
+    
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" class="checkoption" value="codeOpt"  name="data-filter"/>
+                                        <label class="container-filter">
+                                            Code Optimization
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        
+
+                            <div class="filter-children language-checkboxes"> 
+                                <span class="badge-col-head">
+                                    Language
+                                </span>
+                                <div id="">
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="cpp" name="data-filter"/> 
+                                        <label class="container-filter">
+                                            CPP (C++)
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="python" name="data-filter"/>
+                                        <label class="container-filter">
+                                            Python
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="fortran" name="data-filter"/>
+                                        <label class="container-filter">
+                                            Fortran
+                                        </label>
+                                    </span>
+                                </div>
+                            </div> 
+
+                            <div class="filter-children device-checkboxes">         
+                                <span class="badge-col-head"> 
+                                    Target Device
+                                </span>
+                                                
+                                <div>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="cpu" name="data-filter"/> 
+                                        <label class="container-filter">
+                                            CPU
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="gpu" name="data-filter"/>
+                                        <label class="container-filter">
+                                            GPU
+                                        </label>
+                                    </span>
+                                    <span class="checkmark"> 
+                                        <input type="checkbox" value="fpga" name="data-filter"/>
+                                        <label class="container-filter">
+                                            FPGA
+                                        </label>
+                                    </span>
+                                </div>      
+                            </div>
+                        </form>
+                    </div>
+
+                  </div>
+                </div> <!--end acordion-->
+
+            </div> <!-- end left-column -->
+            
+        <div class='right-column'>
+
+                <div class="toolkit-cards" data-toolkit-cards-container> </div>
+
+                <div class='template-wrapper'>
+
+                    <template data-toolkit-template >
+                            
+                            <div class="card">
+                                <div class="card-title" data-header></div>
+                                    <section class="card-desc" data-body></section>
+                                <span class="badges-container"> 
+                                    <p class="badges badge1" data-expertise></p>
+                                    <p class="badges badge2" data-languages></p>
+                                    <p class="badges-devices" data-targetDevice></p>
+                                    <div url></div>
+                                </span>  
+                            </div>
+  
+                 
+                    </template>
+
+                </div>
+
+                <div id="hide"> 
+                    <div class="no-results">  
+                        <div class="lft-col"></div>
+                            <div class="mid-col help-msg">
+                                <div>
+                                    <div> <span class="emph1">No results found. </span></div>
+            
+                                    <ul class="help">
+                                        <li> <span class="emph1">Search</span>:  Simplify search term.</span></li>
+                                        <li> <span class="emph1">Filter</span>:  Select one filter per category. </li>
+                                        <li> <span class="emph1">Avoid combining:</span><span class="emph1"> Search</span><span class="emph2"> and </span><span class="emph1">Filter</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        <div class="rgt-col"></div>
+                    </div>
+                </div>
+        </div> <!--END right column-->
+    </div> <!--END content row-->
+</div>
+
+    </div>
+    
+    <footer>
+        <div id="footer-container"> 
+            
+            
+            <div id="footer-blk-1">
+                &copy; Copyright 2024 Intel Corporation. 
+                
+                <a href="https://www.intel.com/content/www/us/en/legal/trademarks.html">
+                    <span class="tmb-cookies-privacy">*Trademarks </span>
+                </a>
+            
+                <a class="footer-link" href='https://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html' data-cookie-notice='true'>
+                    <span class="tmb-cookies-privacy">Cookies</span>
+                </a>
+            
+                <a class="footer-link" href='https://www.intel.com/content/www/us/en/privacy/intel-privacy-notice.html'>
+                    <span class="tmb-cookies-privacy">Privacy</span>
+                </a>
+            </div>
+
+            <div>
+                <a data-wap_ref="dns" id="wap_dns" href="https://www.intel.com/content/www/us/en/privacy/intel-cookienotice.html">
+                    Do Not Share My Personal Information
+                </a>
+            </div>
+            
+            <div id="footer-blk-2"> 
+                Last updated: 
+                <span id="lastmodified"></span>
+                (Pacific Time)
+            </div>
+        </div>
+    </footer>
+    
+    
+</body>
+</html>
