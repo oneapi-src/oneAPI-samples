@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.4)
+cmake_minimum_required (VERSION 3.5)
 set (CMAKE_CXX_COMPILER "icpx")
 project (matrix_mul LANGUAGES CXX)
 

@@ -6,10 +6,10 @@ through this sample *after* you familiarize yourself with the basics of
 SYCL programming, and *before* you start using the debugger.
 
 
-| Area                | Description
-|---------------------|--------------
-| What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator
-| Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU
+| Area                | Description                                                                                     |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| What you will learn | Essential debugger features for effective debugging on CPU, GPU (Linux only), and FPGA emulator |
+| Time to complete    | 20 minutes for CPU or FPGA emulator; 30 minutes for GPU                                         |
 
 This sample accompanies
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://software.intel.com/en-us/get-started-with-debugging-dpcpp)
@@ -34,16 +34,16 @@ of the application debugger.
 
 ## Prerequisites
 
-| Optimized for                                    | Description
-|--------------------------------------------------|--------------
-| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10, 11
-| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series
-| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler
+| Optimized for                                    | Description                                                                                    |
+|--------------------------------------------------|------------------------------------------------------------------------------------------------|
+| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 <br> Windows* 10, 11 |
+| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series                                         |
+| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler                                                           |
 
 > **Note** although the sample can be run on all supported by Intel® oneAPI
 > Base Toolkit platforms, the GPU debugger can debug only kernels offloaded
 > onto devices specified at “Hardware to debug offloaded kernels on GPUs”
-> while running with the L0 backend.  When the GPU device is different from
+> while running with the L0 backend. When the GPU device is different from
 > the listed above, e.g., an integrated graphics device, breakpoints inside
 > the kernel won't be hit.  In such case, try to switch the offload to a CPU
 > device by using ONEAPI_DEVICE_SELECTOR environment variable.

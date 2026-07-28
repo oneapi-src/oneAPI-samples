@@ -14,28 +14,28 @@ injected. You can try to find and fix them using the debugger.  The debug steps
 follow a common strategy that attempts to resolve bugs first on the CPU,
 then focus on possibly more difficult GPU-oriented bugs.
 
-| Area                | Description
-|:---                 |:---
-| What you will learn | Find existing bugs in a program using the debugger
-| Time to complete    | 1 hour for CPU or FPGA emulator; 2 hours for GPU
+| Area                | Description                                        |
+|:--------------------|:---------------------------------------------------|
+| What you will learn | Find existing bugs in a program using the debugger |
+| Time to complete    | 1 hour for CPU or FPGA emulator; 2 hours for GPU   |
 
 ## Prerequisites
 
-| Optimized for                                    | Description
-|:---                                              |:---
-| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15
-| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series
-| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler
+| Optimized for                                    | Description                                                               |
+|:-------------------------------------------------|:--------------------------------------------------------------------------|
+| OS                                               | Linux* Ubuntu* 20.04 to 22.04 <br> CentOS* 8 <br> Fedora* 30 <br> SLES 15 |
+| Hardware to debug offloaded <br> kernels on GPUs | Intel® Arc(tm) <br> Intel® Data Center GPU Flex Series                    |
+| Software                                         | Intel&reg; oneAPI DPC++/C++ Compiler                                      |
 
 > **Note** although the sample can be run on all supported by Intel® oneAPI
 > Base Toolkit platforms, the GPU debugger can debug only kernels offloaded
-> onto devices specified at “Hardware to debug offloaded kernels on GPUs”
-> while running with the L0 backend.  When the GPU device is different from
+> onto devices specified in “Hardware to debug offloaded kernels on GPUs”
+> while running with the L0 backend. When the GPU device is different from
 > the listed above, e.g., an integrated graphics device, breakpoints inside
 > the kernel won't be hit.  In such case, try to switch the offload to a CPU
 > device by using ONEAPI_DEVICE_SELECTOR environment variable.
 
-We recommend to first make sure that the program you intend to debug is running
+We recommend first making sure that the program you intend to debug is running
 correctly on CPU and only after that switch the offload to GPU.
 
 > *Note**: although the sample can be built and run on Windows* 10, 11 and 11 too,
@@ -99,11 +99,11 @@ from the loop:
 
 There are 3 files in the solution.
 
-| File          | Description
-|:---           |:---
-| jacobi.cpp    | Contains the `main` function, no bugs: <br> * initialize the problem <br> * setup SYCL boiler plate <br> call the `iterate` function <br> validate the result
-| bugged.cpp    | Contains bugged versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-bugged` program.
-| fixed.cpp     | Contains fixed versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-fixed` program.
+| File       | Description                                                                                                                                                      |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| jacobi.cpp | Contains the `main` function, no bugs: <br> * initialize the problem <br> * setup SYCL boiler plate <br> call the `iterate` function <br> validate the result    |
+| bugged.cpp | Contains bugged versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-bugged` program. |
+| fixed.cpp  | Contains fixed versions of `iterate`, `compute_x_k1`, and `prepare_for_next_iteration` functions. <br> This file is included only into `jacobi-fixed` program.   |
 
 The iteration loop is located at `iterate` function.
 Each iteration has two parts: `compute_x_k1` and `prepare_for_next_iteration`.
@@ -165,11 +165,11 @@ for development.
 > oneAPI installation.
 >
 > Linux*:
-> - For system wide installations: `. /opt/intel/oneapi/setvars.sh`
+> - For system-wide installations: `. /opt/intel/oneapi/setvars.sh`
 > - For private installations: `. ~/intel/oneapi/setvars.sh`
 > - For non-POSIX shells, like csh, use the following command: `bash -c 'source <install-dir>/setvars.sh ; exec csh'`
 >
-> For more information on configuring environment variables, see [Use the setvars Script with Linux* or MacOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
+> For more information on configuring environment variables, see [Use the setvars Script with Linux* or macOS*](https://www.intel.com/content/www/us/en/develop/documentation/oneapi-programming-guide/top/oneapi-development-environment-setup/use-the-setvars-script-with-linux-or-macos.html).
 
 ## Build the `jacobi-bugged` and `jacobi-fixed` programs
 
@@ -177,7 +177,7 @@ Preliminary setup steps are needed for the debugger to function.
 Please see the setup instructions in the Get Started Guide
 [Get Started with Intel® Distribution for GDB* on Linux* OS Host](https://www.intel.com/content/www/us/en/develop/documentation/get-started-with-debugging-dpcpp-linux/)
 
-### Using Visual Studio Code* (VS Code) (Optional)
+### Using Visual Studio Code* (VS Code*) (Optional)
 
 You can use Visual Studio Code (VS Code) extensions to set your environment, create launch configurations,
 and browse and download samples.
@@ -236,18 +236,18 @@ Please see the setup instructions in the Get Started Guide
     ```
     > Note: to specify a device type to offload the kernel, use
     > the `ONEAPI_DEVICE_SELECTOR` environment variable.
-    > E.g.  to restrict the offload only to CPU devices use:
+    > For example, to restrict the offload only to CPU devices use:
     ```
     ONEAPI_DEVICE_SELECTOR=*:cpu ./jacobi-bugged
     ```
 
-3.  Start a debugging session on a CPU device:
+* Start a debugging session on a CPU device:
 
     ```
     ONEAPI_DEVICE_SELECTOR=*:cpu gdb-oneapi jacobi-bugged
     ```
 
-4.  Clean the program (optional):
+* Clean the program (optional):
 
     ```
     make clean
@@ -261,9 +261,9 @@ please see
 
 ## Guided Debugging
 
-The below instructions provide step by step instructions for locating and
+The following instructions provide step-by-step guidance for locating and
 resolving the three bugs in the `jacobi` sample, as well as basic usage of
-the debbuger.
+the debugger.
 
 ### Recommended Commands
 
@@ -272,8 +272,7 @@ For checking variables values you can use: `print`, `printf`, `display`,
 
 #### `commands` command
 
-To define specific actions when a BP is hit, use `commands <breakpoint number>`,
-e.g.
+To define specific actions when a BP is hit, use `commands <breakpoint number>` e.g.,
 
 ```
 (gdb) commands 1
@@ -368,8 +367,8 @@ to a different thread while stepping):
 
 ### Debugging `jacobi-bugged`
 
-Again, to try to isolate our bugs, we'll focus first on the CPU.  This is
-a common strategy.  You can specify the device for offloading the kernels
+Again, to try to isolate our bugs, focus first on the CPU.  This is
+a common strategy. You can specify the device for offloading the kernels
 using `ONEAPI_DEVICE_SELECTOR` variable, for example:
 
 ```
@@ -589,16 +588,16 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 
 `thread <thread_id>:<lane>`
 : Switch context to the SIMD lane `lane` of the specified thread.
-  E.g: `thread 2.6:4`
+  For example: `thread 2.6:4`
 
 `thread apply <thread_id>:<lane> <cmd>`
 : Apply command `cmd` to the specified lane of the thread.
-  E.g.: `thread apply 2.3:* print element` prints `element` for each active lane
+  For example: `thread apply 2.3:* print element` prints `element` for each active lane
   of thread 2.3. Useful for inspecting vectorized values.
 
 `x /<format> <addr>`
 : Examine the memory at address `addr` according to `format`.
-  E.g.: `x /i $pc` shows the instruction pointed by the program counter.
+  For example: `x /i $pc` shows the instruction pointed by the program counter.
   `x /8wd &count` shows eight words in decimal format located at the address
   of `count`.
 
@@ -610,7 +609,7 @@ success; the relative error (9.97509e-05) is below the desired tolerance 0.0001 
 : Set the scheduler locking mode.
 
 `maint jit dump <addr> <filename>`
-: Save the JIT'ed objfile that contains address `addr` into the file `filename`.
+: Save the JIT'ed obj file that contains address `addr` into the file `filename`.
   Useful for extracting the kernel when running on the CPU device.
 
 `cond [-force] <N> <exp>`
