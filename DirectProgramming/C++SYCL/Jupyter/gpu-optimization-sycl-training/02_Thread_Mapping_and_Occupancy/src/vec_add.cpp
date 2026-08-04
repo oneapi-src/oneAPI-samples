@@ -28,12 +28,11 @@ int VectorAdd(sycl::queue &q, std::vector<int> &a, std::vector<int> &b,
     h.parallel_for(
         sycl::nd_range<1>(num_groups * wg_size, wg_size), [=
     ](sycl::nd_item<1> index) [[intel::reqd_sub_group_size(sg_size)]] {
-          size_t grp_id = index.get_group()[0];
-          size_t loc_id = index.get_local_id();
-          size_t start = grp_id * N;
-          size_t end = start + N;
-          for (size_t i = start + loc_id; i < end; i += wg_size) {
-            sum_acc[i] = a_acc[i] + b_acc[i];
+          size_t global_id = index.get_global_id(0);
+          size_t global_size = index.get_global_range(0);
+  
+          for (size_t i = global_id; i < N; i += global_size) {
+              sum_acc[i] = a_acc[i] + b_acc[i];
           }
         });
   });
